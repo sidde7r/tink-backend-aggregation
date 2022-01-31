@@ -3,14 +3,21 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.OTPSMS_AUTH;
 
 import com.google.common.base.Strings;
+import java.util.Optional;
 import javax.annotation.Nullable;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.PermStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.AuthenticationRequest;
@@ -45,6 +52,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.caixa.utils.CaixaRegistrationDataGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -52,19 +61,19 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
+@RequiredArgsConstructor
 public class LaCaixaApiClient {
 
     private final TinkHttpClient client;
-    private final String installationId;
+    private final PersistentStorage persistentStorage;
+    private final String username;
+    private final RandomValueGenerator randomValueGenerator;
 
     private UserDataResponse userDataCache;
-
-    public LaCaixaApiClient(TinkHttpClient client, String installationId) {
-        this.client = client;
-        this.installationId = installationId;
-    }
+    private Cookie jSessionId;
 
     public SessionResponse initializeSession() {
 
@@ -73,9 +82,23 @@ public class LaCaixaApiClient {
                         LaCaixaConstants.DefaultRequestParams.LANGUAGE_ES,
                         LaCaixaConstants.DefaultRequestParams.ORIGIN,
                         LaCaixaConstants.DefaultRequestParams.CHANNEL,
-                        installationId);
+                        retrieveAppInstallationId());
 
-        return createRequest(LaCaixaConstants.Urls.INIT_LOGIN).post(SessionResponse.class, request);
+        HttpResponse response =
+                createRequest(LaCaixaConstants.Urls.INIT_LOGIN).post(HttpResponse.class, request);
+
+        Optional<NewCookie> maybeJsessionId =
+                response.getCookies().stream()
+                        .filter(cookie -> ("JSESSIONID").equalsIgnoreCase(cookie.getName()))
+                        .findFirst();
+
+        if (maybeJsessionId.isPresent()) {
+            jSessionId = maybeJsessionId.get().toCookie();
+        } else {
+            log.info("JsessionId missing");
+        }
+
+        return response.getBody(SessionResponse.class);
     }
 
     public StatusResponse login(LoginRequest loginRequest) throws LoginException {
@@ -257,10 +280,18 @@ public class LaCaixaApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
+        RequestBuilder requestBuilder =
+                client.request(url)
+                        .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
+                        .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
 
-        return client.request(url)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        if (jSessionId != null) {
+            requestBuilder.cookie(jSessionId);
+        }
+
+        return requestBuilder;
     }
 
     public ScaResponse initiateEnrolment() {
@@ -312,5 +343,30 @@ public class LaCaixaApiClient {
                 createRequest(Urls.USER_DATA).post(UserDataResponse.class, request);
 
         return userDataResponse.isScaNeeded();
+    }
+
+    private String retrieveUserAgent() {
+        String userAgent = persistentStorage.get(PermStorage.USER_AGENT);
+        if (userAgent == null) {
+            userAgent =
+                    CaixaRegistrationDataGenerator.generateUserAgent(
+                            username, false, "APPCBK_", "5.43.0");
+            if (StringUtils.isNotEmpty(username)) {
+                persistentStorage.put(PermStorage.USER_AGENT, userAgent);
+            }
+        }
+        return userAgent;
+    }
+
+    private String retrieveAppInstallationId() {
+        String appInstallationId = persistentStorage.get(PermStorage.APP_INSTALLATION_ID);
+        if (appInstallationId == null) {
+            appInstallationId =
+                    CaixaRegistrationDataGenerator.generateAppInstallationId(username, false);
+            if (StringUtils.isNotEmpty(username)) {
+                persistentStorage.put(PermStorage.APP_INSTALLATION_ID, appInstallationId);
+            }
+        }
+        return appInstallationId;
     }
 }

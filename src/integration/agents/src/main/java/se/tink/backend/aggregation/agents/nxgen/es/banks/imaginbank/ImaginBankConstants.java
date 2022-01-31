@@ -178,10 +178,8 @@ public class ImaginBankConstants {
     }
 
     public static final class HeaderValues {
-        public static final String CACHE_CONTROL_VALUE = "no-cache";
-        public static final String ACCEPT_ENCODING_VALUE = "gzip, deflate";
-        public static final String HOST_VALUE = "api.imagin.com";
-        public static final String CONNECTION_VALUE = "Connection";
+        public static final String UA_PREFIX = "no-cache";
+        public static final String UA_APP_VERSION = "4.13.2";
     }
 
     public static final class HeaderKeys {
@@ -191,24 +189,6 @@ public class ImaginBankConstants {
         public static final String ACCEPT_ENCODING = "Accept-Encoding";
         public static final String HOST = "Host";
         public static final String CONNECTION = "keep-alive";
-    }
-
-    public static final class UserAgentValues {
-        public static final String UA_APP_NAME_PREFIX = "IMAGINBANK_";
-        public static final String UA_E_CONSTANT = "e";
-        public static final String UA_SHORT_COMPANY = "APPL";
-        public static final String UA_IPHONE_BRAND = "_IPHONE_";
-        public static final String UA_IPAD_BRAND = "_IPAD_";
-        public static final String UA_IPHONE_INDICATOR = "I";
-        public static final String UA_IPAD_INDICATOR = "P";
-        public static final String UA_COMPANY = "_Apple_";
-        public static final String UA_ADAM = "_ADAM";
-        public static final String UA_IOS_VERSION = "14.4.2";
-        public static final String UA_APP_VERSION = "4.13.2";
-        public static final String UA_SHORT_PHONE_MODEL = "h10,4";
-        public static final String UA_PHONE_MODEL = "iPhone10,4";
-
-        public static final String APP_NAME_AND_VARIANT = "es.lacaixa.mobile.imaginBank_iPhone";
     }
 
     public static final class EnrollmentValues {
