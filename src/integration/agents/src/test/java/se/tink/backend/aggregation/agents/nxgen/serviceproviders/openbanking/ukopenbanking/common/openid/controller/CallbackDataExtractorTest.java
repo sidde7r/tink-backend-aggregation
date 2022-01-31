@@ -13,12 +13,12 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class MapExtractorTest {
+public class CallbackDataExtractorTest {
 
     private final String key;
     private Map<String, String> callbackData;
 
-    public MapExtractorTest(String key) {
+    public CallbackDataExtractorTest(String key) {
         this.key = key;
     }
 
@@ -37,20 +37,20 @@ public class MapExtractorTest {
 
     @Test
     public void shouldThrowNullPointerExceptionWithProperMessageWhenNullMapProvided() {
-        assertThatThrownBy(() -> MapExtractor.getCallbackElement(null, "key"))
+        assertThatThrownBy(() -> CallbackDataExtractor.get(null, "key"))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("Callback data cannot be null!");
     }
 
     @Test
     public void shouldReturnEmptyOptionalForProvidedKeys() {
-        Optional<String> element = MapExtractor.getCallbackElement(callbackData, key);
+        Optional<String> element = CallbackDataExtractor.get(callbackData, key);
         assertThat(element).isEmpty();
     }
 
     @Test
     public void shouldReturnProperElement() {
-        Optional<String> element = MapExtractor.getCallbackElement(callbackData, "key");
+        Optional<String> element = CallbackDataExtractor.get(callbackData, "key");
         assertThat(element).isPresent().hasValue("value");
     }
 }

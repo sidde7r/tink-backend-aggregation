@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Token.DEFAULT_TOKEN_LIFETIME;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Token.DEFAULT_TOKEN_LIFETIME_UNIT;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.controller.MapExtractor.getCallbackElement;
 
 import java.util.Map;
 import java.util.Optional;
@@ -115,7 +114,7 @@ public class OpenIdAuthenticationController
         errorHandler.handle(callbackData);
 
         String code =
-                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
+                CallbackDataExtractor.get(callbackData, OpenIdConstants.CallbackParams.CODE)
                         .orElseGet(
                                 () -> {
                                     log.error(
@@ -127,10 +126,11 @@ public class OpenIdAuthenticationController
                                     throw SessionError.SESSION_EXPIRED.exception();
                                 });
 
-        String state = getCallbackElement(callbackData, OpenIdConstants.Params.STATE).orElse(null);
+        String state =
+                CallbackDataExtractor.get(callbackData, OpenIdConstants.Params.STATE).orElse(null);
 
         Optional<String> idToken =
-                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN);
+                CallbackDataExtractor.get(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN);
 
         if (idToken.isPresent()) {
             authenticationValidator.validateIdToken(idToken.get(), code, state);

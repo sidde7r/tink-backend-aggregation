@@ -7,7 +7,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors.SERVER_ERROR;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors.TEMPORARILY_UNAVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors.UNAUTHORISED;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.controller.MapExtractor.getCallbackElement;
 
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +32,7 @@ final class OpenIdAuthenticationErrorHandler implements ErrorHandler {
     @Override
     public void handle(Map<String, String> callbackData) {
         Optional<String> error =
-                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR);
+                CallbackDataExtractor.get(callbackData, OpenIdConstants.CallbackParams.ERROR);
 
         if (!error.isPresent()) {
             log.info("[OpenIdAuthenticationErrorHandler] OpenId callback success.");
@@ -49,7 +48,8 @@ final class OpenIdAuthenticationErrorHandler implements ErrorHandler {
 
         String errorType = error.orElse("");
         String errorDescription =
-                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR_DESCRIPTION)
+                CallbackDataExtractor.get(
+                                callbackData, OpenIdConstants.CallbackParams.ERROR_DESCRIPTION)
                         .orElse("");
 
         if (errorType.equalsIgnoreCase(ACCESS_DENIED)

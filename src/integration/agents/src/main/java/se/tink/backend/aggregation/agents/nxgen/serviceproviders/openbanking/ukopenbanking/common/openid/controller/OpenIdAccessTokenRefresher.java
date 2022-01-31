@@ -6,7 +6,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -17,13 +16,22 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.retrypolicy.RetryExecutor;
+import se.tink.libraries.retrypolicy.RetryPolicy;
 
-@RequiredArgsConstructor
 @Slf4j
 final class OpenIdAccessTokenRefresher implements AccessTokenRefresher {
 
     private final OpenIdApiClient openIdApiClient;
     private final Credentials credentials;
+    private final RetryExecutor retryExecutor;
+
+    public OpenIdAccessTokenRefresher(OpenIdApiClient openIdApiClient, Credentials credentials) {
+        this.openIdApiClient = openIdApiClient;
+        this.credentials = credentials;
+        this.retryExecutor = new RetryExecutor();
+        this.retryExecutor.setRetryPolicy(new RetryPolicy(2, RuntimeException.class));
+    }
 
     @Override
     public OAuth2Token refresh(OAuth2Token oAuth2Token) throws SessionException {
@@ -52,7 +60,10 @@ final class OpenIdAccessTokenRefresher implements AccessTokenRefresher {
 
         try {
             OAuth2Token refreshedOAuth2Token =
-                    openIdApiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS);
+                    retryExecutor.execute(
+                            () ->
+                                    openIdApiClient.refreshAccessToken(
+                                            refreshToken, ClientMode.ACCOUNTS));
 
             if (!refreshedOAuth2Token.isValid()) {
                 log.warn(
