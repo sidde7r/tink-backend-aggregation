@@ -481,7 +481,7 @@ clients:
 
 eidasProxy:
   useEidasProxyQsealcSignerHttpClient: true
-  eidasProxyQsealcSignerHttpClientRate: "0.01"
+  eidasProxyQsealcSignerHttpClientRate: "0.5"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"

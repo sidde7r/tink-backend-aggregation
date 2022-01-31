@@ -530,9 +530,12 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         requestExecutor.setEidasProxyConfiguration(eidasProxyConfiguration);
     }
 
+    /**
+     * Timeout limit does not work for initial proxy connection (bug in library). Consider using
+     * {@link se.tink.libraries.retrypolicy.RetryExecutor}{} on your request as a workaround
+     */
     public void setTimeout(int milliseconds) {
         Preconditions.checkState(this.internalClient == null);
-        // Note: Timeout on an initial proxy connection does not work (bug in library)
 
         // `CoreConnectionPNames.SO_TIMEOUT` is taken from the SEB agent to fix timeout problems.
         this.internalClientConfig
