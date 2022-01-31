@@ -476,6 +476,8 @@ clients:
     aggregatorIdentifier: "Xero"
   uk-openwrks-production:
     aggregatorIdentifier: "OpenWrks MyBudget"
+  slimpay-production:
+    aggregatorIdentifier: "SlimPay"
 
 eidasProxy:
   useEidasProxyQsealcSignerHttpClient: true
