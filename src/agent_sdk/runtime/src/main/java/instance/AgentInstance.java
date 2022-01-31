@@ -13,12 +13,11 @@ public class AgentInstance {
     private final Class<?> agentClass;
     private final Object instance;
 
-    public AgentInstance(AgentEnvironment environment, Class<?> agentClass)
-            throws AgentInstantiationException {
+    private AgentInstance(AgentEnvironment environment, Class<?> agentClass, Object instance) {
         this.environment =
                 Preconditions.checkNotNull(environment, "Agent environment cannot be null.");
         this.agentClass = Preconditions.checkNotNull(agentClass, "Agent class cannot be null.");
-        this.instance = instantiateAgentClass(environment, agentClass);
+        this.instance = Preconditions.checkNotNull(instance, "Agent instance cannot be null.");
     }
 
     public AgentEnvironment getEnvironment() {
@@ -40,7 +39,7 @@ public class AgentInstance {
         return Optional.of(tCast);
     }
 
-    private Object instantiateAgentClass(AgentEnvironment environment, Class<?> agentClass)
+    private static Object instantiateAgentClass(AgentEnvironment environment, Class<?> agentClass)
             throws AgentInstantiationException {
         AgentEnvironmentModule environmentModule = new AgentEnvironmentModule(environment);
 
@@ -50,6 +49,17 @@ public class AgentInstance {
         } catch (ConfigurationException | ProvisionException e) {
             throw new AgentInstantiationException(e);
         }
+    }
+
+    public static AgentInstance createFromClass(AgentEnvironment environment, Class<?> agentClass)
+            throws AgentInstantiationException {
+        Object agentInstance = instantiateAgentClass(environment, agentClass);
+        return new AgentInstance(environment, agentClass, agentInstance);
+    }
+
+    public static AgentInstance createFromInstance(
+            AgentEnvironment environment, Class<?> agentClass, Object agentInstance) {
+        return new AgentInstance(environment, agentClass, agentInstance);
     }
 
     public static class AgentInstantiationException extends Exception {
