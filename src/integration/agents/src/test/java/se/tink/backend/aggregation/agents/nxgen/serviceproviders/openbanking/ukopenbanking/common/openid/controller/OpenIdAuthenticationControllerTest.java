@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -245,7 +246,9 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         assertThat(throwable)
-                .isExactlyInstanceOf(ThirdPartyAppError.CANCELLED.exception().getClass())
+                .isInstanceOfSatisfying(
+                        ThirdPartyAppException.class,
+                        e -> assertThat(e.getError()).isEqualTo(ThirdPartyAppError.CANCELLED))
                 .hasMessage(ErrorDescriptions.SERVER_ERROR_PROCESSING);
     }
 
@@ -271,7 +274,9 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         assertThat(throwable)
-                .isExactlyInstanceOf(BankServiceError.BANK_SIDE_FAILURE.exception().getClass())
+                .isInstanceOfSatisfying(
+                        BankServiceException.class,
+                        e -> assertThat(e.getError()).isEqualTo(BankServiceError.BANK_SIDE_FAILURE))
                 .hasMessage("Description of some other server error");
     }
 

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -13,16 +14,19 @@ import ch.qos.logback.core.read.ListAppender;
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.assertj.core.groups.Tuple;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
@@ -33,11 +37,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnitParamsRunner.class)
 public class OpenIdAuthenticationErrorHandlerTest {
 
-    @Mock private PersistentStorage persistentStorage;
-    @Mock private OpenIdApiClient openIdApiClient;
+    private OpenIdApiClient openIdApiClient;
     private OpenIdAuthenticationErrorHandler errorHandler;
     private ListAppender<ILoggingEvent> listAppender;
 
@@ -47,14 +50,18 @@ public class OpenIdAuthenticationErrorHandlerTest {
         listAppender = new ListAppender<>();
         listAppender.start();
         log.addAppender(listAppender);
+        PersistentStorage persistentStorage = mock(PersistentStorage.class);
+        openIdApiClient = mock(OpenIdApiClient.class);
         ConsentDataStorage consentDataStorage = new ConsentDataStorage(persistentStorage);
         errorHandler = new OpenIdAuthenticationErrorHandler(consentDataStorage, openIdApiClient);
     }
 
     @Test
-    public void shouldNotThrowAnyException() {
+    public void shouldOnlyLogSuccessMessageWhenCallbackDataDoesNotContainAnyError() {
         // given
+        // when
         errorHandler.handle(new HashMap<>());
+        // then
         assertThat(listAppender.list)
                 .extracting(ILoggingEvent::getFormattedMessage, ILoggingEvent::getLevel)
                 .containsExactly(
@@ -64,100 +71,79 @@ public class OpenIdAuthenticationErrorHandlerTest {
     }
 
     @Test
-    public void shouldThrowIncorrectCredentialsExceptionWhenAccessDenied() {
+    @Parameters
+    public void shouldThrowIncorrectCredentialsException(Map<String, String> callbackData) {
         // given
-        Map<String, String> callbackData = ImmutableMap.of("error", "access_denied");
         // when
+        ThrowingCallable throwingCallable = () -> errorHandler.handle(callbackData);
         // then
-        assertThatThrownBy(() -> errorHandler.handle(callbackData))
+        assertThatThrownBy(throwingCallable)
                 .isInstanceOfSatisfying(
                         LoginException.class,
                         e -> assertThat(e.getError()).isEqualTo(LoginError.INCORRECT_CREDENTIALS));
         verify(openIdApiClient, times(1)).storeOpenIdError(any(ErrorEntity.class));
     }
 
-    @Test
-    public void shouldThrowIncorrectCredentialsExceptionWhenLoginIsNotProvided() {
-        // given
-        Map<String, String> callbackData = ImmutableMap.of("error", "login_required");
-        // when
-        // then
-        assertThatThrownBy(() -> errorHandler.handle(callbackData))
-                .isInstanceOfSatisfying(
-                        LoginException.class,
-                        e -> assertThat(e.getError()).isEqualTo(LoginError.INCORRECT_CREDENTIALS));
-        verify(openIdApiClient, times(1)).storeOpenIdError(any(ErrorEntity.class));
+    public Object[] parametersForShouldThrowIncorrectCredentialsException() {
+        return new Object[] {
+            ImmutableMap.of("error", "access_denied"), ImmutableMap.of("error", "login_required")
+        };
     }
 
     @Test
-    public void shouldThrowThirdPartyErrorCancelledWhenServerErrorOccursAndDescriptionIsNotEmpty() {
+    @Parameters
+    public void shouldThrowException(
+            Map<String, String> providedCallbackData,
+            Class<? extends AgentException> expectedExceptionClass,
+            AgentError expectedError,
+            String expectedMessage) {
         // given
-        Map<String, String> callbackData =
+        // when
+        ThrowingCallable throwingCallable = () -> errorHandler.handle(providedCallbackData);
+        // then
+        assertThatThrownBy(throwingCallable)
+                .isInstanceOfSatisfying(
+                        expectedExceptionClass,
+                        e -> assertThat(e.getError()).isEqualTo(expectedError))
+                .hasMessage(expectedMessage);
+    }
+
+    public Object[] parametersForShouldThrowException() {
+        return new Object[] {
+            new Object[] {
+                ImmutableMap.of("error", "server_error"),
+                BankServiceException.class,
+                BankServiceError.BANK_SIDE_FAILURE,
+                ""
+            },
+            new Object[] {
+                ImmutableMap.of("error", "temporarily_unavailable"),
+                BankServiceException.class,
+                BankServiceError.NO_BANK_SERVICE,
+                ""
+            },
+            new Object[] {
+                ImmutableMap.of("error", "401 Unauthorised"),
+                BankServiceException.class,
+                BankServiceError.SESSION_TERMINATED,
+                ""
+            },
+            new Object[] {
                 ImmutableMap.<String, String>builder()
                         .put("error", "server_error")
                         .put("error_description", "server_error_processing")
-                        .build();
-        // when
-        // then
-        assertThatThrownBy(() -> errorHandler.handle(callbackData))
-                .isInstanceOfSatisfying(
-                        ThirdPartyAppException.class,
-                        e -> assertThat(e.getError()).isEqualTo(ThirdPartyAppError.CANCELLED))
-                .hasMessage("server_error_processing");
-    }
-
-    @Test
-    public void shouldThrowBankSideFailureExceptionWhenServerErrorOccursAndDescriptionIsEmpty() {
-        // given
-        Map<String, String> callbackData = ImmutableMap.of("error", "server_error");
-        // when
-        // then
-        assertThatThrownBy(() -> errorHandler.handle(callbackData))
-                .isInstanceOfSatisfying(
-                        BankServiceException.class,
-                        e -> assertThat(e.getError()).isEqualTo(BankServiceError.BANK_SIDE_FAILURE))
-                .hasMessage("");
-    }
-
-    @Test
-    public void shouldThrowNoBankServiceExceptionWhenServiceTemporarilyUnavailable() {
-        // given
-        Map<String, String> callbackData = ImmutableMap.of("error", "temporarily_unavailable");
-        // when
-        // then
-        assertThatThrownBy(() -> errorHandler.handle(callbackData))
-                .isInstanceOfSatisfying(
-                        BankServiceException.class,
-                        e -> assertThat(e.getError()).isEqualTo(BankServiceError.NO_BANK_SERVICE))
-                .hasMessage("");
-    }
-
-    @Test
-    public void shouldThrowSessionTerminatedExceptionWhenUnauthorisedRequest() {
-        // given
-        Map<String, String> callbackData = ImmutableMap.of("error", "401 Unauthorised");
-        // when
-        // then
-        assertThatThrownBy(() -> errorHandler.handle(callbackData))
-                .isInstanceOfSatisfying(
-                        BankServiceException.class,
-                        e ->
-                                assertThat(e.getError())
-                                        .isEqualTo(BankServiceError.SESSION_TERMINATED))
-                .hasMessage("");
-    }
-
-    @Test
-    public void shouldThrowConsentInvalidExceptionWhenInvalidIntentIdProvided() {
-        // given
-        Map<String, String> callbackData =
-                ImmutableMap.of("error", "invalid_openbanking_intent_id");
-        // when
-        // then
-        assertThatThrownBy(() -> errorHandler.handle(callbackData))
-                .isInstanceOfSatisfying(
-                        SessionException.class,
-                        e -> assertThat(e.getError()).isEqualTo(SessionError.CONSENT_INVALID));
+                        .build(),
+                ThirdPartyAppException.class,
+                ThirdPartyAppError.CANCELLED,
+                "server_error_processing"
+            },
+            new Object[] {
+                ImmutableMap.of("error", "invalid_openbanking_intent_id"),
+                SessionException.class,
+                SessionError.CONSENT_INVALID,
+                "Cause: SessionError.CONSENT_INVALID"
+            }
+        };
     }
 
     @Test
@@ -165,8 +151,9 @@ public class OpenIdAuthenticationErrorHandlerTest {
         // given
         Map<String, String> callbackData = ImmutableMap.of("error", "dummyError");
         // when
+        ThrowingCallable throwingCallable = () -> errorHandler.handle(callbackData);
         // then
-        assertThatThrownBy(() -> errorHandler.handle(callbackData))
+        assertThatThrownBy(throwingCallable)
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessageContaining(
                         "[OpenIdAuthenticationErrorHandler] Unknown error with details:");
