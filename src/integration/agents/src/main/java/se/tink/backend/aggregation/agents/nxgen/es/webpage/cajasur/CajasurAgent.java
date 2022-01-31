@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.CajasurAuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.CajasurAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.PasswordVirtualKeyboardOcr;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -35,9 +34,7 @@ public class CajasurAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
         return new CajasurAuthenticator(
-                new CajasurAuthenticationApiClient(
-                        client, sessionStorage, new PasswordVirtualKeyboardOcr()),
-                sessionStorage);
+                new CajasurAuthenticationApiClient(client, sessionStorage), sessionStorage);
     }
 
     @Override

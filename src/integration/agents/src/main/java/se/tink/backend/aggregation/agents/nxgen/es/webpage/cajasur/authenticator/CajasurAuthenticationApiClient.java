@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.ObfuscatedLoginJavaScriptFetchRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.PasswordVirtualKeyboardImageFetchRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.SegmentIdFetchRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.PasswordVirtualKeyboardOcr;
+import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.LoginVirtualKeyboardOcr;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.mainview.MainViewRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.mainview.PostLoginFormSubmitRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -26,7 +26,6 @@ public class CajasurAuthenticationApiClient {
 
     private final TinkHttpClient tinkHttpClient;
     private final SessionStorage sessionStorage;
-    private final PasswordVirtualKeyboardOcr passwordVirtualKeyboardOcr;
 
     public String callForSegmentId() {
         return Optional.ofNullable(
@@ -59,7 +58,10 @@ public class CajasurAuthenticationApiClient {
     }
 
     public String callLogin(LoginRequestParams params) {
-        return new LoginRequest(AUTH_PROCESSING_URL_DOMAIN, passwordVirtualKeyboardOcr, params)
+        return new LoginRequest(
+                        AUTH_PROCESSING_URL_DOMAIN,
+                        new LoginVirtualKeyboardOcr(params.getPasswordVirtualKeyboardImage()),
+                        params)
                 .call(tinkHttpClient, sessionStorage);
     }
 

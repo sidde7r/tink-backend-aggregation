@@ -14,8 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurTestConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.PasswordVirtualKeyboardOcr;
-import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.VirtualKeyboardImageParameters;
+import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.LoginVirtualKeyboardOcr;
 import se.tink.backend.aggregation.nxgen.http.CookieRepository;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
@@ -29,17 +28,13 @@ public class LoginRequestTest extends WireMockIntegrationTest {
 
     @Mock private BufferedImage passwordVirtualKeyboard;
 
-    @Mock private PasswordVirtualKeyboardOcr passwordVirtualKeyboardOcr;
+    @Mock private LoginVirtualKeyboardOcr passwordVirtualKeyboardOcr;
 
     private SessionStorage sessionStorage = new SessionStorage();
 
     @Before
     public void init() {
-        Mockito.when(
-                        passwordVirtualKeyboardOcr.getNumbersSequenceFromImage(
-                                passwordVirtualKeyboard,
-                                PASSWORD,
-                                VirtualKeyboardImageParameters.createEnterpriseConfiguration()))
+        Mockito.when(passwordVirtualKeyboardOcr.getVirtualKeyboardValueForNumbersSequence(PASSWORD))
                 .thenReturn("092809");
         CookieRepository cookieRepository = CookieRepository.getInstance(sessionStorage);
         cookieRepository.addCookie("JSESSIONID", "324532345345");
