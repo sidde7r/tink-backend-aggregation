@@ -13,6 +13,7 @@ public abstract class StatelessProgressiveAuthenticator {
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private AuthenticationStep currentStep;
+    private List<AuthenticationStep> authenticationSteps;
 
     public SteppableAuthenticationResponse processAuthentication(
             final SteppableAuthenticationRequest request)
@@ -51,9 +52,9 @@ public abstract class StatelessProgressiveAuthenticator {
             return Optional.of(
                     getStepById(steppableAuthenticationRequest.getStepIdentifier().get()));
         } else {
-            return authenticationSteps().isEmpty()
+            return getAuthenticationSteps().isEmpty()
                     ? Optional.empty()
-                    : Optional.of(authenticationSteps().get(0));
+                    : Optional.of(getAuthenticationSteps().get(0));
         }
     }
 
@@ -67,7 +68,7 @@ public abstract class StatelessProgressiveAuthenticator {
     }
 
     private AuthenticationStep getStepById(String stepId) {
-        List<AuthenticationStep> authSteps = authenticationSteps();
+        List<AuthenticationStep> authSteps = getAuthenticationSteps();
         return authSteps.stream()
                 .filter(s -> s.getIdentifier().equals(stepId))
                 .findAny()
@@ -78,12 +79,19 @@ public abstract class StatelessProgressiveAuthenticator {
     }
 
     private Optional<AuthenticationStep> getStepNextToCurrent() {
-        List<AuthenticationStep> authSteps = authenticationSteps();
+        List<AuthenticationStep> authSteps = getAuthenticationSteps();
         int currentStepId = authSteps.indexOf(currentStep);
         if (currentStepId < authSteps.size() - 1) {
             return Optional.of(authSteps.get(currentStepId + 1));
         }
         return Optional.empty();
+    }
+
+    private List<AuthenticationStep> getAuthenticationSteps() {
+        if (authenticationSteps == null) {
+            authenticationSteps = authenticationSteps();
+        }
+        return authenticationSteps;
     }
 
     public abstract List<AuthenticationStep> authenticationSteps();

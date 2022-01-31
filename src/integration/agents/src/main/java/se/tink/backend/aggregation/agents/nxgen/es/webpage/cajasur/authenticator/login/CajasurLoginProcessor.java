@@ -20,7 +20,7 @@ public class CajasurLoginProcessor implements CredentialsAuthenticationStep.Call
     public AuthenticationStepResponse process(Credentials credentials)
             throws AuthenticationException {
         String segmentId = cajasurApiClient.callForSegmentId();
-        String obfuscatedLoginJavaScript = cajasurApiClient.encryptObfuscatedLogin();
+        String obfuscatedLoginJavaScript = cajasurApiClient.callForEncryptObfuscatedLoginJS();
         BufferedImage passwordVirtualKeyboardImage =
                 cajasurApiClient.callForPasswordVirtualKeyboardImage();
         CajasurSessionState.getInstance(sessionStorage)

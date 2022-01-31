@@ -20,6 +20,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:commons_io_commons_io",
         "//third_party:lombok_libs",
+        "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_mozilla_rhino",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

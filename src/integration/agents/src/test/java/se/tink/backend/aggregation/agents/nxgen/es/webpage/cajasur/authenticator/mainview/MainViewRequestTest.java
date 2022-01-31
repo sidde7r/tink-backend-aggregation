@@ -9,9 +9,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurTestConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
 
 public class MainViewRequestTest extends WireMockIntegrationTest {
+
+    private SessionStorage sessionStorage = new SessionStorage();
 
     @Test
     public void shouldReturnMainPageHtmlBody() throws IOException {
@@ -44,7 +47,7 @@ public class MainViewRequestTest extends WireMockIntegrationTest {
                                         + "/NASApp/BesaideNet2/pages/login/entradaBanca.iface?destino=resumen.home"));
 
         // when
-        String result = objectUnderTest.call(httpClient);
+        String result = objectUnderTest.call(httpClient, sessionStorage);
 
         // then
         Assertions.assertThat(result).contains("Bienvenidos al Portal de CajaSur");
