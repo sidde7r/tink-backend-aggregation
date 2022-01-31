@@ -16,10 +16,12 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
@@ -33,7 +35,7 @@ public class LaCaixaApiClientTest {
         return ErrorCode.ACCOUNT_BLOCKED;
     }
 
-    private static final String INSTALLATION_ID = "0000000";
+    private static final String DUMMY_USERNAME = "dummyUsername";
     private static final String UNKNOWN_ERROR_CODE = "666";
 
     private LaCaixaApiClient caixaApiClient;
@@ -42,7 +44,12 @@ public class LaCaixaApiClientTest {
     @Before
     public void setUp() {
         httpClientMock = mock(TinkHttpClient.class);
-        caixaApiClient = new LaCaixaApiClient(httpClientMock, INSTALLATION_ID);
+        caixaApiClient =
+                new LaCaixaApiClient(
+                        httpClientMock,
+                        mock(PersistentStorage.class),
+                        DUMMY_USERNAME,
+                        mock(RandomValueGenerator.class));
     }
 
     @Test

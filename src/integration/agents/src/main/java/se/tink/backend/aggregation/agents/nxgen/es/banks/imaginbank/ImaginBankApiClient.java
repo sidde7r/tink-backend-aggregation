@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.EnrollmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.EnrollmentScaRequest;
@@ -37,7 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.rpc.ImaginBankErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.utils.ImaginBankRegistrationDataGenerator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.caixa.utils.CaixaRegistrationDataGenerator;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -238,8 +239,11 @@ public class ImaginBankApiClient {
         String userAgent = persistentStorage.get(USER_AGENT_ID);
         if (userAgent == null) {
             userAgent =
-                    ImaginBankRegistrationDataGenerator.generateUserAgent(
-                            imaginBankSessionStorage.getUsername(), false);
+                    CaixaRegistrationDataGenerator.generateUserAgent(
+                            imaginBankSessionStorage.getUsername(),
+                            false,
+                            HeaderValues.UA_PREFIX,
+                            HeaderValues.UA_APP_VERSION);
             if (StringUtils.isNotEmpty(imaginBankSessionStorage.getUsername())) {
                 persistentStorage.put(USER_AGENT_ID, userAgent);
             }
@@ -251,7 +255,7 @@ public class ImaginBankApiClient {
         String appInstallationId = persistentStorage.get(APP_INSTALLATION_ID);
         if (appInstallationId == null) {
             appInstallationId =
-                    ImaginBankRegistrationDataGenerator.generateAppInstallationId(
+                    CaixaRegistrationDataGenerator.generateAppInstallationId(
                             imaginBankSessionStorage.getUsername(), false);
             if (StringUtils.isNotEmpty(imaginBankSessionStorage.getUsername())) {
                 persistentStorage.put(APP_INSTALLATION_ID, appInstallationId);

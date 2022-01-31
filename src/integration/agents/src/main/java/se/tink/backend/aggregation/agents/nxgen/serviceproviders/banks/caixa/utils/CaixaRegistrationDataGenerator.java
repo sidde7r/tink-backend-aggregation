@@ -1,26 +1,24 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.utils;
-
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.APP_NAME_AND_VARIANT;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_ADAM;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_APP_NAME_PREFIX;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_APP_VERSION;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_COMPANY;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_E_CONSTANT;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_IOS_VERSION;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_IPAD_BRAND;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_IPAD_INDICATOR;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_IPHONE_BRAND;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_IPHONE_INDICATOR;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_PHONE_MODEL;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_SHORT_COMPANY;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.UserAgentValues.UA_SHORT_PHONE_MODEL;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.caixa.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.UUID;
 
-public class ImaginBankRegistrationDataGenerator {
+public class CaixaRegistrationDataGenerator {
+    private static final String UA_E_CONSTANT = "e";
+    private static final String UA_SHORT_COMPANY = "APPL";
+    private static final String UA_IPHONE_BRAND = "_IPHONE_";
+    private static final String UA_IPAD_BRAND = "_IPAD_";
+    private static final String UA_IPHONE_INDICATOR = "I";
+    private static final String UA_IPAD_INDICATOR = "P";
+    private static final String UA_COMPANY = "_Apple_";
+    private static final String UA_ADAM = "_ADAM";
+    private static final String UA_IOS_VERSION = "14.4.2";
+    private static final String UA_SHORT_PHONE_MODEL = "h10,4";
+    private static final String UA_PHONE_MODEL = "iPhone10,4";
+
+    private static final String APP_NAME_AND_VARIANT = "es.lacaixa.mobile.imaginBank_iPhone";
 
     /**
      * identifier = appNameAndVariant + deviceIdentifier appNameAndVariant =
@@ -71,12 +69,13 @@ public class ImaginBankRegistrationDataGenerator {
      * @param iPad
      * @return
      */
-    public static String generateUserAgent(String username, boolean iPad) {
+    public static String generateUserAgent(
+            String username, boolean iPad, String appNamePrefix, String appVersion) {
         String brand = iPad ? UA_IPAD_BRAND : UA_IPHONE_BRAND;
-        return UA_APP_NAME_PREFIX
+        return appNamePrefix
                 + generateAppInstallationId(username, iPad)
                 + brand
-                + UA_APP_VERSION
+                + appVersion
                 + UA_COMPANY
                 + UA_PHONE_MODEL
                 + "_"

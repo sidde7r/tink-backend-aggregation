@@ -191,6 +191,13 @@ public final class LaCaixaConstants {
         public static final String ENROLMENT_CODE = "enrolmentCode";
     }
 
+    public static class PermStorage {
+        private PermStorage() {}
+
+        public static final String USER_AGENT = "userAgent";
+        public static final String APP_INSTALLATION_ID = "appInstallationId";
+    }
+
     public static class UserData {
         private UserData() {}
 
@@ -237,5 +244,10 @@ public final class LaCaixaConstants {
         public static final String ACCESS_DEACTIVATED = "0207";
         public static final String ATTEMPS_EXCEEDED = "0246";
         public static final String UNKNOWN_ISSUE = "1575";
+    }
+
+    public static final class HeaderKeys {
+        public static final String USER_AGENT = "User-Agent";
+        public static final String X_REQUEST_ID = "X-Request-Id";
     }
 }
