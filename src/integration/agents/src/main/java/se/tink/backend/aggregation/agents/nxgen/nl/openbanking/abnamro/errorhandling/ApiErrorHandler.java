@@ -102,24 +102,34 @@ public final class ApiErrorHandler {
     }
 
     private static void tryHandleOAuth2ErrorResponse(HttpResponseException e) {
-        if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
-                && MediaType.APPLICATION_JSON_TYPE.equals(e.getResponse().getType())
-                && e.getResponse().getBody(OAuth2ErrorResponse.class).isInvalidGrant()) {
-            throw SessionError.CONSENT_INVALID.exception();
+        if (isInvalidGrantError(e)) {
+            throw SessionError.CONSENT_INVALID.exception(
+                    "Unknown, invalid, or expired refresh token");
         } else {
             log.error("[ABN] Unhandled issue in OAuth2 communication - please add handling!");
         }
     }
 
+    private static boolean isInvalidGrantError(HttpResponseException e) {
+        return e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                && MediaType.APPLICATION_JSON_TYPE.isCompatible(e.getResponse().getType())
+                && e.getResponse().getBody(OAuth2ErrorResponse.class) != null
+                && e.getResponse().getBody(OAuth2ErrorResponse.class).isInvalidGrant();
+    }
+
     private static void tryHandleErrorResponse(HttpResponseException e) {
         if (MediaType.APPLICATION_JSON_TYPE.equals(e.getResponse().getType())) {
             ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-            if (CollectionUtils.isNotEmpty(errorResponse.getErrors())) {
+            if (isNotEmpty(errorResponse)) {
                 Errors error = errorResponse.getErrors().get(0);
                 handleBankSideIssues(e, error);
                 handleCustomerIssues(e, error);
             }
-        } else throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+    }
+
+    private static boolean isNotEmpty(ErrorResponse errorResponse) {
+        return errorResponse != null && CollectionUtils.isNotEmpty(errorResponse.getErrors());
     }
 
     private static void handleBankSideIssues(HttpResponseException e, Errors error) {
