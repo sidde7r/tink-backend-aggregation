@@ -17,7 +17,7 @@ public class NemIdDemoPasswordField {
                 .maxLength(40)
                 .pattern("^(\\d{4}|[a-zA-Z0-9{}!#\"$'%^&,*()_+\\-=:;?.@]{6,40})$")
                 .patternError(
-                        "Must be between 4 and 40 characters\\nMay not begin or end with a blank character\\nMay not contain certain special characters, such as æ, ø, å")
+                        "Must be between 4 and 40 characters\nMay not begin or end with a blank character\nMay not contain certain special characters, such as æ, ø, å")
                 .build();
     }
 }
