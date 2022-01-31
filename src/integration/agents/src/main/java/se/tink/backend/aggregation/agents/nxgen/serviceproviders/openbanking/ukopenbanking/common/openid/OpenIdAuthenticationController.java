@@ -185,7 +185,8 @@ public class OpenIdAuthenticationController
                             + "validation - no token provided");
         }
 
-        OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
+        OAuth2Token oAuth2Token = retryExecutor.execute(() -> apiClient.exchangeAccessCode(code));
+
         log.info(
                 "[OpenIdAuthenticationController] OAuth2 token received from bank: {}",
                 oAuth2Token.toMaskedString(logMasker));
