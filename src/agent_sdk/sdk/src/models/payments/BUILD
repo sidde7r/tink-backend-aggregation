@@ -1,23 +1,16 @@
-alias(
-    name = "payment_rpc",
-    actual = "//src/integration/payment:rpc",
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
-)
+load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
-alias(
-    name = "payment_enums",
-    actual = "//src/integration/payment:enums",
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
-)
-
-alias(
-    name = "transfer_rpc",
-    actual = "//src/integration/transfer:rpc",
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
-)
-
-alias(
-    name = "transfer_enums",
-    actual = "//src/integration/transfer:enums",
+java_library_with_sources(
+    name = "payments",
+    srcs = glob(["**/*.java"]),
+    extdeps = [
+        "@aggregation//:com_google_code_findbugs_jsr305",
+        "@aggregation//:com_google_guava_guava",
+    ],
+    intdeps = [
+        "//src/agent_sdk/sdk/src/storage",
+        "//src/integration/amount",
+        "@tink_backend//src/libraries/account_identifier",
+    ],
     visibility = ["//src/agent_sdk/sdk:__subpackages__"],
 )

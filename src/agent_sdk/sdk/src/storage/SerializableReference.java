@@ -2,6 +2,7 @@ package se.tink.agent.sdk.storage;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.Optional;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
@@ -17,18 +18,13 @@ public class SerializableReference implements Reference {
     }
 
     @Override
-    public String get() {
-        return this.get(String.class);
+    public Optional<String> tryGet() {
+        return this.tryGet(String.class);
     }
 
     @Override
-    public <T> T get(Class<T> referenceType) {
-        return this.storage
-                .tryGet(STORAGE_KEY, referenceType)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "The Reference could not be found or failed to be deserialized."));
+    public <T> Optional<T> tryGet(Class<T> referenceType) {
+        return this.storage.tryGet(STORAGE_KEY, referenceType);
     }
 
     public static SerializableReference from(String reference) {
