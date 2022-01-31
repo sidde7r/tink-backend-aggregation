@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBranchMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.handler.CreditAgricoleResponseStatusHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.payment.CreditAgricolePaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.AccountConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseCreditCardsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseTransactionalAccountFetcher;
@@ -63,6 +64,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditAgricoleBranchConfiguration branchConfiguration;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final AccountConsentManager accountConsentManager;
 
     public CreditAgricoleBaseAgent(
             AgentComponentProvider componentProvider,
@@ -77,7 +79,6 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
 
         this.agentConfiguration = getAgentConfiguration();
         this.creditAgricoleConfiguration = agentConfiguration.getProviderSpecificConfiguration();
-
         this.client.addFilter(new TimeoutFilter());
         this.client.setResponseStatusHandler(new CreditAgricoleResponseStatusHandler());
 
@@ -94,6 +95,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         this.agentConfiguration, qSealSignatureProvider);
         this.client.addFilter(creditAgricoleBaseMessageSignInterceptor);
 
+        this.accountConsentManager = new AccountConsentManager(apiClient);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
         this.creditCardRefreshController =
@@ -184,7 +186,10 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CreditAgricoleBaseTransactionalAccountFetcher accountFetcher =
                 new CreditAgricoleBaseTransactionalAccountFetcher(
-                        apiClient, persistentStorage, Clock.system(ZoneId.of("CET")));
+                        apiClient,
+                        persistentStorage,
+                        Clock.system(ZoneId.of("CET")),
+                        accountConsentManager);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -204,7 +209,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
             LocalDateTimeSource localDateTimeSource) {
         final CreditAgricoleBaseCreditCardsFetcher creditAgricoleCreditCardFetcher =
                 new CreditAgricoleBaseCreditCardsFetcher(
-                        apiClient, persistentStorage, localDateTimeSource);
+                        apiClient, persistentStorage, localDateTimeSource, accountConsentManager);
 
         return new CreditCardRefreshController(
                 this.metricRefreshController,
