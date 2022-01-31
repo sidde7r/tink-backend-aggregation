@@ -30,11 +30,9 @@ public class BnlAgentPaymentTest {
     public void setup() throws Exception {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-bnl-oauth2")
-                        .setFinancialInstitutionId("bnl")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink")
-                        .setOriginatingUserIp(System.getProperty("tink.ORIGINATING_USER_IP"))
                         .expectLoggedIn(false)
-                        .setClusterId("oxford-preprod")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }

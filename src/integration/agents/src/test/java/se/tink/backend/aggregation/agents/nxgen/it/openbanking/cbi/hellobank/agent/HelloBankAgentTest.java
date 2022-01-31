@@ -15,7 +15,7 @@ public class HelloBankAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("hellobank")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

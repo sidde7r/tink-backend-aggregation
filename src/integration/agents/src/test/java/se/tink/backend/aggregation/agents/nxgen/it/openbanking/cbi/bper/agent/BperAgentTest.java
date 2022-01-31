@@ -15,7 +15,7 @@ public class BperAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("bper")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

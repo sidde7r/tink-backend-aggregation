@@ -15,7 +15,7 @@ public class IspAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("isp")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

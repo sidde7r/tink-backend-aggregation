@@ -25,7 +25,7 @@ public class BpmSondrioAgentPaymentTest {
     public void setup() throws Exception {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-bpsondrio-oauth2")
-                        .setFinancialInstitutionId("bpsondrio")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)

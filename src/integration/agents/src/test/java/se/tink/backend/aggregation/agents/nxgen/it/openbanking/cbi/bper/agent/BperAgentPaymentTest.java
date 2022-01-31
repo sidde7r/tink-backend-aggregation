@@ -33,7 +33,7 @@ public class BperAgentPaymentTest {
         creditorDebtorManager.before();
         builder =
                 new AgentIntegrationTest.Builder("it", "it-bper-oauth2")
-                        .setFinancialInstitutionId("bper")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)

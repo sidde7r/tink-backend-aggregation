@@ -15,7 +15,7 @@ public class BancoPostaAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
-                        .setFinancialInstitutionId("bancoposta")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

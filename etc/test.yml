@@ -7206,6 +7206,11 @@ agentsServiceConfiguration:
         clientId: ''
         clientSecret: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    cbi:
+      tink:
+        clientId: ''
+        clientSecret: ''
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     n26:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

@@ -15,7 +15,7 @@ public class BpmAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("bpm")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

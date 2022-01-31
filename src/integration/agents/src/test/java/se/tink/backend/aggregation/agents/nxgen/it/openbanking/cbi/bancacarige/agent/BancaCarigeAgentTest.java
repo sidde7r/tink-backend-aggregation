@@ -15,7 +15,7 @@ public class BancaCarigeAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("bancacarige")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

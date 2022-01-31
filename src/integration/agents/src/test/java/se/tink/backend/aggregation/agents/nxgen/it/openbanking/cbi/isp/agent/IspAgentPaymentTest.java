@@ -32,7 +32,7 @@ public class IspAgentPaymentTest {
         creditorDebtorManager.before();
         builder =
                 new AgentIntegrationTest.Builder("it", "it-isp-oauth2")
-                        .setFinancialInstitutionId("isp")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)

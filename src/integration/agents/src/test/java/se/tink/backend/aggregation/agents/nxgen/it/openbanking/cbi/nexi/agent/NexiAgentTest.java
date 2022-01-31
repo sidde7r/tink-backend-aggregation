@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.cbi.nexi.agent;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class NexiAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -17,7 +15,7 @@ public class NexiAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("nexi")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

@@ -31,7 +31,7 @@ public class CredemAgentPaymentTest {
     public void setup() throws Exception {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-credem-oauth2")
-                        .setFinancialInstitutionId("credem")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink")
                         .setOriginatingUserIp(System.getProperty("tink.ORIGINATING_USER_IP"))
                         .expectLoggedIn(false)

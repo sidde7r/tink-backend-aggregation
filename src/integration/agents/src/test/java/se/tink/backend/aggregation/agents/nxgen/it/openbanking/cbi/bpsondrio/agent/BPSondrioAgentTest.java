@@ -15,7 +15,7 @@ public class BPSondrioAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("bpsondrio")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

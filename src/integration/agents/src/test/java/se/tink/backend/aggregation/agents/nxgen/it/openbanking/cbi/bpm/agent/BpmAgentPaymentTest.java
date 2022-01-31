@@ -31,7 +31,7 @@ public class BpmAgentPaymentTest {
     public void setup() throws Exception {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-bpm-oauth2")
-                        .setFinancialInstitutionId("bpm")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink")
                         .setOriginatingUserIp(System.getProperty("tink.ORIGINATING_USER_IP"))
                         .expectLoggedIn(false)

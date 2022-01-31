@@ -15,7 +15,7 @@ public class MpsAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("mps")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

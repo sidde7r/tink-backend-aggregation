@@ -15,7 +15,7 @@ public class WidibaAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("widiba")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

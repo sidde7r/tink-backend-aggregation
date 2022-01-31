@@ -15,7 +15,7 @@ public class FindomesticAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("findomestic")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

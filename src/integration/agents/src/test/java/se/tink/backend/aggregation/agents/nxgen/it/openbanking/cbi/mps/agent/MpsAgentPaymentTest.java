@@ -25,7 +25,7 @@ public class MpsAgentPaymentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("it", "it-mps-oauth2")
-                        .setFinancialInstitutionId("mps")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)

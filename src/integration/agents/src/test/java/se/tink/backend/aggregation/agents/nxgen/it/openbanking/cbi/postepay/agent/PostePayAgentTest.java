@@ -15,7 +15,7 @@ public class PostePayAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
-                        .setFinancialInstitutionId("postepay")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

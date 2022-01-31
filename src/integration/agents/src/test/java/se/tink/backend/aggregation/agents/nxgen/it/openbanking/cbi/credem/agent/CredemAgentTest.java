@@ -15,7 +15,7 @@ public class CredemAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("credem")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 

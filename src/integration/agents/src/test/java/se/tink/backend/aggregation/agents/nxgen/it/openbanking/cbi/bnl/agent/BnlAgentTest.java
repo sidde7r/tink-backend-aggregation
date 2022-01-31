@@ -15,7 +15,7 @@ public class BnlAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
-                        .setFinancialInstitutionId("bnl")
+                        .setFinancialInstitutionId("cbi")
                         .setAppId("tink");
     }
 
