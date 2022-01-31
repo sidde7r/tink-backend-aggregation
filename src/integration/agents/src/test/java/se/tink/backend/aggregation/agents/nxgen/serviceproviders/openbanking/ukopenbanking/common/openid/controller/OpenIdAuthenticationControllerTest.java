@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -23,9 +23,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.CallbackParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorDescriptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors;
@@ -241,7 +246,9 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         assertThat(throwable)
-                .isExactlyInstanceOf(ThirdPartyAppError.CANCELLED.exception().getClass())
+                .isInstanceOfSatisfying(
+                        ThirdPartyAppException.class,
+                        e -> assertThat(e.getError()).isEqualTo(ThirdPartyAppError.CANCELLED))
                 .hasMessage(ErrorDescriptions.SERVER_ERROR_PROCESSING);
     }
 
@@ -267,7 +274,9 @@ public class OpenIdAuthenticationControllerTest {
 
         // then
         assertThat(throwable)
-                .isExactlyInstanceOf(BankServiceError.BANK_SIDE_FAILURE.exception().getClass())
+                .isInstanceOfSatisfying(
+                        BankServiceException.class,
+                        e -> assertThat(e.getError()).isEqualTo(BankServiceError.BANK_SIDE_FAILURE))
                 .hasMessage("Description of some other server error");
     }
 

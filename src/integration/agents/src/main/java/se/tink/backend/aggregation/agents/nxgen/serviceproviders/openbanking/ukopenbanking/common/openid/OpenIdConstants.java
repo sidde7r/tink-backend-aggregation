@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
 import com.google.common.collect.ImmutableList;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.TokenEndpointAuthMethod;
@@ -92,5 +94,10 @@ public class OpenIdConstants {
             public static final String ISSUER = "iss";
             public static final String AUDIENCE = "aud";
         }
+    }
+
+    public static class Token {
+        public static final int DEFAULT_TOKEN_LIFETIME = 90;
+        public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
     }
 }
