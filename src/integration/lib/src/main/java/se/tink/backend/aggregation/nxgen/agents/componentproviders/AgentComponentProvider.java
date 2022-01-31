@@ -3,9 +3,6 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders;
 import com.google.inject.Inject;
 import java.util.HashMap;
 import java.util.Optional;
-import se.tink.agent.runtime.operation.ProviderImpl;
-import se.tink.agent.runtime.operation.StaticBankCredentialsImpl;
-import se.tink.agent.runtime.operation.UserImpl;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.agent.sdk.operation.User;
@@ -35,6 +32,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.provider.UnleashClientProvider;
+import src.agent_sdk.runtime.src.operation.ProviderImpl;
+import src.agent_sdk.runtime.src.operation.StaticBankCredentialsImpl;
+import src.agent_sdk.runtime.src.operation.UserImpl;
 
 public class AgentComponentProvider
         implements TinkHttpClientProvider,

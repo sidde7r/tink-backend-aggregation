@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.agent.runtime.operation.http.ProxyProfilesImpl;
 import se.tink.agent.sdk.operation.http.ProxyProfiles;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
@@ -14,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.http.proxy.AuthenticatedProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.proxy.NoopProxyProfile;
 import se.tink.backend.aggregation.nxgen.http.proxy.ProxyProfile;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import src.agent_sdk.runtime.src.operation.http.ProxyProfilesImpl;
 
 @Slf4j
 public class ProductionProxyProfilesProvider implements ProxyProfilesProvider {

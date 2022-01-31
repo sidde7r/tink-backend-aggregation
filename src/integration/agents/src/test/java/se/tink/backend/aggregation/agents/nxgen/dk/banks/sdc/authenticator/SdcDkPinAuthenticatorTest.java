@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-import se.tink.agent.runtime.operation.ProviderImpl;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -21,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
+import src.agent_sdk.runtime.src.operation.ProviderImpl;
 
 public class SdcDkPinAuthenticatorTest {
 
