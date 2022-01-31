@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -39,6 +40,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
     protected final UnicreditBaseApiClient apiClient;
     protected final UnicreditStorage unicreditStorage;
+    protected final RandomValueGenerator randomValueGenerator;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final UnicreditTransactionsDateFromChooser unicreditTransactionsDateFromChooser;
 
@@ -51,6 +53,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         unicreditStorage = new UnicreditStorage(getPersistentStorage());
         unicreditTransactionsDateFromChooser =
                 getUnicreditTransactionsDateFromChooser(componentProvider.getLocalDateTimeSource());
+        randomValueGenerator = componentProvider.getRandomValueGenerator();
         apiClient = getApiClient(providerConfiguration, headerValues);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -69,7 +72,11 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
         return new UnicreditBaseApiClient(
-                client, unicreditStorage, providerConfiguration, headerValues);
+                client,
+                unicreditStorage,
+                providerConfiguration,
+                headerValues,
+                randomValueGenerator);
     }
 
     protected abstract UnicreditTransactionsDateFromChooser getUnicreditTransactionsDateFromChooser(

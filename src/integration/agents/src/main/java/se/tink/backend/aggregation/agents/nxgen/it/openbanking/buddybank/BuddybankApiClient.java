@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -17,8 +18,9 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
             TinkHttpClient client,
             UnicreditStorage unicreditStorage,
             UnicreditProviderConfiguration providerConfiguration,
-            UnicreditBaseHeaderValues headerValues) {
-        super(client, unicreditStorage, providerConfiguration, headerValues);
+            UnicreditBaseHeaderValues headerValues,
+            RandomValueGenerator randomValueGenerator) {
+        super(client, unicreditStorage, providerConfiguration, headerValues, randomValueGenerator);
     }
 
     @Override

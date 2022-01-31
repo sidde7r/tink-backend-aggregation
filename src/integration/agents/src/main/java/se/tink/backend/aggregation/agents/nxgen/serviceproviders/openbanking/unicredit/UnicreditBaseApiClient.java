@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
-import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -52,6 +52,7 @@ public class UnicreditBaseApiClient {
     protected final UnicreditStorage unicreditStorage;
     protected final UnicreditProviderConfiguration providerConfiguration;
     protected final UnicreditBaseHeaderValues headerValues;
+    protected final RandomValueGenerator randomValueGenerator;
 
     protected ConsentRequest getConsentRequest() {
         LocalDateTime validUntil =
@@ -86,19 +87,18 @@ public class UnicreditBaseApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
 
     private RequestBuilder createRequestInSession(URL url) {
         final String consentId = getConsentIdFromStorage();
         return createRequest(url)
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.CONSENT_ID, consentId);
     }
 
     public ConsentResponse createConsent(String state) {
         return createRequest(new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENTS))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
@@ -116,7 +116,6 @@ public class UnicreditBaseApiClient {
                                                 providerConfiguration.getBaseUrl()
                                                         + Endpoints.CONSENT_DETAILS)
                                         .parameter(PathParameters.CONSENT_ID, consentId))
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .get(HttpResponse.class);
         logLastMRHCookie(response);
 
@@ -186,7 +185,6 @@ public class UnicreditBaseApiClient {
                                         .parameter(
                                                 PathParameters.PAYMENT_PRODUCT,
                                                 getPaymentProduct(paymentRequest)))
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
@@ -219,7 +217,6 @@ public class UnicreditBaseApiClient {
                                         PathParameters.PAYMENT_PRODUCT,
                                         getPaymentProduct(paymentRequest))
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .get(FetchPaymentStatusResponse.class);
     }
 

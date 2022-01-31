@@ -16,7 +16,7 @@ public class UnicreditIconUrlMapper implements GermanFields.ScaMethodEntityToIco
     private String getUrl(AuthenticationType authenticationTypeMethod) {
         switch (authenticationTypeMethod) {
             case PUSH_OTP:
-                return "https://cdn.tink.se/provider-images/de/otp-icons/icon-authenticationType-vrSecureGo.png";
+                return "https://cdn.tink.se/provider-images/generic-otp-icons/icon-authenticationType-generic_appCode.png";
             case PHOTO_OTP:
                 return "https://cdn.tink.se/provider-images/de/otp-icons/icon-authenticationType-photoTAN.png";
             case SMS_OTP:

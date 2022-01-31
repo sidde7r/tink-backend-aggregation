@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.Authorizatio
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
-import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -35,8 +35,9 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
             UnicreditStorage unicreditStorage,
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues,
+            RandomValueGenerator randomValueGenerator,
             SessionStorage sessionStorage) {
-        super(client, unicreditStorage, providerConfiguration, headerValues);
+        super(client, unicreditStorage, providerConfiguration, headerValues, randomValueGenerator);
         this.sessionStorage = sessionStorage;
     }
 
@@ -48,9 +49,9 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
     @Override
     public UnicreditConsentResponse createConsent(String state) {
         return createRequest(new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENTS))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
-                // "TPP-Redirect-URI" header is mandatory even if "TPP-Redirect_URI" is set to false
+                // "TPP-Redirect-URI" header is mandatory
+                // even if "TPP-Redirect-Preferred" is set to false
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(headerValues.getRedirectUrl())
@@ -63,10 +64,10 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
     public AuthorizationResponse initializeAuthorization(
             String url, String state, String username) {
         return createRequest(new URL(url))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_ID, username)
                 .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
-                // "TPP-Redirect-URI" header is mandatory even if "TPP-Redirect_URI" is set to false
+                // "TPP-Redirect-URI" header is mandatory
+                // even if "TPP-Redirect-Preferred" is set to false
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(headerValues.getRedirectUrl())
@@ -79,7 +80,6 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
     public AuthorizationResponse authorizeWithPassword(
             String url, String username, String password) {
         return createRequest(new URL(url))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_ID, username)
                 .put(
                         AuthorizationResponse.class,
@@ -88,7 +88,6 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
 
     public AuthorizationResponse finalizeAuthorization(String url, String otp) {
         return createRequest(new URL(url))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .put(AuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
     }
 
@@ -106,8 +105,9 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
                                         .parameter(
                                                 PathParameters.PAYMENT_PRODUCT,
                                                 getPaymentProduct(paymentRequest)))
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
+                        // "TPP-Redirect-URI" header is mandatory
+                        // even if "TPP-Redirect-Preferred" is set to false
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(headerValues.getRedirectUrl())

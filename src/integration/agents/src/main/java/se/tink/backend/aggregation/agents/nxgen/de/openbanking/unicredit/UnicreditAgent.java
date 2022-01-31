@@ -36,8 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentCo
 public final class UnicreditAgent extends UnicreditBaseAgent {
 
     private static final UnicreditProviderConfiguration PROVIDER_CONFIG =
-            new UnicreditProviderConfiguration(
-                    "HVB_ONLINEBANKING", "https://api-sandbox.unicredit.de");
+            new UnicreditProviderConfiguration("HVB_ONLINEBANKING", "https://api.unicredit.de");
 
     @Inject
     public UnicreditAgent(AgentComponentProvider componentProvider) {
@@ -79,7 +78,12 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
         return new UnicreditApiClient(
-                client, unicreditStorage, providerConfiguration, headerValues, sessionStorage);
+                client,
+                unicreditStorage,
+                providerConfiguration,
+                headerValues,
+                randomValueGenerator,
+                sessionStorage);
     }
 
     @Override

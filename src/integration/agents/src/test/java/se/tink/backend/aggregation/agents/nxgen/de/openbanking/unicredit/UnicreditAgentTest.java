@@ -30,11 +30,6 @@ public class UnicreditAgentTest {
             new ArgumentManager<>(PasswordArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
-    @AfterClass
-    public static void afterClass() {
-        ArgumentManager.afterClass();
-    }
-
     @Before
     public void setup() {
         usernameManager.before();
@@ -59,5 +54,10 @@ public class UnicreditAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }
