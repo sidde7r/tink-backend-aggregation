@@ -24,6 +24,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.histograms.Histogram;
 import se.tink.libraries.queue.QueueProducer;
 import se.tink.libraries.queue.sqs.configuration.SqsConsumerConfiguration;
+import se.tink.libraries.queue.sqs.exception.RateLimitException;
 
 public class SqsConsumerTest {
     private static final Message MESSAGE = getMessage();
@@ -116,6 +117,29 @@ public class SqsConsumerTest {
 
         // then
         verify(queueProducer, times(1)).requeue("BODY");
+    }
+
+    @Test
+    public void shouldRequeueRateLimitMessageIfGotRateLimitException() throws IOException {
+        when(receiveMessageResult.getMessages()).thenReturn(Collections.singletonList(MESSAGE));
+        when(amazonSQS.receiveMessage(any(ReceiveMessageRequest.class)))
+                .thenReturn(receiveMessageResult);
+        doThrow(new RateLimitException("")).when(queueMessageAction).handle(anyString());
+        SqsConsumer sqsConsumer =
+                spy(
+                        new SqsConsumer(
+                                sqsQueue,
+                                queueProducer,
+                                queueMessageAction,
+                                metricRegistry,
+                                new SqsConsumerConfiguration(),
+                                "Regular"));
+
+        // when
+        sqsConsumer.consume();
+
+        // then
+        verify(queueProducer, times(1)).requeueRateLimit("BODY");
     }
 
     @Test

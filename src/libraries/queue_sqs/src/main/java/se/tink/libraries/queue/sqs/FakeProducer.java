@@ -11,6 +11,11 @@ public class FakeProducer implements QueueProducer {
     public void requeue(String encodedMessageBody) {}
 
     @Override
+    public void requeueRateLimit(String encodedMessageBody) {
+        // NO IMPLEMENTATION FOR FAKE
+    }
+
+    @Override
     public boolean isAvailable() {
         return false;
     }
