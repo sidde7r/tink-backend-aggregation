@@ -24,7 +24,7 @@ public class PasswordVirtualKeyboardOcrTest {
                                         Files.readAllBytes(
                                                 Paths.get(
                                                         CajasurTestConstants.TEST_DATA_PATH,
-                                                        "virtual_keyboard.gif")))));
+                                                        "virtual_keyboard_login.gif")))));
         final String password = "937193";
         PasswordVirtualKeyboardOcr objectUnderTest = new PasswordVirtualKeyboardOcr();
 
@@ -34,6 +34,32 @@ public class PasswordVirtualKeyboardOcrTest {
                         keyboardImage,
                         password,
                         VirtualKeyboardImageParameters.createEnterpriseConfiguration());
+
+        // then
+        Assertions.assertThat(keyboardedPassword).isEqualTo(passwordValueComputedByCajasurWebPage);
+    }
+
+    @Test
+    public void ocrSCATest() throws IOException {
+        // given
+        final String passwordValueComputedByCajasurWebPage = "299077";
+        BufferedImage keyboardImage =
+                ImageIO.read(
+                        new BufferedInputStream(
+                                new ByteArrayInputStream(
+                                        Files.readAllBytes(
+                                                Paths.get(
+                                                        CajasurTestConstants.TEST_DATA_PATH,
+                                                        "virtual_keyboard_transactions_sca.gif")))));
+        final String password = "200633";
+        PasswordVirtualKeyboardOcr objectUnderTest = new PasswordVirtualKeyboardOcr();
+
+        // when
+        String keyboardedPassword =
+                objectUnderTest.getNumbersSequenceFromImage(
+                        keyboardImage,
+                        password,
+                        VirtualKeyboardImageParameters.createTransactionsSCAConfiguration());
 
         // then
         Assertions.assertThat(keyboardedPassword).isEqualTo(passwordValueComputedByCajasurWebPage);

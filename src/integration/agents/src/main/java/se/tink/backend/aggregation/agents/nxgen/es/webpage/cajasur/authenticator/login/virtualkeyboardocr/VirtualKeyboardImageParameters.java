@@ -46,4 +46,15 @@ public class VirtualKeyboardImageParameters {
         instance.verticalStep = 28;
         return instance;
     }
+
+    public static VirtualKeyboardImageParameters createTransactionsSCAConfiguration() {
+        VirtualKeyboardImageParameters instance = new VirtualKeyboardImageParameters();
+        instance.imgWidth = 10;
+        instance.imgHeight = 15;
+        instance.firstRowHorizontalInit = 10;
+        instance.firstRowVerticalInit = 8;
+        instance.horizontalStep = 34;
+        instance.verticalStep = 34;
+        return instance;
+    }
 }

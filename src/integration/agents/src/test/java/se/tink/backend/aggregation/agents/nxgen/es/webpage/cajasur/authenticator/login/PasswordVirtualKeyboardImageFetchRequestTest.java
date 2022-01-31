@@ -20,7 +20,8 @@ public class PasswordVirtualKeyboardImageFetchRequestTest extends WireMockIntegr
         // given
         byte[] responseBody =
                 Files.readAllBytes(
-                        Paths.get(CajasurTestConstants.TEST_DATA_PATH, "virtual_keyboard.gif"));
+                        Paths.get(
+                                CajasurTestConstants.TEST_DATA_PATH, "virtual_keyboard_login.gif"));
         WireMock.stubFor(
                 WireMock.get(WireMock.urlPathEqualTo("/NASApp/BesaideNet2/Gestor"))
                         .withQueryParam("PRESTACION", WireMock.equalTo("login"))

@@ -10,6 +10,19 @@ public class PasswordVirtualKeyboardOcr {
     private static final Map<String, String> KEYBOARD_NUMBERS = new HashMap<>(30);
 
     static {
+
+        // Transactions SCA
+        KEYBOARD_NUMBERS.put("2574875706-150", "0");
+        KEYBOARD_NUMBERS.put("1898855350-150", "1");
+        KEYBOARD_NUMBERS.put("703743688-150", "2");
+        KEYBOARD_NUMBERS.put("1444231452-150", "3");
+        KEYBOARD_NUMBERS.put("823842625-150", "4");
+        KEYBOARD_NUMBERS.put("3201879118-150", "5");
+        KEYBOARD_NUMBERS.put("3427852132-150", "6");
+        KEYBOARD_NUMBERS.put("3386420344-150", "7");
+        KEYBOARD_NUMBERS.put("3996298118-150", "8");
+        KEYBOARD_NUMBERS.put("1240257521-150", "9");
+
         // Sca movs
         KEYBOARD_NUMBERS.put("3654922649-143", "0");
         KEYBOARD_NUMBERS.put("2130343582-143", "1");
