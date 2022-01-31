@@ -46,6 +46,7 @@ public final class TppSecretsServiceInternalClientImpl extends ManagedSafeStop
                                                         .toString()))
                                 .withEnabledRetryPolicy(
                                         tppSecretsServiceConfiguration.isEnabledRetryPolicy())
+                                .withOverrideAuthority(false)
                                 .build();
             } else {
                 this.grpcClientConfig = null;
@@ -99,6 +100,12 @@ public final class TppSecretsServiceInternalClientImpl extends ManagedSafeStop
     @Override
     public GetAllSecretsResponse getAllSecrets(
             String clusterId, String appId, String certId, String providerId) {
+        log.info(
+                "calling SecretService getAllSecrets with params: clusterId:{}, appId:{}, certId: {}, providerId:{} from aggregation service",
+                clusterId,
+                appId,
+                certId,
+                providerId);
         return secretsServiceInternalClient.getAllSecrets(clusterId, appId, certId, providerId);
     }
 
