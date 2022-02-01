@@ -173,7 +173,7 @@ http_archive(
 # Google api types.
 http_archive(
     name = "com_google_googleapis",
-    sha256 = "c2fcda1bc6913bedc22a6a43c0ad1ff81a685d9e725dc78e5166fe759d41deae",
+    sha256 = "ddd2cd7b6b310028b8ba08057d2990ced6f78c35fdf5083ff142704f1c2c5e49",
     strip_prefix = "googleapis-10049e8ea946100bb7da66f63b0ecd1a345e8760",
     urls = ["https://github.com/googleapis/googleapis/archive/10049e8ea946100bb7da66f63b0ecd1a345e8760.zip"],
 )
@@ -226,7 +226,7 @@ container_pull(
 
 RULES_CODEOWNERS_VERSION = "b08239b88705a5d2d9c613afc6a70ece73e32cad"
 
-RULES_CODEOWNERS_SHA = "5d1fcf54a9d270687368507c6004d509afeb51539f19d54754ca344405997b71"
+RULES_CODEOWNERS_SHA = "cbb9fdfb30ac57678c8bbf6a07b2ccf7993799dbdf6cb3c8549499bb23d09235"
 
 http_archive(
     name = "rules_codeowners",
@@ -361,7 +361,7 @@ rules_proto_toolchains()
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "af63e71965bdc0cef4ed8c7ab22ceb84b74667736e51b9845e95acdf344d3aeb",
+    sha256 = "832c476bb442ca98a59c2291b8a504648d1c139b74acc15ef667a0e8f5e984e7",
     strip_prefix = "protobuf-%s" % PROTOBUF_VERSION,
     urls = ["https://github.com/protocolbuffers/protobuf/archive/v%s.zip" % PROTOBUF_VERSION],
 )
@@ -604,7 +604,7 @@ jvm_maven_import_external(
 
 http_archive(
     name = "grpc_ecosystem_grpc_gateway",
-    sha256 = "c34906fb48d114e0cd496fc72ae896f7d039957d9a6eedae9c6246b3c19525d5",
+    sha256 = "b14c0ad883933705bfaeffcc695f07bf1e435e7f27e5999d164eb22ced105b3d",
     strip_prefix = "grpc-gateway-1.12.2",
     url = "https://github.com/grpc-ecosystem/grpc-gateway/archive/v1.12.2.zip",
 )
@@ -651,7 +651,7 @@ jvm_maven_import_external(
 
 http_archive(
     name = "io_grpc_grpc_java",
-    sha256 = "4c92274c63b47da25f6abc77767021133612e1b05bdf5ac207d08dc7849286e1",
+    sha256 = "446ad7a2e85bbd05406dbf95232c7c49ed90de83b3b60cb2048b0c4c9f254d29",
     strip_prefix = "grpc-java-%s" % GRPC_JAVA_VERSION,
     urls = [
         "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_VERSION,
