@@ -1,0 +1,169 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic ZHVtbXlDbGllbnRJZDpkdW1teUNsaWVudFNlY3JldA==
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token":"dummyAccessToken",
+  "token_type":"Bearer",
+  "expires_in":300,
+  "scope":"production"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 05034
+date: Fri, 10 Apr 1992 12:00:00 UTC
+aspsp-product-code: IBP01
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
+tpp-nok-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=failure
+
+{
+  "access": {
+    "allPsd2": "allAccountsWithOwnerName"
+  },
+  "combinedServiceIndicator": false,
+  "frequencyPerDay": 4,
+  "recurringIndicator": true,
+  "validUntil": "1992-07-08"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: REDIRECT
+x-request-id: 00000000-0000-4000-0000-000000000000
+Location: https://cbiglobeopenbankingapigateway.nexi.it/consents/test_consent_id
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "consentStatus": "received",
+  "consentId": "test_consent_id",
+  "_links": {
+    "scaRedirect": {
+      "href": "https://example.com/test Redirect Url"
+    },
+    "self": {
+      "href": "/consents/test_consent_id"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/test_consent_id/status
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 05034
+date: Fri, 10 Apr 1992 12:00:00 UTC
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Mon, 31 Jan 2022 17:11:49 GMT
+Date: Mon, 31 Jan 2022 17:11:48 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "consentStatus": "valid"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents/test_consent_id
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 05034
+date: Fri, 10 Apr 1992 12:00:00 UTC
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Mon, 31 Jan 2022 17:11:50 GMT
+Date: Mon, 31 Jan 2022 17:11:50 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "access": {
+    "allPsd2": "allAccountsWithOwnerName"
+  },
+  "recurringIndicator": "true",
+  "validUntil": "2022-04-30T23:59:59Z",
+  "frequencyPerDay": "4",
+  "lastActionDate": "2022-01-31",
+  "consentStatus": "valid",
+  "scaStatus": "VERIFIED"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/accounts
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 05034
+date: Fri, 10 Apr 1992 12:00:00 UTC
+consent-id: test_consent_id
+psu-ip-address: 127.0.0.1
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Mon, 31 Jan 2022 17:11:50 GMT
+Date: Mon, 31 Jan 2022 17:11:50 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "accounts": [
+    {
+      "_links": {
+        "account": {
+          "href": "/accounts/**HASHED:IU**"
+        },
+        "balances": {
+          "href": "/accounts/**HASHED:IU**/balances"
+        },
+        "transactions": {
+          "href": "/accounts/**HASHED:IU**/transactions"
+        }
+      },
+      "currency": "EUR",
+      "iban": "**HASHED:L7**",
+      "ownerName": "**HASHED:PY**",
+      "product": "CC01",
+      "resourceId": "**HASHED:IU**"
+    }
+  ]
+}

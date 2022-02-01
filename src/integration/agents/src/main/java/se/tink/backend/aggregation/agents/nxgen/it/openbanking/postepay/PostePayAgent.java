@@ -41,8 +41,9 @@ public final class PostePayAgent extends CbiGlobeAgent {
 
     @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final CbiGlobeTransactionalAccountFetcher accountFetcher =
-                CbiGlobeTransactionalAccountFetcher.createFromBooked(fetcherApiClient, storage);
+        CbiGlobeTransactionalAccountFetcher accountFetcher =
+                CbiGlobeTransactionalAccountFetcher.createFromBooked(
+                        fetcherApiClient, storage, localDateTimeSource);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

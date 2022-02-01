@@ -1,0 +1,44 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic ZHVtbXlDbGllbnRJZDpkdW1teUNsaWVudFNlY3JldA==
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token":"dummyAccessToken",
+  "token_type":"Bearer",
+  "expires_in":300,
+  "scope":"production"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/test_consent_id/status
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 05034
+date: Fri, 10 Apr 1992 12:00:00 UTC
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Mon, 31 Jan 2022 17:11:49 GMT
+Date: Mon, 31 Jan 2022 17:11:48 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "consentStatus": "valid"
+}

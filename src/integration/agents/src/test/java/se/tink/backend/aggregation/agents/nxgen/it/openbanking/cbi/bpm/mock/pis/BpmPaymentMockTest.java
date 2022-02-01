@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.cbi.bpm.mock;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.cbi.bpm.mock.pis;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
@@ -24,7 +24,7 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BpmPaymentMockTest {
     private static final String BASE_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/cbi/bpm/mock/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/cbi/bpm/mock/pis/resources/";
     private static final String CONFIGURATION_FILE = BASE_PATH + "configuration.yml";
 
     @Test

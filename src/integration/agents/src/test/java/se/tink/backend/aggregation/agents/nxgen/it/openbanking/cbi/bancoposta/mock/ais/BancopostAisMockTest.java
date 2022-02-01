@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.cbi.iccrea.mock.ais;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.cbi.bancoposta.mock.ais;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.enums.MarketCode;
 
-public class IccreaAisMockTest {
+public class BancopostAisMockTest {
 
     private static final String BASE_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/cbi/iccrea/mock/ais/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/cbi/bancoposta/mock/ais/resources/";
 
     private AgentsServiceConfiguration configuration;
 
@@ -27,13 +27,11 @@ public class IccreaAisMockTest {
         AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.IT)
-                        .withProviderName("it-iccrea-no-08530-oauth2")
+                        .withProviderName("it-bancoposta-oauth2")
                         .withWireMockFilePath(BASE_PATH + "full_auth.aap")
                         .withConfigFile(configuration)
                         .testFullAuthentication()
                         .testOnlyAuthentication()
-                        .addCredentialField("username", "test_username")
-                        .addCredentialField("password", "test_password")
                         .build();
 
         // when & then
@@ -46,7 +44,7 @@ public class IccreaAisMockTest {
         AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.IT)
-                        .withProviderName("it-iccrea-no-08530-oauth2")
+                        .withProviderName("it-bancoposta-oauth2")
                         .withWireMockFilePath(BASE_PATH + "auto_auth.aap")
                         .withConfigFile(configuration)
                         .testAutoAuthentication()

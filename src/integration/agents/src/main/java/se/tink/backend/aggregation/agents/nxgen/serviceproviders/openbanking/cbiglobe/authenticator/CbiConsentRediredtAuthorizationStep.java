@@ -37,6 +37,10 @@ public class CbiConsentRediredtAuthorizationStep {
             throw ThirdPartyAppError.CANCELLED.exception(
                     "[CBI] Redirect came back with result == failure");
         }
+        if (!supplementalInfo.get().containsKey(QueryKeys.RESULT)) {
+            log.warn(
+                    "[CBI] Callback from CBI did not contain 'result' param. Will check consent status, but this should not really happen. Bug on CBI side?");
+        }
 
         checkResultingConsent();
     }

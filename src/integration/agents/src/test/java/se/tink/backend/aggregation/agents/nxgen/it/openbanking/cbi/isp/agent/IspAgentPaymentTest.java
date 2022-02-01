@@ -91,7 +91,8 @@ public class IspAgentPaymentTest {
                 .withExecutionDate(executionDate)
                 .withCurrency(amount.getCurrencyCode())
                 .withRemittanceInformation(remittanceInformation)
-                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                .withPaymentServiceType(PaymentServiceType.SINGLE);
     }
 
     @AfterClass
