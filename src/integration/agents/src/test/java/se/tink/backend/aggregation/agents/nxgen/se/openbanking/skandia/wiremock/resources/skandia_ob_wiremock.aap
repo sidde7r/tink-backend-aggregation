@@ -183,7 +183,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 5
-GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915011111111111/transactions?date-from=1992-04-10&date-to=1992-07-10&booking-status=pending
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915011111111111/transactions?date-from=1992-04-10&booking-status=pending
 Accept: application/json
 Content-Type: application/json
 
@@ -233,7 +233,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 6
-GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915011111111111/transactions?&date-from=1992-01-12&date-to=1992-04-10&booking-status=booked
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915011111111111/transactions?&date-from=1990-04-10&booking-status=booked
 Accept: application/json
 Content-Type: application/json
 
@@ -322,7 +322,7 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 7
-GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915022222222222/transactions?date-from=1992-04-10&date-to=1992-07-10&booking-status=pending
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915022222222222/transactions?date-from=1992-04-10&booking-status=pending
 Accept: application/json
 Content-Type: application/json
 
@@ -355,7 +355,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 8
-GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915022222222222/transactions?date-from=1992-01-12&date-to=1992-04-10&booking-status=booked
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915022222222222/transactions?date-from=1990-04-10&booking-status=booked
 Accept: application/json
 Content-Type: application/json
 
