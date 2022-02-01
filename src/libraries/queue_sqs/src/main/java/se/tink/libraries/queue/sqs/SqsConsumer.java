@@ -16,6 +16,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.QueueProducer;
 import se.tink.libraries.queue.sqs.configuration.SqsConsumerConfiguration;
+import se.tink.libraries.queue.sqs.exception.RateLimitException;
 
 @Slf4j
 public class SqsConsumer {
@@ -101,6 +102,13 @@ public class SqsConsumer {
                     try {
                         consume(sqsMessage.getBody());
                         sqsQueue.consumed();
+                    } catch (RateLimitException e) {
+                        log.debug(
+                                "[SqsConsumer] Failed to consume message from '{}' SQS because provider was rate limmited. Requeuing it. SqsMessageId: {}",
+                                name,
+                                sqsMessage.getMessageId(),
+                                e);
+                        producer.requeueRateLimit(sqsMessage.getBody());
                     } catch (RejectedExecutionException e) {
                         log.debug(
                                 "[SqsConsumer] Failed to consume message from '{}' SQS. Requeuing it. SqsMessageId: {}",
@@ -119,7 +127,8 @@ public class SqsConsumer {
     }
 
     @VisibleForTesting
-    void consume(String message) throws IOException, RejectedExecutionException {
+    void consume(String message)
+            throws IOException, RejectedExecutionException, RateLimitException {
         queueMessageAction.handle(message);
     }
 

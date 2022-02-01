@@ -5,6 +5,7 @@ import com.amazonaws.services.sqs.model.SendMessageResult;
 import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.queue.QueueProducer;
@@ -45,6 +46,27 @@ public class SqsProducer implements QueueProducer {
 
     @Override
     public void requeue(String encodedMessageBody) {
+        requeue(encodedMessageBody, SqsQueue::requeued);
+    }
+
+    @Override
+    public void requeueRateLimit(String encodedMessageBody) {
+        requeue(encodedMessageBody, SqsQueue::requeuedRateLimit);
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return sqsQueue.isAvailable();
+    }
+
+    private int randomTimeoutSeconds(int min, int max) {
+        Preconditions.checkArgument(
+                min < max, "The minimum value cannot be same or equal to the maximum");
+
+        return ThreadLocalRandom.current().nextInt(min, max);
+    }
+
+    private void requeue(String encodedMessageBody, Consumer<SqsQueue> consumer) {
         try {
             SendMessageRequest sendMessageStandardQueue =
                     new SendMessageRequest()
@@ -58,21 +80,9 @@ public class SqsProducer implements QueueProducer {
             logger.debug(
                     "[SQSProducer] Requeued message with new id: {}",
                     sendMessageResult.getMessageId());
-            sqsQueue.requeued();
+            consumer.accept(sqsQueue);
         } catch (RuntimeException e) {
             logger.error("[SQSProducer] Couldn't requeue message", e);
         }
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return sqsQueue.isAvailable();
-    }
-
-    private int randomTimeoutSeconds(int min, int max) {
-        Preconditions.checkArgument(
-                min < max, "The minimum value cannot be same or equal to the maximum");
-
-        return ThreadLocalRandom.current().nextInt(min, max);
     }
 }

@@ -17,6 +17,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.sqs.EncodingHandler;
 import se.tink.libraries.queue.sqs.QueueMessageAction;
+import se.tink.libraries.queue.sqs.exception.RateLimitException;
 import se.tink.libraries.rate_limit_service.RateLimitService;
 
 public class AutomaticRefreshQueueHandler implements QueueMessageAction {
@@ -44,14 +45,15 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     }
 
     @Override
-    public void handle(String message) throws IOException, RejectedExecutionException {
+    public void handle(String message)
+            throws IOException, RejectedExecutionException, RateLimitException {
         try {
             RefreshInformation refreshInformation = encodingHandler.decode(message);
             MDC.setContextMap(refreshInformation.getMDCContext());
             logger.info("[AutomaticRefreshQueueHandler] Started handling automatic refresh.");
             String providerName = refreshInformation.getRequest().getProvider().getName();
             if (RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName)) {
-                throw new RejectedExecutionException(
+                throw new RateLimitException(
                         String.format(
                                 "Provider %s was rate limited recently. Rejecting execution to requeue.",
                                 providerName));

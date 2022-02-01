@@ -166,7 +166,13 @@ public class SqsQueue {
 
     public void requeued() {
         metricRegistry
-                .meter(METRIC_ID_BASE.label(EVENT_LABEL, "requeued").label("name", name))
+                .meter(METRIC_ID_BASE.label(EVENT_LABEL, "requeued-rejected").label("name", name))
+                .inc();
+    }
+
+    public void requeuedRateLimit() {
+        metricRegistry
+                .meter(METRIC_ID_BASE.label(EVENT_LABEL, "requeued-rate-limit").label("name", name))
                 .inc();
     }
 

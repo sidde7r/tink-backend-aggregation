@@ -6,5 +6,7 @@ public interface QueueProducer {
 
     void requeue(String encodedMessageBody);
 
+    void requeueRateLimit(String encodedMessageBody);
+
     boolean isAvailable();
 }
