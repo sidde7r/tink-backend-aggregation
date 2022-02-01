@@ -101,8 +101,8 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
             logger.info(
                     "[AutomaticRefreshQueueHandler] Finished handling automatic refresh handler.");
-        } catch (RejectedExecutionException rejectedExecution) {
-            throw rejectedExecution;
+        } catch (RateLimitException | RejectedExecutionException exception) {
+            throw exception;
         } catch (Exception e) {
             logger.error("Something went wrong with an automatic refresh from sqs.", e);
         } finally {
