@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.error.TppMessage;
 
 public class SparkassenKnownErrors {
 
-    static class PsuErrorMessages {
+    public static class PsuErrorMessages {
         public static final String REQUEST_PROCESSING_ERROR =
                 "Die Anfrage konnte nicht verarbeitet werden.";
         static final String TEMPORARILY_BLOCKED_ACCOUNT =
@@ -28,6 +28,8 @@ public class SparkassenKnownErrors {
                 "9010- Der Auftrag wurde nicht ausgeführt. - 3909- Bitte wenden Sie sich an Ihren Berater";
         static final String ENTER_LOGIN_AND_PIN =
                 "Bitte geben Sie Ihren Anmeldenamen/Legitimations-ID und Ihre PIN ein.";
+        public static final String SYSTEM_ERROR_CONTACT_ADVISOR =
+                "9010- Systemfehler - bitte wenden Sie sich an Ihren Kundenberater.";
     }
 
     private static final String FORMAT_ERROR = "FORMAT_ERROR";
@@ -56,7 +58,7 @@ public class SparkassenKnownErrors {
                     .text("PSU-ID zu lang.")
                     .build();
 
-    static final TppMessage NO_SCA_METHOD =
+    public static final TppMessage NO_SCA_METHOD =
             TppMessage.builder()
                     .category(TppMessage.ERROR)
                     .code("SCA_INVALID")

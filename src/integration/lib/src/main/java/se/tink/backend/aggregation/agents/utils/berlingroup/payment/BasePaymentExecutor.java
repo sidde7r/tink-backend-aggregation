@@ -4,9 +4,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.ErrorMessages;
@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -39,7 +40,7 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     private final PaymentApiClient apiClient;
     private final PaymentAuthenticator authenticator;
     private final SessionStorage sessionStorage;
-    private PaymentStatusMapper paymentStatusMapper;
+    private final PaymentStatusMapper paymentStatusMapper;
 
     public BasePaymentExecutor(
             PaymentApiClient apiClient,
@@ -49,7 +50,7 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
         CreatePaymentResponse createPaymentResponse = apiClient.createPayment(paymentRequest);
 
         sessionStorage.put(StorageValues.SCA_LINKS, createPaymentResponse.getLinks());
@@ -58,12 +59,52 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         if (AuthenticationStepConstants.STEP_INIT.equals(paymentMultiStepRequest.getStep())) {
-            authorizePayment();
+            try {
+                authorizePayment();
+            } catch (AgentException exception) {
+                debugLoggingForUnexpectedFailures(exception, paymentMultiStepRequest.getPayment());
+                throw exception;
+            }
         }
-        return checkStatus(paymentMultiStepRequest);
+
+        PaymentMultiStepResponse paymentMultiStepResponse = checkStatus(paymentMultiStepRequest);
+        debugLoggingForSucessfulPayments(paymentMultiStepResponse);
+
+        return paymentMultiStepResponse;
+    }
+
+    protected void debugLoggingForUnexpectedFailures(
+            AgentException agentException, Payment payment) {
+        // Place for logging for all agents reusing this class, if ever necessary.
+        // Per agent logging should live in extensions of this class.
+    }
+
+    private void debugLoggingForSucessfulPayments(
+            PaymentMultiStepResponse paymentMultiStepResponse) {
+        // NZG-1028 Temporary logging to learn more.
+        // We want to observe successes that go beyond borders.
+        if (AuthenticationStepConstants.STEP_FINALIZE.equalsIgnoreCase(
+                paymentMultiStepResponse.getStep())) {
+
+            try {
+                String countryCodeFromIban =
+                        paymentMultiStepResponse
+                                .getPayment()
+                                .getCreditor()
+                                .getAccountIdentifier(IbanIdentifier.class)
+                                .getIban()
+                                .substring(0, 2);
+                if (!"DE".equalsIgnoreCase(countryCodeFromIban)) {
+                    log.info("Payment succeeded after crossing an iban border!");
+                }
+            } catch (RuntimeException exception) {
+                log.warn(
+                        "BasePaymentExecutor caught exception while trying to do some logging! This should not happen.",
+                        exception);
+            }
+        }
     }
 
     private void authorizePayment() {
@@ -75,8 +116,7 @@ public class BasePaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         authenticator.authenticatePayment(scaLinks);
     }
 
-    private PaymentMultiStepResponse checkStatus(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    private PaymentMultiStepResponse checkStatus(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
         PaymentResponse paymentResponse = fetch(paymentMultiStepRequest);
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
