@@ -19,8 +19,6 @@ import se.tink.libraries.authentication_options.AuthenticationOptionDto;
 import se.tink.libraries.authentication_options.AuthenticationOptionField;
 import se.tink.libraries.authentication_options.AuthenticationOptionsGroup;
 import se.tink.libraries.authentication_options.AuthenticationOptionsGroupDto;
-import se.tink.libraries.authentication_options.Field;
-import se.tink.libraries.authentication_options.SupportedChannel;
 
 @Slf4j
 public class AuthenticationOptionsExtractor {
@@ -31,12 +29,17 @@ public class AuthenticationOptionsExtractor {
     private final Reflections reflections = new Reflections(DEFAULT_AGENT_PACKAGE_CLASS_PREFIX);
 
     public AuthenticationOptionsExtractor() {
-        validateAuthenticationOptions();
+        this(true);
     }
 
     @VisibleForTesting
-    AuthenticationOptionsExtractor(boolean doNotValidate) {
-        log.warn("Instantiating AuthenticationOptionsExtractor without validating agents first.");
+    AuthenticationOptionsExtractor(boolean validateOptions) {
+        if (validateOptions) {
+            validateAuthenticationOptions();
+        } else {
+            log.warn(
+                    "Instantiating AuthenticationOptionsExtractor without validating agents first.");
+        }
     }
 
     public Map<String, Set<AuthenticationOptionsGroupDto>> getAgentsAuthenticationOptions() {
@@ -61,20 +64,17 @@ public class AuthenticationOptionsExtractor {
                 mapGroupsAuthenticationOptions = new HashMap<>();
         for (AuthenticationOption authenticationOption : authenticationOptions) {
             AuthenticationOptionDefinition definition = authenticationOption.definition();
-            Set<Field> fields =
+            Set<AuthenticationOptionField> fields =
                     Arrays.stream(authenticationOption.fields())
                             .sequential()
-                            .map(AuthenticationOptionField::getField)
                             .collect(Collectors.toSet());
             mapGroupsAuthenticationOptions.putIfAbsent(definition.getGroup(), new HashSet<>());
             mapGroupsAuthenticationOptions
                     .get(definition.getGroup())
                     .add(
                             AuthenticationOptionDto.newBuilder()
-                                    .name(definition.name())
+                                    .definition(definition)
                                     .fields(fields)
-                                    .displayText(definition.getDisplayText())
-                                    .helpText(definition.getHelpText())
                                     .overallDefault(authenticationOption.overallDefault())
                                     .supportedChannels(definition.getSupportedChannels())
                                     .build());
@@ -90,9 +90,7 @@ public class AuthenticationOptionsExtractor {
                 .map(
                         e ->
                                 AuthenticationOptionsGroupDto.newBuilder()
-                                        .name(e.getKey().name())
-                                        .helpText(e.getKey().getHelpText())
-                                        .displayText(e.getKey().getDisplayText())
+                                        .group(e.getKey())
                                         .authenticationOptions(e.getValue())
                                         .build())
                 .collect(Collectors.toSet());
@@ -107,7 +105,6 @@ public class AuthenticationOptionsExtractor {
     @VisibleForTesting
     void validateAuthenticationOptions(Class<? extends Agent> klass) {
         Boolean overallDefaultFound = false;
-        Map<SupportedChannel, Boolean> defaultForChannelFound = new HashMap<>();
         Set<String> seenAuthenticationOptions = new HashSet();
         String agentName = getAgentName.apply(klass);
 
