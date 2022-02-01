@@ -12,5 +12,5 @@ java_library_with_sources(
         "//src/integration/amount",
         "@tink_backend//src/libraries/account_identifier",
     ],
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
+    visibility = ["//src/agent_sdk:__subpackages__"],
 )
