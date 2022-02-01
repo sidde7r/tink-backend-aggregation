@@ -16,7 +16,8 @@ public final class ResursBankAgent extends CrosskeyBaseAgent {
             new CrosskeyMarketConfiguration(
                     "resursbank",
                     "https://open-banking.resurs.com",
-                    "https://open-banking-identification.resurs.com");
+                    "https://open-banking-identification.resurs.com",
+                    null);
 
     @Inject
     public ResursBankAgent(AgentComponentProvider componentProvider) {

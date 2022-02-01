@@ -16,7 +16,8 @@ public final class AlandsbankenAgent extends CrosskeyBaseAgent {
             new CrosskeyMarketConfiguration(
                     "alandsbanken-se",
                     "https://api.alandsbanken.se",
-                    "https://open.alandsbanken.se");
+                    "https://open.alandsbanken.se",
+                    null);
 
     @Inject
     public AlandsbankenAgent(AgentComponentProvider componentProvider) {
