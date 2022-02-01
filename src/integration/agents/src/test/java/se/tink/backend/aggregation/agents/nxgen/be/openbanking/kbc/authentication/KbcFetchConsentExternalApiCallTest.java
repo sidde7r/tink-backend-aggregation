@@ -37,7 +37,7 @@ public class KbcFetchConsentExternalApiCallTest {
     }
 
     @Test
-    public void shouldThrowInvalidCredentialsErrorWhenBankRespondsWithFormatError() {
+    public void shouldThrowWhenBankRespondsWithFormatError() {
         // given
         httpResponse =
                 bankRespondsWith(
@@ -60,12 +60,9 @@ public class KbcFetchConsentExternalApiCallTest {
     }
 
     @Test
-    @Parameters(
-            method =
-                    "parametersForShouldThrowAuthorizationErrorWhenBankRespondsWithBadRequestOrUnauthorizedAndUnexpectedBody")
-    public void
-            shouldThrowAuthorizationErrorWhenBankRespondsWithBadRequestOrUnauthorizedAndUnexpectedBody(
-                    int statusCode, String responseBody) {
+    @Parameters()
+    public void shouldThrowAuthorizationErrorOnGivenStatusAndBody(
+            int statusCode, String responseBody) {
         // given
         httpResponse = bankRespondsWith(statusCode, responseBody);
 
@@ -79,8 +76,7 @@ public class KbcFetchConsentExternalApiCallTest {
     }
 
     @SuppressWarnings("unused")
-    private Object[]
-            parametersForShouldThrowAuthorizationErrorWhenBankRespondsWithBadRequestOrUnauthorizedAndUnexpectedBody() {
+    private Object[] parametersForShouldThrowAuthorizationErrorOnGivenStatusAndBody() {
         return new Object[][] {
             {400, null},
             {401, null}
@@ -111,7 +107,7 @@ public class KbcFetchConsentExternalApiCallTest {
     }
 
     @Test
-    @Parameters(method = "parametersForShouldThrowServerErrorWhenBankRespondsWithServerError")
+    @Parameters()
     public void shouldThrowServerErrorWhenBankRespondsWithServerError(int statusCode) {
         // given
         httpResponse = bankRespondsWith(statusCode, null);
