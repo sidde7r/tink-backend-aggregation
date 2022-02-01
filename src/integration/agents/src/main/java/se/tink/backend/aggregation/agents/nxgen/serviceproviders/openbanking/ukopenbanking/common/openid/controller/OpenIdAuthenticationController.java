@@ -51,8 +51,7 @@ public class OpenIdAuthenticationController
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
     private final Credentials credentials;
-    private final String strongAuthenticationState;
-    private final String strongAuthenticationStateSupplementalKey;
+    private final StrongAuthenticationState strongAuthenticationState;
     private final RandomValueGenerator randomValueGenerator;
     private final String callbackUri;
     private final OpenIdAuthenticationValidator authenticationValidator;
@@ -77,9 +76,7 @@ public class OpenIdAuthenticationController
         this.authenticator = authenticator;
         this.credentials = credentials;
         this.callbackUri = callbackUri;
-        this.strongAuthenticationStateSupplementalKey =
-                strongAuthenticationState.getSupplementalKey();
-        this.strongAuthenticationState = strongAuthenticationState.getState();
+        this.strongAuthenticationState = strongAuthenticationState;
         this.randomValueGenerator = randomValueGenerator;
         this.authenticationValidator = authenticationValidator;
         this.logMasker = logMasker;
@@ -96,20 +93,22 @@ public class OpenIdAuthenticationController
 
     @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
+        String state = strongAuthenticationState.getState();
         String nonce = randomValueGenerator.generateRandomHexEncoded(8);
+
         return ThirdPartyAppAuthenticationPayload.of(
-                authenticator.createAuthorizeUrl(
-                        strongAuthenticationState, nonce, callbackUri, ClientMode.ACCOUNTS));
+                authenticator.createAuthorizeUrl(state, nonce, callbackUri, ClientMode.ACCOUNTS));
     }
 
     @Override
     public ThirdPartyAppResponse<String> collect(String reference)
             throws AuthenticationException, AuthorizationException {
+        String scaSupplementalKey = strongAuthenticationState.getSupplementalKey();
 
         Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                strongAuthenticationStateSupplementalKey,
+                                scaSupplementalKey,
                                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                                 TimeUnit.MINUTES)
                         .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
