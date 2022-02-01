@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -38,9 +37,9 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public static AccountEntity debtorOf(AccountResponse accountResponse) {
-        String accountNumber = accountResponse.getAccounts().stream().findFirst().get().getBban();
-        return new AccountEntity(AccountIdentifierType.NO, accountNumber);
+    public static AccountEntity debtorOf(Payment payment) {
+        Debtor debtor = payment.getDebtor();
+        return new AccountEntity(debtor.getAccountIdentifierType(), debtor.getAccountNumber());
     }
 
     @JsonIgnore
