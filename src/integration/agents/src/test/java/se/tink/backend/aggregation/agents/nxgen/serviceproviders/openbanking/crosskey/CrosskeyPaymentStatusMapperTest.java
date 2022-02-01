@@ -8,13 +8,43 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class CrosskeyPaymentStatusMapperTest {
 
-  @Test
-  public void shouldMapToProperPaymentStatus() {
+    @Test
+    public void shouldMapToProperPaymentStatus() {
 
-    assertEquals(CrosskeyPaymentStatus.mapToTinkPaymentStatus(CrosskeyPaymentStatus.AWAITING_AUTHORISATION),PaymentStatus.PENDING);
-    assertEquals(CrosskeyPaymentStatus.mapToTinkPaymentStatus(CrosskeyPaymentStatus.AUTHORISED),PaymentStatus.SIGNED);
-    assertEquals(CrosskeyPaymentStatus.mapToTinkPaymentStatus(CrosskeyPaymentStatus.ACCEPTED_SETTLEMENT_IN_PROCESS),PaymentStatus.PAID);
-    assertEquals(CrosskeyPaymentStatus.mapToTinkPaymentStatus(CrosskeyPaymentStatus.UNKNOWN),PaymentStatus.UNDEFINED);
+        assertEquals(
+                CrosskeyPaymentStatus.mapToTinkPaymentStatus(
+                        CrosskeyPaymentStatus.AWAITING_AUTHORISATION),
+                PaymentStatus.PENDING);
+        assertEquals(
+                CrosskeyPaymentStatus.mapToTinkPaymentStatus(CrosskeyPaymentStatus.AUTHORISED),
+                PaymentStatus.SIGNED);
+        assertEquals(
+                CrosskeyPaymentStatus.mapToTinkPaymentStatus(
+                        CrosskeyPaymentStatus.ACCEPTED_SETTLEMENT_IN_PROCESS),
+                PaymentStatus.PAID);
+        assertEquals(
+                CrosskeyPaymentStatus.mapToTinkPaymentStatus(CrosskeyPaymentStatus.UNKNOWN),
+                PaymentStatus.UNDEFINED);
+        assertEquals(
+                CrosskeyPaymentStatus.mapToTinkPaymentStatus(CrosskeyPaymentStatus.CONSUMED),
+                PaymentStatus.PAID);
+        assertEquals(
+                CrosskeyPaymentStatus.mapToTinkPaymentStatus(
+                        CrosskeyPaymentStatus.ACCEPTED_SETTLEMENT_COMPLETED),
+                PaymentStatus.PAID);
+    }
 
-  }
+    @Test
+    public void shouldMapToProperCrosskeyStatus() {
+
+        assertEquals(
+                CrosskeyPaymentStatus.mapToCrosskeyPaymentStatus(PaymentStatus.PENDING),
+                CrosskeyPaymentStatus.AWAITING_AUTHORISATION);
+        assertEquals(
+                CrosskeyPaymentStatus.mapToCrosskeyPaymentStatus(PaymentStatus.CREATED),
+                CrosskeyPaymentStatus.AWAITING_AUTHORISATION);
+        assertEquals(
+                CrosskeyPaymentStatus.mapToCrosskeyPaymentStatus(PaymentStatus.SIGNED),
+                CrosskeyPaymentStatus.AUTHORISED);
+    }
 }
