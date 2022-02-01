@@ -277,7 +277,7 @@ Cache-Control: no-cache, no-store, private, proxy-revalidate
 
 
 REQUEST 16
-GET https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/accountnumbers
+GET https://api.bank.lansforsakringar.se:443/openbanking/ais/v1/accounts
 Accept: application/json
 Content-Type: application/json
 PSU-IP-Address: 127.0.0.1
