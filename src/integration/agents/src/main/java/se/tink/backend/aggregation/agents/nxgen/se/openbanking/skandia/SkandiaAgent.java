@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -127,7 +127,8 @@ public final class SkandiaAgent extends NextGenerationAgent
                 new SkandiaTransactionalAccountFetcher(apiClient);
 
         final SkandiaTransactionFetcher transactionFetcher =
-                new SkandiaTransactionFetcher(apiClient, localDateTimeSource);
+                new SkandiaTransactionFetcher(
+                        apiClient, localDateTimeSource, transactionPaginationHelper);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -135,9 +136,7 @@ public final class SkandiaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
-                                .setLocalDateTimeSource(localDateTimeSource)
-                                .build()));
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 
     private TransferDestinationRefreshController getTransferDestinationController() {

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia;
 
-import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -39,7 +38,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SkandiaApiClient {
@@ -179,16 +177,8 @@ public class SkandiaApiClient {
                 .get(GetBalancesResponse.class);
     }
 
-    public GetTransactionsResponse getTransactions(
-            String resourceId, Date fromDate, Date toDate, String bookingStatus) {
-        return createRequestInSession(
-                        Urls.GET_TRANSACTIONS.parameter(IdTags.ACCOUNT_ID, resourceId))
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(
-                        QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format((toDate)))
-                .queryParam(QueryKeys.BOOKING_STATUS, bookingStatus)
-                .get(GetTransactionsResponse.class);
+    public GetTransactionsResponse getTransactions(URL urlAddress) {
+        return createRequestInSession(urlAddress).get(GetTransactionsResponse.class);
     }
 
     public CreatePaymentResponse createPayment(Payment payment) {
