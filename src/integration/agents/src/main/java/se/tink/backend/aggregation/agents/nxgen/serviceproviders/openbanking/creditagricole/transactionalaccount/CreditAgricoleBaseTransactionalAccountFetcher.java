@@ -4,13 +4,11 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -30,15 +28,12 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
     private final CreditAgricoleBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final Clock clock;
+    private final AccountConsentManager accountConsentManager;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
-
-        List<AccountIdEntity> accountIdsForConsentRequest =
-                getAccountsResponse.getAccountsListForNecessaryConsents();
-        if (!accountIdsForConsentRequest.isEmpty()) {
-            apiClient.putConsents(accountIdsForConsentRequest);
+        if (accountConsentManager.prepareConsentsIfNeeded(getAccountsResponse)) {
             getAccountsResponse = apiClient.getAccounts();
         }
 

@@ -55,7 +55,10 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
         final Clock clockMock = createClockMock();
         transactionalAccountFetcher =
                 new CreditAgricoleBaseTransactionalAccountFetcher(
-                        apiClient, persistentStorage, clockMock);
+                        apiClient,
+                        persistentStorage,
+                        clockMock,
+                        new AccountConsentManager(apiClient));
     }
 
     @Test

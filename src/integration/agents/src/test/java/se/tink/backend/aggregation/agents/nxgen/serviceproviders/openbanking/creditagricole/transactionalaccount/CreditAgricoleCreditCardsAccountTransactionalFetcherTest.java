@@ -31,7 +31,10 @@ public class CreditAgricoleCreditCardsAccountTransactionalFetcherTest {
 
         baseCardFetcher =
                 new CreditAgricoleBaseCreditCardsFetcher(
-                        creditAgricoleBaseApiClient, persistentStorage, localDateTimeSource);
+                        creditAgricoleBaseApiClient,
+                        persistentStorage,
+                        localDateTimeSource,
+                        new AccountConsentManager(creditAgricoleBaseApiClient));
     }
 
     @Test

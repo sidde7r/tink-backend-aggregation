@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;
@@ -93,7 +94,12 @@ final class OpenIdAccessTokenRefresher implements AccessTokenRefresher {
             log.error(
                     "[OpenIdAccessTokenRefresher] Access token refresh failed: {}",
                     e.getResponse().getBody(String.class));
+            throw SessionError.SESSION_EXPIRED.exception();
 
+        } catch (HttpClientException e) {
+            log.error(
+                    "[OpenIdAccessTokenRefresher] Failure of processing the HTTP request or response: {}",
+                    e.getMessage());
             throw SessionError.SESSION_EXPIRED.exception();
         }
 

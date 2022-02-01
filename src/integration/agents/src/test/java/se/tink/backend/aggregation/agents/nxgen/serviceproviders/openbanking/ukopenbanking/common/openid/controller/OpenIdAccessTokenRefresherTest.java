@@ -15,6 +15,7 @@ import ch.qos.logback.core.read.ListAppender;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,8 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
@@ -154,6 +157,32 @@ public class OpenIdAccessTokenRefresherTest {
                         "[OpenIdAccessTokenRefresher] Trying to refresh access token.");
         assertThat(logs.get(1))
                 .containsSubsequence("[OpenIdAccessTokenRefresher] Access token refresh failed:");
+    }
+
+    @Test
+    public void shouldThrowSessionExpiredExceptionWhenHttpClientExceptionHasBeenCaught() {
+        // given
+        OAuth2Token oAuth2Token = getSampleOAuth2Token();
+        when(openIdApiClient.refreshAccessToken(anyString(), any(ClientMode.class)))
+                .thenThrow(new HttpClientException("Error message", mock(HttpRequest.class)));
+        // when
+        ThrowingCallable throwingCallable = () -> tokenRefresher.refresh(oAuth2Token);
+        // then
+        assertThatThrownBy(throwingCallable)
+                .isInstanceOfSatisfying(
+                        SessionException.class,
+                        e -> Assertions.assertThat(e.getError()).isEqualTo(SESSION_EXPIRED));
+        List<String> logs =
+                listAppender.list.stream()
+                        .map(ILoggingEvent::getFormattedMessage)
+                        .collect(Collectors.toList());
+        assertThat(logs).hasSize(2);
+        assertThat(logs.get(0))
+                .containsSubsequence(
+                        "[OpenIdAccessTokenRefresher] Trying to refresh access token.");
+        assertThat(logs.get(1))
+                .containsSubsequence(
+                        "[OpenIdAccessTokenRefresher] Failure of processing the HTTP request or response:");
     }
 
     private OAuth2Token getSampleOAuth2TokenWithoutRefreshToken() {
