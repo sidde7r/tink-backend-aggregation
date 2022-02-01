@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -47,22 +46,15 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     public SparebankPaymentExecutor(
             SparebankApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState,
             SparebankStorage storage) {
         this.apiClient = apiClient;
         this.storage = storage;
         this.signer =
-                new SparebankPaymentSigner(
-                        this,
-                        apiClient,
-                        supplementalInformationHelper,
-                        strongAuthenticationState,
-                        storage);
+                new SparebankPaymentSigner(this, apiClient, supplementalInformationHelper, storage);
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        signer.initiate();
         return getPaymentResponse(paymentRequest);
     }
 
