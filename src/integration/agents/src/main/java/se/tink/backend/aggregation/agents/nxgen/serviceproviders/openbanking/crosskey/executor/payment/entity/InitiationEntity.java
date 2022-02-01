@@ -21,6 +21,7 @@ public class InitiationEntity {
     private InstructedAmountEntity instructedAmount;
     private PersonAccountEntity debtorAccount;
     private PersonAccountEntity creditorAccount;
+    private String localInstrument;
 
     public InitiationEntity() {}
 
@@ -33,22 +34,25 @@ public class InitiationEntity {
         this.instructedAmount = builder.instructedAmount;
         this.creditorAccount = builder.creditorAccount;
         this.debtorAccount = builder.debtorAccount;
+
+        this.localInstrument = builder.localInstrument;
     }
 
     @JsonIgnore
     public static InitiationEntity of(PaymentRequest paymentRequest) {
-        String endToEndIdentification = RequestConstants.END_TO_END_IDENTIFICATION;
         InstructedAmountEntity instructedAmount = InstructedAmountEntity.of(paymentRequest);
         PersonAccountEntity creditorAccount = PersonAccountEntity.creditorOf(paymentRequest);
         PersonAccountEntity debtorAccount = PersonAccountEntity.debtorOf(paymentRequest);
 
         return new InitiationEntity.Builder()
-                .withInstructionIdentification(randomStringNumber())
-                .withEndToEndIdentification(endToEndIdentification)
+                .withInstructionIdentification(
+                        paymentRequest.getPayment().getRemittanceInformation().getValue())
+                .withEndToEndIdentification(randomStringNumber())
                 .withCurrencyOfTransfer(paymentRequest.getPayment().getCurrency())
                 .withInstructedAmount(instructedAmount)
                 .withCreditorAccount(creditorAccount)
                 .withDebtorAccount(debtorAccount)
+                .withLocalInstrument(RequestConstants.SEPA_CREDIT_TRANSFER)
                 .build();
     }
 
@@ -95,6 +99,7 @@ public class InitiationEntity {
         private InstructedAmountEntity instructedAmount;
         private PersonAccountEntity creditorAccount;
         private PersonAccountEntity debtorAccount;
+        private String localInstrument;
 
         public Builder withInstructionIdentification(String instructionIdentification) {
             this.instructionIdentification = instructionIdentification;
@@ -123,6 +128,11 @@ public class InitiationEntity {
 
         public Builder withDebtorAccount(PersonAccountEntity debtorAccount) {
             this.debtorAccount = debtorAccount;
+            return this;
+        }
+
+        public Builder withLocalInstrument(String localInstrument) {
+            this.localInstrument = localInstrument;
             return this;
         }
 

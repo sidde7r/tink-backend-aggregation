@@ -9,7 +9,10 @@ public enum CrosskeyPaymentStatus {
     AWAITING_AUTHORISATION("AwaitingAuthorisation"),
     AUTHORISED("Authorised"),
     ACCEPTED_SETTLEMENT_COMPLETED("AcceptedSettlementCompleted"),
-    UNKNOWN("Unknown");
+    ACCEPTED_SETTLEMENT_IN_PROCESS("AcceptedSettlementInProcess"),
+    UNKNOWN("Unknown"),
+    CONSUMED("Consumed"),
+    REJECTED("Rejected");
 
     private static EnumMap<CrosskeyPaymentStatus, PaymentStatus> crosskeyPaymentStatusToTinkMapper =
             new EnumMap<>(CrosskeyPaymentStatus.class);
@@ -20,7 +23,10 @@ public enum CrosskeyPaymentStatus {
         crosskeyPaymentStatusToTinkMapper.put(AWAITING_AUTHORISATION, PaymentStatus.PENDING);
         crosskeyPaymentStatusToTinkMapper.put(AUTHORISED, PaymentStatus.SIGNED);
         crosskeyPaymentStatusToTinkMapper.put(ACCEPTED_SETTLEMENT_COMPLETED, PaymentStatus.PAID);
+        crosskeyPaymentStatusToTinkMapper.put(ACCEPTED_SETTLEMENT_IN_PROCESS, PaymentStatus.PAID);
+        crosskeyPaymentStatusToTinkMapper.put(CONSUMED, PaymentStatus.PAID);
         crosskeyPaymentStatusToTinkMapper.put(UNKNOWN, PaymentStatus.UNDEFINED);
+        crosskeyPaymentStatusToTinkMapper.put(REJECTED, PaymentStatus.REJECTED);
 
         tinkPaymentStatusToCrosskeyMapper.put(PaymentStatus.PENDING, AWAITING_AUTHORISATION);
         tinkPaymentStatusToCrosskeyMapper.put(PaymentStatus.SIGNED, AUTHORISED);
@@ -65,5 +71,14 @@ public enum CrosskeyPaymentStatus {
     @Override
     public String toString() {
         return statusText;
+    }
+
+    public static CrosskeyPaymentStatus fromString(String text) {
+        for (CrosskeyPaymentStatus status : CrosskeyPaymentStatus.values()) {
+            if (status.statusText.equalsIgnoreCase(text)) {
+                return status;
+            }
+        }
+        return null;
     }
 }

@@ -9,4 +9,5 @@ public class CrosskeyMarketConfiguration {
     private String financialId;
     private String baseApiURL;
     private String baseAuthURL;
+    private String tanUrl;
 }

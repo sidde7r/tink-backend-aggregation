@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment;
 
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.NotImplementedException;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -28,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@Slf4j
 public class CrossKeyPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final CrosskeyBaseApiClient apiClient;
@@ -74,16 +76,22 @@ public class CrossKeyPaymentExecutor implements PaymentExecutor, FetchablePaymen
         sessionStorage.put(
                 StorageKeys.INTERNATIONAL_ID,
                 paymentResponse.getData().getInternationalPaymentId());
-        return consentDetails.toTinkPayment(paymentRequest);
+        String paymentStat = paymentResponse.getData().getStatus();
+        log.info("External payment status is: " + paymentStat);
+        return consentDetails.toTinkPayment(paymentRequest, paymentStat);
     }
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
 
-        CrosskeyPaymentDetails consentDetails = CrosskeyPaymentDetails.of(paymentMultiStepRequest);
-        CrosskeyPaymentDetails paymentResponse = apiClient.makePayment(consentDetails);
+        CrosskeyPaymentDetails paymentResponse =
+                apiClient.fetchPayment(sessionStorage.get(StorageKeys.INTERNATIONAL_ID));
+        fetch(paymentMultiStepRequest);
         return new PaymentMultiStepResponse(
-                paymentResponse.toTinkPayment(paymentMultiStepRequest).getPayment(),
+                paymentResponse
+                        .toTinkPayment(
+                                paymentMultiStepRequest, paymentResponse.getData().getStatus())
+                        .getPayment(),
                 AuthenticationStepConstants.STEP_FINALIZE);
     }
 
@@ -104,7 +112,9 @@ public class CrossKeyPaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         String internationalId = sessionStorage.get(StorageKeys.INTERNATIONAL_ID);
         CrosskeyPaymentDetails crosskeyPaymentDetails = apiClient.fetchPayment(internationalId);
-        return crosskeyPaymentDetails.toTinkPayment(paymentRequest);
+        String paymentStat = crosskeyPaymentDetails.getData().getStatus();
+        log.info("External payment status is: " + paymentStat);
+        return crosskeyPaymentDetails.toTinkPayment(paymentRequest, paymentStat);
     }
 
     @Override

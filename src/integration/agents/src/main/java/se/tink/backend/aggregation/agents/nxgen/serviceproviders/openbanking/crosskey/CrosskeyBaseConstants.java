@@ -75,7 +75,6 @@ public class CrosskeyBaseConstants {
         public final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public final String MISSING_BALANCE = "No balance found";
         public final String MISSING_TOKEN = "Cannot find token!";
         public final String CONSENT_ID_NOT_FOUND = "Consent Id not found in session storage.";
         public final String NOT_AUTHENTICATED = "User is not authenticated.";
@@ -137,17 +136,12 @@ public class CrosskeyBaseConstants {
 
     @UtilityClass
     public class Format {
-        public final String TRANSACTION_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ssX";
         public final String TRANSACTION_DATE_FETCHER = "yyyy-MM-dd'T'HH:mm:ss";
     }
 
     @UtilityClass
     public class ExceptionMessagePatterns {
         public final String UNRECOGNIZED_ACCOUNT_TYPE = "Unrecognized Crosskey account type %s";
-        public final String CANNOT_MAP_TINK_ACCOUNT =
-                "Cannot map Tink account type : %s to a Crosskey account type.";
-        public final String CANNOT_MAP_CROSSKEY_ACCOUNT =
-                "Cannot map Crosskey account type : %s to a Tink account type.";
         public final String CANNOT_MAP_CROSSKEY_PAYMENT_STATUS =
                 "Cannot map Crosskey payment status : %s to Tink payment status.";
         public final String CANNOT_MAP_TINK_PAYMENT_STATUS =
@@ -156,7 +150,8 @@ public class CrosskeyBaseConstants {
 
     @UtilityClass
     public class RequestConstants {
-        public final String END_TO_END_IDENTIFICATION = "FRESCO.21302.GFX.20";
+        public final String SEPA_CREDIT_TRANSFER = "UK.OBIE.SEPACreditTransfer";
+        public final String PARTY_TO_PARTY = "PartyToParty";
     }
 
     @UtilityClass

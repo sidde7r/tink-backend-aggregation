@@ -74,6 +74,7 @@ public class CrosskeyBaseApiClient {
     private final String certificateSerialNumber;
     private final String providerMarket;
     private final String userIp;
+    private final String tanUrl;
 
     public CrosskeyBaseApiClient(
             TinkHttpClient client,
@@ -88,6 +89,7 @@ public class CrosskeyBaseApiClient {
         this.user = user;
         this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
         this.baseApiUrl = marketConfiguration.getBaseApiURL();
+        this.tanUrl = marketConfiguration.getTanUrl();
         this.xFapiFinancialId = marketConfiguration.getFinancialId();
         this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
@@ -339,7 +341,7 @@ public class CrosskeyBaseApiClient {
                 Arrays.asList(OIDCValues.B_64_STR, OIDCValues.IAT, OIDCValues.ISS, OIDCValues.TAN),
                 // -3 since it is sometimes rounds up to future..
                 Instant.now().getEpochSecond() - 3,
-                baseApiUrl,
+                tanUrl,
                 configuration.getClientId());
     }
 
