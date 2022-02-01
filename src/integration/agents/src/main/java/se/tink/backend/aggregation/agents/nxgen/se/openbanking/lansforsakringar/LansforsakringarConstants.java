@@ -67,8 +67,6 @@ public abstract class LansforsakringarConstants {
         public static final String CREATE_SIGNING_BASKET =
                 BASE_API_URL + Endpoints.CREATE_SIGNING_BASKET;
         public static final String GET_PAYMENT_STATUS = BASE_API_URL + Endpoints.GET_PAYMENT_STATUS;
-        public static final String GET_ACCOUNT_NUMBERS =
-                BASE_API_URL + Endpoints.GET_ACCOUNT_NUMBERS;
     }
 
     public static class Endpoints {
