@@ -14,6 +14,7 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment",
@@ -22,6 +23,7 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//third_party:org_assertj_assertj_core",
         "@tink_backend//src/libraries/account_identifier",
     ],
 )
