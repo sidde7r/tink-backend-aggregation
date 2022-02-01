@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import se.tink.agent.runtime.operation.ProviderImpl;
 import se.tink.agent.sdk.operation.Provider;
+import src.agent_sdk.runtime.src.operation.ProviderImpl;
 
 public class SdcNoConfigurationTest {
 

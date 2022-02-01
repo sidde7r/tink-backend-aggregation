@@ -9,7 +9,7 @@ java_library(
         "//src/agent_sdk/sdk/src/utils/signer",
     ],
     deps = [
-        "//src/agent_sdk/runtime/src/main/java/operation",
+        "//src/agent_sdk/runtime/src/operation",
         "//src/agent_sdk/sdk/src/operation",
         "//src/agent_sdk/sdk/src/utils/signer",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",

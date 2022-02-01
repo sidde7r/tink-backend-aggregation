@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.auth
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.agent.runtime.operation.ProviderImpl;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.SdcSeConfiguration;
+import src.agent_sdk.runtime.src.operation.ProviderImpl;
 
 public class SdcErrorMessagesTest {
     private SdcSeConfiguration agentConfiguration;

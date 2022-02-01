@@ -6,6 +6,6 @@ junit_test(
     data = [],
     resources = [],
     deps = [
-        "//src/agent_sdk/runtime/src/main/java/operation",
+        "//src/agent_sdk/runtime/src/operation",
     ],
 )

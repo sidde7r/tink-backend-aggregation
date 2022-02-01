@@ -43,7 +43,8 @@ public class ErrorCheckerTest {
                 UNMAPPED_ERROR, httpResponseExceptionThrown.getResponse().getBody(String.class));
     }
 
-    @Parameters(method = "agentsExceptionsToTest")
+    @Test
+    @Parameters(method = "agentExceptionsToTest")
     public <T extends AgentException> void testAgentErrors(
             String errorMessage, Class<T> agentException, String expectedError) {
         // given
@@ -57,6 +58,7 @@ public class ErrorCheckerTest {
         assertEquals(expectedError, mappedException.getUserMessage().get());
     }
 
+    @Test
     @Parameters(method = "paymentExceptionsToTest")
     public <T extends PaymentException> void testPaymentExceptions(
             String errorMessage, Class<T> paymentException, String expectedError) {
@@ -100,6 +102,11 @@ public class ErrorCheckerTest {
                 EndUserErrorMessageKeys.ORDER_NOT_PROCESSED_MESSAGE.get()
             },
             new Object[] {
+                ErrorMessageKeys.ORDER_REJECTED,
+                LoginException.class,
+                "There may be a lock on the TAN procedure. Please contact your bank."
+            },
+            new Object[] {
                 "",
                 BankServiceException.class,
                 "The bank service has temporarily failed; please try again later."
@@ -121,12 +128,12 @@ public class ErrorCheckerTest {
                 "The payment was rejected by the bank."
             },
             new Object[] {
-                ErrorMessageKeys.ORDER_DUPLICATED,
-                DuplicatePaymentException.class,
-                "The payment could not be made because an identical payment is already registered"
+                "/// + " + ErrorMessageKeys.MISSING_COVERAGE + " ///",
+                PaymentRejectedException.class,
+                "The payment was rejected by the bank."
             },
             new Object[] {
-                ErrorMessageKeys.ORDER_REJECTED,
+                ErrorMessageKeys.ORDER_DUPLICATED,
                 DuplicatePaymentException.class,
                 "The payment could not be made because an identical payment is already registered"
             },
