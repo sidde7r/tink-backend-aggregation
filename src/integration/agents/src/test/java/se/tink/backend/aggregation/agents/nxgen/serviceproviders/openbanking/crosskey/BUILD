@@ -26,6 +26,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
+        "//src/integration/payment:enums",
         "//src/libraries/agent-storage",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
