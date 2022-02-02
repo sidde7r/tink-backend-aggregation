@@ -210,6 +210,8 @@ clients:
     aggregatorIdentifier: "Ica Spara"
   icaspara-test:
     aggregatorIdentifier: "Ica Spara"
+  ie-bnppf-production:
+    aggregatorIdentifier: "BNP Paribas Fortis"
   ir-anpost-test:
     aggregatorIdentifier: "An Post"
   ir-anpost-production:
