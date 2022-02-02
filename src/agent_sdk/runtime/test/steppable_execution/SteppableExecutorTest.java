@@ -1,5 +1,6 @@
 package src.agent_sdk.runtime.test.steppable_execution;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -71,6 +72,35 @@ public class SteppableExecutorTest {
         response = executor.execute(response.getNextStepId().get(), request);
 
         Assert.assertEquals(Optional.of(123), response.getDonePayload());
+    }
+
+    @Test
+    public void testMaxExecutionTime() {
+        StepFlow stepFlow =
+                StepFlow.builder().startStep(new LongRunningStep()).addStep(new StepA()).build();
+
+        // Allow maximum execution time of 1ms.
+        SteppableExecutor<String, Integer> executor =
+                new SteppableExecutor<>(Duration.ofMillis(1), stepFlow);
+
+        StepRequest<String> request = new StepRequest<>("foo", null, null, null);
+        StepResponse<Integer> response = executor.execute(null, request);
+
+        // Only one step, `LongRunningStep`, should have had time to execute.
+        Assert.assertEquals(Optional.of(StepA.class.toString()), response.getNextStepId());
+    }
+
+    private static class LongRunningStep extends InteractiveStep<String, Integer> {
+        @Override
+        @SuppressWarnings("java:S2925")
+        public InteractiveStepResponse<Integer> execute(StepRequest<String> request) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // Noop.
+            }
+            return InteractiveStepResponse.nextStep(StepA.class).noUserInteraction().build();
+        }
     }
 
     private static class StepA extends InteractiveStep<String, Integer> {
