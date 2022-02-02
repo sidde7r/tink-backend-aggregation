@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -19,7 +20,7 @@ public class TransactionEntity {
     private AccountEntity debtorAccount;
     private String debtorName;
     private String entryReference;
-    private String remittanceInformationUnstructured;
+    private List<String> remittanceInformationUnstructuredArray;
     private BalanceAmountEntity transactionAmount;
     private String transactionId;
     private String endToEndId;
@@ -27,7 +28,7 @@ public class TransactionEntity {
     public Transaction toBookedTinkTransaction() {
         Builder builder =
                 Transaction.builder()
-                        .setDescription(remittanceInformationUnstructured)
+                        .setDescription(getDescription())
                         .setDate(bookingDate.withZoneSameInstant(ZONE_ID).toLocalDate())
                         .setAmount(transactionAmount.toAmount())
                         .setPending(false)
@@ -39,6 +40,10 @@ public class TransactionEntity {
                         .setProviderMarket(SkandiaConstants.PROVIDER_MARKET);
 
         return (Transaction) builder.build();
+    }
+
+    private String getDescription() {
+        return remittanceInformationUnstructuredArray.stream().findFirst().orElse("");
     }
 
     private TransactionDates getTinkTransactionDates() {

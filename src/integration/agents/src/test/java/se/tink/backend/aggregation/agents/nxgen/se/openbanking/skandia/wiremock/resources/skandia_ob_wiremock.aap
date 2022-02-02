@@ -28,7 +28,7 @@ Server: Jetty(9.4.z-SNAPSHOT)
 
 -----------------------------------------------------------------------------------
 REQUEST 2
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts
 Accept: application/json
 Content-Type: application/json
 
@@ -57,13 +57,13 @@ X-Powered-By: ASP.NET
       "usage": "PRIV",
       "_links": {
         "self": {
-          "href": "/v1/accounts/915011111111111"
+          "href": "/ais/v2/accounts/915011111111111"
         },
         "balances": {
-          "href": "/v1/accounts/915011111111111/balances"
+          "href": "/ais/v2/accounts/915011111111111/balances"
         },
         "transactions": {
-          "href": "/v1/accounts/915011111111111/transactions"
+          "href": "/ais/v2/accounts/915011111111111/transactions"
         }
       }
     },
@@ -78,13 +78,13 @@ X-Powered-By: ASP.NET
       "usage": "PRIV",
       "_links": {
         "self": {
-          "href": "/v1/accounts/915022222222222"
+          "href": "/ais/v2/accounts/915022222222222"
         },
         "balances": {
-          "href": "/v1/accounts/915022222222222/balances"
+          "href": "/ais/v2/accounts/915022222222222/balances"
         },
         "transactions": {
-          "href": "/v1/accounts/915022222222222/transactions"
+          "href": "/ais/v2/accounts/915022222222222/transactions"
         }
       }
     }
@@ -93,7 +93,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 3
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/balances
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915011111111111/balances
 Accept: application/json
 Content-Type: application/json
 
@@ -120,7 +120,8 @@ X-Powered-By: ASP.NET
         "amount": "5000.99",
         "currency": "SEK"
       },
-      "balanceType": "closingbooked",
+      "balanceType": "closingBooked",
+      "creditLimitIncluded": true,
       "referenceDate": "2021-04-13T00:00:00"
     },
     {
@@ -128,7 +129,8 @@ X-Powered-By: ASP.NET
         "amount": "5000.99",
         "currency": "SEK"
       },
-      "balanceType": "available",
+      "balanceType": "interimAvailable",
+      "creditLimitIncluded": true,
       "referenceDate": "2021-04-13T00:00:00"
     }
   ]
@@ -136,7 +138,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 4
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915022222222222/balances
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915022222222222/balances
 Accept: application/json
 Content-Type: application/json
 
@@ -163,7 +165,8 @@ X-Powered-By: ASP.NET
         "amount": "10000.48",
         "currency": "SEK"
       },
-      "balanceType": "closingbooked",
+      "balanceType": "closingBooked",
+      "creditLimitIncluded": true,
       "referenceDate": "2021-08-24T00:00:00"
     },
     {
@@ -171,7 +174,8 @@ X-Powered-By: ASP.NET
         "amount": "10000.48",
         "currency": "SEK"
       },
-      "balanceType": "available",
+      "balanceType": "interimAvailable",
+      "creditLimitIncluded": true,
       "referenceDate": "2021-08-24T00:00:00"
     }
   ]
@@ -179,7 +183,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 5
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?dateFrom=1992-04-10&dateTo=1992-07-10&bookingStatus=pending
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915011111111111/transactions?date-from=1992-04-10&date-to=1992-07-10&booking-status=pending
 Accept: application/json
 Content-Type: application/json
 
@@ -209,17 +213,19 @@ X-Powered-By: ASP.NET
           "amount": "100",
           "currency": "SEK"
         },
-        "remittanceInformationUnstructured": "Pending purchase",
+        "remittanceInformationUnstructuredArray": [
+        "Pending purchase"
+        ],
         "_links": {
           "transactionDetails": {
-            "href": "/v1/accounts/915011111111111/transactions/9150000000000"
+            "href": "/ais/v2/accounts/915011111111111/transactions/9150000000000"
           }
         }
       }
     ],
     "_links": {
       "account": {
-        "href": "/v1/accounts/915011111111111"
+        "href": "/ais/v2/accounts/915011111111111"
       }
     }
   }
@@ -227,7 +233,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 6
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915011111111111/transactions?&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=booked
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915011111111111/transactions?&date-from=1992-01-12&date-to=1992-04-10&booking-status=booked
 Accept: application/json
 Content-Type: application/json
 
@@ -260,10 +266,12 @@ Transfer-Encoding: chunked
           "amount": "-50",
           "currency": "SEK"
         },
-        "remittanceInformationUnstructured": "Purchase",
+        "remittanceInformationUnstructuredArray": [
+        "Purchase"
+        ],
         "_links": {
           "transactionDetails": {
-            "href": "/v1/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-12@2021-04-12-22.47.41.260165"
+            "href": "/ais/v2/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-12@2021-04-12-22.47.41.260165"
           }
         }
       },
@@ -276,10 +284,12 @@ Transfer-Encoding: chunked
           "amount": "350",
           "currency": "SEK"
         },
-        "remittanceInformationUnstructured": "Swish",
+        "remittanceInformationUnstructuredArray": [
+        "Swish"
+        ],
         "_links": {
           "transactionDetails": {
-            "href": "/v1/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-06@2021-04-04-14.22.48.171251"
+            "href": "/ais/v2/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-06@2021-04-04-14.22.48.171251"
           }
         }
       },
@@ -292,17 +302,19 @@ Transfer-Encoding: chunked
           "amount": "-99",
           "currency": "SEK"
         },
-        "remittanceInformationUnstructured": "Autogiro",
+        "remittanceInformationUnstructuredArray": [
+        "Autogiro"
+        ],
         "_links": {
           "transactionDetails": {
-            "href": "/v1/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-01@2021-04-01-05.36.06.166182"
+            "href": "/ais/v2/accounts/915011111111111/transactions/915011111111111@mocked@2021-04-01@2021-04-01-05.36.06.166182"
           }
         }
       }
     ],
     "_links": {
       "account": {
-        "href": "/v1/accounts/915011111111111"
+        "href": "/ais/v2/accounts/915011111111111"
       }
     }
   }
@@ -310,7 +322,7 @@ Transfer-Encoding: chunked
 
 -----------------------------------------------------------------------------------
 REQUEST 7
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915022222222222/transactions?dateFrom=1992-04-10&dateTo=1992-07-10&bookingStatus=pending
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915022222222222/transactions?date-from=1992-04-10&date-to=1992-07-10&booking-status=pending
 Accept: application/json
 Content-Type: application/json
 
@@ -335,7 +347,7 @@ X-Powered-By: ASP.NET
     "pending": [],
     "_links": {
       "account": {
-        "href": "/v1/accounts/915022222222222"
+        "href": "/ais/v2/accounts/915022222222222"
       }
     }
   }
@@ -343,7 +355,7 @@ X-Powered-By: ASP.NET
 
 -----------------------------------------------------------------------------------
 REQUEST 8
-GET https://apis.skandia.se/open-banking/core-bank/v1/accounts/915022222222222/transactions?&dateFrom=1992-01-12&dateTo=1992-04-10&bookingStatus=booked
+GET https://apis.skandia.se/open-banking/core-bank/ais/v2/accounts/915022222222222/transactions?date-from=1992-01-12&date-to=1992-04-10&booking-status=booked
 Accept: application/json
 Content-Type: application/json
 
@@ -376,10 +388,12 @@ Transfer-Encoding: chunked
           "amount": "-10000",
           "currency": "SEK"
         },
-        "remittanceInformationUnstructured": "Message to recipient",
+        "remittanceInformationUnstructuredArray": [
+        "Message to recipient"
+        ],
         "_links": {
           "transactionDetails": {
-            "href": "/v1/accounts/915022222222222/transactions/915022222222222@7F000001@2021-08-01@2021-08-01-09.04.51.027622"
+            "href": "/ais/v2/accounts/915022222222222/transactions/915022222222222@7F000001@2021-08-01@2021-08-01-09.04.51.027622"
           }
         }
       },
@@ -392,10 +406,12 @@ Transfer-Encoding: chunked
           "amount": "30500",
           "currency": "SEK"
         },
-        "remittanceInformationUnstructured": "Message from sender",
+        "remittanceInformationUnstructuredArray": [
+        "Message from sender"
+        ],
         "_links": {
           "transactionDetails": {
-            "href": "/v1/accounts/915022222222222/transactions/915022222222222@7F000001@2021-07-15@2021-07-15-13.22.50.733448"
+            "href": "/ais/v2/accounts/915022222222222/transactions/915022222222222@7F000001@2021-07-15@2021-07-15-13.22.50.733448"
           }
         }
       }
@@ -403,7 +419,7 @@ Transfer-Encoding: chunked
     "pending": [],
     "_links": {
       "account": {
-        "href": "/v1/accounts/915022222222222"
+        "href": "/ais/v2/accounts/915022222222222"
       }
     }
   }

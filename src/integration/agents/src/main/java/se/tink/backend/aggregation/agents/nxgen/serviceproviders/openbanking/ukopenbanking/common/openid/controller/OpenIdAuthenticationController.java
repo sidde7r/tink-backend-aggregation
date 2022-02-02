@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.masker.StringMasker;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -150,15 +149,6 @@ public class OpenIdAuthenticationController
                 "[OpenIdAuthenticationController] OAuth2 token received from bank: {}",
                 oAuth2Token.toMaskedString(logMasker));
 
-        // TODO: To be removed when 401 response for valid access token problem solved
-        // https://tinkab.atlassian.net/browse/IFD-3448
-        // https://openbanking.atlassian.net/servicedesk/customer/portal/1/OBSD-26782
-        if ("uk-tsb-oauth2".equals(credentials.getProviderName())) {
-            log.info(
-                    "[OpenIdAuthenticationController] OAuth2 access token received from bank: {}",
-                    StringMasker.maskMiddleOfString(oAuth2Token.getAccessToken()));
-        }
-
         authenticationValidator.validateRefreshableAccessToken(oAuth2Token);
 
         credentials.setSessionExpiryDate(
@@ -180,15 +170,6 @@ public class OpenIdAuthenticationController
         log.info(
                 "[OpenIdAuthenticationController] OAuth2 token retrieved from persistent storage {} ",
                 oAuth2Token.toMaskedString(logMasker));
-
-        // TODO: To be removed when 401 response for valid access token problem solved
-        // https://tinkab.atlassian.net/browse/IFD-3448
-        // https://openbanking.atlassian.net/servicedesk/customer/portal/1/OBSD-26782
-        if ("uk-tsb-oauth2".equals(credentials.getProviderName())) {
-            log.info(
-                    "[OpenIdAuthenticationController] OAuth2 access token retrieved from persistent storage: {}",
-                    StringMasker.maskMiddleOfString(oAuth2Token.getAccessToken()));
-        }
 
         if (oAuth2Token.canUseAccessToken()) {
             apiClient.instantiateAisAuthFilter(oAuth2Token);

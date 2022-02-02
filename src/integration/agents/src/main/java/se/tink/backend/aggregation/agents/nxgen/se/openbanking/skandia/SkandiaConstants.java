@@ -100,9 +100,9 @@ public final class SkandiaConstants {
     public static class ApiServices {
         public static final String AUTHORIZE = "/authorization.oauth2";
         public static final String TOKEN = "/token.oauth2";
-        public static final String GET_ACCOUNTS = "/v1/accounts";
-        public static final String GET_TRANSACTIONS = "/v1/accounts/{accountId}/transactions";
-        public static final String GET_BALANCES = "/v1/accounts/{accountId}/balances";
+        public static final String GET_ACCOUNTS = "/ais/v2/accounts";
+        public static final String GET_TRANSACTIONS = "/ais/v2/accounts/{accountId}/transactions";
+        public static final String GET_BALANCES = "/ais/v2/accounts/{accountId}/balances";
         public static final String CREATE_PAYMENT = "/pis/v2/payments/{paymentProduct}";
         public static final String GET_PAYMENT = "/pis/v2/payments/{paymentProduct}/{paymentId}";
         public static final String GET_PAYMENT_STATUS =
@@ -119,14 +119,14 @@ public final class SkandiaConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
-        public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String BOOKING_STATUS = "booking-status";
         public static final String CLIENT_ID = "client_id";
         public static final String STATE = "state";
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String RESPONSE_TYPE = "response_type";
-        public static final String DATE_FROM = "dateFrom";
-        public static final String DATE_TO = "dateTo";
+        public static final String DATE_FROM = "date-from";
+        public static final String DATE_TO = "date-to";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -221,6 +221,11 @@ public final class SkandiaConstants {
 
         public static final String BANK_GIRO_TYPE = "BANKGIRO";
         public static final String PLUS_GIRO_TYPE = "PLUSGIRO";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class BalanceTypes {
+        public static final String INTERIM_AVAILABLE = "interimAvailable";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
