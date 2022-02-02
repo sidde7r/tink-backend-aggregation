@@ -1,0 +1,104 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "22222222222222",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "GBP",
+            "scale" : 2,
+            "unscaledValue" : 250000,
+            "exactValue" : 2500.0,
+            "doubleValue" : 2500.0
+        },
+        "exactBalance" : {
+            "currencyCode" : "GBP",
+            "scale" : 2,
+            "unscaledValue" : 277331,
+            "exactValue" : 2773.31,
+            "doubleValue" : 2773.31
+        },
+        "currencyCode" : "GBP",
+        "availableBalance" : {
+            "currencyCode" : "GBP",
+            "scale" : 2,
+            "unscaledValue" : 288438,
+            "exactValue" : 2884.38,
+            "doubleValue" : 2884.38
+        },
+        "creditLimit" : {
+            "currencyCode" : "GBP",
+            "scale" : 2,
+            "unscaledValue" : 250000,
+            "exactValue" : 2500.0,
+            "doubleValue" : 2500.0
+        },
+        "bankId" : "22222222222222",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "JANUSZ TRACZ",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"sort-code://22222222222222\"]",
+        "closed" : false,
+        "holderName" : "Janusz Tracz",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Janusz Tracz",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 2500.0,
+        "balance" : 2773.31
+    } ],
+    "transactions" : [ {
+        "amount" : -19.35,
+        "date" : 1619517600000,
+        "description" : "CLEARPAY",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-27",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "POS",
+        "providerMarket" : "UK",
+        "booked" : false
+    }, {
+        "amount" : 130.42,
+        "date" : 1619085600000,
+        "description" : "BOWERMAN A 2020",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ {
+            "type" : "BOOKING_DATE",
+            "value" : {
+                "date" : "2021-04-22",
+                "instant" : null
+            }
+        } ],
+        "proprietaryFinancialInstitutionType" : "DPC",
+        "providerMarket" : "UK",
+        "booked" : false
+    } ]
+}

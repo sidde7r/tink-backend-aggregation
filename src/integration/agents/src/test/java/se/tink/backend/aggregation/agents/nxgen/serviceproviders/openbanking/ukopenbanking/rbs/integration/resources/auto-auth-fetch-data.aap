@@ -1,0 +1,402 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://secure1.rbs.co.uk/.well-known/openid-configuration
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "version": "3.0",
+  "issuer": "https://secure1.rbs.co.uk",
+  "authorization_endpoint": "https://secure1.rbs.co.uk/as/authorization.oauth2",
+  "token_endpoint": "https://secure1t.rbs.co.uk/as/token.oauth2",
+  "revocation_endpoint": "https://secure1.rbs.co.uk/as/revoke_token.oauth2",
+  "jwks_uri": "https://keystore.openbanking.org.uk/0015800000jfwB4AAI/3Z5fMPENsz075hYLU9Rly5.jwks",
+  "registration_endpoint": "https://api.rbs.co.uk/register/v1.0",
+  "scopes_supported": [
+    "openid",
+    "payments",
+    "accounts",
+    "fundsconfirmations",
+    "mortgages-v1:decision-in-principle",
+    "customer:read",
+    "bankingmyway:read",
+    "crossreference:read",
+    "crossreference:create",
+    "crossreference:delete",
+    "change-of-address:create",
+    "change-of-address:read",
+    "change-of-address-eligibility:read",
+    "address:search",
+    "indicativefxrate:search",
+    "tradeablepaymentquotefxrate:search",
+    "tradeablepaymentquotefxrate:write",
+    "carbondata-retail:read",
+    "carbondata-retail:write",
+    "change-of-email-eligibility:read",
+    "change-of-email:create",
+    "change-of-email:read",
+    "change-of-mobile-eligibility:read",
+    "change-of-mobile:create",
+    "change-of-mobile:read",
+    "change-of-address:update",
+    "hermes-notificationcentre:read",
+    "hermes-notificationcentre:write",
+    "payee-confirmation:search",
+    "COPRequester:name-verification",
+    "COPResponder:copin",
+    "mortgages-v2:decision-in-principle",
+    "customer-ekyc:read"
+  ],
+  "claims_supported": [
+    "aud",
+    "exp",
+    "iat",
+    "iss",
+    "openbanking_intent_id",
+    "sub",
+    "acr"
+  ],
+  "acr_values_supported": [
+    "urn:openbanking:psd2:ca"
+  ],
+  "response_types_supported": [
+    "code id_token"
+  ],
+  "response_modes_supported": [
+    "fragment",
+    "query",
+    "form_post"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "refresh_token",
+    "client_credentials"
+  ],
+  "subject_types_supported": [
+    "public"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "HS256",
+    "HS384",
+    "HS512",
+    "RS384",
+    "RS512",
+    "ES256",
+    "ES384",
+    "ES512"
+  ],
+  "token_endpoint_auth_methods_supported": [
+    "tls_client_auth",
+    "**HASHED:O+**"
+  ],
+  "tls_client_certificate_bound_access_tokens": true,
+  "token_endpoint_auth_signing_alg_values_supported": [
+    "**HASHED:Dd**",
+    "RS384",
+    "RS512",
+    "ES256",
+    "ES384",
+    "ES512"
+  ],
+  "claim_types_supported": [
+    "normal"
+  ],
+  "claims_parameter_supported": true,
+  "request_parameter_supported": true,
+  "request_uri_parameter_supported": false,
+  "request_object_signing_alg_values_supported": [
+    "**HASHED:Dd**",
+    "RS384",
+    "RS512",
+    "ES256",
+    "ES384",
+    "ES512"
+  ],
+  "request_object_encryption_alg_values_supported": [],
+  "request_object_encryption_enc_values_supported": []
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://secure1t.rbs.co.uk/as/token.oauth2
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token": "000nS3OcUQz3NrPBnni9kHgb03HD",
+  "token_type": "**HASHED:cQ**",
+  "expires_in": 599
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api.rbs.co.uk/open-banking/v3.1/aisp/accounts
+Accept: application/json
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/json;charset=utf-8
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+  "Data": {
+    "Account": [
+      {
+        "AccountId": "222A08C886C7B72BCCF095AAC94FE7AF",
+        "Currency": "GBP",
+        "AccountType": "Personal",
+        "AccountSubType": "Mortgage",
+        "Description": "RB CAM",
+        "Account": [
+          {
+            "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+            "Identification": "83055010098952",
+            "Name": "LAKING M & J"
+          }
+        ]
+      },
+      {
+          "AccountId": "A435AFAB0E93D88ABDE56D062D9E6F47",
+          "Currency": "GBP",
+          "AccountType": "Personal",
+          "AccountSubType": "CurrentAccount",
+          "Description": "U FIRST GOLD",
+          "Account": [
+              {
+                  "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+                  "Identification": "22222222222222",
+                  "Name": "JANUSZ TRACZ"
+              }
+          ]
+      }
+    ]
+  },
+  "Links": {
+    "Self": "https://api.rbs.co.uk/open-banking/v3.1/aisp/accounts"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.rbs.co.uk/open-banking/v3.1/aisp/accounts/222A08C886C7B72BCCF095AAC94FE7AF/balances
+Accept: application/json
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/json; charset=utf-8
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Balance": [
+            {
+                "AccountId": "222A08C886C7B72BCCF095AAC94FE7AF",
+                "Amount": {
+                    "Amount": "2884.38",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Type": "Expected",
+                "CreditLine": [
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Pre-Agreed"
+                    },
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Available"
+                    }
+                ],
+                "DateTime": "2021-02-08T14:43:32.971Z"
+            },
+            {
+                "AccountId": "222A08C886C7B72BCCF095AAC94FE7AF",
+                "Amount": {
+                    "Amount": "3134.79",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Type": "ForwardAvailable",
+                "CreditLine": [
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Pre-Agreed"
+                    },
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Available"
+                    }
+                ],
+                "DateTime": "2021-02-08T14:43:32.971Z"
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://api.rbs.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/balances"
+    },
+    "Meta": {}
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.rbs.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/balances
+Accept: application/json
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/json; charset=utf-8
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Balance": [
+            {
+                "AccountId": "A435AFAB0E93D88ABDE56D062D9E6F47",
+                "Amount": {
+                    "Amount": "2884.38",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Type": "Expected",
+                "CreditLine": [
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Pre-Agreed"
+                    },
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Available"
+                    }
+                ],
+                "DateTime": "2021-02-08T14:43:32.971Z"
+            },
+            {
+                "AccountId": "A435AFAB0E93D88ABDE56D062D9E6F47",
+                "Amount": {
+                    "Amount": "3134.79",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Type": "ForwardAvailable",
+                "CreditLine": [
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Pre-Agreed"
+                    },
+                    {
+                        "Included": false,
+                        "Amount": {
+                            "Amount": "2500.00",
+                            "Currency": "GBP"
+                        },
+                        "Type": "Available"
+                    }
+                ],
+                "DateTime": "2021-02-08T14:43:32.971Z"
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://api.rbs.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/balances"
+    },
+    "Meta": {}
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.rbs.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/transactions?fromBookingDateTime=1992-01-11T00:00:00Z&toBookingDateTime=1992-04-10T00:00:00Z
+Accept: application/json
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/json;charset=utf-8
+x-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Transaction": [
+            {
+                "AccountId": "A435AFAB0E93D88ABDE56D062D9E6F47",
+                "Amount": {
+                    "Amount": "19.35",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Debit",
+                "Status": "Pending",
+                "TransactionInformation": "CLEARPAY",
+                "BookingDateTime": "2021-04-27T00:00:00.000Z",
+                "ProprietaryBankTransactionCode": {
+                    "Code": "POS"
+                }
+            },
+            {
+                "AccountId": "A435AFAB0E93D88ABDE56D062D9E6F47",
+                "Amount": {
+                    "Amount": "130.42",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Credit",
+                "Status": "Pending",
+                "TransactionInformation": "BOWERMAN A 2020",
+                "BookingDateTime": "2021-04-22T00:00:00.000Z",
+                "ProprietaryBankTransactionCode": {
+                    "Code": "DPC"
+                }
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://api.rbs.co.uk/open-banking/v3.1/aisp/accounts/A435AFAB0E93D88ABDE56D062D9E6F47/transactions?fromBookingDateTime=2021-01-23T15:04:31.377Z"
+    },
+    "Meta": {}
+}
