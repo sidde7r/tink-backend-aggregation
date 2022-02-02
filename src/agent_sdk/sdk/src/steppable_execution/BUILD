@@ -7,7 +7,7 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/steppable_execution/interactive_step",
         "//src/agent_sdk/sdk/src/steppable_execution/non_interactive_step",
     ],
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
+    visibility = ["//src/agent_sdk:__subpackages__"],
     exports = [
         "//src/agent_sdk/sdk/src/steppable_execution/base_step",
         "//src/agent_sdk/sdk/src/steppable_execution/interactive_step",
@@ -21,7 +21,7 @@ java_library_with_sources(
         ":steps",
         "//src/agent_sdk/sdk/src/steppable_execution/execution_flow",
     ],
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
+    visibility = ["//src/agent_sdk:__subpackages__"],
     exports = [
         ":steps",
         "//src/agent_sdk/sdk/src/steppable_execution/execution_flow",
