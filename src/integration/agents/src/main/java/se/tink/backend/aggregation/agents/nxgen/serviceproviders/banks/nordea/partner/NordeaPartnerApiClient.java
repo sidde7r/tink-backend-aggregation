@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 public class NordeaPartnerApiClient {
@@ -41,6 +40,7 @@ public class NordeaPartnerApiClient {
     private NordeaPartnerConfiguration configuration;
     private NordeaPartnerJweHelper jweHelper;
     private final boolean userIsPresent;
+    private AccountListResponse accountListResponse;
 
     public NordeaPartnerApiClient(
             TinkHttpClient client,
@@ -164,24 +164,22 @@ public class NordeaPartnerApiClient {
                     endDate.format(DateTimeFormatter.ofPattern(DATE_FORMATTER)));
         }
 
-        AccountListResponse accountListResponse =
+        accountListResponse =
                 requestRefreshableGet(
                         requestBuilder.queryParam(
                                 QueryParamsKeys.INCLUDE, QueryParamsValues.INCLUDE_VALUES),
                         AccountListResponse.class);
-        storeDataInSessionStorage(accountListResponse);
         log.info("Nordea Partner: After fetching all");
     }
 
     public AccountListResponse getAllData() {
-        if (sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA).isEmpty()) {
+        if (accountListResponse == null) {
             log.info(
                     "Session storage empty. Getting all data from date: "
                             + LocalDate.now().minusYears(1));
             fetchAllData(LocalDate.now().minusYears(1), LocalDate.now());
         }
-        String accounts = sessionStorage.get(NordeaPartnerConstants.SessionStorage.ALL_DATA);
-        return SerializationUtils.deserializeFromString(accounts, AccountListResponse.class);
+        return accountListResponse;
     }
     // By request from Nordea some refreshes are not to be done when the user is not present.
     public boolean isUserPresent() {
@@ -190,9 +188,5 @@ public class NordeaPartnerApiClient {
 
     public String getMarket() {
         return provider.getMarket();
-    }
-
-    private void storeDataInSessionStorage(AccountListResponse accountListResponse) {
-        sessionStorage.put(NordeaPartnerConstants.SessionStorage.ALL_DATA, accountListResponse);
     }
 }
