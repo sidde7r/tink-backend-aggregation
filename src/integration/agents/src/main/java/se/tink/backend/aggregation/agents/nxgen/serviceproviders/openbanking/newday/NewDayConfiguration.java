@@ -28,4 +28,9 @@ public class NewDayConfiguration extends UkOpenBankingAisConfiguration {
                 .add(UkObScope.READ_TRANSACTIONS_DETAIL)
                 .build();
     }
+
+    @Override
+    public boolean isFetchingTransactionsFromTheNewestToTheOldest() {
+        return false;
+    }
 }

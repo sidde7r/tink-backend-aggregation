@@ -30,6 +30,8 @@ public interface UkOpenBankingAisConfig {
 
     boolean isAccountPartyEndpointEnabled();
 
+    boolean isFetchingTransactionsFromTheNewestToTheOldest();
+
     ImmutableSet<UkObScope> getAvailablePermissions();
 
     String getOrganisationId();

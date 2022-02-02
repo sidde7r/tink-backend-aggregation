@@ -50,12 +50,11 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId(MonzoConstants.ORGANISATION_ID)
-                        .withApiBaseURL(MonzoConstants.AIS_API_URL)
-                        .withWellKnownURL(MonzoConstants.WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.PARTY)
-                        .build();
+            new MonzoAisConfiguration(UkOpenBankingAisConfiguration.builder()
+                    .withOrganisationId(MonzoConstants.ORGANISATION_ID)
+                    .withApiBaseURL(MonzoConstants.AIS_API_URL)
+                    .withWellKnownURL(MonzoConstants.WELL_KNOWN_URL)
+                    .withPartyEndpoints(PartyEndpoint.PARTY));
     }
 
     @Inject

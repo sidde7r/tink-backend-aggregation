@@ -88,6 +88,11 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
+    public boolean isFetchingTransactionsFromTheNewestToTheOldest() {
+        return true;
+    }
+
+    @Override
     public ImmutableSet<UkObScope> getAvailablePermissions() {
         Set<UkObScope> set = new HashSet<>();
         set.add(UkObScope.READ_ACCOUNTS_DETAIL);
