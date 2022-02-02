@@ -15,8 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -47,22 +45,15 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     public SparebankPaymentExecutor(
             SparebankApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState,
             SparebankStorage storage) {
         this.apiClient = apiClient;
         this.storage = storage;
         this.signer =
-                new SparebankPaymentSigner(
-                        this,
-                        apiClient,
-                        supplementalInformationHelper,
-                        strongAuthenticationState,
-                        storage);
+                new SparebankPaymentSigner(this, apiClient, supplementalInformationHelper, storage);
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        signer.initiate();
         return getPaymentResponse(paymentRequest);
     }
 
@@ -121,7 +112,7 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
         }
 
         final AccountEntity creditor = AccountEntity.creditorOf(payment);
-        final AccountEntity debtor = getDebtorAccount();
+        final AccountEntity debtor = AccountEntity.debtorOf(payment);
         final String creditorName = payment.getCreditor().getName();
         final SparebankPaymentType paymentType =
                 SparebankPaymentType.getSpareBankPaymentType(payment);
@@ -160,13 +151,6 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     private boolean isRemittanceInformationStructured(RemittanceInformation remittanceInformation) {
         return remittanceInformation.getType() == RemittanceInformationType.REFERENCE;
-    }
-
-    private AccountEntity getDebtorAccount() {
-        AccountResponse accountResponse =
-                storage.getStoredAccounts()
-                        .orElseThrow(() -> new IllegalStateException("Empty accounts to debit"));
-        return AccountEntity.debtorOf(accountResponse);
     }
 
     private String getPaymentStatusUrl(String paymentId) {

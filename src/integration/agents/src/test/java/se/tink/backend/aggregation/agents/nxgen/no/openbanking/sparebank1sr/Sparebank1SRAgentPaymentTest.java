@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -15,6 +14,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -22,7 +22,6 @@ import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@Ignore
 public class Sparebank1SRAgentPaymentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -102,6 +101,10 @@ public class Sparebank1SRAgentPaymentTest {
         remittanceInformation.setValue(remittanceInformationValue);
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
+        AccountIdentifier debtorAccountIdentifier =
+                new NorwegianIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
+
         AccountIdentifier creditorAccountIdentifier =
                 new NorwegianIdentifier(
                         creditorDebtorManager.get(
@@ -112,6 +115,7 @@ public class Sparebank1SRAgentPaymentTest {
 
         return new Payment.Builder()
                 .withPaymentServiceType(PaymentServiceType.SINGLE)
+                .withDebtor(debtor)
                 .withCreditor(creditor)
                 .withExactCurrencyAmount(amount)
                 .withCurrency("NOK")
