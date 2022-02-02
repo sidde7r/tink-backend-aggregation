@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payme
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.SparkassenKnownErrors.NO_SCA_METHOD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.SparkassenKnownErrors.PsuErrorMessages.SYSTEM_ERROR_CONTACT_ADVISOR;
 
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
@@ -35,33 +34,35 @@ public class SparkassenPaymentExecutor extends BasePaymentExecutor {
     // to missing sca methods.
     protected void debugLoggingForUnexpectedFailures(
             AgentException agentException, Payment payment) {
+        if (isNoScaErrorWithProperMessage(agentException)) {
+            log.info(
+                    "[Sparkasse] No-sca-methods error during payment authorization! Payment details - amount is "
+                            + getAmountBucketInString(payment.getExactCurrencyAmount())
+                            + " - creditor iban country: "
+                            + payment.getCreditor()
+                                    .getAccountIdentifier(IbanIdentifier.class)
+                                    .getIban()
+                                    .substring(0, 2));
+        }
+    }
+
+    private boolean isNoScaErrorWithProperMessage(AgentException agentException) {
         if (agentException instanceof LoginException) {
             LoginException loginException = (LoginException) agentException;
             if (LoginError.NO_AVAILABLE_SCA_METHODS == loginException.getError()) {
                 Throwable cause = loginException.getCause();
                 if (cause instanceof HttpResponseException) {
                     HttpResponseException httpResponseException = (HttpResponseException) cause;
-                    Optional<ErrorResponse> maybeRelevantErrorResponse =
-                            ErrorResponse.fromHttpException(httpResponseException)
-                                    .filter(
-                                            ErrorResponse.anyTppMessageMatchesPredicate(
-                                                    NO_SCA_METHOD))
-                                    .filter(
-                                            ErrorResponse.psuMessageContainsPredicate(
-                                                    SYSTEM_ERROR_CONTACT_ADVISOR));
-                    if (maybeRelevantErrorResponse.isPresent()) {
-                        log.info(
-                                "[Sparkasse] No-sca-methods error during payment authorization! Payment details - amount is "
-                                        + getAmountBucketInString(payment.getExactCurrencyAmount())
-                                        + " - creditor iban country: "
-                                        + payment.getCreditor()
-                                                .getAccountIdentifier(IbanIdentifier.class)
-                                                .getIban()
-                                                .substring(0, 2));
-                    }
+                    return ErrorResponse.fromHttpException(httpResponseException)
+                            .filter(ErrorResponse.anyTppMessageMatchesPredicate(NO_SCA_METHOD))
+                            .filter(
+                                    ErrorResponse.psuMessageContainsPredicate(
+                                            SYSTEM_ERROR_CONTACT_ADVISOR))
+                            .isPresent();
                 }
             }
         }
+        return false;
     }
 
     private String getAmountBucketInString(ExactCurrencyAmount amount) {
