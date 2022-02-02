@@ -9,7 +9,6 @@ junit_test(
         "//data:cryptography_test",
         "//data:provider_configurations",
         "//etc:development",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/resources",
     ],
     tags = [
         "external",
@@ -29,19 +28,15 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
-        "//src/integration/models",
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:io_vavr",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@tink_backend//src/libraries/account_identifier",
-        "@tink_backend//src/libraries/unleash",
     ],
 )
 

@@ -52,10 +52,10 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final FetchedTransactionsDataStorage fetchedTransactionsDataStorage;
     private final TransactionPaginationHelper paginationHelper;
-    private String lastAccount;
-    private int paginationCount;
     private final UnleashClient unleashClient;
     private final Toggle toggle;
+    private String lastAccount;
+    private int paginationCount;
 
     /**
      * @param apiClient Ukob api client
@@ -81,8 +81,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         this.fetchedTransactionsDataStorage = new FetchedTransactionsDataStorage(persistentStorage);
         this.localDateTimeSource = localDateTimeSource;
         this.paginationHelper = paginationHelper;
-        unleashClient = componentProvider.getUnleashClient();
-        toggle =
+        this.unleashClient = componentProvider.getUnleashClient();
+        this.toggle =
                 Toggle.of("UK_SET_MAX_ALLOWED_NUMBER_OF_MONTHS_TO_24")
                         .context(
                                 UnleashContext.builder()
@@ -172,27 +172,6 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         return key;
     }
 
-    private LocalDateTime getTransactionDateLimit(AccountType account, LocalDateTime fromDate) {
-        LocalDateTime historyTransactionDate =
-                paginationHelper
-                        .getTransactionDateLimit(account)
-                        .map(date -> date.toInstant().atZone(DEFAULT_ZONE_ID).toLocalDateTime())
-                        .orElse(fromDate);
-
-        if (historyTransactionDate.isAfter(fromDate)) {
-            log.info(
-                    "[UkOpenBankingTransactionPaginator] History transaction date is after proposed fromDate -> set historyTransactionDate as fromBookingDateTime to avoid fetching transactions which we already fetched in the past: fromDate is {} and historyTransactionDate is {}",
-                    fromDate,
-                    historyTransactionDate);
-            return historyTransactionDate;
-        }
-        log.info(
-                "[UkOpenBankingTransactionPaginator] No need for adjustments or first login by user -> fromDate: {}, lastTransactionDate: {}",
-                fromDate,
-                historyTransactionDate);
-        return fromDate;
-    }
-
     protected boolean isPaginationCountOverLimit() {
         return paginationCount > PAGINATION_LIMIT;
     }
@@ -265,5 +244,26 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                 "[UK Transaction Paginator] Fetching transactions since "
                         + startingDateForFetchingAsMuchAsPossible);
         return startingDateForFetchingAsMuchAsPossible;
+    }
+
+    private LocalDateTime getTransactionDateLimit(AccountType account, LocalDateTime fromDate) {
+        LocalDateTime historyTransactionDate =
+                paginationHelper
+                        .getTransactionDateLimit(account)
+                        .map(date -> date.toInstant().atZone(DEFAULT_ZONE_ID).toLocalDateTime())
+                        .orElse(fromDate);
+
+        if (historyTransactionDate.isAfter(fromDate)) {
+            log.info(
+                    "[UkOpenBankingTransactionPaginator] History transaction date is after proposed fromDate -> set historyTransactionDate as fromBookingDateTime to avoid fetching transactions which we already fetched in the past: fromDate is {} and historyTransactionDate is {}",
+                    fromDate,
+                    historyTransactionDate);
+            return historyTransactionDate;
+        }
+        log.info(
+                "[UkOpenBankingTransactionPaginator] No need for adjustments or first login by user -> fromDate: {}, lastTransactionDate: {}",
+                fromDate,
+                historyTransactionDate);
+        return fromDate;
     }
 }
