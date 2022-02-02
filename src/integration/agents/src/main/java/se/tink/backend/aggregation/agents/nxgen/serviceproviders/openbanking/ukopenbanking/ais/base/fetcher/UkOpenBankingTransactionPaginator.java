@@ -162,19 +162,35 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     protected String initialisePaginationKeyIfNull(AccountType account, String key) {
         if (key == null) {
             final LocalDateTime fromDate = calculateFromBookingDate(account.getApiIdentifier());
+            if (!ukOpenBankingAisConfig.isFetchingTransactionsFromTheNewestToTheOldest()) {
+                return createRequestPaginationKey(
+                        account, getTransactionDateLimit(account, fromDate));
+            }
 
-            /*
-            We need to send in fromDate when fetching transactions to improve the performance
-            and also to adhere to OpenBanking standards of not fetching transactions more than 90
-            days old with refresh token. For the very first time when we add the Bank to the app or
-            fetch transactions we will try to fetch it for 23 months and after that for every refresh
-            it will be for last 89 days.
-            This is according to Article 10 of UkOpenBanking
-            https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1009778990/How+the+OBIE+Standard+can+be+used+in+relation+to+RTS+Article+10
-             */
-            key = createRequestPaginationKey(account, fromDate);
+            return createRequestPaginationKey(account, fromDate);
         }
         return key;
+    }
+
+    private LocalDateTime getTransactionDateLimit(AccountType account, LocalDateTime fromDate) {
+        LocalDateTime historyTransactionDate =
+                paginationHelper
+                        .getTransactionDateLimit(account)
+                        .map(date -> date.toInstant().atZone(DEFAULT_ZONE_ID).toLocalDateTime())
+                        .orElse(fromDate);
+
+        if (historyTransactionDate.isAfter(fromDate)) {
+            log.info(
+                    "[UkOpenBankingTransactionPaginator] History transaction date is after proposed fromDate -> set historyTransactionDate as fromBookingDateTime to avoid fetching transactions which we already fetched in the past: fromDate is {} and historyTransactionDate is {}",
+                    fromDate,
+                    historyTransactionDate);
+            return historyTransactionDate;
+        }
+        log.info(
+                "[UkOpenBankingTransactionPaginator] No need for adjustments or first login by user -> fromDate: {}, lastTransactionDate: {}",
+                fromDate,
+                historyTransactionDate);
+        return fromDate;
     }
 
     protected boolean isPaginationCountOverLimit() {
