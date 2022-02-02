@@ -121,54 +121,11 @@ Content-Length: 61
 
 -----------------------------------------------------------------------------------
 REQUEST 5
-GET https://api.nickel.eu/customer-banking-api/customers/426723/accounts/primary/details
-referer: https://api.nickel.eu/
-content-type: application/json
-
------------------------------------------------------------------------------------
-RESPONSE 5
-200
-Date: Mon, 13 Dec 2021 16:45:49 GMT
-Date: Mon, 13 Dec 2021 16:45:49 GMT
-Content-Type: application/json
-Content-Length: 570
-
-{
-  "holder": {
-    "title": "MS",
-    "lastName": "DOE",
-    "firstName": "JANE",
-    "address": {
-      "address": "15 Champ Elysee ",
-      "city": "PARIS",
-      "zipCode": "15 Champ Elysee",
-      "country": "FR"
-    }
-  },
-  "agency": {
-    "name": "FPE CHARENTON",
-    "address": {
-      "address": "1 PLACE DES MARSEILLAIS",
-      "city": "CHARENTON LE PONT",
-      "zipCode": "94220",
-      "country": "FR"
-    }
-  },
-  "bankCode": "16598",
-  "branchCode": "00001",
-  "accountNumber": "12345678901",
-  "key": "81",
-  "bic": "FPELFR21XXX",
-  "iban": "FR7616598000011234567890181"
-}
-
------------------------------------------------------------------------------------
-REQUEST 6
 GET https://api.nickel.eu/customer-banking-api/accounts/12345678901/operations
 referer: https://api.nickel.eu/
 
 -----------------------------------------------------------------------------------
-RESPONSE 6
+RESPONSE 5
 200
 Content-Type: application/json
 Vary: Accept-Encoding
@@ -235,13 +192,13 @@ Content-Length: 3433
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 7
+REQUEST 6
 GET https://api.nickel.eu/personal-space-api/api/v2/users/username
 Accept: application/json, text/plain, */*
 content-type: application/json
 
 -----------------------------------------------------------------------------------
-RESPONSE 7
+RESPONSE 6
 200
 Content-Type: application/json
 Content-Length: 1022

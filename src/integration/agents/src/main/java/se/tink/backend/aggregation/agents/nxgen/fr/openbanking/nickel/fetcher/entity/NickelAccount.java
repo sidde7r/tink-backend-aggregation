@@ -21,11 +21,9 @@ public class NickelAccount {
     private String number;
     private Boolean primaryAccount;
 
-    @JsonIgnore private NickelAccountDetails accountDetails;
-    @JsonIgnore private NickelAccountOverview accountOverview;
-
     @JsonIgnore
-    public Optional<TransactionalAccount> toTransactionalAccount() {
+    public Optional<TransactionalAccount> toTransactionalAccount(
+            NickelAccountOverview accountOverview, String iban) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withInferredAccountFlags()
@@ -35,19 +33,14 @@ public class NickelAccount {
                                         accountOverview.getBalance().movePointLeft(2), "EUR")))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(accountDetails.getIban())
-                                .withAccountNumber(accountDetails.getIban())
-                                .withAccountName(accountDetails.getIban())
-                                .addIdentifier(new IbanIdentifier(accountDetails.getIban()))
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(iban)
+                                .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .addHolderName(accountDetails.getHolderName())
+                .addHolderName(String.format("%s %s", firstName, lastName))
                 .putInTemporaryStorage(StorageKeys.ACCESS_TKN, accessToken)
                 .setApiIdentifier(number)
                 .build();
-    }
-
-    @JsonIgnore
-    public boolean isTransactional() {
-        return true;
     }
 }

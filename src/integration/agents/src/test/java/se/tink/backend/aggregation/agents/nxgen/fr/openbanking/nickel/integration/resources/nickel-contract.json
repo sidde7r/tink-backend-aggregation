@@ -1,7 +1,7 @@
 {
     "accounts": [
         {
-            "accountNumber": "FR7616598000011234567890181",
+            "accountNumber": "FR7616598000011234567890110",
             "accountExclusion": "NONE",
             "exactAvailableCredit": null,
             "exactBalance": {
@@ -14,12 +14,12 @@
             "currencyCode": "EUR",
             "availableBalance": null,
             "creditLimit": null,
-            "bankId": "FR7616598000011234567890181",
+            "bankId": "FR7616598000011234567890110",
             "certainDate": null,
             "credentialsId": null,
             "excluded": false,
             "favored": false,
-            "name": "FR7616598000011234567890181",
+            "name": "FR7616598000011234567890110",
             "ownership": 1.0,
             "payload": null,
             "type": "CHECKING",
@@ -27,7 +27,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[]",
+            "identifiers": "[\"iban://FR7616598000011234567890110\"]",
             "transferDestinations": null,
             "details": null,
             "closed": false,
