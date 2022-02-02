@@ -1,21 +1,18 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.detail;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.detail;
 
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.DecoupledFieldBuilder;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 @RequiredArgsConstructor
-public class SparkassenDecoupledFieldBuilder implements DecoupledFieldBuilder {
-
-    private static final LocalizableParametrizedKey INSTRUCTIONS =
-            new LocalizableParametrizedKey(
-                    "Please open the S-pushTAN app on device \"{0}\" and confirm login. Then click the \"Submit\" button");
+// This version is the old/current way, that we want to still compare to the new one.
+public class PostbankLegacyDecoupledFieldBuilder implements DecoupledFieldBuilder {
 
     private final Catalog catalog;
 
@@ -23,6 +20,7 @@ public class SparkassenDecoupledFieldBuilder implements DecoupledFieldBuilder {
     public List<Field> getInstructionsField(ScaMethodEntity scaMethod) {
         return Collections.singletonList(
                 CommonFields.Instruction.build(
-                        catalog.getString(INSTRUCTIONS, scaMethod.getName())));
+                        catalog.getString(
+                                PostbankConstants.InfoScreen.INSTRUCTIONS, scaMethod.getName())));
     }
 }

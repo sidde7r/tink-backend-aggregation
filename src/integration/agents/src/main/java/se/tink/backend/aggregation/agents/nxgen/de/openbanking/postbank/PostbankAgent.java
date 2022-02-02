@@ -81,7 +81,8 @@ public final class PostbankAgent extends DeutscheBankAgent
                         catalog,
                         supplementalInformationController,
                         postbankAuthenticator,
-                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()));
+                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()),
+                        randomValueGenerator);
 
         return new AutoAuthenticationController(
                 request, context, postbankAuthenticationController, postbankAuthenticator);
@@ -96,7 +97,8 @@ public final class PostbankAgent extends DeutscheBankAgent
                         postbankAuthenticator,
                         credentials,
                         new PostbankPaymentsEmbeddedFieldBuilder(
-                                catalog, new PostbankIconUrlMapper()));
+                                catalog, new PostbankIconUrlMapper()),
+                        randomValueGenerator);
 
         DeutscheBankPaymentApiClient apiClient =
                 new DeutscheBankPaymentApiClient(
