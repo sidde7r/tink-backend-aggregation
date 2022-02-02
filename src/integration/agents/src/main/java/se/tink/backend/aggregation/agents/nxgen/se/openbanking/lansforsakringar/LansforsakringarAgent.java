@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.Capability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.LansforsakringarDecoupledAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.LansforsakringarAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.LansforsakringarPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.creditcard.LansforsakringarCreditCardFetcher;
@@ -34,7 +34,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -114,16 +115,24 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BankIdAuthenticationController<String> bankIdAuthenticationController =
-                new BankIdAuthenticationController<>(
-                        supplementalInformationController,
-                        new LansforsakringarDecoupledAuthenticator(
-                                apiClient, storageHelper, credentials),
+
+        LansforsakringarAuthenticator lansforsakringarAuthenticator =
+                new LansforsakringarAuthenticator(apiClient, storageHelper);
+        OAuth2AuthenticationController oAuth2AuthenticationController =
+                new LansforsakringarAuthController(
                         persistentStorage,
-                        request);
+                        supplementalInformationHelper,
+                        lansforsakringarAuthenticator,
+                        credentials,
+                        strongAuthenticationState,
+                        storageHelper);
 
         return new AutoAuthenticationController(
-                request, context, bankIdAuthenticationController, bankIdAuthenticationController);
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override
