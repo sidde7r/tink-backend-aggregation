@@ -129,8 +129,30 @@ public class DemobankConstants {
     }
 
     public static class ClusterIds {
-        public static final String OXFORD_PREPROD = "oxford-preprod";
+        public static final String BARNSLEY_STAGING = "barnsley-staging";
+        public static final String CARDIFF_STAGING = "cardiff-staging";
+        public static final String FARNHAM_STAGING = "farnham-staging";
+        public static final String KERRY_STAGING = "kerry-staging";
+        public static final String KIRKBY_STAGING = "kirkby-staging";
+        public static final String LEEDS_STAGING = "leeds-staging";
         public static final String OXFORD_STAGING = "oxford-staging";
+        public static final String RUGBY_STAGING = "rugby-staging";
+        public static final String NESTON_STAGING = "neston-staging";
+
+        public static final String CORNWALL_TESTING = "cornwall-testing";
+
+        public static final String OXFORD_PREPROD = "oxford-preprod";
+        public static final String NESTON_PREPROD = "neston-preprod";
+
+        public static final String BARNSLEY_PROD = "barnsley-production";
+        public static final String KERRY_PROD = "kerry-production";
+        public static final String CARDIFF_PROD = "cardiff-production";
+        public static final String FARNHAM_PROD = "farnham-production";
+        public static final String KIRKBY_PROD = "kirkby-production";
+        public static final String LEEDS_PROD = "leeds-production";
+        public static final String RUGBY_PROD = "rugby-production";
+        public static final String CORNWALL_PROD = "cornwall-production";
+        public static final String NESTON_PROD = "neston-production";
     }
 
     public static class AccountTypes {
@@ -154,12 +176,53 @@ public class DemobankConstants {
 
     public static class ClusterSpecificCallbacks {
 
+        public static final String BARNSLEY_STAGING_CALLBACK =
+                "https://api.staging.barnsley.tink.com/api/v1/credentials/third-party/callback";
+        public static final String CARDIFF_STAGING_CALLBACK =
+                "https://api.staging.cardiff.tink.com/api/v1/credentials/third-party/callback";
+        public static final String FARNHAM_STAGING_CALLBACK =
+                "https://api.staging.farnham.tink.com/api/v1/credentials/third-party/callback";
+        public static final String KERRY_STAGING_CALLBACK =
+                "https://api.staging.kerry.tink.com/api/v1/credentials/third-party/callback";
+        public static final String KIRKBY_STAGING_CALLBACK =
+                "https://api.staging.kirkby.tink.com/api/v1/credentials/third-party/callback";
+        public static final String LEEDS_STAGING_CALLBACK =
+                "https://api.staging.leeds.tink.com/api/v1/credentials/third-party/callback";
         public static final String OXFORD_STAGING_CALLBACK =
                 "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback";
+        public static final String RUGBY_STAGING_CALLBACK =
+                "https://main.staging.rugby.tink.se/api/v1/credentials/third-party/callback";
+        public static final String NESTON_STAGING_CALLBACK =
+                "https://main.staging.neston.tink.se/api/v1/credentials/third-party/callback";
+
+        public static final String CORNWALL_TESTING_CALLBACK =
+                "https://main.testing.cornwall.tink.se/api/v1/credentials/third-party/callback";
+
         public static final String OXFORD_PREPROD_CALLBACK =
                 "https://api.preprod.oxford.tink.com/api/v1/credentials/third-party/callback";
+        public static final String NESTON_PREPROD_CALLBACK =
+                "https://main.preprod.neston.tink.se/api/v1/credentials/third-party/callback";
+
+        public static final String BARNSLEY_PROD_CALLBACK =
+                "https://api.production.barnsley.tink.com/api/v1/credentials/third-party/callback";
+        public static final String KERRY_PROD_CALLBACK =
+                "https://api.production.kerry.tink.com/api/v1/credentials/third-party/callback";
+        public static final String CARDIFF_PROD_CALLBACK =
+                "https://api.production.cardiff.tink.com/api/v1/credentials/third-party/callback";
+        public static final String FARNHAM_PROD_CALLBACK =
+                "https://api.production.farnham.tink.com/api/v1/credentials/third-party/callback";
+        public static final String KIRKBY_PROD_CALLBACK =
+                "https://api.production.kirkby.tink.com/api/v1/credentials/third-party/callback";
+        public static final String LEEDS_PROD_CALLBACK =
+                "https://api.production.leeds.tink.com/api/v1/credentials/third-party/callback";
         public static final String OXFORD_PROD_CALLBACK =
                 "https://api.tink.com/api/v1/credentials/third-party/callback";
+        public static final String RUGBY_PROD_CALLBACK =
+                "https://main.production.rugby.tink.se/api/v1/credentials/third-party/callback";
+        public static final String CORNWALL_PROD_CALLBACK =
+                "https://main.production.cornwall.tink.se/api/v1/credentials/third-party/callback";
+        public static final String NESTON_PROD_CALLBACK =
+                "https://main.production.neston.tink.se/api/v1/credentials/third-party/callback";
     }
 
     public static class ErrorMessages {

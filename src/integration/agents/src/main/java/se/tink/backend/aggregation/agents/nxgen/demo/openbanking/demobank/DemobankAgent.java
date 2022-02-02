@@ -144,11 +144,68 @@ public final class DemobankAgent extends NextGenerationAgent
         String callbackUri = request.getCallbackUri();
         if (callbackUri == null || callbackUri.trim().length() == 0) {
             switch (context.getClusterId()) {
+                case ClusterIds.BARNSLEY_STAGING:
+                    callbackUri = ClusterSpecificCallbacks.BARNSLEY_STAGING_CALLBACK;
+                    break;
+                case ClusterIds.CARDIFF_STAGING:
+                    callbackUri = ClusterSpecificCallbacks.CARDIFF_STAGING_CALLBACK;
+                    break;
+                case ClusterIds.FARNHAM_STAGING:
+                    callbackUri = ClusterSpecificCallbacks.FARNHAM_STAGING_CALLBACK;
+                    break;
+                case ClusterIds.KERRY_STAGING:
+                    callbackUri = ClusterSpecificCallbacks.KERRY_STAGING_CALLBACK;
+                    break;
+                case ClusterIds.KIRKBY_STAGING:
+                    callbackUri = ClusterSpecificCallbacks.KIRKBY_STAGING_CALLBACK;
+                    break;
+                case ClusterIds.LEEDS_STAGING:
+                    callbackUri = ClusterSpecificCallbacks.LEEDS_STAGING_CALLBACK;
+                    break;
                 case ClusterIds.OXFORD_STAGING:
                     callbackUri = ClusterSpecificCallbacks.OXFORD_STAGING_CALLBACK;
                     break;
+                case ClusterIds.RUGBY_STAGING:
+                    callbackUri = ClusterSpecificCallbacks.RUGBY_STAGING_CALLBACK;
+                    break;
+                case ClusterIds.NESTON_STAGING:
+                    callbackUri = ClusterSpecificCallbacks.NESTON_STAGING_CALLBACK;
+                    break;
+                case ClusterIds.CORNWALL_TESTING:
+                    callbackUri = ClusterSpecificCallbacks.CORNWALL_TESTING_CALLBACK;
+                    break;
                 case ClusterIds.OXFORD_PREPROD:
                     callbackUri = ClusterSpecificCallbacks.OXFORD_PREPROD_CALLBACK;
+                    break;
+                case ClusterIds.NESTON_PREPROD:
+                    callbackUri = ClusterSpecificCallbacks.NESTON_PREPROD_CALLBACK;
+                    break;
+                case ClusterIds.BARNSLEY_PROD:
+                    callbackUri = ClusterSpecificCallbacks.BARNSLEY_PROD_CALLBACK;
+                    break;
+                case ClusterIds.KERRY_PROD:
+                    callbackUri = ClusterSpecificCallbacks.KERRY_PROD_CALLBACK;
+                    break;
+                case ClusterIds.CARDIFF_PROD:
+                    callbackUri = ClusterSpecificCallbacks.CARDIFF_PROD_CALLBACK;
+                    break;
+                case ClusterIds.FARNHAM_PROD:
+                    callbackUri = ClusterSpecificCallbacks.FARNHAM_PROD_CALLBACK;
+                    break;
+                case ClusterIds.KIRKBY_PROD:
+                    callbackUri = ClusterSpecificCallbacks.KIRKBY_PROD_CALLBACK;
+                    break;
+                case ClusterIds.LEEDS_PROD:
+                    callbackUri = ClusterSpecificCallbacks.LEEDS_PROD_CALLBACK;
+                    break;
+                case ClusterIds.RUGBY_PROD:
+                    callbackUri = ClusterSpecificCallbacks.RUGBY_PROD_CALLBACK;
+                    break;
+                case ClusterIds.CORNWALL_PROD:
+                    callbackUri = ClusterSpecificCallbacks.CORNWALL_PROD_CALLBACK;
+                    break;
+                case ClusterIds.NESTON_PROD:
+                    callbackUri = ClusterSpecificCallbacks.NESTON_PROD_CALLBACK;
                     break;
                 default:
                     callbackUri = ClusterSpecificCallbacks.OXFORD_PROD_CALLBACK;
