@@ -385,10 +385,8 @@ container_layer(
 
 container_image(
     name = "aggregation_image",
-    base = "@openjdk_jdk8//image",
+    base = "@distroless_java_11//image",
     cmd = [
-        "java",
-        "-jar",
         "-Xmx2560m",
         "/usr/share/tink-backend-aggregation/aggregation_service.jar",
         "server",
@@ -397,6 +395,8 @@ container_image(
     layers = [
         ":libm4ri_installer",
         ":libtesseract_installer",
+        ":libtesseract_installer_distroless_extra_dep",
+        ":chromium_deps_for_java11",
     ],
     tars = [
         "//deb:aggregation_bin_tar",

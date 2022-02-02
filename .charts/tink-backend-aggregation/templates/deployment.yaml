@@ -352,6 +352,10 @@ spec:
         env:
           - name: JAVA_TOOL_OPTIONS
             value: "-XX:+UseContainerSupport -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=70.0"
+          - name: OPENSSL_CONF
+            value: "/etc/ssl/"
+          - name: LC_ALL
+            value: "C"
 
         ports:
         - name: https-api
