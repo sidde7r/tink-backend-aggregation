@@ -4,7 +4,7 @@ java_library_with_sources(
     name = "utils",
     srcs = glob(["*.java"]),
     extdeps = [
-        "//third_party:commons_codec_commons_codec",
+        "@aggregation//:commons_codec_commons_codec",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/utils",
