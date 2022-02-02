@@ -150,7 +150,8 @@ public abstract class IntegrationTestBase {
                 APP_ID,
                 CLUSTER_ID,
                 CERT_ID,
-                REDIRECT_URL);
+                REDIRECT_URL,
+                false);
     }
 
     private IntegrationsConfiguration createIntegrationsConfiguration(Provider provider) {

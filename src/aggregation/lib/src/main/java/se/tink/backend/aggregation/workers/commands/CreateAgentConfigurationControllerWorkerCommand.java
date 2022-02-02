@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
@@ -7,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentCo
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 
@@ -30,6 +32,11 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
+        TppSecretsServiceConfiguration tppSecretsServiceConfiguration =
+                agentsServiceConfiguration.getTppSecretsServiceConfiguration();
+        boolean tppSecretsServiceEnabled =
+                !Objects.isNull(tppSecretsServiceConfiguration)
+                        && tppSecretsServiceConfiguration.isEnabled();
         agentConfigurationController =
                 new AgentConfigurationController(
                         tppSecretsServiceClient,
@@ -39,7 +46,8 @@ public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorker
                         agentWorkerCommandContext.getAppId(),
                         agentWorkerCommandContext.getClusterId(),
                         agentWorkerCommandContext.getCertId(),
-                        agentWorkerCommandContext.getRequest().getCallbackUri());
+                        agentWorkerCommandContext.getRequest().getCallbackUri(),
+                        tppSecretsServiceEnabled);
 
         agentWorkerCommandContext.setAgentConfigurationController(agentConfigurationController);
 

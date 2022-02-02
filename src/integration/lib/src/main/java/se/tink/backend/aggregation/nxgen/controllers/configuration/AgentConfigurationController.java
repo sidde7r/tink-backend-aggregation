@@ -92,7 +92,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             String appId,
             String clusterId,
             String certId,
-            String redirectUrl) {
+            String redirectUrl,
+            boolean tppSecretsServiceEnabled) {
 
         Preconditions.checkNotNull(
                 tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
@@ -133,6 +134,16 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         this.redirectUrl = redirectUrl;
         this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
+
+        if (this.tppSecretsServiceEnabled != tppSecretsServiceEnabled) {
+            log.info(
+                    "tppSecretsServiceEnabled {} does not equal to its original value {} for appId {} providerId {} and clusterId {}",
+                    tppSecretsServiceEnabled,
+                    this.tppSecretsServiceEnabled,
+                    this.appId,
+                    this.providerId,
+                    this.clusterId);
+        }
 
         if (isTestProvider) {
             log.info(

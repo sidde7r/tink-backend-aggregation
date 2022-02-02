@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
@@ -83,6 +84,7 @@ import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsS
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceInternalClientImpl;
+import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -244,6 +246,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             provider.getMarket(),
                             provider.isOpenBanking()));
             context.setProviderId(provider.getName());
+            TppSecretsServiceConfiguration tppSecretsServiceConfiguration =
+                    configuration.getTppSecretsServiceConfiguration();
+            boolean tppSecretsServiceEnabled =
+                    !Objects.isNull(tppSecretsServiceConfiguration)
+                            && tppSecretsServiceConfiguration.isEnabled();
             AgentConfigurationControllerable agentConfigurationController =
                     new AgentConfigurationController(
                             tppSecretsServiceClient,
@@ -253,7 +260,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             context.getAppId(),
                             clusterIdForSecretsService,
                             context.getCertId(),
-                            credentialsRequest.getCallbackUri());
+                            credentialsRequest.getCallbackUri(),
+                            tppSecretsServiceEnabled);
             context.getLogMasker()
                     .addSensitiveValuesSetObservable(
                             agentConfigurationController.getSecretValuesObservable());
