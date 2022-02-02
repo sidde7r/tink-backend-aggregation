@@ -81,6 +81,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
 
     public static final String BASE_URL = "https://psd.lcl.fr";
 
+    private final AgentComponentProvider componentProvider;
     private final LclApiClient lclApiClient;
     private final LclPaymentApiClient paymentApiClient;
     private final LclTokenApiClient tokenApiClient;
@@ -94,7 +95,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     @Inject
     public LclAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-
+        this.componentProvider = componentProvider;
         this.agentConfiguration = getAgentConfiguration();
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
 
@@ -152,7 +153,8 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                         accessTokenFetchHelper, this.tokenStorage, accessCodeStorage);
 
         final LclThirdPartyAppRequestParamsProvider thirdPartyAppRequestParamsProvider =
-                new LclThirdPartyAppRequestParamsProvider(this.agentConfiguration);
+                new LclThirdPartyAppRequestParamsProvider(
+                        this.agentConfiguration, componentProvider.getUnleashClient());
 
         final ThirdPartyAppCallbackProcessor thirdPartyAppCallbackProcessor =
                 new LclThirdPartyAppCallbackProcessor(thirdPartyAppRequestParamsProvider);

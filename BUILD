@@ -546,7 +546,7 @@ codeowners(
         "kubernetes/development/cache.yml",
         ".forego",
         "bazel-wrapper",
-        "src/pom-service-parent.xml,",
+        "src/pom-service-parent.xml",
     ],
     teams = [
         "@tink-ab/aggregation-agent-platform-maintainer",

@@ -358,4 +358,4 @@ kubernetes/development/providerdb.yml @tink-ab/aggregation-agent-platform-mainta
 kubernetes/development/cache.yml @tink-ab/aggregation-agent-platform-maintainer
 .forego @tink-ab/aggregation-agent-platform-maintainer
 bazel-wrapper @tink-ab/aggregation-agent-platform-maintainer
-src/pom-service-parent.xml, @tink-ab/aggregation-agent-platform-maintainer
+src/pom-service-parent.xml @tink-ab/aggregation-agent-platform-maintainer
