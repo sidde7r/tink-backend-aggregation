@@ -57,6 +57,7 @@ public final class HttpLoggingConstants {
                     "referer",
                     "request-id",
                     "retry-after",
+                    "sdcguid",
                     "send-date",
                     "server",
                     "signature",
