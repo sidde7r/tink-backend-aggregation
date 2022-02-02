@@ -202,6 +202,8 @@ clients:
     aggregatorIdentifier: "Ica Spara"
   icaspara-test:
     aggregatorIdentifier: "Ica Spara"
+  ie-bnppf-production:
+    aggregatorIdentifier: "BNP Paribas Fortis"
   it-bnp-bnl-testing:
     aggregatorIdentifier: "BNL Gruppo BNP Paribas"
   it-bnp-bnl-staging:
