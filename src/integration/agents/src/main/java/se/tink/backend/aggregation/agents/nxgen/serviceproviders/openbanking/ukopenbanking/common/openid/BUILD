@@ -41,7 +41,6 @@ java_library(
         "//src/libraries/cryptography",
         "//src/libraries/encoding",
         "//src/libraries/i18n",
-        "//src/libraries/masker",
         "//src/libraries/retrypolicy",
         "//src/libraries/serialization",
         "//third_party:com_auth0_java_jwt",
