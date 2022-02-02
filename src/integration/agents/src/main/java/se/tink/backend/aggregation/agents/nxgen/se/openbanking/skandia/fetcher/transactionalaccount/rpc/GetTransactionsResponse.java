@@ -4,15 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class GetTransactionsResponse implements PaginatorResponse {
+@Getter
+public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
     private AccountEntity account;
     private TransactionsEntity transactions;
 
@@ -24,17 +26,20 @@ public class GetTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        // they don't support pagination. All the transactions are returned in one response
-        return Optional.of(false);
+        return Optional.of(transactions.getLinks().hasMore());
+    }
+
+    public String nextKey() {
+        return transactions.getLinks().getNext();
     }
 
     @JsonIgnore
-    public void setBooked(List<TransactionEntity> booked) {
-        transactions.setBooked(booked);
+    public void setPending(List<TransactionEntity> pending) {
+        transactions.setPending(pending);
     }
 
     @JsonIgnore
-    public List<TransactionEntity> getBooked() {
-        return transactions.getBooked();
+    public List<TransactionEntity> getPending() {
+        return transactions.getPending();
     }
 }
