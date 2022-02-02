@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.utils;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -85,4 +86,17 @@ public interface SupplementalInformationController {
      * @return the mfaId that can be used to wait for the results.
      */
     String openMobileBankIdAsync(String autoStartToken);
+
+    /**
+     * Starts a dynamic authentication flow using the Agent SDK's UserInteraction object. The
+     * UserInteraction object can be of any of the three types (swedish mobile bankid, fields, 3rd
+     * party app).
+     *
+     * <p>If a custom repsonse key is set, it will be used as mfaId, otherwise the id of the
+     * credentials will be used.
+     *
+     * @param userInteraction
+     * @return the mfaId that can be used to wait for the results.
+     */
+    String requestUserInteractionAsync(UserInteraction<?> userInteraction);
 }

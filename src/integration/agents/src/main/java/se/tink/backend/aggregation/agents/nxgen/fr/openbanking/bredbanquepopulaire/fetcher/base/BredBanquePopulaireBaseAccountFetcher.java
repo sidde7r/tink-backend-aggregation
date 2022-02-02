@@ -76,9 +76,6 @@ public abstract class BredBanquePopulaireBaseAccountFetcher<T extends Account>
     }
 
     private boolean doesAccountLackConsentedData(AccountEntity accountEntity) {
-        return Objects.isNull(accountEntity.getResourceId())
-                || Objects.isNull(accountEntity.getLinks())
-                || Objects.isNull(accountEntity.getLinks().getBalances())
-                || Objects.isNull(accountEntity.getLinks().getTransactions());
+        return Objects.isNull(accountEntity.getBalances());
     }
 }

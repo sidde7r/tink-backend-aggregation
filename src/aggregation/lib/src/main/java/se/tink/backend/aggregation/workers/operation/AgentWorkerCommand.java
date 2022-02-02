@@ -31,7 +31,11 @@ public abstract class AgentWorkerCommand {
         MDC.put(AGENT_WORKER_COMMAND_MDC_KEY, getCommandName() + " execute");
         try {
             startSpanForJaeger("execute");
-            return doExecute();
+            long start = System.currentTimeMillis();
+            AgentWorkerCommandResult result = doExecute();
+            logger.info(
+                    "Executed {} in {}ms", getCommandName(), System.currentTimeMillis() - start);
+            return result;
         } finally {
             MDC.remove(AGENT_WORKER_COMMAND_MDC_KEY);
             endSpanForJaeger("execute");

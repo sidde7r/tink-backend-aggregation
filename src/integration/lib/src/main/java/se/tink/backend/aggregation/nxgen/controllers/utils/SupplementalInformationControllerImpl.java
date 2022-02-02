@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.agent.sdk.user_interaction.UserInteraction;
+import se.tink.agent.sdk.user_interaction.UserInteractionType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
@@ -226,6 +228,31 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         supplementalRequester.requestSupplementalInformation(mfaId, credentials);
 
         return mfaId;
+    }
+
+    @Override
+    public String requestUserInteractionAsync(UserInteraction<?> userInteraction) {
+        credentials.setStatus(getCredentialsStatus(userInteraction.getType()));
+        credentials.setSupplementalInformation(userInteraction.getPayload());
+        credentials.setStatusPayload(null);
+
+        String mfaId = userInteraction.getCustomResponseKey().orElse(credentials.getId());
+        supplementalRequester.requestSupplementalInformation(mfaId, credentials);
+
+        return mfaId;
+    }
+
+    private CredentialsStatus getCredentialsStatus(UserInteractionType type) {
+        switch (type) {
+            case THIRD_PARTY_APP:
+                return CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION;
+            case SUPPLEMENTAL_INFORMATION:
+                return CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION;
+            case SWEDISH_MOBILE_BANKID:
+                return CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION;
+            default:
+                throw new IllegalStateException("UserInteractionType not implemented yet");
+        }
     }
 
     private static Map<String, String> stringToMap(final String string) {
