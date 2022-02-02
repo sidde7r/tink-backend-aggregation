@@ -46,12 +46,13 @@ public class ServiceBlockedFilterTest {
     }
 
     @Test
-    public void shouldReturnBankServiceError() {
+    public void shouldReturnBankServiceErrorIfMediaTypeIsNotCompatible() {
         // given
         given(response.getStatus()).willReturn(HttpStatus.SC_SERVICE_UNAVAILABLE);
+        given(response.getType()).willReturn(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
 
         // when
-        when(filter.handle(any())).thenReturn(response);
+        when(filter.handle(any())).thenThrow(new HttpResponseException(null, response));
 
         // then
         assertThatThrownBy(() -> serviceBlockedFilter.handle(httpRequest))

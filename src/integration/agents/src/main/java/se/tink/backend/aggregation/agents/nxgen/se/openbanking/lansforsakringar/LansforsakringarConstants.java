@@ -75,13 +75,13 @@ public abstract class LansforsakringarConstants {
         public static final String AUTHORIZATION = "/as/authorization.oauth2";
         public static final String TOKEN = "/as/token.oauth2";
 
-        public static final String CONSENT = "/openbanking/ano/v2/consents";
+        public static final String CONSENT = "/openbanking/ano/v3/consents";
         public static final String CONSENT_STATUS =
                 "/openbanking/sec/v2/consents/{consentId}/status";
         public static final String CONSENT_PROVIDED =
-                "/openbanking/ano/v2/consents/{consentId}/authorisations";
+                "/openbanking/ano/v3/consents/{consentId}/authorisations";
         public static final String SCA_STATUS =
-                "/openbanking/sec/v2/consents/{consentId}/authorisations/{authorizationId}";
+                "/openbanking/sec/v3/consents/{consentId}/authorisations/{authorizationId}";
         public static final String GET_ACCOUNTS = "/openbanking/ais/v1/accounts";
         public static final String GET_BALANCES =
                 "/openbanking/ais/v1/accounts/{accountId}/balances";
@@ -102,14 +102,17 @@ public abstract class LansforsakringarConstants {
         public static final String ACCOUNTS = "accounts";
         public static final String ACCOUNT_NUMBERS = "account_numbers";
         public static final String CONSENT_ID = "consentId";
+        public static final String AUTHORISATION_ID = "authorisationId";
     }
 
     public static class QueryKeys {
         public static final String DATE_FROM = "dateFrom";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String CLIENT_ID = "client_id";
+        public static final String CLIENT_CREDENTIALS = "client_credentials";
+        public static final String CONSENT_ID = "consentId";
         public static final String RESPONSE_TYPE = "response_type";
-        public static final String AUTHORIZATION_ID = "AuthorisationID";
+        public static final String AUTHORIZATION_ID = "authorizationId";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String STATE = "state";
     }
@@ -133,6 +136,7 @@ public abstract class LansforsakringarConstants {
         public static final String CACHE_CONTROL = "Cache-Control";
         public static final String TPP_NOK_REDIRECT_URI = "TPP-NOK-Redirect-URI";
         public static final String BASKET_ID = "basketId";
+        public static final String DECOUPLED = "Decoupled";
     }
 
     public static class HeaderValues {
@@ -140,6 +144,7 @@ public abstract class LansforsakringarConstants {
         public static final String PSU_USER_AGENT = "Desktop Mode";
         public static final String PSU_ID_TYPE = "SSSN";
         public static final String NO_CACHE = "no-cache";
+        public static final String TRUE = "true";
     }
 
     public static class FormKeys {
@@ -201,29 +206,35 @@ public abstract class LansforsakringarConstants {
                 "CROSS_BORDER_CREDIT_TRANSFERS";
     }
 
-    public class BodyValues {
+    public static class BodyValues {
         public static final String EMPTY_BODY = "{}";
     }
 
-    public class SCAValues {
+    public static class SCAValues {
         public static final String SCA_EXEMPTED = "EXEMPTED";
     }
 
-    public class CallbackParam {
+    public static class CallbackParam {
         private CallbackParam() {
             throw new IllegalStateException("Utility class");
         }
-
-        public static final String PICKUP = "pickup";
     }
 
-    public class ErrorCodes {
+    public static class ErrorCodes {
         public static final String SERVER = "server";
     }
 
     public static class ConsentStatus {
         public static final String VALID = "valid";
         public static final String REJECTED = "rejected";
+    }
+
+    public static class ScaStatusValue {
+        public static final String RECEIVED = "received";
+        public static final String STARTED = "started";
+        public static final String FINALISED = "finalised";
+        public static final String FAILED = "failed";
+        public static final String EMPTY = "";
     }
 
     public static class PaymentValue {
