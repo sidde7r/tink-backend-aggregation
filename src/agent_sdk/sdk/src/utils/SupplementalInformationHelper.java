@@ -20,29 +20,11 @@ public interface SupplementalInformationHelper {
 
     UserInteraction<SupplementalInformation> getLoginInput() throws SupplementalInfoException;
 
-    UserInteraction<SupplementalInformation> getAddBeneficiaryInput()
-            throws SupplementalInfoException;
-
     UserInteraction<SupplementalInformation> getOtpInput() throws SupplementalInfoException;
 
     UserInteraction<SupplementalInformation> getLoginChallengeResponse(String challenge)
             throws SupplementalInfoException;
 
     UserInteraction<SupplementalInformation> getSignCodeChallengeResponse(String challenge)
-            throws SupplementalInfoException;
-
-    UserInteraction<SupplementalInformation> getSignForBeneficiaryChallengeResponse(
-            String challenge) throws SupplementalInfoException;
-
-    UserInteraction<SupplementalInformation> getTwoStepSignForBeneficiaryChallengeResponse(
-            String challenge, String extraChallenge) throws SupplementalInfoException;
-
-    UserInteraction<SupplementalInformation> getSignForTransferChallengeResponse(String challenge)
-            throws SupplementalInfoException;
-
-    UserInteraction<SupplementalInformation> getTwoStepSignForTransferChallengeResponse(
-            String challenge, String extraChallenge) throws SupplementalInfoException;
-
-    UserInteraction<SupplementalInformation> getShowLoginDescription(String description)
             throws SupplementalInfoException;
 }
