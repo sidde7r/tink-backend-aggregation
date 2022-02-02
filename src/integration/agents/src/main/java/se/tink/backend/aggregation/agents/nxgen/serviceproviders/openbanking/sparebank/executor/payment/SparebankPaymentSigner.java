@@ -51,7 +51,6 @@ public class SparebankPaymentSigner {
             PaymentResponse paymentResponse = collect(toSign);
             paymentStatus = paymentResponse.getPayment().getStatus();
             switch (paymentStatus) {
-                case SIGNED:
                 case PAID:
                     return paymentResponse;
                 case CREATED:

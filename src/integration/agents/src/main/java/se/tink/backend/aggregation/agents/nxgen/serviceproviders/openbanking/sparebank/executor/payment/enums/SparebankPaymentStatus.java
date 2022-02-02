@@ -12,7 +12,7 @@ public enum SparebankPaymentStatus {
     ACCEPTED_WITH_CHANGE("ACWC", PaymentStatus.PENDING),
     ACCEPTED_WITHOUT_POSTING("ACWP", PaymentStatus.PENDING),
     RECEIVED("RCVD", PaymentStatus.CREATED),
-    PENDING("PDNG", PaymentStatus.SIGNED),
+    PENDING("PDNG", PaymentStatus.PAID),
     REJECTED("RJCT", PaymentStatus.REJECTED),
     CANCELED("CANC", PaymentStatus.CANCELLED),
     PARTIALLY_ACCEPTED("PART", PaymentStatus.PENDING),
