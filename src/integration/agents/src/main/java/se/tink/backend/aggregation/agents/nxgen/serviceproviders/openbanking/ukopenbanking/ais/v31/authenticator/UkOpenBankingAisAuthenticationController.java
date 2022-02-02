@@ -16,11 +16,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.retrypolicy.RetryExecutor;
+import se.tink.libraries.retrypolicy.RetryPolicy;
 
 @Slf4j
 public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticationController {
 
     private final UkOpenBankingApiClient apiClient;
+    private final RetryExecutor retryExecutor = new RetryExecutor();
     private final ConsentStatusValidator consentStatusValidator;
 
     public UkOpenBankingAisAuthenticationController(
@@ -48,12 +51,15 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
                 logMasker);
 
         this.apiClient = apiClient;
+        this.retryExecutor.setRetryPolicy(new RetryPolicy(2, RuntimeException.class));
         this.consentStatusValidator = consentStatusValidator;
     }
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
+        OAuth2Token clientOAuth2Token =
+                retryExecutor.execute(
+                        () -> apiClient.requestClientCredentials(ClientMode.ACCOUNTS));
         if (!clientOAuth2Token.isValid()) {
             throw new IllegalArgumentException("Client access token is not valid.");
         }

@@ -84,7 +84,9 @@ public class OpenIdAuthenticationController
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
+        OAuth2Token clientOAuth2Token =
+                retryExecutor.execute(
+                        () -> apiClient.requestClientCredentials(ClientMode.ACCOUNTS));
         authenticationValidator.validateClientToken(clientOAuth2Token);
         apiClient.instantiateAisAuthFilter(clientOAuth2Token);
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
