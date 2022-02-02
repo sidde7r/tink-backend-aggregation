@@ -2,6 +2,7 @@ package se.tink.agent.sdk.user_interaction;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import se.tink.backend.agents.rpc.Field;
 
 @JsonSerialize(using = SupplementalInformationSerializer.class)
@@ -20,8 +21,8 @@ public class SupplementalInformation {
         return UserInteraction.supplementalInformation(this).userResponseRequired().build();
     }
 
-    public static SupplementalInformation from(ImmutableList<Field> fields) {
-        return new SupplementalInformation(fields);
+    public static SupplementalInformation from(List<Field> fields) {
+        return new SupplementalInformation(ImmutableList.copyOf(fields));
     }
 
     public static SupplementalInformation from(Field... fields) {
