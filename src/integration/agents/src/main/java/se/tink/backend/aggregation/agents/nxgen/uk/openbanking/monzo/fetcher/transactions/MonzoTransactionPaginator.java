@@ -39,7 +39,8 @@ public class MonzoTransactionPaginator<T, S extends Account>
                 apiClient,
                 responseType,
                 transactionConverter,
-                localDateTimeSource);
+                localDateTimeSource,
+                paginationHelper);
         this.paginationHelper = paginationHelper;
     }
 

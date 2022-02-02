@@ -16,12 +16,15 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class PermanentTsbAis extends UkOpenBankingV31Ais {
 
+    private final TransactionPaginationHelper paginationHelper;
+
     protected PermanentTsbAis(
             UkOpenBankingAisConfig aisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
             TransactionPaginationHelper transactionPaginationHelper) {
         super(aisConfig, persistentStorage, localDateTimeSource, transactionPaginationHelper);
+        this.paginationHelper = transactionPaginationHelper;
     }
 
     @Override
@@ -40,7 +43,8 @@ public class PermanentTsbAis extends UkOpenBankingV31Ais {
                         (response, account) ->
                                 AccountTransactionsV31Response
                                         .toAccountTransactionPaginationResponse(response),
-                        localDateTimeSource));
+                        localDateTimeSource,
+                        paginationHelper));
     }
 
     @Override
@@ -57,6 +61,7 @@ public class PermanentTsbAis extends UkOpenBankingV31Ais {
                         apiClient,
                         AccountTransactionsV31Response.class,
                         AccountTransactionsV31Response::toCreditCardPaginationResponse,
-                        localDateTimeSource));
+                        localDateTimeSource,
+                        paginationHelper));
     }
 }

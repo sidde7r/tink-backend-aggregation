@@ -2,13 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionMapper;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionPaginator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
@@ -40,7 +40,7 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
             AgentComponentProvider componentProvider,
             Provider provider) {
         return new TransactionKeyPaginationController<>(
-                new MonzoTransactionPaginator<>(
+                new UkOpenBankingTransactionPaginator<>(
                         componentProvider,
                         provider,
                         ukOpenBankingAisConfig,
@@ -61,7 +61,7 @@ public class MonzoV31Ais extends UkOpenBankingV31Ais {
             AgentComponentProvider componentProvider,
             Provider provider) {
         return new TransactionKeyPaginationController<>(
-                new MonzoTransactionPaginator<>(
+                new UkOpenBankingTransactionPaginator<>(
                         componentProvider,
                         provider,
                         ukOpenBankingAisConfig,

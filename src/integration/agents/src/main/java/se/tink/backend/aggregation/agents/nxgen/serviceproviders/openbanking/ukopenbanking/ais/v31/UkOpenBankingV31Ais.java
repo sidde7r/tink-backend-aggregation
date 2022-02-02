@@ -237,7 +237,8 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         (response, account) ->
                                 AccountTransactionsV31Response
                                         .toAccountTransactionPaginationResponse(response),
-                        localDateTimeSource));
+                        localDateTimeSource,
+                        transactionPaginationHelper));
     }
 
     private TransactionPaginator<CreditCardAccount>
@@ -267,6 +268,7 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
                         apiClient,
                         AccountTransactionsV31Response.class,
                         AccountTransactionsV31Response::toCreditCardPaginationResponse,
-                        localDateTimeSource));
+                        localDateTimeSource,
+                        transactionPaginationHelper));
     }
 }

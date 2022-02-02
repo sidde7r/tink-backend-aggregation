@@ -23,6 +23,8 @@ import se.tink.libraries.unleash.model.Toggle;
 @Slf4j
 public class DanskeBankV31Ais extends UkOpenBankingV31Ais {
 
+    private final TransactionPaginationHelper paginationHelper;
+
     public DanskeBankV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
@@ -37,6 +39,7 @@ public class DanskeBankV31Ais extends UkOpenBankingV31Ais {
                 creditCardAccountMapper,
                 transactionalAccountMapper,
                 transactionPaginationHelper);
+        this.paginationHelper = transactionPaginationHelper;
     }
 
     @Override
@@ -71,7 +74,8 @@ public class DanskeBankV31Ais extends UkOpenBankingV31Ais {
                         (response, account) ->
                                 DanskeBankAccountTransactionsV31Response
                                         .toAccountTransactionPaginationResponse(response),
-                        localDateTimeSource));
+                        localDateTimeSource,
+                        paginationHelper));
     }
 
     @Override
@@ -103,6 +107,7 @@ public class DanskeBankV31Ais extends UkOpenBankingV31Ais {
                         apiClient,
                         DanskeBankAccountTransactionsV31Response.class,
                         DanskeBankAccountTransactionsV31Response::toCreditCardPaginationResponse,
-                        localDateTimeSource));
+                        localDateTimeSource,
+                        paginationHelper));
     }
 }

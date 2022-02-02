@@ -4,12 +4,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 
 public class MonzoAisConfiguration extends UkOpenBankingAisConfiguration {
 
-  public MonzoAisConfiguration(Builder builder) {
-    super(builder);
-  }
+    public MonzoAisConfiguration(Builder builder) {
+        super(builder);
+    }
 
-  @Override
-  public boolean isFetchingTransactionsFromTheNewestToTheOldest() {
-    return false;
-  }
+    @Override
+    public boolean isFetchingTransactionsFromTheNewestToTheOldest() {
+        return false;
+    }
 }

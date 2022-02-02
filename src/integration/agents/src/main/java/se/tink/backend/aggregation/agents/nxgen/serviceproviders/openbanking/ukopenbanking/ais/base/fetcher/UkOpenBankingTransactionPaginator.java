@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data.FetchedTransactionsDataStorage;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -50,6 +51,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private final TransactionConverter<ResponseType, AccountType> transactionConverter;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final FetchedTransactionsDataStorage fetchedTransactionsDataStorage;
+    private final TransactionPaginationHelper paginationHelper;
     private String lastAccount;
     private int paginationCount;
     private final UnleashClient unleashClient;
@@ -70,13 +72,15 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             UkOpenBankingApiClient apiClient,
             Class<ResponseType> responseType,
             TransactionConverter<ResponseType, AccountType> transactionConverter,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            TransactionPaginationHelper paginationHelper) {
         this.apiClient = apiClient;
         this.responseType = responseType;
         this.transactionConverter = transactionConverter;
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.fetchedTransactionsDataStorage = new FetchedTransactionsDataStorage(persistentStorage);
         this.localDateTimeSource = localDateTimeSource;
+        this.paginationHelper = paginationHelper;
         unleashClient = componentProvider.getUnleashClient();
         toggle =
                 Toggle.of("UK_SET_MAX_ALLOWED_NUMBER_OF_MONTHS_TO_24")

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -26,7 +27,8 @@ public class PermanentTsbTransactionPaginator<T, S extends Account>
             UkOpenBankingApiClient apiClient,
             Class<T> responseType,
             TransactionConverter<T, S> transactionConverter,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            TransactionPaginationHelper paginationHelper) {
         super(
                 componentProvider,
                 provider,
@@ -35,7 +37,8 @@ public class PermanentTsbTransactionPaginator<T, S extends Account>
                 apiClient,
                 responseType,
                 transactionConverter,
-                localDateTimeSource);
+                localDateTimeSource,
+                paginationHelper);
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
     }
 
