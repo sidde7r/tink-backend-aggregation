@@ -23,6 +23,7 @@ java_library(
         "//src/integration/models",
         "//src/libraries/agent-storage",
         "//src/libraries/mapper",
+        "//src/libraries/retrypolicy",
         "//src/libraries/strings",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_google_code_findbugs_jsr305",
