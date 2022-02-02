@@ -27,11 +27,11 @@ import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionMapper;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionPaginator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.mapper.MonzoTransactionMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.RefreshScopeTransactionPaginationHelper;
@@ -69,7 +69,7 @@ public class MonzoTransactionPaginatorTest {
     private PersistentStorage persistentStorage;
     private UkOpenBankingApiClient apiClient;
     private UkOpenBankingAisConfig ukOpenBankingAisConfig;
-    private MonzoTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
+    private UkOpenBankingTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
             transactionPaginator;
     private TransactionPaginationHelper paginationHelper;
 
@@ -92,7 +92,7 @@ public class MonzoTransactionPaginatorTest {
 
         paginationHelper = mock(RefreshScopeTransactionPaginationHelper.class);
         transactionPaginator =
-                new MonzoTransactionPaginator<>(
+                new UkOpenBankingTransactionPaginator<>(
                         componentProvider,
                         provider,
                         ukOpenBankingAisConfig,
