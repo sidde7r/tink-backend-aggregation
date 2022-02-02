@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
 COMMIT=$1
 
@@ -29,6 +29,11 @@ echo "--- Checking commit ${COMMIT}..."
 # shell doesn't support '-o pipefail' setting. Without that flag, 'git' might
 # fail without us knowing.
 COMMIT_MSG_SUBJECT=$(git show --pretty=format:'%s' --no-expand-tabs --no-patch "$COMMIT")
+
+if [[ "$COMMIT_MSG_SUBJECT" == Revert* ]]; then
+    echo "Revert commits are pardoned from linting because they can be created through the Github UI and you have limited control over their contents."
+    exit 0
+fi
 
 # The commit message that bors generates.
 BORS_COMMIT_MSG_SUBJECT_FORMAT="^Merge( #[0-9]+)+$"

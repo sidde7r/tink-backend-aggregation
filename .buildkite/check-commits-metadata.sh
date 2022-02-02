@@ -22,7 +22,7 @@ EOF
 # Run the actual tests.
 FAILED=0
 for commit in $(git log --format=format:%H origin/master..HEAD);do
-  
+
   if [[ "$IGNORED_COMMITS" = *$commit* ]]; then
     echo "Ignoring commit ${commit} imported from tink-oauth";
     continue;
