@@ -79,7 +79,25 @@ public class StringMasker {
     }
 
     /**
-     * Masks strings to avoid showing sensitive data. For example, "ABC12345678909876543" would
+     * Masks string to avoid showing sensitive data. For example, "ABC12345678909876543" would
+     * become "ABC1~***~6543".
+     */
+    public static String maskMiddleOfString(String unmasked) {
+        final String MASK = "~***~";
+
+        if (Strings.isNullOrEmpty(unmasked)) {
+            return unmasked;
+        }
+        if (unmasked.length() <= SHOWN_CHARS * 4) {
+            return MASK;
+        }
+
+        int lastStarIndex = unmasked.length() - SHOWN_CHARS;
+        return unmasked.substring(0, SHOWN_CHARS) + MASK + unmasked.substring(lastStarIndex);
+    }
+
+    /**
+     * Masks string to avoid showing sensitive data. For example, "ABC12345678909876543" would
      * become "***********************6543".
      */
     public static String starMaskBeginningOfString(String unmasked) {

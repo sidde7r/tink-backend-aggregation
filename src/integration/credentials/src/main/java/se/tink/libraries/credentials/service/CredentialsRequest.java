@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.authentication_options.SelectedAuthenticationOption;
 import se.tink.libraries.requesttracing.RequestTracer;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
@@ -59,6 +61,8 @@ public abstract class CredentialsRequest {
     protected boolean update;
 
     private List<DataFetchingRestrictions> dataFetchingRestrictions = new ArrayList<>();
+
+    private Set<SelectedAuthenticationOption> selectedAuthenticationOptions;
 
     /**
      * @deprecated use UserAvailability's userPresent or userAvailableForInteraction depending on
@@ -176,5 +180,14 @@ public abstract class CredentialsRequest {
     public String getRequestId() {
         return RequestTracer.getRequestId()
                 .orElseThrow(() -> new IllegalStateException("requestId is not assigned"));
+    }
+
+    public Set<SelectedAuthenticationOption> getSelectedAuthenticationOptions() {
+        return selectedAuthenticationOptions;
+    }
+
+    public void setSelectedAuthenticationOptions(
+            Set<SelectedAuthenticationOption> selectedAuthenticationOptions) {
+        this.selectedAuthenticationOptions = selectedAuthenticationOptions;
     }
 }

@@ -8,8 +8,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 import com.google.inject.Inject;
 import java.time.Clock;
 import java.time.ZoneId;
-import java.util.Base64;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -22,7 +21,6 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.RetryFilterValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.ImaginBankProxyAuthenticatior;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaManualAuthenticator;
@@ -49,7 +47,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.libraries.cryptography.hash.Hash;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, MORTGAGE_AGGREGATION})
 public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
@@ -71,7 +68,12 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
     public LaCaixaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         configureHttpClient(client);
-        apiClient = new LaCaixaApiClient(client, getInstallationId(request.getCredentials()));
+        apiClient =
+                new LaCaixaApiClient(
+                        client,
+                        persistentStorage,
+                        credentials.getField(Field.Key.USERNAME),
+                        componentProvider.getRandomValueGenerator());
 
         LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(apiClient);
         investmentRefreshController =
@@ -117,13 +119,6 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
                         RetryFilterValues.MAX_ATTEMPTS,
                         RetryFilterValues.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new LaCaixaSessionExpiredFilter(persistentStorage));
-    }
-
-    private String getInstallationId(Credentials credentials) {
-        final String deviceId = credentials.getId();
-        final byte[] hash = Hash.sha256(AuthenticationParams.DEVICE_NAME + deviceId);
-        return AuthenticationParams.INSTALLATION_ID_PREFIX
-                + Base64.getEncoder().encodeToString(hash).substring(0, 28);
     }
 
     @Override

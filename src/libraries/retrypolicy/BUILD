@@ -5,6 +5,10 @@ java_library(
     name = "retrypolicy",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
+    deps = [
+        "//third_party:lombok_libs",
+        "//third_party:org_slf4j_slf4j_api",
+    ],
 )
 
 junit_test(

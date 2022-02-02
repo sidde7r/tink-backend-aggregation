@@ -3,8 +3,8 @@ podCpuLimit: "2000m"
 podMemoryRequest: "6Gi"
 podMemoryLimit: "6Gi"
 heapSize: "4G"
-replicas: 35
-maxReplicas: 70
+replicas: 75
+maxReplicas: 150
 targetAverageCpuValue: "800m"
 initialDelaySeconds: "300"
 
@@ -476,17 +476,19 @@ clients:
     aggregatorIdentifier: "Xero"
   uk-openwrks-production:
     aggregatorIdentifier: "OpenWrks MyBudget"
+  slimpay-production:
+    aggregatorIdentifier: "SlimPay"
 
 eidasProxy:
   useEidasProxyQsealcSignerHttpClient: true
-  eidasProxyQsealcSignerHttpClientRate: "0.01"
+  eidasProxyQsealcSignerHttpClientRate: "0.5"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
   enabledRetryPolicy: true
   useSecretsServiceInternalClient: true
-  rate: "0.35"
+  rate: "1.0"
 
 debugLogFrequencyPercent: 100
 debugLogHarFrequencyPercent: 10

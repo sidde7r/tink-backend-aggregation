@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class RetryPolicy {
 
     private final int maxAttempts;
@@ -19,7 +21,12 @@ public class RetryPolicy {
 
     boolean canRetry(final RetryContext context) {
         Throwable t = context.getLastThrowable();
-        return (t == null || isOneOfRetryables(t)) && context.getAttempt() < this.maxAttempts;
+        int attempt = context.getAttempt();
+        boolean canRetry = (t == null || isOneOfRetryables(t)) && attempt < maxAttempts;
+        if (canRetry) {
+            log.info("[RetryPolicy] Executing retryable request [{}/{}]", attempt, maxAttempts);
+        }
+        return canRetry;
     }
 
     private boolean isOneOfRetryables(Throwable t) {

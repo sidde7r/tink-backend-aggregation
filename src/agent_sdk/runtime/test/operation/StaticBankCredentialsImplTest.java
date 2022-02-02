@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.agent.runtime.operation.StaticBankCredentialsImpl;
+import src.agent_sdk.runtime.src.operation.StaticBankCredentialsImpl;
 
 public class StaticBankCredentialsImplTest {
     @Test

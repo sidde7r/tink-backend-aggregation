@@ -1,0 +1,352 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.bred.fr/bred-auth-client/v1/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+grant_type=authorization_code&code=DUMMY_AUTH_CODE&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D00000000-0000-4000-0000-000000000000&client_id=DUMMY_ID
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Content-Type: application/json;charset=utf-8
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+
+{
+  "access_token": "DUMMY_TOKEN",
+  "token_type": "bearer",
+  "refresh_token": "DUMMY_TOKEN",
+  "expires_in": 3599,
+  "scope": "aisp",
+  "cnf": {
+    "x5t#S256": "DUMMY_CODE"
+  },
+  "jti": "DUMMY_JTI"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://api.bred.fr/psd2-aisp/v1/accounts
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Content-Type: application/hal+json;charset=utf-8
+Expires: 0
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+breadcrumbId: ***
+Accept-Encoding: gzip,deflate
+Ocp-Apim-Subscription-Key: ***
+digest: ***
+
+{
+  "accounts": [
+    {
+      "resourceId": "00000000000000EUR000000000",
+      "bicFi": "BREDFRPPXXX",
+      "accountId": {
+        "iban": "DUMMY_IBAN"
+      },
+      "name": "NAME",
+      "usage": "PRIV",
+      "cashAccountType": "CACC",
+      "currency": "EUR",
+      "balances": [
+        {
+          "name": "Solde comptable au 21/01/2022",
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "-20.23"
+          },
+          "balanceType": "CLBD"
+        }
+      ],
+      "_links": {
+        "balances": {
+          "href": "v1/accounts/00000000000000EUR000000000/balances"
+        },
+        "transactions": {
+          "href": "v1/accounts/00000000000000EUR000000000/transactions"
+        }
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "v1/accounts"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://api.bred.fr/psd2-aisp/v1/accounts
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Content-Type: application/hal+json;charset=utf-8
+Expires: 0
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Accept-Encoding: gzip,deflate
+breadcrumbId: ***
+Ocp-Apim-Subscription-Key: ***
+digest: ***
+
+{
+  "accounts": [
+    {
+      "resourceId": "00000000000000EUR000000000",
+      "bicFi": "BREDFRPPXXX",
+      "accountId": {
+        "iban": "DUMMY_IBAN"
+      },
+      "name": "NAME",
+      "usage": "PRIV",
+      "cashAccountType": "CACC",
+      "currency": "EUR",
+      "balances": [
+        {
+          "name": "Solde comptable au 21/01/2022",
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "-20.23"
+          },
+          "balanceType": "CLBD"
+        }
+      ],
+      "_links": {
+        "balances": {
+          "href": "v1/accounts/00000000000000EUR000000000/balances"
+        },
+        "transactions": {
+          "href": "v1/accounts/00000000000000EUR000000000/transactions"
+        }
+      }
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "v1/accounts"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://api.bred.fr/psd2-aisp/v1/accounts/00000000000000EUR000000000/transactions
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Content-Type: application/hal+json;charset=utf-8
+Expires: 0
+Ocp-Apim-Subscription-Key: ***
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+breadcrumbId: ***
+Accept-Encoding: gzip,deflate
+digest: ***
+Transfer-Encoding: chunked
+
+{
+  "transactions": [
+    {
+      "entryReference": "0000000002021-12-14-03.09.43.626449",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "8.89"
+      },
+      "creditDebitIndicator": "CRDT",
+      "status": "BOOK",
+      "bookingDate": "2021-12-12T23:00:00.000+0000",
+      "valueDate": "2021-12-12T23:00:00.000+0000",
+      "transactionDate": "2021-12-12T23:00:00.000+0000",
+      "remittanceInformation": [
+        "DEXT FRANCE 0000000",
+        "Virement SEPA reçu 0000000",
+        "Dext Expenses",
+        null,
+        "Dext Expenses"
+      ]
+    },
+    {
+      "entryReference": "0000000012021-12-14-03.09.43.626449",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-2.5"
+      },
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "bookingDate": "2021-12-12T23:00:00.000+0000",
+      "valueDate": "2021-12-12T23:00:00.000+0000",
+      "transactionDate": "2021-12-12T23:00:00.000+0000",
+      "remittanceInformation": [
+        "Frais tenue de compte 0000000"
+      ]
+    },
+    {
+      "entryReference": "0000000022021-12-08-03.00.08.347524",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-49.99"
+      },
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "bookingDate": "2021-12-06T23:00:00.000+0000",
+      "valueDate": "2021-12-06T23:00:00.000+0000",
+      "transactionDate": "2021-12-06T23:00:00.000+0000",
+      "remittanceInformation": [
+        "DEXT FRANCE 0000000",
+        "Virement SEPA reçu 0000000",
+        "Dext Expenses",
+        null,
+        "Dext Expenses"
+      ]
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "v1/accounts/00000000000000EUR000000000/transactions?page=0"
+    },
+    "parent-list": {
+      "href": "v1/accounts"
+    },
+    "balances": {
+      "href": "v1/accounts/00000000000000EUR000000000/balances"
+    },
+    "first": {
+      "href": "v1/accounts/00000000000000EUR000000000/transactions?page=0"
+    },
+    "last": {
+      "href": "v1/accounts/00000000000000EUR000000000/transactions?page=1"
+    },
+    "next": {
+      "href": "v1/accounts/00000000000000EUR000000000/transactions?page=1"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.bred.fr/psd2-aisp/v1/accounts/00000000000000EUR000000000/transactions?page=1
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Content-Type: application/hal+json;charset=utf-8
+Expires: 0
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+page: ***
+Accept-Encoding: gzip,deflate
+Ocp-Apim-Subscription-Key: ***
+breadcrumbId: ***
+digest: ***
+Transfer-Encoding: chunked
+
+{
+  "transactions": [
+    {
+      "entryReference": "0000000003021-12-14-03.09.43.626449",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "8.89"
+      },
+      "creditDebitIndicator": "CRDT",
+      "status": "BOOK",
+      "bookingDate": "2021-12-12T23:00:00.000+0000",
+      "valueDate": "2021-12-12T23:00:00.000+0000",
+      "transactionDate": "2021-12-12T23:00:00.000+0000",
+      "remittanceInformation": [
+        "DEXT FRANCE 0000000",
+        "Virement SEPA reçu 0000000",
+        "Dext Expenses",
+        null,
+        "Dext Expenses"
+      ]
+    },
+    {
+      "entryReference": "0000000042021-12-14-03.09.43.626449",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-2.5"
+      },
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "bookingDate": "2021-12-12T23:00:00.000+0000",
+      "valueDate": "2021-12-12T23:00:00.000+0000",
+      "transactionDate": "2021-12-12T23:00:00.000+0000",
+      "remittanceInformation": [
+        "Frais tenue de compte 0000000"
+      ]
+    },
+    {
+      "entryReference": "0000000052021-12-08-03.00.08.347524",
+      "transactionAmount": {
+        "currency": "EUR",
+        "amount": "-49.99"
+      },
+      "creditDebitIndicator": "DBIT",
+      "status": "BOOK",
+      "bookingDate": "2021-12-06T23:00:00.000+0000",
+      "valueDate": "2021-12-06T23:00:00.000+0000",
+      "transactionDate": "2021-12-06T23:00:00.000+0000",
+      "remittanceInformation": [
+        "DEXT FRANCE 0000000",
+        "Virement SEPA reçu 0000000",
+        "Dext Expenses",
+        null,
+        "Dext Expenses"
+      ]
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "v1/accounts/00000000000000EUR000000000/transactions?page=1"
+    },
+    "parent-list": {
+      "href": "v1/accounts"
+    },
+    "balances": {
+      "href": "v1/accounts/00000000000000EUR000000000/balances"
+    },
+    "first": {
+      "href": "v1/accounts/00000000000000EUR000000000/transactions?page=0"
+    },
+    "last": {
+      "href": "v1/accounts/00000000000000EUR000000000/transactions?page=1"
+    },
+    "prev": {
+      "href": "v1/accounts/00000000000000EUR000000000/transactions?page=0"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://api.bred.fr/psd2-aisp/v1/end-user-identity
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Content-Type: application/hal+json;charset=utf-8
+Expires: 0
+Accept-Encoding: gzip,deflate
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+breadcrumbId: ***
+Ocp-Apim-Subscription-Key: ***
+digest: ***
+
+{
+  "connectedPsu": "FULL NAME",
+  "_links": {
+    "self": {
+      "href": "end-user-identity"
+    },
+    "parent-list": {
+      "href": "v1/accounts"
+    }
+  }
+}

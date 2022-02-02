@@ -11,19 +11,11 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.
 public class MitIdDemoCodeAppField {
 
     public static List<Field> build() {
-        List<Field> fields =
-                DecoupledTemplate.getTemplate(
-                        DecoupledData.builder()
-                                .iconUrl(
-                                        "https://www.mitid.dk/mitid-code-app-auth/assets/img/code-app-slider-emulator.gif")
-                                .text("To continue, open your MitID app")
-                                .build());
-        fields.add(
-                Field.builder()
-                        .name("mitIdCodeAppContinueButtonField")
-                        .description("")
-                        .type("OPEN_THIRD_PARTY")
+        return DecoupledTemplate.getTemplateForMitId(
+                DecoupledData.builder()
+                        .iconUrl(
+                                "https://www.mitid.dk/mitid-code-app-auth/assets/img/code-app-slider-emulator.gif")
+                        .text("To continue, open your MitID app")
                         .build());
-        return fields;
     }
 }

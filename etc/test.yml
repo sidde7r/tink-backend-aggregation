@@ -5137,6 +5137,12 @@ agentsServiceConfiguration:
         keyId: ''
         redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
         serverUrl: https://www.18707.live.api.89c3.com
+    bredbanquepopulaire:
+      tink:
+        clientId: ''
+        ocpApimSubscriptionKey: ''
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        keyId: https://cdn.tink.se/eidas/tink-qsealc-without-headers.pem
     buddybank-it:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback

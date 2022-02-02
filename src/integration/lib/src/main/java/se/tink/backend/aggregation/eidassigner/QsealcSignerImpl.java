@@ -160,8 +160,10 @@ public class QsealcSignerImpl
         se.tink.backend.tink_integration_eidas_proxy.client.QsealcAlg proxyAlgorithm =
                 se.tink.backend.tink_integration_eidas_proxy.client.QsealcAlg.valueOf(
                         algorithm.name());
+        byte[] signedData =
+                this.eidasProxyFacade.signData(signingData, proxyAlgorithm, proxyEidasIdentity);
         log.info("Called callSecretsServiceThroughEidasProxyClient");
-        return this.eidasProxyFacade.signData(signingData, proxyAlgorithm, proxyEidasIdentity);
+        return signedData;
     }
 
     private byte[] callSecretsService(QsealcAlg algorithm, byte[] signingData) {

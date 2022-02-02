@@ -11,7 +11,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agent_sdk/runtime/src/main/java/operation",
+        "//src/agent_sdk/runtime/src/operation",
         "//src/agent_sdk/sdk/src/operation",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sdcno",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/sdc",

@@ -1,22 +1,8 @@
 steps:
 
-  - name: ':junit: Test'
-    branches: '!master'
-    command: .buildkite/run-unit-tests.sh
-    timeout_in_minutes: 45
-    env:
-      COMPOSE_HTTP_TIMEOUT: 300
-    agents:
-      queue: bazel-optimized
-    plugins:
-      docker-compose#v3.0.3:
-        run: "app"
-        config: "docker/docker-compose.bazel.yml"
-    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
-
   - name: ':junit: Test (Java 11)'
     branches: '!master'
-    command: .buildkite/run-unit-tests-java11.sh
+    command: .buildkite/run-unit-tests.sh
     timeout_in_minutes: 45
     env:
       COMPOSE_HTTP_TIMEOUT: 300
@@ -96,20 +82,9 @@ steps:
     agents:
       queue: default
 
-  - name: ':junit: System Test'
+  - name: ':junit: System Test (Java 11)'
     branches: '!master'
     command: .buildkite/run-system-tests.sh
-    timeout_in_minutes: 30
-    agents:
-      queue: bazel-optimized
-    plugins:
-      docker-compose#v3.0.3:
-        run: app
-        config: docker/docker-compose-system-tests.bazel.yml
-
-  - name: ':junit: System Test (Java11)'
-    branches: '!master'
-    command: .buildkite/run-system-tests-in-java11.sh
     timeout_in_minutes: 30
     agents:
       queue: bazel-optimized
@@ -128,7 +103,7 @@ steps:
 
   - name: ':docker: tink-backend-aggregation'
     branches: 'staging'
-    command: .buildkite/build-and-push-docker.sh //docker:aggregation_push jdk8
+    command: .buildkite/build-and-push-docker.sh //docker:aggregation_push jdk11
     timeout_in_minutes: 10
     plugins:
       docker-compose#v3.0.3:

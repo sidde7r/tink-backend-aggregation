@@ -7,10 +7,13 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import javax.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
 
+@Slf4j
 public class DanskebankV31Constant {
 
     private static final String MARKET = "MARKET";
@@ -29,10 +32,26 @@ public class DanskebankV31Constant {
             public static final String PIS_BASE = "https://psd2-api.danskebank.com/psd2/v3.1/pisp";
             private static final String WELL_KNOWN =
                     "https://psd2-api.danskebank.com/psd2/{MARKET}/private/.well-known/openid-configuration";
+            private static final String WELL_KNOWN_APP_TO_APP =
+                    "https://psd2-mb3.danskebank.com/psd2/{MARKET}/private/.well-known/openid-configuration";
+            private static final String WELL_KNOWN_UK =
+                    "https://psd2-api.danskebank.com/psd2/uk/private/.well-known/openid-configuration";
             private static final String WELL_KNOWN_BUSINESS =
                     "https://psd2-api.danskebank.com/psd2/{MARKET}/business/.well-known/openid-configuration";
 
             public static URL getWellKnownUrl(@Nonnull final MarketCode market) {
+                if (market == MarketCode.UK) {
+                    return new URL(WELL_KNOWN_UK);
+                }
+
+                // route small amount of traffic to use app-to-app redirect
+                int randNum = RandomUtils.generateRandomNumberInRange(0, 100);
+
+                if (randNum < 10) {
+                    log.info("Using app-to-app redirect");
+                    return new URL(WELL_KNOWN_APP_TO_APP)
+                            .parameter(MARKET, market.name().toLowerCase());
+                }
 
                 return new URL(WELL_KNOWN).parameter(MARKET, market.name().toLowerCase());
             }

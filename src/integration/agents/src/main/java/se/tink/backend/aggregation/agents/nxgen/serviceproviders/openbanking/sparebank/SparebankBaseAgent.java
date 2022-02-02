@@ -198,11 +198,7 @@ public abstract class SparebankBaseAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         final SparebankPaymentExecutor paymentExecutor =
-                new SparebankPaymentExecutor(
-                        apiClient,
-                        supplementalInformationHelper,
-                        strongAuthenticationState,
-                        storage);
+                new SparebankPaymentExecutor(apiClient, supplementalInformationHelper, storage);
 
         return Optional.of(new PaymentController(paymentExecutor));
     }

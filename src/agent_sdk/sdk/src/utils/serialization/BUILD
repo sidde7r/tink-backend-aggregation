@@ -12,7 +12,9 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/utils/serialization/body",
         "//src/agent_sdk/sdk/src/utils/serialization/local_date",
     ],
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
+    visibility = [
+        "//src/agent_sdk:__subpackages__",
+    ],
     exports = [
         "//src/agent_sdk/sdk/src/utils/serialization/annotations",
         "//src/agent_sdk/sdk/src/utils/serialization/body",

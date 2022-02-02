@@ -17,6 +17,7 @@ java_library(
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/credentialsservice",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/authentication_options",
         "@tink_backend//src/libraries/strings",
         "@tink_backend//src/libraries/uuid",
     ],
