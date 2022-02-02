@@ -11,6 +11,7 @@ set -x
     --deleted_packages=deb,docker \
     --curses=yes \
     --color=yes \
+    --config=jdk11 \
     -- \
     //src/integration/agents/...
 
@@ -26,6 +27,7 @@ fi
     --deleted_packages=deb,docker \
     --curses=yes \
     --color=yes \
+    --config=jdk11 \
     -- \
     ...:all
 OUTCOME=$?

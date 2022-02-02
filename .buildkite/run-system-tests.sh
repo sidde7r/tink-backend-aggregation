@@ -20,6 +20,7 @@ docker pull gcr.io/tink-containers/ryuk:0.2.3
     --deleted_packages=deb,docker \
     --curses=yes \
     --color=yes \
+    --config=jdk11 \
     -- \
     //src/aggregation/service/src/test/java/se/tink/backend/aggregation/service:ci
 
