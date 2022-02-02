@@ -68,6 +68,7 @@ public class SmsCodeTemplateTest {
         assertThat(field.getStyle()).isEqualTo("TITLE");
         assertThat(field.getType()).isEqualTo("TEXT");
         assertThat(field.getValue()).isEqualTo("Title Value");
+        assertThat(field.getAdditionalInfo()).isEqualTo("{\"layoutType\":\"INSTRUCTIONS\"}");
     }
 
     private void assertInputField(Field field) {

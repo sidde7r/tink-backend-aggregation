@@ -131,25 +131,13 @@ public class FieldsBuilder {
                 .build();
     }
 
-    public static Field buildTextFieldForMitId(
-            String textDescription, String textValue, String name) {
-        return Field.builder()
-                .type(CommonConstants.FieldTypes.BackwardCompatible.TEXT)
-                .style(CommonConstants.FieldStyles.BackwardCompatible.TEXT)
-                .description(Strings.nullToEmpty(textDescription))
-                .additionalInfo(INFO_SCREEN_ADDITIONAL_INFO)
-                .immutable(true)
-                .name(name)
-                .value(textValue)
-                .build();
-    }
-
     public static Field buildTitleField(String title, String name) {
         return Field.builder()
                 .type(CommonConstants.FieldTypes.BackwardCompatible.TEXT)
                 .style(CommonConstants.FieldStyles.TinkLinkCompatible.TITLE)
                 .name(name)
                 .description(CommonConstants.FieldStyles.TinkLinkCompatible.TITLE)
+                .additionalInfo(INFO_SCREEN_ADDITIONAL_INFO)
                 .immutable(true)
                 .value(title)
                 .build();
