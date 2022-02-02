@@ -53,7 +53,7 @@ import se.tink.libraries.unleash.UnleashClient;
 public class UkObReverseTransactionPaginatorTest {
 
     private static final String DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/fetcher/resources/";
 
     private final DelaySimulatingLocalDateTimeSource localDateTimeSource =
             new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2021-10-02T00:00:00"));
@@ -229,7 +229,7 @@ public class UkObReverseTransactionPaginatorTest {
 
         @Override
         public LocalDateTime now(ZoneId zoneId) {
-            return null;
+            return currentTime;
         }
 
         @Override
