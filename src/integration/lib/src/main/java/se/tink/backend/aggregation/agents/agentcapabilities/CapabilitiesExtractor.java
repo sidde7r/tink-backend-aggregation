@@ -64,30 +64,41 @@ public class CapabilitiesExtractor {
         return new HashSet<>(Arrays.asList(capabilities.value()));
     }
 
-    public static Map<String, Set<String>> readPisCapabilities(Class<? extends Agent> klass) {
+    public static Map<String, Set<String>> readPisCapabilitiesAsStrings(
+            Class<? extends Agent> klass) {
+        return readPisCapabilities(klass).entrySet().stream()
+                .collect(
+                        Collectors.toMap(
+                                entry -> entry.getKey().name(),
+                                entry ->
+                                        entry.getValue().stream()
+                                                .map(Enum::name)
+                                                .collect(Collectors.toSet())));
+    }
+
+    public static Map<MarketCode, Set<PisCapability>> readPisCapabilities(
+            Class<? extends Agent> klass) {
         /* Java internally treats repeating Annotation as an instance of @AgentPisCapabilities holding an array of @AgentPisCapability */
         AgentPisCapability[] pisCapabilitiesArray =
                 klass.getAnnotationsByType(AgentPisCapability.class);
-        Map<String, Set<String>> map = new HashMap<>();
+        Map<MarketCode, Set<PisCapability>> map = new HashMap<>();
         for (AgentPisCapability agentPisCapability : pisCapabilitiesArray) {
-            List<String> markets = Arrays.asList(agentPisCapability.markets());
+            List<MarketCode> markets =
+                    Arrays.stream(agentPisCapability.markets())
+                            .map(MarketCode::valueOf)
+                            .collect(Collectors.toList());
+
             if (markets.isEmpty()) {
-                markets =
-                        Arrays.stream(MarketCode.values())
-                                .map(marketCode -> marketCode.name())
-                                .collect(Collectors.toList());
+                markets = Arrays.asList(MarketCode.values());
             }
-            for (String market : markets) {
+            for (MarketCode market : markets) {
                 map.computeIfAbsent(market, k -> new HashSet<>())
-                        .addAll(readPisCapabilitiesFromAnnotation(agentPisCapability));
+                        .addAll(
+                                Arrays.stream(agentPisCapability.capabilities())
+                                        .collect(Collectors.toSet()));
             }
         }
-        return map;
-    }
 
-    private static Set<String> readPisCapabilitiesFromAnnotation(
-            AgentPisCapability pisCapabilities) {
-        Set<PisCapability> s = new HashSet<>(Arrays.asList(pisCapabilities.capabilities()));
-        return s.stream().map(Enum::name).collect(Collectors.toSet());
+        return map;
     }
 }

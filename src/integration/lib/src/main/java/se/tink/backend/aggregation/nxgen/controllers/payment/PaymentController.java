@@ -4,12 +4,14 @@ import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerAgentExceptionMapper;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerAgentExceptionMapper.PaymentControllerAgentExceptionMapperContext;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerOldExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.validation.PaymentInitializationValidator;
 
 public class PaymentController {
     private final PaymentExecutor paymentExecutor;
     private final FetchablePaymentExecutor fetchablePaymentExecutor;
 
     private final PaymentControllerAgentExceptionMapper exceptionHandler;
+    private PaymentInitializationValidator validator;
 
     public PaymentController(PaymentExecutor paymentExecutor) {
         this(paymentExecutor, null, new PaymentControllerOldExceptionMapper());
@@ -36,6 +38,10 @@ public class PaymentController {
     }
 
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        if (validator != null) {
+            validator.throwIfNotPossibleToInitialize(paymentRequest.getPayment());
+        }
+
         try {
             return paymentExecutor.create(paymentRequest);
         } catch (AgentException agentException) {

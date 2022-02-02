@@ -12,6 +12,7 @@ import se.tink.libraries.enums.MarketCode;
 public class CapabilitiesExtractorTest {
 
     private static final String MARKET = "GB";
+    private static final MarketCode MARKET_AS_CODE = MarketCode.GB;
 
     @Test
     public void shouldExtractCapabilitiesFromImplementedExecutors() {
@@ -29,9 +30,10 @@ public class CapabilitiesExtractorTest {
     }
 
     @Test
-    public void shouldExtractPisCapabilitiesFromAnnotation() {
+    public void shouldExtractPisCapabilitiesAsStringsFromAnnotation() {
         final Map<String, Set<String>> pisCapabilities =
-                CapabilitiesExtractor.readPisCapabilities(TestAgentWithListedPisCapabilities.class);
+                CapabilitiesExtractor.readPisCapabilitiesAsStrings(
+                        TestAgentWithListedPisCapabilities.class);
 
         Arrays.stream(MarketCode.values())
                 .map(MarketCode::name)
@@ -46,9 +48,9 @@ public class CapabilitiesExtractorTest {
     }
 
     @Test
-    public void shouldExtractMarketSpecificPisCapabilitiesFromAnnotation() {
+    public void shouldExtractMarketSpecificPisCapabilitiesAsStringsFromAnnotation() {
         final Map<String, Set<String>> pisCapabilities =
-                CapabilitiesExtractor.readPisCapabilities(
+                CapabilitiesExtractor.readPisCapabilitiesAsStrings(
                         TestAgentWithListedMarketSpecificPisCapabilities.class);
 
         assertThat(pisCapabilities).hasSize(1);
@@ -57,9 +59,10 @@ public class CapabilitiesExtractorTest {
     }
 
     @Test
-    public void shouldExtractRepeatedMarketSpecificPisCapabilitiesFromMultipleAnnotations() {
+    public void
+            shouldExtractRepeatedMarketSpecificPisCapabilitiesAsStringsFromMultipleAnnotations() {
         final Map<String, Set<String>> pisCapabilities =
-                CapabilitiesExtractor.readPisCapabilities(
+                CapabilitiesExtractor.readPisCapabilitiesAsStrings(
                         TestAgentWithListedPisCapabilitiesWithRepeatedMarket.class);
         assertThat(pisCapabilities).hasSize(1);
         assertThat(pisCapabilities.containsKey(MARKET)).isTrue();
@@ -67,5 +70,44 @@ public class CapabilitiesExtractorTest {
                 .containsExactlyInAnyOrder(
                         PisCapability.SEPA_CREDIT_TRANSFER.name(),
                         PisCapability.SEPA_INSTANT_CREDIT_TRANSFER.name());
+    }
+
+    @Test
+    public void shouldExtractPisCapabilitiesFromAnnotation() {
+        final Map<MarketCode, Set<PisCapability>> pisCapabilities =
+                CapabilitiesExtractor.readPisCapabilities(TestAgentWithListedPisCapabilities.class);
+
+        Arrays.stream(MarketCode.values())
+                .forEach(
+                        marketCode -> {
+                            assertThat(pisCapabilities.containsKey(marketCode)).isTrue();
+                            assertThat(pisCapabilities.get(marketCode))
+                                    .containsExactlyInAnyOrder(
+                                            PisCapability.SEPA_CREDIT_TRANSFER,
+                                            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER);
+                        });
+    }
+
+    @Test
+    public void shouldExtractMarketSpecificPisCapabilitiesFromAnnotation() {
+        final Map<MarketCode, Set<PisCapability>> pisCapabilities =
+                CapabilitiesExtractor.readPisCapabilities(
+                        TestAgentWithListedMarketSpecificPisCapabilities.class);
+
+        assertThat(pisCapabilities).hasSize(1);
+        assertThat(pisCapabilities.containsKey(MARKET_AS_CODE)).isTrue();
+    }
+
+    @Test
+    public void shouldExtractRepeatedMarketSpecificPisCapabilitiesFromMultipleAnnotations() {
+        final Map<MarketCode, Set<PisCapability>> pisCapabilities =
+                CapabilitiesExtractor.readPisCapabilities(
+                        TestAgentWithListedPisCapabilitiesWithRepeatedMarket.class);
+        assertThat(pisCapabilities).hasSize(1);
+        assertThat(pisCapabilities.containsKey(MARKET_AS_CODE)).isTrue();
+        assertThat(pisCapabilities.get(MARKET_AS_CODE))
+                .containsExactlyInAnyOrder(
+                        PisCapability.SEPA_CREDIT_TRANSFER,
+                        PisCapability.SEPA_INSTANT_CREDIT_TRANSFER);
     }
 }

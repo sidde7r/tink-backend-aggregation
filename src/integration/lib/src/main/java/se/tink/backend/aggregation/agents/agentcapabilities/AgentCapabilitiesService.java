@@ -25,7 +25,8 @@ public class AgentCapabilitiesService {
         return reflections.getSubTypesOf(Agent.class).stream()
                 .filter(hasPisCapabilities)
                 .collect(
-                        Collectors.toMap(getAgentName, CapabilitiesExtractor::readPisCapabilities));
+                        Collectors.toMap(
+                                getAgentName, CapabilitiesExtractor::readPisCapabilitiesAsStrings));
     }
 
     private final Predicate<Class<? extends Agent>> hasCapabilities =
