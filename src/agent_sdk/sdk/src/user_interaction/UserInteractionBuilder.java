@@ -1,6 +1,10 @@
 package se.tink.agent.sdk.user_interaction;
 
-public class UserInteractionBuilder<T> {
+import se.tink.agent.sdk.user_interaction.builder.UserInteractionBuild;
+import se.tink.agent.sdk.user_interaction.builder.UserInteractionBuildResponseRequired;
+
+public class UserInteractionBuilder<T>
+        implements UserInteractionBuildResponseRequired<T>, UserInteractionBuild<T> {
     private final UserInteractionType type;
     private final T payload;
     private boolean userResponseRequired = false;
@@ -11,17 +15,26 @@ public class UserInteractionBuilder<T> {
         this.payload = payload;
     }
 
-    public UserInteractionBuilder<T> userResponseRequired() {
+    @Override
+    public UserInteractionBuild<T> noUserResponseRequired() {
+        this.userResponseRequired = false;
+        return this;
+    }
+
+    @Override
+    public UserInteractionBuild<T> userResponseRequired() {
         this.userResponseRequired = true;
         return this;
     }
 
-    public UserInteractionBuilder<T> userResponseRequired(String customResponseKey) {
+    @Override
+    public UserInteractionBuild<T> userResponseRequired(String customResponseKey) {
         this.userResponseRequired = true;
         this.customResponseKey = customResponseKey;
         return this;
     }
 
+    @Override
     public UserInteraction<T> build() {
         return new UserInteraction<>(
                 this.type, this.payload, this.userResponseRequired, this.customResponseKey);
