@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CH
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LIST_BENEFICIARIES;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
@@ -18,14 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModules(modules = CreditAgricoleBaseModule.class)
-@AgentCapabilities({
-    CHECKING_ACCOUNTS,
-    LIST_BENEFICIARIES,
-    SAVINGS_ACCOUNTS,
-    IDENTITY_DATA,
-    TRANSFERS,
-    CREDIT_CARDS
-})
+@AgentCapabilities({CHECKING_ACCOUNTS, LIST_BENEFICIARIES, IDENTITY_DATA, TRANSFERS, CREDIT_CARDS})
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_CREDIT_TRANSFER,

@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CH
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.LIST_BENEFICIARIES;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
@@ -19,7 +18,6 @@ import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
@@ -59,14 +57,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({
-    CHECKING_ACCOUNTS,
-    LIST_BENEFICIARIES,
-    SAVINGS_ACCOUNTS,
-    IDENTITY_DATA,
-    TRANSFERS,
-    CREDIT_CARDS
-})
+@AgentCapabilities({CHECKING_ACCOUNTS, LIST_BENEFICIARIES, IDENTITY_DATA, TRANSFERS, CREDIT_CARDS})
 @AgentPisCapability(
         capabilities = {
             PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
@@ -75,7 +66,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
         })
 public final class SocieteGeneraleAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 RefreshBeneficiariesExecutor,
                 RefreshCreditCardAccountsExecutor {
@@ -173,16 +163,6 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
