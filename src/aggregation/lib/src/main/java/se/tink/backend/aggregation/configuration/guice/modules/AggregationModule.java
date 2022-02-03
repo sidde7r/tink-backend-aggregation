@@ -68,9 +68,7 @@ import se.tink.backend.aggregation.workers.operation.LockSupplier;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
-import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
-import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceInternalClientImpl;
 import se.tink.libraries.http.client.HstsFilter;
 import se.tink.libraries.http.client.LoggingFilter;
@@ -97,9 +95,6 @@ public class AggregationModule extends AbstractModule {
         bind(AggregationControllerAggregationClient.class)
                 .to(AggregationControllerAggregationClientImpl.class);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
-        bind(ManagedTppSecretsServiceClient.class)
-                .to(TppSecretsServiceClientImpl.class)
-                .in(Scopes.SINGLETON);
         bind(ManagedTppSecretsServiceInternalClient.class)
                 .to(TppSecretsServiceInternalClientImpl.class)
                 .in(Scopes.SINGLETON);
