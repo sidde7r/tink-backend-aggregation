@@ -11,7 +11,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/tpp_secrets_service/client:utils",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/entities",
-        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/libraries/serialization",
         "//src/tink_backend_libs:secrets_service_client",
         "//third_party:io_grpc_grpc_core",

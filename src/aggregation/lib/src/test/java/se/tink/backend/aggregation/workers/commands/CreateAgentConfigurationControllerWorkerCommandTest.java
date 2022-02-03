@@ -11,7 +11,6 @@ import org.mockito.Answers;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
-import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -22,14 +21,12 @@ public class CreateAgentConfigurationControllerWorkerCommandTest {
     @Before
     public void setUp() {
         context = mock(AgentWorkerCommandContext.class, Answers.RETURNS_DEEP_STUBS);
-        TppSecretsServiceClient tppSecretsServiceClient =
-                mock(TppSecretsServiceClient.class, Answers.RETURNS_DEEP_STUBS);
         SecretsServiceInternalClient secretsServiceInternalClient =
                 mock(SecretsServiceInternalClient.class, Answers.RETURNS_DEEP_STUBS);
 
         command =
                 new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient, secretsServiceInternalClient);
+                        context, secretsServiceInternalClient);
     }
 
     @Test
