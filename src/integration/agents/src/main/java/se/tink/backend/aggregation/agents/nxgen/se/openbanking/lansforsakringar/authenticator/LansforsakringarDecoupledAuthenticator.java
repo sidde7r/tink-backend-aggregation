@@ -76,7 +76,7 @@ public class LansforsakringarDecoupledAuthenticator implements BankIdAuthenticat
                 return BankIdStatus.DONE;
 
             case ScaStatusValue.FAILED:
-                return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                return BankIdStatus.CANCELLED;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }
