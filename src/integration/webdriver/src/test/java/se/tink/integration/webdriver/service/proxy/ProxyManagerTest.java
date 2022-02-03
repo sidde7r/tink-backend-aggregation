@@ -2,6 +2,7 @@ package se.tink.integration.webdriver.service.proxy;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.browserup.bup.BrowserUpProxy;
 import org.junit.Before;
@@ -22,12 +23,28 @@ public class ProxyManagerTest {
     }
 
     @Test
-    public void should_add_proxy_filter_as_request_and_response_filter() {
+    public void should_add_proxy_filter_registry_for_requests() {
+        // given
+        ProxyManager proxyManager = new ProxyManagerImpl(proxy, proxyFilterRegistry);
+
         // when
-        new ProxyManagerImpl(proxy, proxyFilterRegistry);
+        proxyManager.enableRequestsFiltering();
 
         // then
         verify(proxy).addRequestFilter(proxyFilterRegistry);
+        verifyNoMoreInteractions(proxy);
+    }
+
+    @Test
+    public void should_add_proxy_filter_registry_for_responses() {
+        // given
+        ProxyManager proxyManager = new ProxyManagerImpl(proxy, proxyFilterRegistry);
+
+        // when
+        proxyManager.enableResponseFiltering();
+
+        // then
         verify(proxy).addResponseFilter(proxyFilterRegistry);
+        verifyNoMoreInteractions(proxy);
     }
 }

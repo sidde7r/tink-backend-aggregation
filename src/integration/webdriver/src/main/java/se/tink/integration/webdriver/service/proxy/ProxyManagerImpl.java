@@ -13,8 +13,15 @@ public class ProxyManagerImpl implements ProxyManager {
             BrowserUpProxy browserUpProxy, ProxyFilterRegistry proxyFilterRegistry) {
         this.browserUpProxy = browserUpProxy;
         this.proxyFilterRegistry = proxyFilterRegistry;
+    }
 
+    @Override
+    public void enableRequestsFiltering() {
         browserUpProxy.addRequestFilter(proxyFilterRegistry);
+    }
+
+    @Override
+    public void enableResponseFiltering() {
         browserUpProxy.addResponseFilter(proxyFilterRegistry);
     }
 

@@ -19,8 +19,8 @@ public class MitIdProxyFiltersRegistry {
 
     /** For consistency, this the place where we should register all proxy filters */
     public void registerFilters() {
+        driverService.enableResponseFiltering();
         driverService.registerProxyFilter(LISTEN_WEB_AUTH_FINISHED, authFinishProxyFilter);
-
         driverService.registerProxyFilter(
                 LISTEN_CODE_APP_POLLING_FINISHED, codeAppPollingProxyFilter);
     }

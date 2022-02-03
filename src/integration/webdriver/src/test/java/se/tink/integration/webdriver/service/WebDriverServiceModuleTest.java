@@ -35,6 +35,9 @@ public class WebDriverServiceModuleTest {
     @Test
     public void should_initialize_working_driver_with_proxy() {
         // given
+        driverService.enableRequestsFiltering();
+        driverService.enableResponseFiltering();
+
         ExampleFilter filter = new ExampleFilter();
         driverService.registerProxyFilter("example_filter", filter);
 

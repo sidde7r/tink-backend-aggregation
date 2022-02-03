@@ -117,6 +117,11 @@ public class BankIdIframeAuthenticationController
     }
 
     private void setupProxyResponseFilter() {
+        /*
+        NOTE: If we ever need to enable request filtering, we'll need to investigate if it's even possible.
+        Right now, when enabled, request filtering always results in BankID iframe "network issues" error.
+         */
+        webDriver.enableResponseFiltering();
         webDriver.registerProxyFilter("authFinishProxyFilter", authFinishProxyFilter);
     }
 
