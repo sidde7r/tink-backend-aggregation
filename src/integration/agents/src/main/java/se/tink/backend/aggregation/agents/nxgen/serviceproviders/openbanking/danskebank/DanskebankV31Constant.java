@@ -27,6 +27,8 @@ public class DanskebankV31Constant {
         public static class V31 {
             public static final String AIS_BASE = "https://psd2-api.danskebank.com/psd2/v3.1/aisp";
             public static final String PIS_BASE = "https://psd2-api.danskebank.com/psd2/v3.1/pisp";
+            public static final String AIS_BASE_APP_REDIRECT =
+                    "https://psd2-mb3.danskebank.com/psd2/v3.1/aisp";
             private static final String WELL_KNOWN =
                     "https://psd2-mb3.danskebank.com/psd2/{MARKET}/private/.well-known/openid-configuration";
             private static final String WELL_KNOWN_UK =
