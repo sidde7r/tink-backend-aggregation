@@ -5,7 +5,6 @@ java_library_with_sources(
     intdeps = [
         "//src/agent_sdk/runtime/src/instance",
         "//src/agent_sdk/runtime/src/authentication",
-        "//src/agent_sdk/sdk",
     ],
     visibility = ["//visibility:public"],
 )
