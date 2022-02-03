@@ -107,7 +107,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                                 apiClient,
                                 supplementalInformationHelper,
                                 persistentStorage,
-                                consentHandler),
+                                consentHandler,
+                                componentProvider),
                         persistentStorage,
                         request);
 
