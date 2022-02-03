@@ -27,12 +27,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.consent.SwedbankConsentHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.resources.GenericResponseTestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SwedbankDecoupledAuthenticatorTest {
@@ -41,6 +43,8 @@ public class SwedbankDecoupledAuthenticatorTest {
     private PersistentStorage persistentStorage;
     private SwedbankConsentHandler consentHandler;
     private SwedbankDecoupledAuthenticator objectUnderTest;
+    private AgentComponentProvider componentProvider;
+    private CredentialsRequest credentialsRequest;
     @Mock private HttpResponse httpResponse;
     @Mock private HttpResponseException httpResponseException;
 
@@ -50,13 +54,16 @@ public class SwedbankDecoupledAuthenticatorTest {
         apiClient = mock(SwedbankApiClient.class);
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         consentHandler = mock(SwedbankConsentHandler.class);
+        componentProvider = mock(AgentComponentProvider.class);
+        credentialsRequest = mock(CredentialsRequest.class);
 
         objectUnderTest =
                 new SwedbankDecoupledAuthenticator(
                         apiClient,
                         supplementalInformationHelper,
                         persistentStorage,
-                        consentHandler);
+                        consentHandler,
+                        componentProvider);
     }
 
     @Test
@@ -101,6 +108,7 @@ public class SwedbankDecoupledAuthenticatorTest {
         when(apiClient.exchangeCodeForToken("mockedAuthorizationCode"))
                 .thenReturn(SwedbankDecoupledAuthenticatorTestData.TOKEN_RESPONSE.toTinkToken());
         when(apiClient.isSwedbank()).thenReturn(true);
+        when(componentProvider.getCredentialsRequest()).thenReturn(credentialsRequest);
 
         // when
         final BankIdStatus bankIdStatus = objectUnderTest.collect("collectAuthUri");
@@ -200,6 +208,7 @@ public class SwedbankDecoupledAuthenticatorTest {
         when(apiClient.isSwedbank()).thenReturn(false);
         when(apiClient.fetchAccounts())
                 .thenReturn(SwedbankDecoupledAuthenticatorTestData.SAVINGSBANK_ACCOUNTS_RESPONSE);
+        when(componentProvider.getCredentialsRequest()).thenReturn(credentialsRequest);
 
         // when
         final Throwable thrown =
@@ -222,6 +231,7 @@ public class SwedbankDecoupledAuthenticatorTest {
         when(apiClient.isSwedbank()).thenReturn(false);
         when(apiClient.fetchAccounts())
                 .thenReturn(SwedbankDecoupledAuthenticatorTestData.SWEDBANK_ACCOUNTS_RESPONSE);
+        when(componentProvider.getCredentialsRequest()).thenReturn(credentialsRequest);
 
         // when
         final ThrowingCallable callable =
