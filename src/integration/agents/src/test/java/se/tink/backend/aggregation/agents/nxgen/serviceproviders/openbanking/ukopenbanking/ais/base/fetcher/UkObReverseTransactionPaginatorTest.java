@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.transactions;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,8 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionMapper;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactions.MonzoTransactionPaginator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.mapper.MonzoTransactionMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.RefreshScopeTransactionPaginationHelper;
@@ -51,10 +50,10 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 import se.tink.libraries.unleash.UnleashClient;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MonzoTransactionPaginatorTest {
+public class UkObReverseTransactionPaginatorTest {
 
     private static final String DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/fetcher/resources/";
 
     private final DelaySimulatingLocalDateTimeSource localDateTimeSource =
             new DelaySimulatingLocalDateTimeSource(LocalDateTime.parse("2021-10-02T00:00:00"));
@@ -69,7 +68,7 @@ public class MonzoTransactionPaginatorTest {
     private PersistentStorage persistentStorage;
     private UkOpenBankingApiClient apiClient;
     private UkOpenBankingAisConfig ukOpenBankingAisConfig;
-    private MonzoTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
+    private UkOpenBankingTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
             transactionPaginator;
     private TransactionPaginationHelper paginationHelper;
 
@@ -92,7 +91,7 @@ public class MonzoTransactionPaginatorTest {
 
         paginationHelper = mock(RefreshScopeTransactionPaginationHelper.class);
         transactionPaginator =
-                new MonzoTransactionPaginator<>(
+                new UkOpenBankingTransactionPaginator<>(
                         componentProvider,
                         provider,
                         ukOpenBankingAisConfig,
@@ -230,7 +229,7 @@ public class MonzoTransactionPaginatorTest {
 
         @Override
         public LocalDateTime now(ZoneId zoneId) {
-            return null;
+            return currentTime;
         }
 
         @Override

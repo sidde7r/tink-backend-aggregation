@@ -14,6 +14,7 @@ public class CrossKeyTestUtils {
     public static final String BASE_API_URL = "baseApiURL";
     public static final String BASE_AUTH_URL = "baseAuthURL";
     public static final String REDIRECT_URL = "redirectURL";
+    public static final String TAN_URL = "tanURL";
     public static final String CLIENT_ID = "cliendId";
     public static final String CLIENT_SECRET = "clientSecret";
     public static final String CERTIFICATE_SERIAL_NUMBER = "certificateSerialNumber";
@@ -29,7 +30,8 @@ public class CrossKeyTestUtils {
         return new CrosskeyMarketConfiguration(
                 CrossKeyTestUtils.FINANCIAL_ID,
                 CrossKeyTestUtils.BASE_API_URL,
-                CrossKeyTestUtils.BASE_AUTH_URL);
+                CrossKeyTestUtils.BASE_AUTH_URL,
+                CrossKeyTestUtils.TAN_URL);
     }
 
     public static <T> T loadResourceFileContent(String fileName, Class<T> returnClass) {

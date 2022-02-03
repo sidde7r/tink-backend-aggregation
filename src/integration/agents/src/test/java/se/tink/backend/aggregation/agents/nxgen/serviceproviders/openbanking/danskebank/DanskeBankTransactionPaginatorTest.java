@@ -34,6 +34,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.RefreshScopeTransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -74,6 +76,7 @@ public class DanskeBankTransactionPaginatorTest {
     private DanskeBankTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
             paginator;
     private PersistentStorage persistentStorage;
+    private TransactionPaginationHelper paginationHelper;
 
     private UkOpenBankingApiClient apiClient;
 
@@ -101,6 +104,7 @@ public class DanskeBankTransactionPaginatorTest {
                                 });
 
         persistentStorage = mock(PersistentStorage.class);
+        paginationHelper = mock(RefreshScopeTransactionPaginationHelper.class);
 
         paginator =
                 new DanskeBankTransactionPaginator<>(
@@ -113,7 +117,8 @@ public class DanskeBankTransactionPaginatorTest {
                         (response, account) ->
                                 AccountTransactionsV31Response
                                         .toAccountTransactionPaginationResponse(response),
-                        localDateTimeSource);
+                        localDateTimeSource,
+                        paginationHelper);
     }
 
     @Test

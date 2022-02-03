@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DanskeBankOpenBankingV31Ais extends UkOpenBankingV31Ais {
 
+    private final TransactionPaginationHelper transactionPaginationHelper;
+
     public DanskeBankOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
@@ -31,6 +33,7 @@ public class DanskeBankOpenBankingV31Ais extends UkOpenBankingV31Ais {
                 creditCardAccountMapper,
                 transactionalAccountMapper,
                 transactionPaginationHelper);
+        this.transactionPaginationHelper = transactionPaginationHelper;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class DanskeBankOpenBankingV31Ais extends UkOpenBankingV31Ais {
                         (response, account) ->
                                 AccountTransactionsV31Response
                                         .toAccountTransactionPaginationResponse(response),
-                        localDateTimeSource));
+                        localDateTimeSource,
+                        transactionPaginationHelper));
     }
 }

@@ -8,162 +8,155 @@ import lombok.experimental.UtilityClass;
 public class CrosskeyBaseConstants {
 
     @UtilityClass
-    public static class Urls {
+    public class Urls {
 
-        public static final String TOKEN = "/oidc/v1.0/token";
-        public static final String OAUTH = "/oidc/auth";
-        public static final String ACCOUNT_ACCESS_CONSENTS =
+        public final String TOKEN = "/oidc/v1.0/token";
+        public final String OAUTH = "/oidc/auth";
+        public final String ACCOUNT_ACCESS_CONSENTS =
                 "/open-banking/v3.1/aisp/account-access-consents";
-        public static final String ACCOUNTS = "/open-banking/v3.1/aisp/accounts";
-        public static final String ACCOUNT_BALANCES =
+        public final String ACCOUNTS = "/open-banking/v3.1/aisp/accounts";
+        public final String ACCOUNT_BALANCES =
                 "/open-banking/v3.1/aisp/accounts/{accountId}/balances";
-        public static final String ACCOUNT_TRANSACTIONS =
+        public final String ACCOUNT_TRANSACTIONS =
                 "/open-banking/v3.1/aisp/accounts/{accountId}/transactions";
-        public static final String PAYMENT_ACCESS_CONSENTS =
+        public final String PAYMENT_ACCESS_CONSENTS =
                 "/open-banking/v3.1/pisp/international-payment-consents";
-        public static final String MAKE_PAYMENT = "/open-banking/v3.1/pisp/international-payments";
-        public static final String FETCH_PAYMENT =
+        public final String MAKE_PAYMENT = "/open-banking/v3.1/pisp/international-payments";
+        public final String FETCH_PAYMENT =
                 "/open-banking/v3.1/pisp/international-payments/{internationalPaymentId}";
     }
 
     @UtilityClass
-    public static class StorageKeys {
-        public static final String TOKEN = "OAUTH_TOKEN";
-        public static final String CONSENT = "CONSENT";
-        public static final String INTERNATIONAL_ID = "internationalId";
-        public static final String ACCOUNT_ID = "ACCOUNT_ID";
+    public class StorageKeys {
+        public final String TOKEN = "OAUTH_TOKEN";
+        public final String CONSENT = "CONSENT";
+        public final String INTERNATIONAL_ID = "internationalId";
+        public final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 
     @UtilityClass
-    public static class QueryKeys {
-        public static final String CLIENT_ID = "client_id";
-        public static final String RESPONSE_TYPE = "response_type";
-        public static final String SCOPE = "scope";
-        public static final String REDIRECT_URI = "redirect_uri";
-        public static final String STATE = "state";
-        public static final String GRANT_TYPE = "grant_type";
-        public static final String CODE = "code";
-        public static final String NONCE = "nonce";
-        public static final String REQUEST = "request";
-        public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String RESPONSE_MODE = "response_mode";
+    public class QueryKeys {
+        public final String CLIENT_ID = "client_id";
+        public final String RESPONSE_TYPE = "response_type";
+        public final String SCOPE = "scope";
+        public final String REDIRECT_URI = "redirect_uri";
+        public final String STATE = "state";
+        public final String GRANT_TYPE = "grant_type";
+        public final String CODE = "code";
+        public final String NONCE = "nonce";
+        public final String REQUEST = "request";
+        public final String REFRESH_TOKEN = "refresh_token";
+        public final String RESPONSE_MODE = "response_mode";
     }
 
     @UtilityClass
-    public static class QueryValues {
-        public static final String AUTHORIZATION_CODE = "authorization_code";
-        public static final String RESPONSE_TYPE = "code id_token";
-        public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String CLIENT_CREDENTIALS = "client_credentials";
-        public static final String QUERY = "query";
+    public class QueryValues {
+        public final String AUTHORIZATION_CODE = "authorization_code";
+        public final String RESPONSE_TYPE = "code id_token";
+        public final String REFRESH_TOKEN = "refresh_token";
+        public final String CLIENT_CREDENTIALS = "client_credentials";
+        public final String QUERY = "query";
     }
 
     @UtilityClass
-    public static class HeaderKeys {
-        public static final String X_API_KEY = "X-API-Key";
-        public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
-        public static final String ACCEPT = "Accept";
-        public static final String CONTENT_TYPE = "Content-Type";
-        public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
-        public static final String X_JWS_SIGNATURE = "x-jws-signature";
-        public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
-        public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
+    public class HeaderKeys {
+        public final String X_API_KEY = "X-API-Key";
+        public final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
+        public final String ACCEPT = "Accept";
+        public final String CONTENT_TYPE = "Content-Type";
+        public final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
+        public final String X_JWS_SIGNATURE = "x-jws-signature";
+        public final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
+        public final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
     }
 
     @UtilityClass
-    public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
+    public class ErrorMessages {
+        public final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_BALANCE = "No balance found";
-        public static final String MISSING_TOKEN = "Cannot find token!";
-        public static final String CONSENT_ID_NOT_FOUND =
-                "Consent Id not found in session storage.";
-        public static final String NOT_AUTHENTICATED = "User is not authenticated.";
-        public static final String NOT_AUTHORIZED = "User is not authorized.";
-        public static final String WRONG_INTERVAL = "The request transaction interval";
+        public final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public final String MISSING_TOKEN = "Cannot find token!";
+        public final String CONSENT_ID_NOT_FOUND = "Consent Id not found in session storage.";
+        public final String NOT_AUTHENTICATED = "User is not authenticated.";
+        public final String NOT_AUTHORIZED = "User is not authorized.";
+        public final String WRONG_INTERVAL = "The request transaction interval";
     }
 
     @UtilityClass
-    public static class OIDCValues {
-        public static final String ALG = "RS256";
-        public static final String TYP = "JWT";
-        public static final String TOKEN_ID_PREFIX_ACCOUNT = "urn:crosskey:account:";
-        public static final String TOKEN_ID_PREFIX_PAYMENT = "urn:crosskey:payment:";
-        public static final String SCOPE_OPEN_ID = "openid";
-        public static final String SCOPE_PAYMENTS = SCOPE_OPEN_ID + " payments";
-        public static final String SCOPE_ACCOUNTS = SCOPE_OPEN_ID + " accounts";
-        public static final String SCOPE_ALL = SCOPE_OPEN_ID + " accounts payments";
-        public static final List<String> CONSENT_PERMISSIONS =
+    public class OIDCValues {
+        public final String ALG = "RS256";
+        public final String TYP = "JWT";
+        public final String TOKEN_ID_PREFIX_ACCOUNT = "urn:crosskey:account:";
+        public final String TOKEN_ID_PREFIX_PAYMENT = "urn:crosskey:payment:";
+        public final String SCOPE_OPEN_ID = "openid";
+        public final String SCOPE_PAYMENTS = SCOPE_OPEN_ID + " payments";
+        public final String SCOPE_ACCOUNTS = SCOPE_OPEN_ID + " accounts";
+        public final String SCOPE_ALL = SCOPE_OPEN_ID + " accounts payments";
+        public final List<String> CONSENT_PERMISSIONS =
                 ImmutableList.of(
                         "ReadAccountsDetail",
                         "ReadBalances",
                         "ReadTransactionsDetail",
                         "ReadTransactionsCredits",
                         "ReadTransactionsDebits");
-        public static final String B_64_STR = "b64";
-        public static final Boolean B_64 = Boolean.FALSE;
-        public static final String IAT = "http://openbanking.org.uk/iat";
-        public static final String ISS = "http://openbanking.org.uk/iss";
-        public static final String TAN = "http://openbanking.org.uk/tan";
+        public final String B_64_STR = "b64";
+        public final Boolean B_64 = Boolean.FALSE;
+        public final String IAT = "http://openbanking.org.uk/iat";
+        public final String ISS = "http://openbanking.org.uk/iss";
+        public final String TAN = "http://openbanking.org.uk/tan";
     }
 
     @UtilityClass
-    public static class UrlParameters {
-        public static final String ACCOUNT_ID = "accountId";
-        public static final String INTERNATIONAL_PAYMENT_ID = "internationalPaymentId";
-        public static final String FROM_BOOKING_DATE = "fromBookingDateTime";
-        public static final String TO_BOOKING_DATE = "toBookingDateTime";
+    public class UrlParameters {
+        public final String ACCOUNT_ID = "accountId";
+        public final String INTERNATIONAL_PAYMENT_ID = "internationalPaymentId";
+        public final String FROM_BOOKING_DATE = "fromBookingDateTime";
+        public final String TO_BOOKING_DATE = "toBookingDateTime";
     }
 
     @UtilityClass
-    public static class AccountType {
-        public static final String CREDIT_CARD = "CreditCard";
-        public static final String CURRENT_ACCOUNT = "CurrentAccount";
+    public class AccountType {
+        public final String CREDIT_CARD = "CreditCard";
+        public final String CURRENT_ACCOUNT = "CurrentAccount";
     }
 
     @UtilityClass
-    public static class AccountBalanceType {
-        public static final String BOOKED = "InterimBooked";
-        public static final String AVAILABLE = "InterimAvailable";
+    public class AccountBalanceType {
+        public final String BOOKED = "InterimBooked";
+        public final String AVAILABLE = "InterimAvailable";
     }
 
     @UtilityClass
-    public static class Transactions {
-        public static final String STATUS_BOOKED = "Booked";
-        public static final String DEBIT = "Debit";
-        public static final int MINUTES_MARGIN = 10;
-        public static final int DAYS_WINDOW = 90;
+    public class Transactions {
+        public final String STATUS_BOOKED = "Booked";
+        public final String DEBIT = "Debit";
+        public final int MINUTES_MARGIN = 10;
+        public final int DAYS_WINDOW = 90;
     }
 
     @UtilityClass
-    public static class Format {
-        public static final String TRANSACTION_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ssX";
-        public static final String TRANSACTION_DATE_FETCHER = "yyyy-MM-dd'T'HH:mm:ss";
+    public class Format {
+        public final String TRANSACTION_DATE_FETCHER = "yyyy-MM-dd'T'HH:mm:ss";
     }
 
     @UtilityClass
-    public static class ExceptionMessagePatterns {
-        public static final String UNRECOGNIZED_ACCOUNT_TYPE =
-                "Unrecognized Crosskey account type %s";
-        public static final String CANNOT_MAP_TINK_ACCOUNT =
-                "Cannot map Tink account type : %s to a Crosskey account type.";
-        public static final String CANNOT_MAP_CROSSKEY_ACCOUNT =
-                "Cannot map Crosskey account type : %s to a Tink account type.";
-        public static final String CANNOT_MAP_CROSSKEY_PAYMENT_STATUS =
+    public class ExceptionMessagePatterns {
+        public final String UNRECOGNIZED_ACCOUNT_TYPE = "Unrecognized Crosskey account type %s";
+        public final String CANNOT_MAP_CROSSKEY_PAYMENT_STATUS =
                 "Cannot map Crosskey payment status : %s to Tink payment status.";
-        public static final String CANNOT_MAP_TINK_PAYMENT_STATUS =
+        public final String CANNOT_MAP_TINK_PAYMENT_STATUS =
                 "Cannot map Tink payment status : %s to Crosskey payment status.";
     }
 
     @UtilityClass
-    public static class RequestConstants {
-        public static final String END_TO_END_IDENTIFICATION = "FRESCO.21302.GFX.20";
+    public class RequestConstants {
+        public final String SEPA_CREDIT_TRANSFER = "UK.OBIE.SEPACreditTransfer";
+        public final String PARTY_TO_PARTY = "PartyToParty";
     }
 
     @UtilityClass
-    public static class HttpClient {
-        public static final int MAX_RETRIES_FOR_429_RETRY_AFTER_RESPONSE = 4;
+    public class HttpClient {
+        public final int MAX_RETRIES_FOR_429_RETRY_AFTER_RESPONSE = 4;
     }
 
     public enum IdentificationType {

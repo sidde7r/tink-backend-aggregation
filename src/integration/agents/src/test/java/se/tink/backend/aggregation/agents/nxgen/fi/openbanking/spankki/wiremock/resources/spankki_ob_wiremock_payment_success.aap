@@ -1,0 +1,348 @@
+# EndToEndIdentification is removed on purpose as this value randomly generated
+
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://api.s-pankki.fi/oidc/v1.0/token?client_id=dummyClient&grant_type=client_credentials&scope=openid+accounts+payments
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Fri, 21 Jan 2022 15:57:57 GMT
+Date: Fri, 21 Jan 2022 15:57:57 GMT
+Content-Type: application/json;charset=utf-8
+X-RateLimit-Remaining-Second: 99
+X-RateLimit-Limit-Second: 100
+RateLimit-Limit: 100
+RateLimit-Remaining: 99
+RateLimit-Reset: 1
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Length: 972
+
+{
+  "access_token": "eyJraWQiOiJhN2E3NzI3Zi1iYzQwLTRiMWQtYTQ5Ni04ZDg5N2UyZTJiZjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyRmpNU19xWUg5TlU2NjhfREcxY0NzdHRZbjhfNU95al9QcUF3Tl9VUjBJIiwic2NvcGUiOiJvcGVuaWQgYWNjb3VudHMgcGF5bWVudHMiLCJzdHJvbmdseUF1dGhlbnRpY2F0ZWQiOmZhbHNlLCJpc3MiOiJodHRwczpcL1wvYXBpLnMtcGFua2tpLmZpIiwiY25mIjp7Ing1dCNTMjU2IjoiNGNuLV9wbHdTXzdIM0h6RjR3STBDbEh0RmJ4UGJObGt4b3h3UUwxSTNjRSJ9LCJleHAiOjE2NDI3ODA4NTcsImlhdCI6MTY0Mjc4MDY3NywianRpIjoiMjQ0N2I5MmQtMjM4MC00NWMxLWIzZDgtMWMwODBkOWIzYWI5IiwidGVuYW50Ijoicy1wYW5ra2kifQ.MT5q8zBUqvBqqupIoXETnVomyk61z8bSn7aotiLBdAwR-QIl1nQJbgag5KHDJ46WE09LPX5VVFLtNOS4MNFbGE9nip3I500BQFXq8qvGoiGzqJAI6OuSz5IBTqK5PH5kU2Xjig_hdab6tVk1sl1-qO528RpQ12FtMPHGlF9Yr2eoFyWDrrlODgwjewgmI0vG5lG_ZGzAul2OSBZSaNmqxLmotRK6esV6ddzWY1ZDu3lNryCNEEX8WLg1u0Bwd5Y9OpMlGMYx5OA4Ndqy2pNWT2f27swo6JU68lMO2sP2tJ7Y4c-HIP2fiyheHQVet0-KSxe3fYpsLLWAYSekdpGjag",
+  "scope": "openid accounts payments",
+  "token_type": "Bearer",
+  "expires_in": 180
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://api.s-pankki.fi/open-banking/v3.1/pisp/international-payment-consents
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: s-pankki
+
+{
+  "Data": {
+    "Initiation": {
+      "InstructionIdentification": "610550873500157",
+      "CurrencyOfTransfer": "EUR",
+      "InstructedAmount": {
+        "Amount": "0.01",
+        "Currency": "EUR"
+      },
+      "DebtorAccount": {
+        "Identification": "FI9275931178545771",
+        "SchemeName": "UK.OBIE.IBAN"
+      },
+      "CreditorAccount": {
+        "Identification": "FI9731268662779291",
+        "Name": "Tink Test",
+        "SchemeName": "UK.OBIE.IBAN"
+      },
+      "LocalInstrument": "UK.OBIE.SEPACreditTransfer"
+    },
+    "Status": "AWAITING_AUTHORISATION"
+  },
+  "Risk": {
+    "PaymentContextCode": "PartyToParty"
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Date: Fri, 21 Jan 2022 15:57:58 GMT
+Date: Fri, 21 Jan 2022 15:57:58 GMT
+Content-Type: application/json;charset=utf-8
+RateLimit-Reset: 1
+RateLimit-Limit: 20
+X-RateLimit-Remaining-Second: 19
+X-RateLimit-Limit-Second: 20
+X-RateLimit-Limit-Minute: 600
+RateLimit-Remaining: 19
+X-RateLimit-Remaining-Minute: 599
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Length: 1020
+
+{
+  "Data": {
+    "ConsentId": "fd06fc32-9ad4-482e-a0c1-9a366ad83e0a",
+    "CreationDateTime": "2022-01-21T15:57:58.573Z",
+    "Status": "AwaitingAuthorisation",
+    "StatusUpdateDateTime": "2022-01-21T15:57:58.573Z",
+    "Initiation": {
+      "InstructionIdentification": "610550873500157",
+      "LocalInstrument": "UK.OBIE.SEPACreditTransfer",
+      "CurrencyOfTransfer": "EUR",
+      "InstructedAmount": {
+        "Amount": "0.01",
+        "Currency": "EUR"
+      },
+      "DebtorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FI9275931178545771"
+      },
+      "CreditorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FI9731268662779291",
+        "Name": "Tink Test"
+      }
+    }
+  },
+  "Risk": {
+    "PaymentContextCode": "PartyToParty"
+  },
+  "Links": {
+    "Self": "https://api.s-pankki.fi/open-banking/v3.1/pisp/international-payment-consents/fd06fc32-9ad4-482e-a0c1-9a366ad83e0a"
+  },
+  "Meta": {}
+}
+
+
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+POST https://api.s-pankki.fi/oidc/v1.0/token?client_id=dummyClient&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&grant_type=authorization_code&code=dummyCode
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Fri, 21 Jan 2022 15:58:50 GMT
+Date: Fri, 21 Jan 2022 15:58:50 GMT
+Content-Type: application/json;charset=utf-8
+RateLimit-Reset: 1
+X-RateLimit-Remaining-Second: 99
+X-RateLimit-Limit-Second: 100
+RateLimit-Limit: 100
+RateLimit-Remaining: 99
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Length: 3337
+
+{
+  "access_token": "eyJ6aXAiOiJERUYiLCJraWQiOiI0NWIxM2M0YS01M2QzLTQ2NTktODE1NS1hMGJiODU0NDhhM2EiLCJjdHkiOiJKV1QiLCJ0eXAiOiJKV1QiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiZGlyIn0..rr_JNnCDYURI-Y8S.OsFfc1RadtAtehLjdceMTuWKK4rRnUabFLN3x2I5ip2t6tUzKJLKZCjk14ugBDHUBmyMPdIGg0WFm8M_RICJPozTgzuIEvFGRiwPTg41dRAXYICLhrgZuMLz6zu-6KP_s8R9y0bztfgJ2tRlzMiyIvqty0O0AU0hFEwU82nhv-zW-OGlz-HnIIHnxMYmrJalPV4WJBZpCtNb0nQiaw44ziWS4TLzvmjOhGW68Sv8kV-TGjMv1RDWTSHyQ29I2OQwJUXJMh314JJSQHOzLi2WaHD1qvnOYfSsOiFRy_ers4-MfHjl_fSwF8JjvvrbloZPyB_rRCVNH5b5dyLIwv3DR8rFKgoRAMEenaGucPxnrMl4koSSY9RixbSQV63gKCGY6MxOt06guT97SUGZkgtD9dwej5CAbW48ODfqMTLKYDtlo31jBjkiq3HFFydIIAmMd96o-BFm3GSLFnyKP-A9V2FrsTx7IUa4n8JUMaYZLp5shdb2A97ihqFeIt3zJ1FlLGXhBjtvMjAG7oEz9g83xwtTSp1wXBYiOpQMsQgingucJfWeL_08nnSBN3beSCSi7FvIcRYqMHlAqz3G7b7MwpSrCcyvsvi1odrQi5qTtm3JICP3fvGGEtw6gOiY3RXfUH80vymhuZUJp6YYki8gjUYWtY5zt5v4VZWyfG2dE8Q7L-GvmTW0sRoJiGA6DUhef4UjkD_120WbfDg83MYyssGSJ5VYLjSVj1rdN7WG4KtTfqwvLaNvOC9QsOGTyKNmEVDwS5WZXHyCjV-u3cRDQD7r8xMwsJOIL0WAWH084cWq2nv8KNkorNs24s1rSv3m0Uw9iaopTorC3WInVy_a6RqlVtjmXQiKIaoOfsPn5EZPtSACEwMD66WOm0llvt9vFgedE_Rn87ErKvKp18O-hbMA3le74-TbtlCXt0OxNZQCf7UBQfniPM7CaHiiAPyX0QsH8w1EUulILQdJ9CATGXkukX7eNYh3EybIc5PviJCOkbDlDGr6A8QSr-Wp8FZc8Aa9s23ZnOw3LZkRoS5ubccV3L2Ct918THp6xuPKuJ9PhmtdGUzMD7j6e686RK1zb2Nyn4W-nkfF3Kfdu-ShVJChrvFW_tlPzAjfSiQYZYc2Xz4JAmsc8UbHI96Oi82PZwTn-qYelOX1-yun_KghjKU9qHxdksSTuo7mfScj0cIuFXbi5qMsqWKLgd4jedxQbma8OxyKyx49uN9iFX0nMWLF3g8z1nIytsmkX43IhRB0vlIqV9bWxG39wIpqM9oWj0m_rBQwylCiIntsctty-gft5yYulp-ulqDMsq47VKn76uL6iI8ug0lj4Z2-VLkAdh7Ini7QrkrbqKXGwnpbWYIRvegarc8Qb_KCXwlEk8NTNlfdXEQdTKRuG-dU1CoCsXVy-2rD24aBinBuByOBtyJHpPUQy-FEJLvUmdDAi36Yi4l_LlpH2HIOSAndEafsVpgglOXNlzYokMhUQbVDLAjBAd-_5jbvhkuhvfS9YXabIko_UN9rmXhpayDnAZl7F5htmhYdcdlUSEwQ1kFInQAErQ4BxS4vX5kL0Xe9yqN9IaN3gcNS5w7INHBa9JaTchrRCVpB-alZq3JN_qkiw9tzuBL6Gh48nr-En-sM-_3cHNU--X6yflnsO2QXxQ3ecz30btaStQRYHYc2QtD2N5rplfAboClUEbZdZX_en8cL1PMyU5b8b7rqlCnRUPGNDu6_k8E3P4gUiIDyJA_CqxER0TVzFl29Y2QY5BmJAkpO-0lhxbchuxvP2DlVzsT3zNqYd3COHck2tvLTP2GYyA3IinRX3eHacx6AzuKwt26rBgq1JSsesnKm6wm1qBcPFLp1qjA-mc8ee6iiNLC8OkVi-UtVuaMVNzxJFpdVV5sVNtpvUYC7xv8ASU-vQ5qRs1NP_qWd6HZ_2UdxDm7qyuGfS-8CmTWx_UeJbjQd1w4nnzjSbEsP0GcJI-w-ly9ZIsINm5cX5l07aF6qNtvJAFMQ6YiDcximiJf5CiiNNxCuOP2SglupRNcVSZMgC_QcUXoVSf3qDbwFlySpJxN4MxlyJ48vIm1DuDSXoXhBFtT4Bn_T5geKVY52BZpoXP14bjiLPTUPvaOKZY-cwfi7fL0VImOy7n9c2ApRR6tTtWM8mqqLcnKYxaCyEpVT_X9bKG_oer_9eZ3dEnCqI8F43fwr_Oc43lLJX-T25Y4XTNUeamK8DIj8ZbVqext79yHIEGx4nl4G9ua0NrGAtY-twqpJPdZgt0gKXqpVyPmMDKLOV9_255Qvk-3cE2rN_1piN_12gWhl4WtoYoLsZQh5tpQz5YHBVcMp.yFCbVTDkNwc9tWdFW7xTog",
+  "scope": "openid payments",
+  "id_token": "eyJraWQiOiJhN2E3NzI3Zi1iYzQwLTRiMWQtYTQ5Ni04ZDg5N2UyZTJiZjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpLnMtcGFua2tpLmZpIiwiYXVkIjoiMkZqTVNfcVlIOU5VNjY4X0RHMWNDc3R0WW44XzVPeWpfUHFBd05fVVIwSSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6InVybjpjcm9zc2tleTpwYXltZW50OmZkMDZmYzMyLTlhZDQtNDgyZS1hMGMxLTlhMzY2YWQ4M2UwYSIsImV4cCI6MTY0Mjc4MTYzMCwiaWF0IjoxNjQyNzgwNzMwfQ.PGk-wUn-6h18b8rTj9sDd9Emuc1tqGetjmpil6kJF3zOV2aW2Fcyexus4d9CmpFOee-ffXRqGaKyHjrw-ziq-szciJiWR_vFvHb-gWiyvyffX7gbmkyU94Hzq0Brn0oNyAPSi3hokI9Z78sfeOohlCBKATRjaPoiAk781rClERyoU_0_WBgatmOwjR9AWE-p-bLi3W9CYgWM0fJKN5IKHMp6qxBtXXXcH64-jseMbdUiSAtxqCpn4rd_j7aogMZHRqtk4KvZtUCHDrndzSkgXzwl2vTT_xac8ya5SOpXyYv-IQmVYOCWSkb4fuaFBJdAvSs5dxTYI-F5t0W94XOeCA",
+  "token_type": "Bearer",
+  "expires_in": 180
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+POST https://api.s-pankki.fi/open-banking/v3.1/pisp/international-payments
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: s-pankki
+
+{
+  "Data": {
+    "ConsentId": "fd06fc32-9ad4-482e-a0c1-9a366ad83e0a",
+    "Initiation": {
+      "InstructionIdentification": "610550873500157",
+      "CurrencyOfTransfer": "EUR",
+      "InstructedAmount": {
+        "Amount": "0.01",
+        "Currency": "EUR"
+      },
+      "DebtorAccount": {
+        "Identification": "FI9275931178545771",
+        "SchemeName": "UK.OBIE.IBAN"
+      },
+      "CreditorAccount": {
+        "Identification": "FI9731268662779291",
+        "Name": "Tink Test",
+        "SchemeName": "UK.OBIE.IBAN"
+      },
+      "LocalInstrument": "UK.OBIE.SEPACreditTransfer"
+    },
+    "Status": "AwaitingAuthorisation"
+  },
+  "Risk": {
+    "PaymentContextCode": "PartyToParty"
+  }
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+201
+Date: Fri, 21 Jan 2022 15:58:51 GMT
+Date: Fri, 21 Jan 2022 15:58:52 GMT
+Content-Type: application/json;charset=utf-8
+RateLimit-Reset: 1
+X-RateLimit-Remaining-Second: 19
+X-RateLimit-Remaining-Minute: 599
+X-RateLimit-Limit-Minute: 600
+RateLimit-Limit: 20
+RateLimit-Remaining: 19
+X-RateLimit-Limit-Second: 20
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+x-jws-signature: eyJiNjQiOmZhbHNlLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lhdCI6MTY0Mjc4MDczMiwiaHR0cDpcL1wvb3BlbmJhbmtpbmcub3JnLnVrXC90YW4iOiJhcGkucy1wYW5ra2kuZmkiLCJjcml0IjpbImI2NCIsImh0dHA6XC9cL29wZW5iYW5raW5nLm9yZy51a1wvaWF0IiwiaHR0cDpcL1wvb3BlbmJhbmtpbmcub3JnLnVrXC90YW4iLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lzcyJdLCJraWQiOiJhN2E3NzI3Zi1iYzQwLTRiMWQtYTQ5Ni04ZDg5N2UyZTJiZjIiLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lzcyI6ImF1dGggc2VydmVyIiwiYWxnIjoiUlMyNTYifQ..ZLKdwJbFZaCmCtrFyDMR6KnME3x3odL6lCzvShwdPEH8lopdeA9LLysZ5-M05nra_HCQ4tFU4jHxchBJvEStZD1rKkLvxR4y4Rxm5eSGBO2dABsAnist-rGv7mXUCmYQC0GzUIt3WiwyxslcE1V0OB7EhHx8z_lAg5cA5mNZ-3vgnKSIpDXJKFq7q1I3DVyC54xiu3BeB3wa_YVHTdDeP6dht96gS5_Xv8-sWE69wGdaCqAnIvF12FDCvEREzPRVjj_D4Nk5mQ0rO329wKlTYVe90tfz0WE2yTIpPT3Pd6YZdrbQfQqcZnbW-9AZjlvxWcen2gOzOZacXzkUZ835rw
+Content-Length: 811
+
+{
+  "Data": {
+    "InternationalPaymentId": "c67e7e851dd44a01b2440aa4adc388c6",
+    "ConsentId": "fd06fc32-9ad4-482e-a0c1-9a366ad83e0a",
+    "CreationDateTime": "2022-01-21T15:58:52.786507Z",
+    "Status": "AcceptedSettlementInProcess",
+    "StatusUpdateDateTime": "2022-01-21T15:58:50.121Z",
+    "Initiation": {
+      "InstructionIdentification": "610550873500157",
+      "LocalInstrument": "UK.OBIE.SEPACreditTransfer",
+      "CurrencyOfTransfer": "EUR",
+      "InstructedAmount": {
+        "Amount": "0.01",
+        "Currency": "EUR"
+      },
+      "DebtorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FI9275931178545771"
+      },
+      "CreditorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FI9731268662779291",
+        "Name": "Tink Test"
+      }
+    }
+  },
+  "Links": {
+    "Self": "https://api.s-pankki.fi/open-banking/v3.1/pisp/international-payments/c67e7e851dd44a01b2440aa4adc388c6"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://api.s-pankki.fi/open-banking/v3.1/pisp/international-payments/c67e7e851dd44a01b2440aa4adc388c6
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: s-pankki
+
+-----------------------------------------------------------------------------------
+RESPONSE 5 SET 5
+200
+Date: Fri, 21 Jan 2022 15:58:53 GMT
+Date: Fri, 21 Jan 2022 15:58:53 GMT
+Content-Type: application/json;charset=utf-8
+RateLimit-Limit: 20
+RateLimit-Remaining: 19
+RateLimit-Reset: 1
+X-RateLimit-Limit-Second: 20
+X-RateLimit-Remaining-Second: 19
+X-RateLimit-Remaining-Minute: 599
+X-RateLimit-Limit-Minute: 600
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+x-jws-signature: eyJiNjQiOmZhbHNlLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lhdCI6MTY0Mjc4MDczMywiaHR0cDpcL1wvb3BlbmJhbmtpbmcub3JnLnVrXC90YW4iOiJhcGkucy1wYW5ra2kuZmkiLCJjcml0IjpbImI2NCIsImh0dHA6XC9cL29wZW5iYW5raW5nLm9yZy51a1wvaWF0IiwiaHR0cDpcL1wvb3BlbmJhbmtpbmcub3JnLnVrXC90YW4iLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lzcyJdLCJraWQiOiJhN2E3NzI3Zi1iYzQwLTRiMWQtYTQ5Ni04ZDg5N2UyZTJiZjIiLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lzcyI6ImF1dGggc2VydmVyIiwiYWxnIjoiUlMyNTYifQ..t9YfgNbCgIo6LdkDGkS8a_Ry7e2_y0nhhgPoESpBDlgYkRCj0bi_hU1WL0Lj2N8GnGkgyH2JcSQ1CY_yR3vGVmqmM0F5q94YTQnyFEjL-vAhZYBZD6y0iO7lgJpcDso8S7dyOgbrH1h5297elHTd20fprz9_jpT4CvtH--phQxGH99HtDBIYY3nEI5lQ191hcKO3b9DQ5tQIjwWEqBBVi_eZ81_HOW60MuxI1nrg39L2ykRevjEVJVYg1kTD-8-b_5UKZtHTYgcgDk1CNcI7AMcvNGjO5VIUgD2jinWjreyJD4wzmROw60uUK_6zjw63eMTJOpHrKwP61_AdX2uWEA
+Content-Length: 811
+
+{
+  "Data": {
+    "InternationalPaymentId": "c67e7e851dd44a01b2440aa4adc388c6",
+    "ConsentId": "fd06fc32-9ad4-482e-a0c1-9a366ad83e0a",
+    "CreationDateTime": "2022-01-21T15:58:52.786507Z",
+    "Status": "AcceptedSettlementInProcess",
+    "StatusUpdateDateTime": "2022-01-21T15:58:50.121Z",
+    "Initiation": {
+      "InstructionIdentification": "610550873500157",
+      "LocalInstrument": "UK.OBIE.SEPACreditTransfer",
+      "CurrencyOfTransfer": "EUR",
+      "InstructedAmount": {
+        "Amount": "0.01",
+        "Currency": "EUR"
+      },
+      "DebtorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FI9275931178545771"
+      },
+      "CreditorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FI9731268662779291",
+        "Name": "Tink Test"
+      }
+    }
+  },
+  "Links": {
+    "Self": "https://api.s-pankki.fi/open-banking/v3.1/pisp/international-payments/c67e7e851dd44a01b2440aa4adc388c6"
+  },
+  "Meta": {}
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6 MATCH 5
+GET https://api.s-pankki.fi/open-banking/v3.1/pisp/international-payments/c67e7e851dd44a01b2440aa4adc388c6
+Accept: application/json
+Content-Type: application/json
+x-fapi-financial-id: s-pankki
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Fri, 21 Jan 2022 15:58:53 GMT
+Date: Fri, 21 Jan 2022 15:58:53 GMT
+Content-Type: application/json;charset=utf-8
+RateLimit-Limit: 20
+RateLimit-Remaining: 19
+RateLimit-Reset: 1
+X-RateLimit-Limit-Second: 20
+X-RateLimit-Remaining-Second: 19
+X-RateLimit-Remaining-Minute: 599
+X-RateLimit-Limit-Minute: 600
+Expires: 0
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+x-jws-signature: eyJiNjQiOmZhbHNlLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lhdCI6MTY0Mjc4MDczMywiaHR0cDpcL1wvb3BlbmJhbmtpbmcub3JnLnVrXC90YW4iOiJhcGkucy1wYW5ra2kuZmkiLCJjcml0IjpbImI2NCIsImh0dHA6XC9cL29wZW5iYW5raW5nLm9yZy51a1wvaWF0IiwiaHR0cDpcL1wvb3BlbmJhbmtpbmcub3JnLnVrXC90YW4iLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lzcyJdLCJraWQiOiJhN2E3NzI3Zi1iYzQwLTRiMWQtYTQ5Ni04ZDg5N2UyZTJiZjIiLCJodHRwOlwvXC9vcGVuYmFua2luZy5vcmcudWtcL2lzcyI6ImF1dGggc2VydmVyIiwiYWxnIjoiUlMyNTYifQ..t9YfgNbCgIo6LdkDGkS8a_Ry7e2_y0nhhgPoESpBDlgYkRCj0bi_hU1WL0Lj2N8GnGkgyH2JcSQ1CY_yR3vGVmqmM0F5q94YTQnyFEjL-vAhZYBZD6y0iO7lgJpcDso8S7dyOgbrH1h5297elHTd20fprz9_jpT4CvtH--phQxGH99HtDBIYY3nEI5lQ191hcKO3b9DQ5tQIjwWEqBBVi_eZ81_HOW60MuxI1nrg39L2ykRevjEVJVYg1kTD-8-b_5UKZtHTYgcgDk1CNcI7AMcvNGjO5VIUgD2jinWjreyJD4wzmROw60uUK_6zjw63eMTJOpHrKwP61_AdX2uWEA
+
+{
+  "Data": {
+    "InternationalPaymentId": "c67e7e851dd44a01b2440aa4adc388c6",
+    "ConsentId": "fd06fc32-9ad4-482e-a0c1-9a366ad83e0a",
+    "CreationDateTime": "2022-01-21T15:58:52.786507Z",
+    "Status": "AcceptedSettlementCompleted",
+    "StatusUpdateDateTime": "2022-01-21T15:58:50.121Z",
+    "Initiation": {
+      "InstructionIdentification": "610550873500157",
+      "LocalInstrument": "UK.OBIE.SEPACreditTransfer",
+      "CurrencyOfTransfer": "EUR",
+      "InstructedAmount": {
+        "Amount": "0.01",
+        "Currency": "EUR"
+      },
+      "DebtorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FI9275931178545771"
+      },
+      "CreditorAccount": {
+        "SchemeName": "UK.OBIE.IBAN",
+        "Identification": "FI9731268662779291",
+        "Name": "Tink Test"
+      }
+    }
+  },
+  "Links": {
+    "Self": "https://api.s-pankki.fi/open-banking/v3.1/pisp/international-payments/c67e7e851dd44a01b2440aa4adc388c6"
+  },
+  "Meta": {}
+}

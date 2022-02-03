@@ -5,8 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy.UpperCamelCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.accessconsents.RiskEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.entity.DataEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.entity.RiskEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.enums.CrosskeyPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -33,7 +34,7 @@ public class CrosskeyPaymentDetails {
 
     @JsonIgnore
     public static CrosskeyPaymentDetails of(PaymentRequest paymentRequest) {
-        RiskEntity risk = new RiskEntity();
+        RiskEntity risk = new RiskEntity(CrosskeyBaseConstants.RequestConstants.PARTY_TO_PARTY);
         DataEntity data = DataEntity.of(paymentRequest);
 
         return new Builder().withRisk(risk).withData(data).build();
@@ -44,12 +45,12 @@ public class CrosskeyPaymentDetails {
     }
 
     @JsonIgnore
-    public PaymentResponse toTinkPayment(PaymentRequest paymentRequest) {
+    public PaymentResponse toTinkPayment(PaymentRequest paymentRequest, String paymentStat) {
         Payment.Builder builder = new Payment.Builder();
 
         PaymentStatus paymentStatus =
                 CrosskeyPaymentStatus.mapToTinkPaymentStatus(
-                        CrosskeyPaymentStatus.ACCEPTED_SETTLEMENT_COMPLETED);
+                        CrosskeyPaymentStatus.fromString(paymentStat));
 
         builder.withCurrency(paymentRequest.getPayment().getCurrency())
                 .withStatus(paymentStatus)

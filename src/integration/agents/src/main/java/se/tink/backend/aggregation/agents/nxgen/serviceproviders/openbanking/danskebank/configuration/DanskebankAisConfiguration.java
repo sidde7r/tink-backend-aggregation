@@ -54,6 +54,11 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
+    public boolean isFetchingTransactionsFromTheNewestToTheOldest() {
+        return true;
+    }
+
+    @Override
     public ImmutableSet<UkObScope> getAvailablePermissions() {
         return ImmutableSet.<UkObScope>builder()
                 .add(

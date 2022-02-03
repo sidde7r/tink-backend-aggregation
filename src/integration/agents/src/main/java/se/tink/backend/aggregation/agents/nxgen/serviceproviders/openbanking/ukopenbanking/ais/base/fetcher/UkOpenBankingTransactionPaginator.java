@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data.FetchedTransactionsDataStorage;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -50,10 +51,11 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     private final TransactionConverter<ResponseType, AccountType> transactionConverter;
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final FetchedTransactionsDataStorage fetchedTransactionsDataStorage;
-    private String lastAccount;
-    private int paginationCount;
+    private final TransactionPaginationHelper paginationHelper;
     private final UnleashClient unleashClient;
     private final Toggle toggle;
+    private String lastAccount;
+    private int paginationCount;
 
     /**
      * @param apiClient Ukob api client
@@ -70,15 +72,17 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             UkOpenBankingApiClient apiClient,
             Class<ResponseType> responseType,
             TransactionConverter<ResponseType, AccountType> transactionConverter,
-            LocalDateTimeSource localDateTimeSource) {
+            LocalDateTimeSource localDateTimeSource,
+            TransactionPaginationHelper paginationHelper) {
         this.apiClient = apiClient;
         this.responseType = responseType;
         this.transactionConverter = transactionConverter;
         this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.fetchedTransactionsDataStorage = new FetchedTransactionsDataStorage(persistentStorage);
         this.localDateTimeSource = localDateTimeSource;
-        unleashClient = componentProvider.getUnleashClient();
-        toggle =
+        this.paginationHelper = paginationHelper;
+        this.unleashClient = componentProvider.getUnleashClient();
+        this.toggle =
                 Toggle.of("UK_SET_MAX_ALLOWED_NUMBER_OF_MONTHS_TO_24")
                         .context(
                                 UnleashContext.builder()
@@ -158,17 +162,12 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     protected String initialisePaginationKeyIfNull(AccountType account, String key) {
         if (key == null) {
             final LocalDateTime fromDate = calculateFromBookingDate(account.getApiIdentifier());
+            if (!ukOpenBankingAisConfig.isFetchingTransactionsFromTheNewestToTheOldest()) {
+                return createRequestPaginationKey(
+                        account, getTransactionDateLimit(account, fromDate));
+            }
 
-            /*
-            We need to send in fromDate when fetching transactions to improve the performance
-            and also to adhere to OpenBanking standards of not fetching transactions more than 90
-            days old with refresh token. For the very first time when we add the Bank to the app or
-            fetch transactions we will try to fetch it for 23 months and after that for every refresh
-            it will be for last 89 days.
-            This is according to Article 10 of UkOpenBanking
-            https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1009778990/How+the+OBIE+Standard+can+be+used+in+relation+to+RTS+Article+10
-             */
-            key = createRequestPaginationKey(account, fromDate);
+            return createRequestPaginationKey(account, fromDate);
         }
         return key;
     }
@@ -245,5 +244,26 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                 "[UK Transaction Paginator] Fetching transactions since "
                         + startingDateForFetchingAsMuchAsPossible);
         return startingDateForFetchingAsMuchAsPossible;
+    }
+
+    private LocalDateTime getTransactionDateLimit(AccountType account, LocalDateTime fromDate) {
+        LocalDateTime historyTransactionDate =
+                paginationHelper
+                        .getTransactionDateLimit(account)
+                        .map(date -> date.toInstant().atZone(DEFAULT_ZONE_ID).toLocalDateTime())
+                        .orElse(fromDate);
+
+        if (historyTransactionDate.isAfter(fromDate)) {
+            log.info(
+                    "[UkOpenBankingTransactionPaginator] History transaction date is after proposed fromDate -> set historyTransactionDate as fromBookingDateTime to avoid fetching transactions which we already fetched in the past: fromDate is {} and historyTransactionDate is {}",
+                    fromDate,
+                    historyTransactionDate);
+            return historyTransactionDate;
+        }
+        log.info(
+                "[UkOpenBankingTransactionPaginator] No need for adjustments or first login by user -> fromDate: {}, lastTransactionDate: {}",
+                fromDate,
+                historyTransactionDate);
+        return fromDate;
     }
 }
