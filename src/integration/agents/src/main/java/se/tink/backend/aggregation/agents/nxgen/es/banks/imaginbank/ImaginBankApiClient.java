@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.DefaultPhoneValues.DEFAULT_APP_INSTALLATION_ID;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.DefaultPhoneValues.DEFAULT_USER_AGENT;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.Storage.APP_INSTALLATION_ID;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.Storage.USER_AGENT_ID;
 
@@ -235,31 +237,41 @@ public class ImaginBankApiClient {
                 .accept(MediaType.WILDCARD);
     }
 
-    private String retrieveUserAgent() {
+    private String getAppInstallationIdFromPersistentStorage(String username) {
+        String appInstallationId = persistentStorage.get(APP_INSTALLATION_ID);
+        if (appInstallationId == null) {
+            appInstallationId =
+                    CaixaRegistrationDataGenerator.generateAppInstallationId(username, false);
+            persistentStorage.put(APP_INSTALLATION_ID, appInstallationId);
+        }
+        return appInstallationId;
+    }
+
+    private String getUserAgentFromPersistentStorage(String username) {
         String userAgent = persistentStorage.get(USER_AGENT_ID);
         if (userAgent == null) {
             userAgent =
                     CaixaRegistrationDataGenerator.generateUserAgent(
-                            imaginBankSessionStorage.getUsername(),
-                            false,
-                            HeaderValues.UA_PREFIX,
-                            HeaderValues.UA_APP_VERSION);
-            if (StringUtils.isNotEmpty(imaginBankSessionStorage.getUsername())) {
-                persistentStorage.put(USER_AGENT_ID, userAgent);
-            }
+                            username, false, HeaderValues.UA_PREFIX, HeaderValues.UA_APP_VERSION);
+            persistentStorage.put(USER_AGENT_ID, userAgent);
+        }
+        return userAgent;
+    }
+
+    private String retrieveUserAgent() {
+        String sessionUsername = imaginBankSessionStorage.getUsername();
+        String userAgent = DEFAULT_USER_AGENT;
+        if (StringUtils.isNotEmpty(sessionUsername)) {
+            userAgent = getUserAgentFromPersistentStorage(sessionUsername);
         }
         return userAgent;
     }
 
     private String retrieveAppInstallationId() {
-        String appInstallationId = persistentStorage.get(APP_INSTALLATION_ID);
-        if (appInstallationId == null) {
-            appInstallationId =
-                    CaixaRegistrationDataGenerator.generateAppInstallationId(
-                            imaginBankSessionStorage.getUsername(), false);
-            if (StringUtils.isNotEmpty(imaginBankSessionStorage.getUsername())) {
-                persistentStorage.put(APP_INSTALLATION_ID, appInstallationId);
-            }
+        String sessionUsername = imaginBankSessionStorage.getUsername();
+        String appInstallationId = DEFAULT_APP_INSTALLATION_ID;
+        if (StringUtils.isNotEmpty(sessionUsername)) {
+            appInstallationId = getAppInstallationIdFromPersistentStorage(sessionUsername);
         }
         return appInstallationId;
     }
