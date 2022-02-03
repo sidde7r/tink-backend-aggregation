@@ -21,6 +21,10 @@ public class TppSecretsServiceConfiguration {
     private boolean enabled;
     private String environment;
     private boolean enabledRetryPolicy;
+    private boolean useSecretsServiceInternalClient;
+    // the percentage of rolling out to SecretsServiceInternalClient when
+    // useSecretsServiceInternalClient is enabled
+    private String rate;
 
     public boolean isEnabled() {
         return enabled;
@@ -63,5 +67,13 @@ public class TppSecretsServiceConfiguration {
 
     public boolean isEnabledRetryPolicy() {
         return enabledRetryPolicy;
+    }
+
+    public boolean isUseSecretsServiceInternalClient() {
+        return useSecretsServiceInternalClient;
+    }
+
+    public String getRate() {
+        return rate;
     }
 }

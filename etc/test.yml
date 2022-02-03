@@ -7646,6 +7646,7 @@ agentsServiceConfiguration:
     enabled: false
     host: tink-integration-eidas-secrets-service.eidas-secrets-service.svc.cluster.local
     port: 30787
+    useSecretsServiceInternalClient: false
 cache:
   enabled: true
   hosts: 172.16.42.2:11211
