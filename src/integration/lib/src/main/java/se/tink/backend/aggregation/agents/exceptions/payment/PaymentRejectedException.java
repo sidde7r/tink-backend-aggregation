@@ -29,6 +29,10 @@ public class PaymentRejectedException extends PaymentException {
         super(MESSAGE, InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION, throwable);
     }
 
+    public PaymentRejectedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public static PaymentRejectedException bankPaymentServiceUnavailable() {
         return new PaymentRejectedException(TEMPORARILY_UNAVAILABLE_MESSAGE);
     }

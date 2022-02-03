@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankverlag.BankverlagErrorHandler.ErrorSource;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationRequest;
@@ -89,13 +90,26 @@ public class BankverlagApiClient {
     }
 
     public AuthorizationResponse selectAuthorizationMethod(String url, String methodId) {
-        return requestBuilder
-                .createRequest(new URL(url))
-                .put(AuthorizationResponse.class, new SelectAuthorizationMethodRequest(methodId));
+        try {
+            return requestBuilder
+                    .createRequest(new URL(url))
+                    .put(
+                            AuthorizationResponse.class,
+                            new SelectAuthorizationMethodRequest(methodId));
+        } catch (HttpResponseException httpResponseException) {
+            errorHandler.handleError(
+                    httpResponseException, ErrorSource.SELECT_AUTHORIZATION_METHOD);
+            throw httpResponseException;
+        }
     }
 
     public AuthorizationResponse getAuthorizationStatus(String url) {
-        return requestBuilder.createRequest(new URL(url)).get(AuthorizationResponse.class);
+        try {
+            return requestBuilder.createRequest(new URL(url)).get(AuthorizationResponse.class);
+        } catch (HttpResponseException httpResponseException) {
+            errorHandler.handleError(httpResponseException, ErrorSource.GET_AUTHORIZATION_STATUS);
+            throw httpResponseException;
+        }
     }
 
     public AuthorizationResponse finalizeAuthorization(String url, String otp) {

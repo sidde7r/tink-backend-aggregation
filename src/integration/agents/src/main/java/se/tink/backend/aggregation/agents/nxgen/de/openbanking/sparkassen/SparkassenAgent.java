@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.errors.RequestNotProcessedRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.SparkassenTransactionsFetcher;
-import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.payment.SparkassenPaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
@@ -159,8 +159,9 @@ public class SparkassenAgent extends NextGenerationAgent
                                 catalog, new SparkassenIconUrlMapper()),
                         new SparkassenDecoupledFieldBuilder(catalog),
                         new ScaMethodFilter());
-        BasePaymentExecutor paymentExecutor =
-                new BasePaymentExecutor(apiClient, sparkassenPaymentAuthenticator, sessionStorage);
+        SparkassenPaymentExecutor paymentExecutor =
+                new SparkassenPaymentExecutor(
+                        apiClient, sparkassenPaymentAuthenticator, sessionStorage);
 
         return Optional.of(
                 new PaymentController(

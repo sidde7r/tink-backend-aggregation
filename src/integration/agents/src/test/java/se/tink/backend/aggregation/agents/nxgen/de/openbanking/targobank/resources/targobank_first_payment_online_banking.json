@@ -1,0 +1,14 @@
+{
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "PAYMENT_FAILED",
+      "text": "9380:Berechtigung reicht zur Ausführung des Auftrags nicht aus."
+    },
+    {
+      "category": "ERROR",
+      "code": "PAYMENT_FAILED",
+      "text": "3999:***Sie müssen die erste Echtzeitüberweisung im Online-Banking ausführen.***"
+    }
+  ]
+}
