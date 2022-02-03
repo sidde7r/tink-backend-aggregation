@@ -16,7 +16,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/aib",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/aib",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
@@ -29,12 +29,4 @@ junit_test(
         "//third_party:com_github_tomakehurst_wiremock",
         "@tink_backend//src/libraries/account_identifier",
     ],
-)
-
-codeowners(
-    name = "owners",
-    teams = [
-        "@tink-ab/aggregation-fluffy-maintainer",
-    ],
-    visibility = ["//:__pkg__"],
 )

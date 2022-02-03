@@ -199,4 +199,13 @@ public class ImaginBankConstants {
         public static final String ENROLLMENT_REQUIRED = "S";
         public static final String ENROLLMENT_OK = "OK";
     }
+
+    public static final class DefaultPhoneValues {
+        public static final String DEFAULT_APP_INSTALLATION_ID =
+                "eIAPPLh10,4OdNqEyAYgH2BKRpCh3BImiYuY3_z";
+        public static final String DEFAULT_USER_AGENT =
+                "IMAGINBANK_"
+                        + DEFAULT_APP_INSTALLATION_ID
+                        + "_IPHONE_0.0.0_Apple_iPhone10,4_14.4.2_ADAM";
+    }
 }

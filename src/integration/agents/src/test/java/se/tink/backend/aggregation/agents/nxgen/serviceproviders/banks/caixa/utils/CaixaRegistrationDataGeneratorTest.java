@@ -13,9 +13,15 @@ public class CaixaRegistrationDataGeneratorTest {
     private static final String APP_UUID = "E9606BD1-D916-4CB0-A6D6-A7AA1176A177";
     private static final String IDENTIFIER_ID = "mXLzxVM9zY2W5vsh4r8x7DJ9JIMp";
     private static final String USERNAME = "01234678";
-    private static final String USER_AGENT =
-            "IMAGINBANK_eIAPPLh10,4RFTRs-LgSBHFoVN30ZFEYP46uF4H_IPHONE_0.0.0_Apple_iPhone10,4_14.4.2_ADAM";
     private static final String APP_INSTALLATION_ID = "eIAPPLh10,4RFTRs-LgSBHFoVN30ZFEYP46uF4H";
+    private static final String USER_AGENT =
+            "IMAGINBANK_" + APP_INSTALLATION_ID + "_IPHONE_0.0.0_Apple_iPhone10,4_14.4.2_ADAM";
+    private static final String DEFAULT_APP_INSTALLATION_ID =
+            "eIAPPLh10,4OdNqEyAYgH2BKRpCh3BImiYuY3_z";
+    private static final String DEFAULT_USER_AGENT =
+            "IMAGINBANK_"
+                    + DEFAULT_APP_INSTALLATION_ID
+                    + "_IPHONE_0.0.0_Apple_iPhone10,4_14.4.2_ADAM";
     private static final String DUMMY_PREFIX = "IMAGINBANK_";
     private static final String DUMMY_APP_VERSION = "0.0.0";
 
@@ -45,5 +51,23 @@ public class CaixaRegistrationDataGeneratorTest {
         String result = CaixaRegistrationDataGenerator.generateAppInstallationId(USERNAME, false);
         // then
         assertThat(result).isEqualTo(APP_INSTALLATION_ID);
+    }
+
+    @Test
+    public void generateDefaultUserAgent() {
+        // when
+        String result =
+                CaixaRegistrationDataGenerator.generateUserAgent(
+                        "", false, DUMMY_PREFIX, DUMMY_APP_VERSION);
+        // then
+        assertThat(result).isEqualTo(DEFAULT_USER_AGENT);
+    }
+
+    @Test
+    public void generateDefaultAppInstallationId() {
+        // when
+        String result = CaixaRegistrationDataGenerator.generateAppInstallationId("", false);
+        // then
+        assertThat(result).isEqualTo(DEFAULT_APP_INSTALLATION_ID);
     }
 }

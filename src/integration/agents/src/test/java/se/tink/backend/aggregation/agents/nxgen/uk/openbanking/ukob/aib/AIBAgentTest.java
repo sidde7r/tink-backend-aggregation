@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.aib;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.aib;
 
 import java.time.LocalDate;
 import org.junit.Test;
