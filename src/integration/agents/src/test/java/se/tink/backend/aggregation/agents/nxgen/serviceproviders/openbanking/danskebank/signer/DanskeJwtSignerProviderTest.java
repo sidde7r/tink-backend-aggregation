@@ -9,6 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.agent.sdk.operation.Provider;
+import se.tink.agent.sdk.operation.StaticBankCredentials;
+import se.tink.agent.sdk.operation.User;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankEUConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer.EidasProxyWithFallbackJwtSigner;
@@ -60,7 +63,10 @@ public class DanskeJwtSignerProviderTest {
                         mock(AgentTemporaryStorageProvider.class),
                         mock(MockServerUrlProvider.class),
                         mock(ProxyProfilesProvider.class),
-                        mock(QSealcSignerProvider.class));
+                        mock(QSealcSignerProvider.class),
+                        mock(User.class),
+                        mock(StaticBankCredentials.class),
+                        mock(Provider.class));
         EidasIdentity eidasIdentity =
                 new EidasIdentity(
                         "cluster_id", APP_ID, "DEFAULT", "", DanskebankEUConfiguration.class);
