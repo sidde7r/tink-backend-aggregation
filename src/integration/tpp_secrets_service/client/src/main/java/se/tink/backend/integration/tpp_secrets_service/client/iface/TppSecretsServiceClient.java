@@ -11,6 +11,8 @@ public interface TppSecretsServiceClient {
 
     void ping();
 
+    boolean isEnabled();
+
     // control if secrets service new client should be used
     // will be removed after the migration
     boolean isUseSecretsServiceInternalClient();

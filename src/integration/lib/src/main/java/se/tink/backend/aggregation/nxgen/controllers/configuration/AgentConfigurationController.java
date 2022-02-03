@@ -117,7 +117,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             log.warn("appId cannot be empty/null for clusterId: {}", clusterId);
         }
 
-        this.tppSecretsServiceEnabled = tppSecretsServiceEnabled;
+        this.tppSecretsServiceEnabled = tppSecretsServiceClient.isEnabled();
         this.tppSecretsServiceClient = tppSecretsServiceClient;
         this.secretsServiceInternalClient = secretsServiceInternalClient;
         if (!tppSecretsServiceEnabled) {
@@ -134,6 +134,16 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         this.redirectUrl = redirectUrl;
         this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
+
+        if (this.tppSecretsServiceEnabled != tppSecretsServiceEnabled) {
+            log.info(
+                    "tppSecretsServiceEnabled {} does not equal to its original value {} for appId {} providerId {} and clusterId {}",
+                    tppSecretsServiceEnabled,
+                    this.tppSecretsServiceEnabled,
+                    this.appId,
+                    this.providerId,
+                    this.clusterId);
+        }
 
         if (isTestProvider) {
             log.info(

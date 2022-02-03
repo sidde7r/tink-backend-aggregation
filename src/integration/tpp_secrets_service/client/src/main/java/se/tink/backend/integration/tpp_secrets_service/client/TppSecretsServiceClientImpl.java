@@ -124,6 +124,11 @@ public final class TppSecretsServiceClientImpl extends ManagedSafeStop
     }
 
     @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
     public boolean isUseSecretsServiceInternalClient() {
         return useSecretsServiceInternalClient;
     }
