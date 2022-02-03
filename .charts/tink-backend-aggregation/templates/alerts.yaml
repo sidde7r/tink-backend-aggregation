@@ -97,5 +97,15 @@ spec:
       who: aggregation-agent-platform
     annotations:
       description: At least 1 item evicted
+
+  - alert: HighMemcachedMemoryUsage
+    expr: sum(aws_elasticache_bytes_used_for_cache_items_average{cache_cluster_id="main-mirrored",environment="$env", cluster="$cluster"}) by (instance) > 8589934591
+    for: 1m
+    labels:
+      severity: urgent
+      priority: P2
+      who: aggregation-agent-platform
+    annotations:
+      description: High cache memory usage (over 8.5 GiB)
   {{- end }}
 {{ end }}
