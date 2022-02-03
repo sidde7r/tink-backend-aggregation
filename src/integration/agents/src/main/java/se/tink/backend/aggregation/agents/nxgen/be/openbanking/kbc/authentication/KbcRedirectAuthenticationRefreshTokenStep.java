@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticati
 
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationRefreshTokenStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCall;
@@ -13,15 +10,19 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authent
 public class KbcRedirectAuthenticationRefreshTokenStep
         extends RedirectAuthenticationRefreshTokenStep {
 
+    private final boolean userAvailableForInteraction;
+
     public KbcRedirectAuthenticationRefreshTokenStep(
             RedirectRefreshTokenCall redirectRefreshTokenCall,
             AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
                     agentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory,
-            RefreshableAccessTokenValidator tokensValidator) {
+            RefreshableAccessTokenValidator tokensValidator,
+            boolean userAvailableForInteraction) {
         super(
                 redirectRefreshTokenCall,
                 agentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory,
                 tokensValidator);
+        this.userAvailableForInteraction = userAvailableForInteraction;
     }
 
     @Override
@@ -29,11 +30,11 @@ public class KbcRedirectAuthenticationRefreshTokenStep
             AgentProceedNextStepAuthenticationRequest authenticationProcessRequest) {
         AgentAuthenticationResult authenticationResult =
                 super.execute(authenticationProcessRequest);
-        if (authenticationResult instanceof AgentSucceededAuthenticationResult) {
-            return new AgentProceedNextStepAuthenticationResult(
-                    AgentAuthenticationProcessStep.identifier(KbcConsentValidationStep.class),
-                    authenticationProcessRequest.getAuthenticationPersistedData());
-        }
-        return authenticationResult;
+
+        return new KbcRedirectAuthenticationRefreshTokenStepHandler()
+                .defineResultOfAccessTokenRefresh(
+                        authenticationProcessRequest,
+                        authenticationResult,
+                        userAvailableForInteraction);
     }
 }

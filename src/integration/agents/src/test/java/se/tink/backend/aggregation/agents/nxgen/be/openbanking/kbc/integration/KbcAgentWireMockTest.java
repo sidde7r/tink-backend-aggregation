@@ -11,7 +11,9 @@ import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentCon
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.RefreshTokenFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
+import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -143,6 +145,50 @@ public class KbcAgentWireMockTest {
         AgentBankApiError sourceAgentPlatformError =
                 agentPlatformAuthenticationProcessException.getSourceAgentPlatformError();
         assertThat(sourceAgentPlatformError).isExactlyInstanceOf(AuthenticationError.class);
+    }
+
+    @Test
+    public void shouldFailRefreshingAccessTokenWhenBankRespondsWithInvalidGrant() {
+        // given
+        String wireMockFilePath = BASE_PATH + "invalid_grant.aap";
+        AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.BE)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addPersistentStorageData("consentId", "dummy_consent_id")
+                        .addPersistentStorageData("oauth2_access_token", getExpiredToken())
+                        .addCredentialField("iban", FAKE_BELGIUM_IBAN)
+                        .addCallbackData("code", "123")
+                        .build();
+
+        // when
+        Throwable thrown = catchThrowable(agentWireMockRefreshTest::executeRefresh);
+
+        // then
+        assertThatExceptionThrownIsRelevantToFailedTokenRefreshOperation(thrown);
+    }
+
+    private void assertThatExceptionThrownIsRelevantToFailedTokenRefreshOperation(
+            Throwable thrown) {
+        // then
+        assertThat(thrown).isInstanceOf(AgentPlatformAuthenticationProcessException.class);
+
+        // and
+        AgentPlatformAuthenticationProcessException agentPlatformAuthenticationProcessException =
+                (AgentPlatformAuthenticationProcessException) thrown;
+        AgentBankApiError sourceAgentPlatformError =
+                agentPlatformAuthenticationProcessException.getSourceAgentPlatformError();
+        assertThat(sourceAgentPlatformError).isExactlyInstanceOf(RefreshTokenFailureError.class);
+
+        // and
+        Error errorDetails = sourceAgentPlatformError.getDetails();
+        assertThat(errorDetails.getErrorMessage())
+                .contains("Access token refresh has failed. User must authenticate manually.");
+        assertThat(errorDetails.getErrorCode()).contains("ACCESS_TOKEN_REFRESH_FAILED");
     }
 
     private String getToken() {
