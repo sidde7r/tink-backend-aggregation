@@ -34,11 +34,11 @@ public class CaterAllenAgent extends UkOpenBankingBaseAgent {
 
     static {
         aisConfig =
-                UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId(CaterAllenConstants.ORGANISATION_ID)
-                        .withWellKnownURL(CaterAllenConstants.WELL_KNOWN_URL)
-                        .withApiBaseURL(CaterAllenConstants.AIS_API_URL)
-                        .build();
+                new CaterAllenAisConfiguration(
+                        UkOpenBankingAisConfiguration.builder()
+                                .withOrganisationId(CaterAllenConstants.ORGANISATION_ID)
+                                .withWellKnownURL(CaterAllenConstants.WELL_KNOWN_URL)
+                                .withApiBaseURL(CaterAllenConstants.AIS_API_URL));
     }
 
     @Inject
