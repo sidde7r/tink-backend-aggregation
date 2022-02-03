@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -26,6 +27,7 @@ public class SwedbankConsentHandler {
 
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private FetchAccountResponse fetchAccountResponse;
 
     public void getAndStoreConsentForAllAccounts() {
         ConsentResponse allAccountsConsent = apiClient.getConsentAllAccounts();
@@ -33,14 +35,49 @@ public class SwedbankConsentHandler {
         if (!allAccountsConsent.isValidConsent()) {
             throw new IllegalStateException(
                     "All accounts consent status was not valid. "
-                            + "It's expected to be valid, this needs to be investigated.");
+                            + ErrorMessages.ERROR_INVESTIGATION_MESSAGE);
         }
 
-        storeConsentId(allAccountsConsent.getConsentId());
+        storeConsentId(StorageKeys.CONSENT, allAccountsConsent.getConsentId());
     }
 
+    // Detailed consent which include transactions less than 90 says is valid for 90 days
     public void getAndStoreDetailedConsent() {
-        FetchAccountResponse fetchAccountResponse;
+
+        ConsentResponse accountDetailsConsent =
+                apiClient.getConsentAccountDetails(fetchAccountResponse.getIbanList());
+
+        if (!accountDetailsConsent.isValidConsent()) {
+            throw new IllegalStateException(
+                    "Account details consent status was not valid. "
+                            + ErrorMessages.ERROR_INVESTIGATION_MESSAGE);
+        }
+
+        storeConsentId(StorageKeys.CONSENT, accountDetailsConsent.getConsentId());
+    }
+
+    /**
+     * Transactions Over 90 Days consent is going to be autovalid only once per authorisation, if
+     * PSD2account_transactionsOver90days scope is granted (Sweden only). It's going to be valid for
+     * one hour and can be used for one or multiple accounts that's been added to
+     * "transactionsOver90Days" accounts list.
+     */
+    public void getAndStoreConsentForTransactionsOver90Days() {
+        ConsentResponse transactionsOver90DaysConsent =
+                apiClient.getConsentTransactionOver90Days(fetchAccountResponse.getIbanList());
+
+        if (!transactionsOver90DaysConsent.isValidConsent()) {
+            throw new IllegalStateException(
+                    "Transactions over 90 days consent status was not valid. "
+                            + ErrorMessages.ERROR_INVESTIGATION_MESSAGE);
+        }
+
+        storeConsentId(
+                StorageKeys.CONSENT_TRANSACTIONS_OVER_90_DAYS,
+                transactionsOver90DaysConsent.getConsentId());
+    }
+
+    public void getListOfAccounts() {
         try {
             fetchAccountResponse = apiClient.fetchAccounts();
         } catch (HttpResponseException e) {
@@ -53,21 +90,6 @@ public class SwedbankConsentHandler {
         if (fetchAccountResponse.getAccounts().isEmpty()) {
             throw LoginError.NO_ACCOUNTS.exception();
         }
-
-        storeConsentId(getDetailedConsent(fetchAccountResponse).getConsentId());
-    }
-
-    private ConsentResponse getDetailedConsent(FetchAccountResponse fetchAccountResponse) {
-        ConsentResponse accountDetailsConsent =
-                apiClient.getConsentAccountDetails(fetchAccountResponse.getIbanList());
-
-        if (!accountDetailsConsent.isValidConsent()) {
-            throw new IllegalStateException(
-                    "Account details consent status was not valid. "
-                            + "It's expected to be valid, this needs to be investigated.");
-        }
-
-        return accountDetailsConsent;
     }
 
     public void verifyValidConsentOrThrow() {
@@ -99,8 +121,8 @@ public class SwedbankConsentHandler {
         }
     }
 
-    private void storeConsentId(String consentId) {
-        persistentStorage.put(SwedbankConstants.StorageKeys.CONSENT, consentId);
+    private void storeConsentId(String storageKey, String consentId) {
+        persistentStorage.put(storageKey, consentId);
     }
 
     private void removeConsent() {
@@ -142,7 +164,7 @@ public class SwedbankConsentHandler {
 
     private boolean isConsentError(GenericResponse errorResponse) {
         return errorResponse.isConsentInvalid()
-                || errorResponse.isResourceUnknown()
+                || errorResponse.isResourceNotFound()
                 || errorResponse.isConsentExpired();
     }
 

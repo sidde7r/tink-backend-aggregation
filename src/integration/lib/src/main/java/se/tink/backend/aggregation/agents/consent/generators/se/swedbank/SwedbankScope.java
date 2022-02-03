@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.consent.Scope;
 
 public enum SwedbankScope implements Scope {
     PSD2("PSD2"),
+    READ_ACCOUNT_LIST("PSD2account_list"),
     READ_ACCOUNTS_BALANCES("PSD2account_balances"),
     READ_TRANSACTIONS_HISTORY("PSD2account_transactions"),
     READ_TRANSACTIONS_HISTORY_OVER90("PSD2account_transactions_over90");
