@@ -73,12 +73,14 @@ public enum CrosskeyPaymentStatus {
         return statusText;
     }
 
-    public static CrosskeyPaymentStatus fromString(String text) {
+    public static CrosskeyPaymentStatus fromString(String text) throws IllegalArgumentException {
         for (CrosskeyPaymentStatus status : CrosskeyPaymentStatus.values()) {
             if (status.statusText.equalsIgnoreCase(text)) {
                 return status;
             }
         }
-        return null;
+        throw createException(
+                CrosskeyBaseConstants.ExceptionMessagePatterns.CANNOT_MAP_CROSSKEY_PAYMENT_STATUS,
+                text);
     }
 }

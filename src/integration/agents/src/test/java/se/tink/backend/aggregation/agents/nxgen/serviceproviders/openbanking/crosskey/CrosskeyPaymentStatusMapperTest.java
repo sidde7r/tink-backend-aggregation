@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -46,5 +47,19 @@ public class CrosskeyPaymentStatusMapperTest {
         assertEquals(
                 CrosskeyPaymentStatus.mapToCrosskeyPaymentStatus(PaymentStatus.SIGNED),
                 CrosskeyPaymentStatus.AUTHORISED);
+    }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhenStatusIsNotMapped() {
+        // given
+        String returnedStatus = "notKnownStatus";
+
+        // then
+        assertThatThrownBy(() -> CrosskeyPaymentStatus.fromString(returnedStatus))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(
+                        String.format(
+                                "Cannot map Crosskey payment status : %s to Tink payment status.",
+                                returnedStatus));
     }
 }
