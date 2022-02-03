@@ -111,7 +111,9 @@ import se.tink.backend.aggregation.workers.operation.RequestStatusManager;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
+import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
+import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceInternalClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.cache.CacheClient;
@@ -247,6 +249,14 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
 
+        bindConstant()
+                .annotatedWith(Names.named("useSecretsServiceInternalClient"))
+                .to(
+                        configuration
+                                .getAgentsServiceConfiguration()
+                                .getTppSecretsServiceConfiguration()
+                                .isUseSecretsServiceInternalClient());
+
         bind(ExceptionProcessor.class).in(Scopes.SINGLETON);
         Multibinder<ExceptionHandler> actionBinder =
                 Multibinder.newSetBinder(binder(), ExceptionHandler.class);
@@ -267,6 +277,9 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AggregationControllerAggregationClient.class)
                 .to(FakeAggregationControllerAggregationClient.class);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
+        bind(ManagedTppSecretsServiceClient.class)
+                .to(TppSecretsServiceClientImpl.class)
+                .in(Scopes.SINGLETON);
         bind(ManagedTppSecretsServiceInternalClient.class)
                 .to(TppSecretsServiceInternalClientImpl.class)
                 .in(Scopes.SINGLETON);

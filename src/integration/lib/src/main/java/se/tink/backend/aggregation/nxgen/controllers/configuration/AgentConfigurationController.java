@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.utils.EntityUtils;
+import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.JsonFlattener;
@@ -45,6 +47,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private static final String TRY_READ_FROM_K8_LOGGER_MSG =
             "Trying to read information from k8s for an OB agent: {}. Consider uploading the configuration to ESS instead.";
 
+    private final TppSecretsServiceClient tppSecretsServiceClient;
     private final SecretsServiceInternalClient secretsServiceInternalClient;
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
@@ -77,10 +80,12 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         providerId = null;
         tppSecretsServiceEnabled = false;
         integrationsConfiguration = null;
+        tppSecretsServiceClient = null;
         secretsServiceInternalClient = null;
     }
 
     public AgentConfigurationController(
+            TppSecretsServiceClient tppSecretsServiceClient,
             SecretsServiceInternalClient secretsServiceInternalClient,
             IntegrationsConfiguration integrationsConfiguration,
             Provider provider,
@@ -91,7 +96,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             boolean tppSecretsServiceEnabled) {
 
         Preconditions.checkNotNull(
-                secretsServiceInternalClient, "secretsServiceInternalClient cannot be null.");
+                tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
         Preconditions.checkNotNull(provider, "provider cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(provider.getFinancialInstitutionId()),
@@ -113,6 +118,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         }
 
         this.tppSecretsServiceEnabled = tppSecretsServiceEnabled;
+        this.tppSecretsServiceClient = tppSecretsServiceClient;
         this.secretsServiceInternalClient = secretsServiceInternalClient;
         if (!tppSecretsServiceEnabled) {
             Preconditions.checkNotNull(
@@ -160,11 +166,19 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
                 Optional<SecretsEntityCore> allSecretsOpt;
-                allSecretsOpt =
-                        Optional.of(
-                                EntityUtils.createSecretsEntityCore(
-                                        secretsServiceInternalClient.getAllSecrets(
-                                                clusterId, appId, certId, providerId)));
+                double randomDouble = ThreadLocalRandom.current().nextDouble(0.000_01, 1.0);
+                if (tppSecretsServiceClient.isUseSecretsServiceInternalClient()
+                        && randomDouble <= getRate(tppSecretsServiceClient.getRate())) {
+                    allSecretsOpt =
+                            Optional.of(
+                                    EntityUtils.createSecretsEntityCore(
+                                            secretsServiceInternalClient.getAllSecrets(
+                                                    clusterId, appId, certId, providerId)));
+                } else {
+                    allSecretsOpt =
+                            tppSecretsServiceClient.getAllSecrets(
+                                    appId, clusterId, certId, providerId);
+                }
 
                 // TODO: Remove if once Access team confirms there are no null appIds around.
                 if (!allSecretsOpt.isPresent()) {

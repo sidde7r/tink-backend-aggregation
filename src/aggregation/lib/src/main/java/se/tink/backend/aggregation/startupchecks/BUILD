@@ -9,6 +9,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/tpp_secrets_service/client",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/libraries/health_check_handler",
         "//src/libraries/http:http_utils",
         "//src/libraries/metrics:core",
