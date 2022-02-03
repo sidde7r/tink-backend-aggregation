@@ -9,11 +9,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 
 public interface UkOpenBankingAis {
     AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
-            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation);
+            UkOpenBankingApiClient apiClient);
 
     TransactionPaginator<TransactionalAccount> makeAccountTransactionPaginatorController(
             UkOpenBankingApiClient apiClient,
@@ -24,7 +23,7 @@ public interface UkOpenBankingAis {
             UkOpenBankingApiClient apiClient);
 
     AccountFetcher<CreditCardAccount> makeCreditCardAccountFetcher(
-            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation);
+            UkOpenBankingApiClient apiClient);
 
     TransactionPaginator<CreditCardAccount> makeCreditCardTransactionPaginatorController(
             UkOpenBankingApiClient apiClient,

@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class NationwideV31Ais extends UkOpenBankingV31Ais {
@@ -36,26 +35,20 @@ public class NationwideV31Ais extends UkOpenBankingV31Ais {
 
     @Override
     public AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
-            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
+            UkOpenBankingApiClient apiClient) {
 
         return new TransactionalAccountV31Fetcher(
                 new AccountV31Fetcher<>(
-                        apiClient,
-                        nationwidePartyFetcher,
-                        defaultTransactionalAccountMapper(),
-                        instrumentation));
+                        apiClient, nationwidePartyFetcher, defaultTransactionalAccountMapper()));
     }
 
     @Override
     public AccountFetcher<CreditCardAccount> makeCreditCardAccountFetcher(
-            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
+            UkOpenBankingApiClient apiClient) {
 
         return new CreditCardAccountV31Fetcher(
                 new AccountV31Fetcher<>(
-                        apiClient,
-                        nationwidePartyFetcher,
-                        creditCardAccountMapper,
-                        instrumentation));
+                        apiClient, nationwidePartyFetcher, creditCardAccountMapper));
     }
 
     @Override

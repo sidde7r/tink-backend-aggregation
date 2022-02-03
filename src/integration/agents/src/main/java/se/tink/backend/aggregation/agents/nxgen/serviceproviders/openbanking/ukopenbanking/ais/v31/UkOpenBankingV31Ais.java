@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 import se.tink.libraries.unleash.model.Toggle;
@@ -126,14 +125,13 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     @Override
     public AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
-            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
+            UkOpenBankingApiClient apiClient) {
 
         return new TransactionalAccountV31Fetcher(
                 new AccountV31Fetcher<>(
                         apiClient,
                         defaultPartyFetcher(apiClient, ukOpenBankingAisConfig, persistentStorage),
-                        transactionalAccountMapper,
-                        instrumentation));
+                        transactionalAccountMapper));
     }
 
     @Override
@@ -157,13 +155,12 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
 
     @Override
     public AccountFetcher<CreditCardAccount> makeCreditCardAccountFetcher(
-            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
+            UkOpenBankingApiClient apiClient) {
         return new CreditCardAccountV31Fetcher(
                 new AccountV31Fetcher<>(
                         apiClient,
                         defaultPartyFetcher(apiClient, ukOpenBankingAisConfig, persistentStorage),
-                        creditCardAccountMapper,
-                        instrumentation));
+                        creditCardAccountMapper));
     }
 
     @Override
