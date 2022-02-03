@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Need to access gcr in order to fetch the openjdk8 image which in turn is needed to build
+# Need to access gcr in order to fetch the openjdk11 image which in turn is needed to build
 # //src/aggregation/service:aggregation_decoupled_image.tar
 export PATH="/usr/local/bin/google-cloud-sdk/bin:$PATH"
 echo "$GOOGLE_CLOUD_ACCOUNT_JSON" | base64 --decode | gcloud auth activate-service-account --key-file=-

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aggregation-config-java11
+  namespace: aggregation
+data:
+  server.yml: |
