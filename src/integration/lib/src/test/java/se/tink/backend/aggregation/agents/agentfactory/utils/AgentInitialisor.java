@@ -45,7 +45,6 @@ import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
@@ -146,7 +145,6 @@ public class AgentInitialisor {
         // getAgentConfigurationDev (and the parameter for these methods comes from Agent)
         AgentConfigurationControllerable agentConfigurationController =
                 new AgentConfigurationController(
-                        mock(TppSecretsServiceClient.class),
                         mock(SecretsServiceInternalClient.class),
                         aggregationServiceConfiguration
                                 .getAgentsServiceConfiguration()

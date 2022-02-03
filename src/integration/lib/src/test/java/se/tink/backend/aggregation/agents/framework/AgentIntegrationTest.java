@@ -80,9 +80,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceInternalClient;
-import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceInternalClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -228,10 +226,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private Agent createAgent(CredentialsRequest credentialsRequest) {
         try {
-            ManagedTppSecretsServiceClient tppSecretsServiceClient =
-                    new TppSecretsServiceClientImpl(
-                            configuration.getTppSecretsServiceConfiguration());
-            tppSecretsServiceClient.start();
             ManagedTppSecretsServiceInternalClient tppSecretsServiceInternalClient =
                     new TppSecretsServiceInternalClientImpl(
                             configuration.getTppSecretsServiceConfiguration());
@@ -253,7 +247,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             && tppSecretsServiceConfiguration.isEnabled();
             AgentConfigurationControllerable agentConfigurationController =
                     new AgentConfigurationController(
-                            tppSecretsServiceClient,
                             tppSecretsServiceInternalClient,
                             configuration.getIntegrations(),
                             provider,

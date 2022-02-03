@@ -13,7 +13,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/entities",
-        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_slf4j_slf4j_api",
