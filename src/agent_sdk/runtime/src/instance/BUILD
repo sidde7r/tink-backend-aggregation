@@ -5,12 +5,12 @@ java_library_with_sources(
     srcs = glob(["*.java"]),
     extdeps = [
         "@aggregation//:com_google_guava_guava",
-        "@aggregation//:com_google_inject_guice",
-        "@aggregation//:org_slf4j_slf4j_api",
     ],
     intdeps = [
-        "//src/agent_sdk/sdk",
         "//src/agent_sdk/runtime/src/environment",
     ],
-    visibility = ["//src/agent_sdk/runtime:__subpackages__"],
+    visibility = [
+        "//src/agent_sdk/compatibility_layers:__subpackages__",
+        "//src/agent_sdk/runtime:__subpackages__",
+    ],
 )

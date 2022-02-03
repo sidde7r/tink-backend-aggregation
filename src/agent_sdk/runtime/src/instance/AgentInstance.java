@@ -1,10 +1,6 @@
 package src.agent_sdk.runtime.src.instance;
 
 import com.google.common.base.Preconditions;
-import com.google.inject.ConfigurationException;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.ProvisionException;
 import java.util.Optional;
 import src.agent_sdk.runtime.src.environment.AgentEnvironment;
 
@@ -39,32 +35,8 @@ public class AgentInstance {
         return Optional.of(tCast);
     }
 
-    private static Object instantiateAgentClass(AgentEnvironment environment, Class<?> agentClass)
-            throws AgentInstantiationException {
-        AgentEnvironmentModule environmentModule = new AgentEnvironmentModule(environment);
-
-        final Injector injector = Guice.createInjector(environmentModule);
-        try {
-            return injector.getInstance(agentClass);
-        } catch (ConfigurationException | ProvisionException e) {
-            throw new AgentInstantiationException(e);
-        }
-    }
-
-    public static AgentInstance createFromClass(AgentEnvironment environment, Class<?> agentClass)
-            throws AgentInstantiationException {
-        Object agentInstance = instantiateAgentClass(environment, agentClass);
-        return new AgentInstance(environment, agentClass, agentInstance);
-    }
-
     public static AgentInstance createFromInstance(
             AgentEnvironment environment, Class<?> agentClass, Object agentInstance) {
         return new AgentInstance(environment, agentClass, agentInstance);
-    }
-
-    public static class AgentInstantiationException extends Exception {
-        public AgentInstantiationException(Throwable cause) {
-            super(cause);
-        }
     }
 }
