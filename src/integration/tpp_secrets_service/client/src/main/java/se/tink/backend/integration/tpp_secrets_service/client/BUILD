@@ -11,7 +11,6 @@ java_library(
         "//src/integration/tpp_secrets_service/client:entities",
         "//src/integration/tpp_secrets_service/client:utils",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
-        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/integration/tpp_secrets_service/proto",
         "//src/integration/tpp_secrets_service/proto:java_grpc",
         "//src/integration/tpp_secrets_service/proto:java_proto",

@@ -209,15 +209,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         }
     }
 
-    private double getRate(String rate) {
-        try {
-            return Double.parseDouble(rate);
-        } catch (NumberFormatException e) {
-            log.error("incorrect number format of rate {}", rate);
-            return 0.0;
-        }
-    }
-
     private void initCertsData(String qwac, String qsealc) {
         allSecretsMapObj.put(QWAC_KEY, Strings.nullToEmpty(qwac));
         allSecretsMapObj.put(QSEALC_KEY, Strings.nullToEmpty(qsealc));
