@@ -6,6 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.consent.suppliers.ItemsSupplier;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -25,12 +26,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.consent.SwedbankConsentHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 @RequiredArgsConstructor
 public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<String> {
@@ -38,6 +41,7 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
     private final SwedbankConsentHandler consentHandler;
+    private final AgentComponentProvider componentProvider;
     private String ssn;
     private String autoStartToken;
     private OAuth2Token accessToken;
@@ -106,7 +110,11 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         consentHandler.getAndStoreConsentForAllAccounts();
         consentHandler.getListOfAccounts();
         consentHandler.getAndStoreDetailedConsent();
-        consentHandler.getAndStoreConsentForTransactionsOver90Days();
+
+        if (ItemsSupplier.get(componentProvider.getCredentialsRequest())
+                .contains(RefreshableItem.CHECKING_TRANSACTIONS)) {
+            consentHandler.getAndStoreConsentForTransactionsOver90Days();
+        }
 
         // Handle the case where the user has single engagement at Swedbank and selects
         // Savingsbank provider by mistake
