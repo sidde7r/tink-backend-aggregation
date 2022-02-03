@@ -17,17 +17,19 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants.PollStatus;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.detail.PostbankDecoupledFieldBuilder;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.detail.PostbankLegacyDecoupledFieldBuilder;
 import se.tink.backend.aggregation.agents.utils.authentication.AuthenticationType;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.de.DecoupledFieldBuilder;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.EmbeddedFieldBuilder;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -41,6 +43,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     private final SupplementalInformationController supplementalInformationController;
     protected final PostbankAuthenticator authenticator;
     protected final EmbeddedFieldBuilder embeddedFieldBuilder;
+    private final RandomValueGenerator randomValueGenerator;
 
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
@@ -147,24 +150,37 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     }
 
     private void finishWithAcceptingPush(AuthorizationResponse previousResponse, String username) {
-        showInfo(previousResponse.getChosenScaMethod().getName());
+        showInfo(previousResponse.getChosenScaMethod());
         poll(username, previousResponse.getLinks().getScaStatus());
     }
 
-    private void showInfo(String deviceName) {
-        Field informationField =
-                CommonFields.Instruction.build(
-                        catalog.getString(PostbankConstants.InfoScreen.INSTRUCTIONS, deviceName));
+    private void showInfo(ScaMethodEntity scaMethod) {
+        // NZG-1100
+        // This implementation introduces the new way of showing this template in A/B way
+        // This should be only temporary, and later we will make this class receive just one
+        // instance of DecoupledFieldBuilder into constructor.
+        DecoupledFieldBuilder decoupledFieldBuilder;
+        boolean shouldUseNewTemplate = randomValueGenerator.randomInt(2) == 0;
+        if (shouldUseNewTemplate) {
+            log.info("[Postbank 2FA] Decoupled auth using new SDK Templates!");
+            decoupledFieldBuilder = new PostbankDecoupledFieldBuilder(catalog);
+        } else {
+            log.info("[Postbank 2FA] Decoupled auth using old Info screen!");
+            decoupledFieldBuilder = new PostbankLegacyDecoupledFieldBuilder(catalog);
+        }
+
+        List<Field> informationFields = decoupledFieldBuilder.getInstructionsField(scaMethod);
 
         try {
-            supplementalInformationController.askSupplementalInformationSync(informationField);
+            supplementalInformationController.askSupplementalInformationSync(
+                    informationFields.toArray(new Field[0]));
         } catch (SupplementalInfoException e) {
             // ignore empty response!
             // we're actually not interested in response at all, we just show a text!
         }
     }
 
-    private void poll(String username, String url) throws ThirdPartyAppException {
+    private void poll(String username, String url) {
         for (int i = 0; i < PollStatus.MAX_POLL_ATTEMPTS; i++) {
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
 

@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.common.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthenticator;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.EmbeddedFieldBuilder;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 
@@ -18,8 +19,14 @@ public class PostbankPaymentAuthenticator extends PostbankAuthenticationControll
             SupplementalInformationController supplementalInformationController,
             PostbankAuthenticator authenticator,
             Credentials credentials,
-            EmbeddedFieldBuilder embeddedFieldBuilder) {
-        super(catalog, supplementalInformationController, authenticator, embeddedFieldBuilder);
+            EmbeddedFieldBuilder embeddedFieldBuilder,
+            RandomValueGenerator randomValueGenerator) {
+        super(
+                catalog,
+                supplementalInformationController,
+                authenticator,
+                embeddedFieldBuilder,
+                randomValueGenerator);
         this.credentials = credentials;
     }
 

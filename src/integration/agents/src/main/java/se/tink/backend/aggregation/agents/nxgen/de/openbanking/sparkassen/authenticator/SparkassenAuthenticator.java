@@ -193,9 +193,10 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private void showInfo(ScaMethodEntity scaMethod) {
-        Field informationField = decoupledFieldBuilder.getInstructionsField(scaMethod);
+        List<Field> informationFields = decoupledFieldBuilder.getInstructionsField(scaMethod);
         try {
-            supplementalInformationController.askSupplementalInformationSync(informationField);
+            supplementalInformationController.askSupplementalInformationSync(
+                    informationFields.toArray(new Field[0]));
         } catch (SupplementalInfoException e) {
             // ignore empty response!
             // we're actually not interested in response at all, we just show a text!

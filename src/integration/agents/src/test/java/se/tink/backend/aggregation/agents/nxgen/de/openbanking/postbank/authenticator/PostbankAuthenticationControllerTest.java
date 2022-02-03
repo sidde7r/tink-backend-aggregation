@@ -44,6 +44,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRespo
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -107,7 +108,8 @@ public class PostbankAuthenticationControllerTest {
                         catalog,
                         mockSuppController,
                         mockAuthenticator,
-                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()));
+                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()),
+                        new MockRandomValueGenerator());
 
         // when
         postbankAuthenticationController.authenticate(createCredentials(null));
@@ -135,7 +137,8 @@ public class PostbankAuthenticationControllerTest {
                         catalog,
                         mockSuppController,
                         mockAuthenticator,
-                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()));
+                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()),
+                        new MockRandomValueGenerator());
 
         // when
         postbankAuthenticationController.authenticate(createCredentials(null));
@@ -157,7 +160,8 @@ public class PostbankAuthenticationControllerTest {
                         catalog,
                         mockSuppController,
                         mockAuthenticator,
-                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()));
+                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()),
+                        new MockRandomValueGenerator());
         // when
         Throwable thrown =
                 catchThrowable(
@@ -184,7 +188,8 @@ public class PostbankAuthenticationControllerTest {
                         new Catalog(Locale.getDefault()),
                         mockSuppController,
                         mockAuthenticator,
-                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()));
+                        new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()),
+                        new MockRandomValueGenerator());
 
         // when
         Throwable thrown =
@@ -400,7 +405,8 @@ public class PostbankAuthenticationControllerTest {
                 mockSuppController,
                 postbankAuthenticator,
                 createCredentials(toDate("2029-01-01")),
-                new PostbankPaymentsEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()));
+                new PostbankPaymentsEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()),
+                new MockRandomValueGenerator());
     }
 
     private PostbankAuthenticationController createAutoAuthenticationController(
@@ -411,7 +417,8 @@ public class PostbankAuthenticationControllerTest {
                 catalog,
                 mockSuppController,
                 postbankAuthenticator,
-                new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()));
+                new PostbankEmbeddedFieldBuilder(catalog, new PostbankIconUrlMapper()),
+                new MockRandomValueGenerator());
     }
 
     private String getFieldName(ScaMethodEntity scaMethod) {
