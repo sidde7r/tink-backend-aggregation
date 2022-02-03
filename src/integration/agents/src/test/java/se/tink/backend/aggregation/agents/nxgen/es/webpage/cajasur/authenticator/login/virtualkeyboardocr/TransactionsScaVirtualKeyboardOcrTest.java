@@ -11,12 +11,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurTestConstants;
 
-public class PasswordVirtualKeyboardOcrTest {
+public class TransactionsScaVirtualKeyboardOcrTest {
 
     @Test
-    public void ocrTest() throws IOException {
+    public void virtualKeyboardValueForNumbersSequenceTest() throws IOException {
         // given
-        final String passwordValueComputedByCajasurWebPage = "092809";
+        final String passwordValueComputedByCajasurWebPage = "299077";
         BufferedImage keyboardImage =
                 ImageIO.read(
                         new BufferedInputStream(
@@ -24,16 +24,14 @@ public class PasswordVirtualKeyboardOcrTest {
                                         Files.readAllBytes(
                                                 Paths.get(
                                                         CajasurTestConstants.TEST_DATA_PATH,
-                                                        "virtual_keyboard.gif")))));
-        final String password = "937193";
-        PasswordVirtualKeyboardOcr objectUnderTest = new PasswordVirtualKeyboardOcr();
+                                                        "virtual_keyboard_transactions_sca.gif")))));
+        final String password = "200633";
+        TransactionsScaVirtualKeyboardOcr objectUnderTest =
+                new TransactionsScaVirtualKeyboardOcr(keyboardImage);
 
         // when
         String keyboardedPassword =
-                objectUnderTest.getNumbersSequenceFromImage(
-                        keyboardImage,
-                        password,
-                        VirtualKeyboardImageParameters.createEnterpriseConfiguration());
+                objectUnderTest.getVirtualKeyboardValueForNumbersSequence(password);
 
         // then
         Assertions.assertThat(keyboardedPassword).isEqualTo(passwordValueComputedByCajasurWebPage);

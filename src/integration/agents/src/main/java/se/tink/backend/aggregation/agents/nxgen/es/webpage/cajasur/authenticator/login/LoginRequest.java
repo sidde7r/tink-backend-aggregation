@@ -12,8 +12,7 @@ import org.springframework.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.common.ConnectivityRequest;
 import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.CajasurRequestHeaderFactory;
-import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.PasswordVirtualKeyboardOcr;
-import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.VirtualKeyboardImageParameters;
+import se.tink.backend.aggregation.agents.nxgen.es.webpage.cajasur.authenticator.login.virtualkeyboardocr.LoginVirtualKeyboardOcr;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -28,7 +27,7 @@ public class LoginRequest implements ConnectivityRequest<String> {
             "https://portal.cajasur.es/cs/Satellite/cajasur/es/particulares-0";
 
     private final String authUrlDomain;
-    private final PasswordVirtualKeyboardOcr virtualKeyboardOcr;
+    private final LoginVirtualKeyboardOcr virtualKeyboardOcr;
     private final LoginRequestParams params;
 
     @Override
@@ -56,10 +55,7 @@ public class LoginRequest implements ConnectivityRequest<String> {
 
     private String prepareLoginRequestBody(LoginRequestParams params) {
         String keyboardedPassword =
-                virtualKeyboardOcr.getNumbersSequenceFromImage(
-                        params.getPasswordVirtualKeyboardImage(),
-                        params.getPassword(),
-                        VirtualKeyboardImageParameters.createEnterpriseConfiguration());
+                virtualKeyboardOcr.getVirtualKeyboardValueForNumbersSequence(params.getPassword());
 
         String valueDataLogon =
                 encriptarDataLogon(
