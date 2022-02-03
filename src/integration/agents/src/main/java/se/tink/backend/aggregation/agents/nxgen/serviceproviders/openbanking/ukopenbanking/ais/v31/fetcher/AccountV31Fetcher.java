@@ -6,22 +6,18 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,12 +26,10 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
     private final UkOpenBankingApiClient apiClient;
     private final PartyFetcher partyFetcher;
     private final AccountMapper<T> accountMapper;
-    private final FetcherInstrumentationRegistry instrumentation;
 
     @Override
     public Collection<T> fetchAccounts() {
         List<AccountEntity> allAccountEntities = apiClient.fetchV31Accounts();
-        instrument(allAccountEntities);
         log.info(
                 "Available accounts: {}",
                 allAccountEntities.stream()
@@ -63,35 +57,6 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
                 .map(Optional::get)
                 .toList()
                 .blockingGet();
-    }
-
-    private void instrument(List<AccountEntity> allAccountEntities) {
-        Set<AccountTypes> distinctTypes =
-                allAccountEntities.stream()
-                        .map(AccountTypeMapper::getAccountType)
-                        .collect(Collectors.toSet());
-
-        for (AccountTypes type : distinctTypes) {
-            long personalAccountsSeenByType =
-                    allAccountEntities.stream()
-                            .filter(acc -> AccountTypeMapper.getAccountType(acc) == type)
-                            .filter(
-                                    acc ->
-                                            AccountTypeMapper.getAccountOwnershipType(acc)
-                                                    == AccountOwnershipType.PERSONAL)
-                            .count();
-            long businessAccountsSeenByType =
-                    allAccountEntities.stream()
-                            .filter(acc -> AccountTypeMapper.getAccountType(acc) == type)
-                            .filter(
-                                    acc ->
-                                            AccountTypeMapper.getAccountOwnershipType(acc)
-                                                    == AccountOwnershipType.BUSINESS)
-                            .count();
-
-            instrumentation.personal(type, (int) personalAccountsSeenByType);
-            instrumentation.business(type, (int) businessAccountsSeenByType);
-        }
     }
 
     private Single<List<PartyV31Entity>> fetchParties(AccountEntity account) {

@@ -92,7 +92,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableB
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
-import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -125,7 +124,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             agentConfiguration;
     private final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingPisConfig pisConfig;
-    private final FetcherInstrumentationRegistry fetcherInstrumentation;
     private final UkOpenBankingPisRequestFilter pisRequestFilter;
 
     // Lazy loaded
@@ -156,7 +154,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.pisConfig = pisConfig;
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
         this.pisRequestFilter = pisRequestFilter;
         this.componentProvider = componentProvider;
         this.accountsBalancesUpdater =
@@ -471,7 +468,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                ais.makeCreditCardAccountFetcher(apiClient, fetcherInstrumentation),
+                ais.makeCreditCardAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         ais.makeCreditCardTransactionPaginatorController(
@@ -483,8 +480,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             return transactionalAccountFetcher;
         }
 
-        transactionalAccountFetcher =
-                getAisSupport().makeTransactionalAccountFetcher(apiClient, fetcherInstrumentation);
+        transactionalAccountFetcher = getAisSupport().makeTransactionalAccountFetcher(apiClient);
         return transactionalAccountFetcher;
     }
 

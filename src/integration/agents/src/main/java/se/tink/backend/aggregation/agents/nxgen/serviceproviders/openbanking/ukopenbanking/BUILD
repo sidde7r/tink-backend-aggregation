@@ -25,7 +25,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",

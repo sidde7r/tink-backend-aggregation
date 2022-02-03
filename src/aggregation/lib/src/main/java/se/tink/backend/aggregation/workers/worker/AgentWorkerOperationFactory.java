@@ -59,7 +59,6 @@ import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerComm
 import se.tink.backend.aggregation.workers.commands.EmitEventsAfterRefreshAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.FetcherInstrumentationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LogRefreshSummaryAgentWorkerCommand;
@@ -354,8 +353,6 @@ public class AgentWorkerOperationFactory {
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
             }
-
-            commands.add(new FetcherInstrumentationAgentWorkerCommand(context, itemsToRefresh));
         }
 
         commands.add(
@@ -461,8 +458,6 @@ public class AgentWorkerOperationFactory {
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
             }
-
-            commands.add(new FetcherInstrumentationAgentWorkerCommand(context, itemsToRefresh));
         }
 
         for (RefreshableItem item : nonAccountItems) {

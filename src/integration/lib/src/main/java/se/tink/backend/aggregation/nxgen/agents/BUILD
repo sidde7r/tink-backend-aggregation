@@ -35,7 +35,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/handler",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http_api_client",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
