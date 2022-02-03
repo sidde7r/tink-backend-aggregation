@@ -6,6 +6,8 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import no.finn.unleash.UnleashContext;
 import se.tink.backend.agents.rpc.Account;
@@ -32,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data.ConsentDataStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.PartyMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.ConsentErrorFilter;
@@ -70,6 +73,7 @@ import se.tink.backend.aggregation.agents.payments.TypedPaymentControllerable;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidasidentity.identity.EidasIdentity;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -254,7 +258,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         addFilter(new ConsentErrorFilter(persistentStorage));
         addFilter(new RateLimitFilter(provider.getName(), 500, 1500, 3));
 
-        whitelistValuesToKeepThemUnmasked();
+        setWhitelistValuesToKeepThemUnmasked();
     }
 
     @Override
@@ -586,11 +590,18 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return balanceCalculationEnabled;
     }
 
-    private void whitelistValuesToKeepThemUnmasked() {
-        Optional.ofNullable(providerConfiguration.getClientId())
-                .ifPresent(
-                        clientId ->
-                                context.getLogMasker()
-                                        .addAgentWhitelistedValues(ImmutableSet.of(clientId)));
+    private void setWhitelistValuesToKeepThemUnmasked() {
+        LogMasker logMasker = context.getLogMasker();
+        ConsentDataStorage consentDataStorage = new ConsentDataStorage(persistentStorage);
+        String clientId = providerConfiguration.getClientId();
+        String consentId = consentDataStorage.restoreConsentId();
+        List<String> whiteListValues =
+                Stream.of(clientId, consentId)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+        if (whiteListValues.isEmpty()) {
+            return;
+        }
+        logMasker.addAgentWhitelistedValues(ImmutableSet.copyOf(whiteListValues));
     }
 }
