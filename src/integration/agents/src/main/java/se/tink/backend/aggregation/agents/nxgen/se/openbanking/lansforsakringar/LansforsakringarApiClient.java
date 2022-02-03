@@ -444,7 +444,7 @@ public class LansforsakringarApiClient {
         }
 
         AccountNumbersResponse accountNumbersResponse =
-                createRequestInSession(new URL(Urls.GET_ACCOUNT_NUMBERS))
+                createRequestInSession(new URL(Urls.GET_ACCOUNTS))
                         .header("Consent-ID", storageHelper.getConsentId())
                         .get(AccountNumbersResponse.class);
 
