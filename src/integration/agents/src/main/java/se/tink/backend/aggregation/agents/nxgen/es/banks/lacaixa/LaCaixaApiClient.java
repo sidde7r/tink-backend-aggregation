@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.OTPSMS_AUTH;
 
 import com.google.common.base.Strings;
+import java.util.Base64;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.Cookie;
@@ -350,7 +351,7 @@ public class LaCaixaApiClient {
         if (userAgent == null) {
             userAgent =
                     CaixaRegistrationDataGenerator.generateUserAgent(
-                            username, false, "APPCBK_", "5.43.0");
+                            "APPCBK_", "5.43.0", retrieveAppInstallationId());
             if (StringUtils.isNotEmpty(username)) {
                 persistentStorage.put(PermStorage.USER_AGENT, userAgent);
             }
@@ -362,7 +363,8 @@ public class LaCaixaApiClient {
         String appInstallationId = persistentStorage.get(PermStorage.APP_INSTALLATION_ID);
         if (appInstallationId == null) {
             appInstallationId =
-                    CaixaRegistrationDataGenerator.generateAppInstallationId(username, false);
+                    CaixaRegistrationDataGenerator.generateAppInstallationId(
+                            username, "c", Base64.getEncoder());
             if (StringUtils.isNotEmpty(username)) {
                 persistentStorage.put(PermStorage.APP_INSTALLATION_ID, appInstallationId);
             }

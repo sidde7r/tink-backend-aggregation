@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.DefaultPhoneValues.DEFAULT_APP_INSTALLATION_ID;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.DefaultPhoneValues.DEFAULT_USER_AGENT;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.Storage.APP_INSTALLATION_ID;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.Storage.USER_AGENT_ID;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -222,7 +222,7 @@ public class ImaginBankApiClient {
 
     private RequestBuilder createPostRequest(URL url) {
         return client.request(url)
-                .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
+                .header(HeaderKeys.USER_AGENT, getUserAgentFromPersistentStorage())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString().toUpperCase())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .acceptLanguage("en-us")
@@ -231,7 +231,7 @@ public class ImaginBankApiClient {
 
     private RequestBuilder createGetRequest(URL url) {
         return client.request(url)
-                .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
+                .header(HeaderKeys.USER_AGENT, getUserAgentFromPersistentStorage())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString().toUpperCase())
                 .acceptLanguage("en-us")
                 .accept(MediaType.WILDCARD);
@@ -241,28 +241,22 @@ public class ImaginBankApiClient {
         String appInstallationId = persistentStorage.get(APP_INSTALLATION_ID);
         if (appInstallationId == null) {
             appInstallationId =
-                    CaixaRegistrationDataGenerator.generateAppInstallationId(username, false);
+                    CaixaRegistrationDataGenerator.generateAppInstallationId(
+                            username, HeaderValues.UA_PREFIX_CONSTANT, Base64.getUrlEncoder());
             persistentStorage.put(APP_INSTALLATION_ID, appInstallationId);
         }
         return appInstallationId;
     }
 
-    private String getUserAgentFromPersistentStorage(String username) {
+    private String getUserAgentFromPersistentStorage() {
         String userAgent = persistentStorage.get(USER_AGENT_ID);
         if (userAgent == null) {
             userAgent =
                     CaixaRegistrationDataGenerator.generateUserAgent(
-                            username, false, HeaderValues.UA_PREFIX, HeaderValues.UA_APP_VERSION);
+                            HeaderValues.UA_PREFIX,
+                            HeaderValues.UA_APP_VERSION,
+                            retrieveAppInstallationId());
             persistentStorage.put(USER_AGENT_ID, userAgent);
-        }
-        return userAgent;
-    }
-
-    private String retrieveUserAgent() {
-        String sessionUsername = imaginBankSessionStorage.getUsername();
-        String userAgent = DEFAULT_USER_AGENT;
-        if (StringUtils.isNotEmpty(sessionUsername)) {
-            userAgent = getUserAgentFromPersistentStorage(sessionUsername);
         }
         return userAgent;
     }
