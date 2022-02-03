@@ -6,8 +6,6 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.MO
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
-import java.time.Clock;
-import java.time.ZoneId;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -22,7 +20,6 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.RetryFilterValues;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.ImaginBankProxyAuthenticatior;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaManualAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaMultifactorAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
@@ -94,8 +91,6 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private StatelessProgressiveAuthenticator constructAuthenticator() {
-        ImaginBankProxyAuthenticatior imaginBankProxyAuthenticatior =
-                new ImaginBankProxyAuthenticatior(apiClient, logMasker);
         LaCaixaManualAuthenticator laCaixaManualAuthenticator =
                 new LaCaixaManualAuthenticator(
                         apiClient,
@@ -106,10 +101,7 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
                         credentials,
                         supplementalInformationHelper);
 
-        Clock clock = Clock.system(ZoneId.of("Europe/Madrid"));
-
-        return new LaCaixaMultifactorAuthenticatorController(
-                imaginBankProxyAuthenticatior, laCaixaManualAuthenticator, clock);
+        return new LaCaixaMultifactorAuthenticatorController(laCaixaManualAuthenticator);
     }
 
     private void configureHttpClient(TinkHttpClient client) {
