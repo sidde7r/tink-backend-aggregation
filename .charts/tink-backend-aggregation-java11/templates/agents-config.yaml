@@ -97,6 +97,8 @@ data:
         enabled: {{ $tppSecretsServiceConfig.enabled }}
         environment: {{ .Values.Environment }}
         enabledRetryPolicy: {{ $tppSecretsServiceConfig.enabledRetryPolicy | default false }}
+        useSecretsServiceInternalClient: {{ $tppSecretsServiceConfig.useSecretsServiceInternalClient | default false }}
+        rate: {{ $tppSecretsServiceConfig.rate | default "0.0" }}
       {{- end }}
 
       {{- if $agentsConfig.mountCallbackJwtSignaturePair }}

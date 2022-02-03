@@ -197,6 +197,7 @@ junit_test(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:mocks",
         "//src/integration/transfer:rpc",

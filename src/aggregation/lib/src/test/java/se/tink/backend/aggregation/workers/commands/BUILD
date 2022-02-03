@@ -55,6 +55,7 @@ junit_test(
         "//src/integration/payment:rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:mocks",
         "//src/integration/transfer:rpc",

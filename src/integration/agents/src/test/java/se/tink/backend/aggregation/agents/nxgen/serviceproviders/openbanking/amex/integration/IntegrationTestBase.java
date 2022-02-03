@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigur
 import se.tink.backend.aggregation.nxgen.raw_data_events.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -142,6 +143,7 @@ public abstract class IntegrationTestBase {
                 createIntegrationsConfiguration(provider);
 
         return new AgentConfigurationController(
+                mock(TppSecretsServiceClient.class),
                 mock(SecretsServiceInternalClient.class),
                 integrationsConfiguration,
                 provider,
