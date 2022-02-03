@@ -31,6 +31,7 @@ public final class HttpLoggingConstants {
                     "encoded-error-message",
                     "error-code",
                     "error-message",
+                    "etag",
                     "expires",
                     "forwarded",
                     "host",
