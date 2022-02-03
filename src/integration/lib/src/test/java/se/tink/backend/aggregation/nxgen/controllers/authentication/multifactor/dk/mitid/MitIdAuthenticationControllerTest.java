@@ -83,7 +83,7 @@ public class MitIdAuthenticationControllerTest {
         authenticationController.authenticate(credentials);
 
         // then
-        mocksToVerifyInOrder.verify(flowController).registerProxyListeners();
+        mocksToVerifyInOrder.verify(flowController).registerProxyFilters();
         mocksToVerifyInOrder.verify(authenticator).initializeMitIdWindow(driverService);
         mocksToVerifyInOrder.verify(flowController).authenticate();
         mocksToVerifyInOrder.verify(authenticator).finishAuthentication(mitIdAuthenticationResult);

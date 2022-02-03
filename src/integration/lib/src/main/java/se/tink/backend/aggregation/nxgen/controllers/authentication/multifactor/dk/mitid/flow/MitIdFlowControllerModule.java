@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.codeapp.MitIdCodeAppPollingProxyListener;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.codeapp.MitIdCodeAppPollingProxyFilter;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.libraries.i18n.Catalog;
@@ -32,14 +32,14 @@ public class MitIdFlowControllerModule extends AbstractModule {
         bind(MitIdLocators.class).toInstance(mitIdAuthenticator.getLocators());
         bind(MitIdAuthenticator.class).toInstance(mitIdAuthenticator);
 
-        MitIdAuthFinishProxyListener proxySaveResponseListener =
-                new MitIdAuthFinishProxyListener(
+        MitIdAuthFinishProxyFilter proxySaveResponseFilter =
+                new MitIdAuthFinishProxyFilter(
                         mitIdAuthenticator.getMatcherForAuthenticationFinishResponse());
-        bind(MitIdAuthFinishProxyListener.class).toInstance(proxySaveResponseListener);
+        bind(MitIdAuthFinishProxyFilter.class).toInstance(proxySaveResponseFilter);
 
-        MitIdCodeAppPollingProxyListener codeAppPollingProxyListener =
-                new MitIdCodeAppPollingProxyListener();
-        bind(MitIdCodeAppPollingProxyListener.class).toInstance(codeAppPollingProxyListener);
+        MitIdCodeAppPollingProxyFilter codeAppPollingProxyFilter =
+                new MitIdCodeAppPollingProxyFilter();
+        bind(MitIdCodeAppPollingProxyFilter.class).toInstance(codeAppPollingProxyFilter);
     }
 
     /**

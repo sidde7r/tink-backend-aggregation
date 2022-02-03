@@ -10,15 +10,15 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ProxySaveResponseListenerTest {
+public class ProxySaveResponseFilterTest {
 
     private ProxySaveResponseMatcher saveResponseMatcher;
-    private ProxySaveResponseListener saveResponseListener;
+    private ProxySaveResponseFilter saveResponseProxyFilter;
 
     @Before
     public void setup() {
         saveResponseMatcher = mock(ProxySaveResponseMatcher.class);
-        saveResponseListener = new ProxySaveResponseListener(saveResponseMatcher);
+        saveResponseProxyFilter = new ProxySaveResponseFilter(saveResponseMatcher);
     }
 
     @Test
@@ -28,11 +28,11 @@ public class ProxySaveResponseListenerTest {
         when(saveResponseMatcher.matchesResponse(proxyResponse)).thenReturn(true);
 
         // when
-        saveResponseListener.handleResponse(proxyResponse);
+        saveResponseProxyFilter.handleResponse(proxyResponse);
 
-        boolean hasResponse = saveResponseListener.hasResponse();
+        boolean hasResponse = saveResponseProxyFilter.hasResponse();
         Optional<ProxyResponse> response =
-                saveResponseListener.waitForResponse(0, TimeUnit.MILLISECONDS);
+                saveResponseProxyFilter.waitForResponse(0, TimeUnit.MILLISECONDS);
 
         // then
         assertThat(hasResponse).isTrue();
@@ -46,11 +46,11 @@ public class ProxySaveResponseListenerTest {
         when(saveResponseMatcher.matchesResponse(proxyResponse)).thenReturn(false);
 
         // when
-        saveResponseListener.handleResponse(proxyResponse);
+        saveResponseProxyFilter.handleResponse(proxyResponse);
 
-        boolean hasResponse = saveResponseListener.hasResponse();
+        boolean hasResponse = saveResponseProxyFilter.hasResponse();
         Optional<ProxyResponse> response =
-                saveResponseListener.waitForResponse(0, TimeUnit.MILLISECONDS);
+                saveResponseProxyFilter.waitForResponse(0, TimeUnit.MILLISECONDS);
 
         // then
         assertThat(hasResponse).isFalse();
@@ -66,14 +66,14 @@ public class ProxySaveResponseListenerTest {
         // when
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
         executor.schedule(
-                () -> saveResponseListener.handleResponse(proxyResponse),
+                () -> saveResponseProxyFilter.handleResponse(proxyResponse),
                 100,
                 TimeUnit.MILLISECONDS);
 
-        boolean hasResponse1 = saveResponseListener.hasResponse();
+        boolean hasResponse1 = saveResponseProxyFilter.hasResponse();
         Optional<ProxyResponse> response =
-                saveResponseListener.waitForResponse(200, TimeUnit.MILLISECONDS);
-        boolean hasResponse2 = saveResponseListener.hasResponse();
+                saveResponseProxyFilter.waitForResponse(200, TimeUnit.MILLISECONDS);
+        boolean hasResponse2 = saveResponseProxyFilter.hasResponse();
 
         // then
         assertThat(hasResponse1).isFalse();

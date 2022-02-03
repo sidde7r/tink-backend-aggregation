@@ -18,54 +18,54 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 
 @RunWith(JUnitParamsRunner.class)
-public class ProxyFilterTest {
+public class ProxyFilterRegistryTest {
 
     /*
     Mocks
      */
-    private ProxyListener listener1;
-    private ProxyListener listener2;
-    private ProxyListener listener3;
+    private ProxyFilter filter1;
+    private ProxyFilter filter2;
+    private ProxyFilter filter3;
 
     /*
     Real
      */
-    private ProxyFilter proxyFilter;
+    private ProxyFilterRegistry proxyFilterRegistry;
 
     @Before
     public void setup() {
-        listener1 = mock(ProxyListener.class);
-        listener2 = mock(ProxyListener.class);
-        listener3 = mock(ProxyListener.class);
+        filter1 = mock(ProxyFilter.class);
+        filter2 = mock(ProxyFilter.class);
+        filter3 = mock(ProxyFilter.class);
 
-        proxyFilter = new ProxyFilter();
-        proxyFilter.addListener("listener1", listener1);
-        proxyFilter.addListener("listener2", listener2);
-        proxyFilter.addListener("listener3", listener3);
+        proxyFilterRegistry = new ProxyFilterRegistry();
+        proxyFilterRegistry.registerProxy("filter1", filter1);
+        proxyFilterRegistry.registerProxy("filter2", filter2);
+        proxyFilterRegistry.registerProxy("filter3", filter3);
     }
 
     @Test
-    public void should_notify_all_listeners_on_request_and_ignore_exceptions() {
+    public void should_notify_all_filters_on_request_and_ignore_exceptions() {
         // given
-        doThrow(new RuntimeException()).when(listener2).handleRequest(any());
+        doThrow(new RuntimeException()).when(filter2).handleRequest(any());
 
         // when
         HttpRequest httpRequest = mock(HttpRequest.class);
         HttpMessageContents contents = mock(HttpMessageContents.class);
         HttpMessageInfo messageInfo = mock(HttpMessageInfo.class);
-        proxyFilter.filterRequest(httpRequest, contents, messageInfo);
+        proxyFilterRegistry.filterRequest(httpRequest, contents, messageInfo);
 
         // then
         ProxyRequest expectedRequest = new ProxyRequest(httpRequest, contents, messageInfo);
 
         verify(contents).getTextContents();
 
-        Stream.of(listener1, listener2, listener3)
+        Stream.of(filter1, filter2, filter3)
                 .forEach(
-                        listener -> {
+                        filter -> {
                             ArgumentCaptor<ProxyRequest> requestArgumentCaptor =
                                     ArgumentCaptor.forClass(ProxyRequest.class);
-                            verify(listener).handleRequest(requestArgumentCaptor.capture());
+                            verify(filter).handleRequest(requestArgumentCaptor.capture());
 
                             ProxyRequest capturedRequest = requestArgumentCaptor.getValue();
                             assertThat(capturedRequest)
@@ -75,27 +75,27 @@ public class ProxyFilterTest {
     }
 
     @Test
-    public void should_notify_all_listeners_on_response_and_ignore_exceptions() {
+    public void should_notify_all_filters_on_response_and_ignore_exceptions() {
         // given
-        doThrow(new RuntimeException()).when(listener1).handleRequest(any());
+        doThrow(new RuntimeException()).when(filter1).handleRequest(any());
 
         // when
         HttpResponse httpResponse = mock(HttpResponse.class);
         HttpMessageContents contents = mock(HttpMessageContents.class);
         HttpMessageInfo messageInfo = mock(HttpMessageInfo.class);
-        proxyFilter.filterResponse(httpResponse, contents, messageInfo);
+        proxyFilterRegistry.filterResponse(httpResponse, contents, messageInfo);
 
         // then
         ProxyResponse expectedResponse = new ProxyResponse(httpResponse, contents, messageInfo);
 
         verify(contents).getTextContents();
 
-        Stream.of(listener1, listener2, listener3)
+        Stream.of(filter1, filter2, filter3)
                 .forEach(
-                        listener -> {
+                        filter -> {
                             ArgumentCaptor<ProxyResponse> responseArgumentCaptor =
                                     ArgumentCaptor.forClass(ProxyResponse.class);
-                            verify(listener).handleResponse(responseArgumentCaptor.capture());
+                            verify(filter).handleResponse(responseArgumentCaptor.capture());
 
                             ProxyResponse capturedResponse = responseArgumentCaptor.getValue();
                             assertThat(capturedResponse)

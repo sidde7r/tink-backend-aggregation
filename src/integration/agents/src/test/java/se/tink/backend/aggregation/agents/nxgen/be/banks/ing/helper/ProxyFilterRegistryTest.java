@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProxyFilterTest {
+public class ProxyFilterRegistryTest {
 
     private static final byte[] ENCRYPTION_KEY =
             Hex.decode("052c17a3e22473467fefd3b4041e1a8cd4e86cf5bd6b733a4d5edf550971cec7");

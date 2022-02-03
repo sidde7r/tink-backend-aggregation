@@ -63,7 +63,7 @@ public class BankIdIframeAuthenticationController
     private final BankIdAuthenticationState authenticationState;
     private final BankIdIframeInitializer iframeInitializer;
     private final BankIdIframeAuthenticator iframeAuthenticator;
-    private final BankIdAuthFinishProxyListener authFinishProxyListener;
+    private final BankIdAuthFinishProxyFilter authFinishProxyFilter;
     private final BankIdIframeController iframeController;
     private final UserAvailability userAvailability;
 
@@ -79,7 +79,7 @@ public class BankIdIframeAuthenticationController
         checkIfUserIsPresent();
 
         try {
-            setupProxyResponseListener();
+            setupProxyResponseFilter();
 
             BankIdIframeFirstWindow firstIframeWindow =
                     iframeInitializer.initializeIframe(webDriver);
@@ -115,12 +115,12 @@ public class BankIdIframeAuthenticationController
         }
     }
 
-    private void setupProxyResponseListener() {
-        webDriver.registerProxyListener("authFinishProxyListener", authFinishProxyListener);
+    private void setupProxyResponseFilter() {
+        webDriver.registerProxyFilter("authFinishProxyFilter", authFinishProxyFilter);
     }
 
     private ProxyResponse waitForAuthFinishUrlResponse() {
-        return authFinishProxyListener
+        return authFinishProxyFilter
                 .waitForResponse(WAIT_FOR_PROXY_RESPONSE_IN_SECONDS, TimeUnit.SECONDS)
                 .orElseThrow(() -> new IllegalStateException("Did not found proxy response"));
     }

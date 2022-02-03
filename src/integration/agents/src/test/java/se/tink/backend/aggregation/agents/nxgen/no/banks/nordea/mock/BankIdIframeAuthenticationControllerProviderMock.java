@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthFinishProxyListener;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthFinishProxyFilter;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProvider;
@@ -46,8 +46,8 @@ public class BankIdIframeAuthenticationControllerProviderMock
 
         WebDriverService bankIdWebDriver = mock(WebDriverService.class);
 
-        BankIdAuthFinishProxyListener authFinishProxyListener =
-                mock(BankIdAuthFinishProxyListener.class);
+        BankIdAuthFinishProxyFilter authFinishProxyListener =
+                mock(BankIdAuthFinishProxyFilter.class);
         ProxyResponse proxyResponse =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(

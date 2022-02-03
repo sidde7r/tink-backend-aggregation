@@ -35,10 +35,10 @@ public class MitIdAuthenticationController implements MultiFactorAuthenticator {
             assertUserIsPresent();
 
             /*
-            To make sure we will get all important HTTP traffic, proxy listeners should be registered
+            To make sure we will get all important HTTP traffic, proxy filters should be registered
             before any authentication begins
              */
-            flowController.registerProxyListeners();
+            flowController.registerProxyFilters();
 
             authenticator.initializeMitIdWindow(driverService);
 

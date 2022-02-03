@@ -6,11 +6,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.codeapp.rpc.MitIdCodeAppPollResponse;
-import se.tink.integration.webdriver.service.proxy.ProxyListener;
+import se.tink.integration.webdriver.service.proxy.ProxyFilter;
 import se.tink.integration.webdriver.service.proxy.ProxyRequest;
 import se.tink.integration.webdriver.service.proxy.ProxyResponse;
 
-public class MitIdCodeAppPollingProxyListener implements ProxyListener {
+public class MitIdCodeAppPollingProxyFilter implements ProxyFilter {
 
     @SuppressWarnings("squid:S1075")
     private static final String POLL_URL_PATH = "/poll";

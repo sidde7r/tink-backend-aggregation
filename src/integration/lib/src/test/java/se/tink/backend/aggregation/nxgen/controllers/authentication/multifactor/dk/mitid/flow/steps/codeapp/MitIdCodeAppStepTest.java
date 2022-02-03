@@ -34,7 +34,7 @@ public class MitIdCodeAppStepTest {
     private SupplementalInformationController supplementalInformationController;
     private Catalog catalog;
     private MitIdScreensManager screensManager;
-    private MitIdCodeAppPollingProxyListener pollingProxyListener;
+    private MitIdCodeAppPollingProxyFilter pollingProxyListener;
 
     private MitIdCodeAppStep codeAppStep;
 
@@ -43,7 +43,7 @@ public class MitIdCodeAppStepTest {
         supplementalInformationController = mock(SupplementalInformationController.class);
         catalog = mock(Catalog.class);
         screensManager = mock(MitIdScreensManager.class);
-        pollingProxyListener = mock(MitIdCodeAppPollingProxyListener.class);
+        pollingProxyListener = mock(MitIdCodeAppPollingProxyFilter.class);
 
         codeAppStep =
                 new MitIdCodeAppStep(

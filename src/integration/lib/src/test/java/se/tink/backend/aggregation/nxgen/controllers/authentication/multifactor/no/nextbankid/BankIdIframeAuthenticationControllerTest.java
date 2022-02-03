@@ -36,7 +36,7 @@ public class BankIdIframeAuthenticationControllerTest {
     private BankIdAuthenticationState authenticationState;
     private BankIdIframeInitializer iframeInitializer;
     private BankIdIframeAuthenticator iframeAuthenticator;
-    private BankIdAuthFinishProxyListener authFinishProxyListener;
+    private BankIdAuthFinishProxyFilter authFinishProxyListener;
     private BankIdIframeController iframeController;
 
     private Credentials credentials;
@@ -55,7 +55,7 @@ public class BankIdIframeAuthenticationControllerTest {
         authenticationState = mock(BankIdAuthenticationState.class);
         iframeInitializer = mock(BankIdIframeInitializer.class);
         iframeAuthenticator = mock(BankIdIframeAuthenticator.class);
-        authFinishProxyListener = mock(BankIdAuthFinishProxyListener.class);
+        authFinishProxyListener = mock(BankIdAuthFinishProxyFilter.class);
         iframeController = mock(BankIdIframeController.class);
         credentials = mock(Credentials.class);
         userAvailability = mock(UserAvailability.class);
@@ -148,7 +148,7 @@ public class BankIdIframeAuthenticationControllerTest {
     private void verifyStartsListeningForAuthFinishResponse() {
         mocksToVerifyInOrder
                 .verify(webDriver)
-                .registerProxyListener("authFinishProxyListener", authFinishProxyListener);
+                .registerProxyFilter("authFinishProxyFilter", authFinishProxyListener);
     }
 
     private void verifyAuthenticationWithIframeController() {

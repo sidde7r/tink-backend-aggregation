@@ -27,18 +27,18 @@ public class MitIdFlowController {
     private final WebDriverService driverService;
 
     private final MitIdScreensManager screensManager;
-    private final MitIdProxyListenersRegistry listenersRegistry;
-    private final MitIdAuthFinishProxyListener authFinishProxyListener;
+    private final MitIdProxyFiltersRegistry filtersRegistry;
+    private final MitIdAuthFinishProxyFilter authFinishProxyFilter;
     private final MitIdAuthenticator mitIdAuthenticator;
 
     private final MitIdUserIdStep userIdStep;
     private final MitId2FAStep secondFactorStep;
     private final MitIdEnterCprStep enterCprStep;
 
-    /** Register all proxy listeners required in MitID authentication flow */
-    public void registerProxyListeners() {
-        log.info("{} Registering proxy listeners", MIT_ID_LOG_TAG);
-        listenersRegistry.registerListeners();
+    /** Register all proxy filters required in MitID authentication flow */
+    public void registerProxyFilters() {
+        log.info("{} Registering proxy filters", MIT_ID_LOG_TAG);
+        filtersRegistry.registerFilters();
     }
 
     /** Conduct the whole MitID flow */
@@ -73,7 +73,7 @@ public class MitIdFlowController {
 
     private boolean hasToEnterCpr() {
         for (int i = 0; i < WAIT_TO_CHECK_IF_USER_HAS_TO_ENTER_CPR; i++) {
-            boolean authFinished = authFinishProxyListener.hasResponse();
+            boolean authFinished = authFinishProxyFilter.hasResponse();
             if (authFinished) {
                 log.warn(
                         "{} Authentication finished with proxy response before CPR",
@@ -106,12 +106,12 @@ public class MitIdFlowController {
     private MitIdAuthenticationResult waitForAuthenticationResult(boolean wasOnCprScreen) {
         for (int i = 0; i < WAIT_TO_CHECK_IF_AUTH_FINISHED; i++) {
 
-            boolean authFinished = authFinishProxyListener.hasResponse();
+            boolean authFinished = authFinishProxyFilter.hasResponse();
             if (authFinished) {
                 log.warn(
                         "{} Authentication finished with proxy response after CPR", MIT_ID_LOG_TAG);
                 return MitIdAuthenticationResult.builder()
-                        .proxyResponse(authFinishProxyListener.getResponse())
+                        .proxyResponse(authFinishProxyFilter.getResponse())
                         .driverService(driverService)
                         .build();
             }

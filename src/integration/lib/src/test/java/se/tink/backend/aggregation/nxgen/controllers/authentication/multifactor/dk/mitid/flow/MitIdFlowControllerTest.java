@@ -46,7 +46,7 @@ public class MitIdFlowControllerTest {
 
     private WebDriverService driverService;
     private MitIdScreensManager screensManager;
-    private MitIdAuthFinishProxyListener authFinishProxyListener;
+    private MitIdAuthFinishProxyFilter authFinishProxyListener;
     private MitIdAuthenticator mitIdAuthenticator;
 
     private MitIdUserIdStep userIdStep;
@@ -59,8 +59,8 @@ public class MitIdFlowControllerTest {
     public void setup() {
         driverService = mock(WebDriverService.class);
         screensManager = mock(MitIdScreensManager.class);
-        MitIdProxyListenersRegistry listenersRegistry = mock(MitIdProxyListenersRegistry.class);
-        authFinishProxyListener = mock(MitIdAuthFinishProxyListener.class);
+        MitIdProxyFiltersRegistry proxyFiltersRegistry = mock(MitIdProxyFiltersRegistry.class);
+        authFinishProxyListener = mock(MitIdAuthFinishProxyFilter.class);
         mitIdAuthenticator = mock(MitIdAuthenticator.class);
         doThrow(AUTH_FINISHED_ABNORMALLY)
                 .when(mitIdAuthenticator)
@@ -74,7 +74,7 @@ public class MitIdFlowControllerTest {
                 new MitIdFlowController(
                         driverService,
                         screensManager,
-                        listenersRegistry,
+                        proxyFiltersRegistry,
                         authFinishProxyListener,
                         mitIdAuthenticator,
                         userIdStep,

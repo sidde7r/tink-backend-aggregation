@@ -6,20 +6,21 @@ import com.google.inject.Inject;
 public class ProxyManagerImpl implements ProxyManager {
 
     private final BrowserUpProxy browserUpProxy;
-    private final ProxyFilter proxyFilter;
+    private final ProxyFilterRegistry proxyFilterRegistry;
 
     @Inject
-    public ProxyManagerImpl(BrowserUpProxy browserUpProxy, ProxyFilter proxyFilter) {
+    public ProxyManagerImpl(
+            BrowserUpProxy browserUpProxy, ProxyFilterRegistry proxyFilterRegistry) {
         this.browserUpProxy = browserUpProxy;
-        this.proxyFilter = proxyFilter;
+        this.proxyFilterRegistry = proxyFilterRegistry;
 
-        browserUpProxy.addRequestFilter(proxyFilter);
-        browserUpProxy.addResponseFilter(proxyFilter);
+        browserUpProxy.addRequestFilter(proxyFilterRegistry);
+        browserUpProxy.addResponseFilter(proxyFilterRegistry);
     }
 
     @Override
-    public void registerProxyListener(String key, ProxyListener proxyListener) {
-        proxyFilter.addListener(key, proxyListener);
+    public void registerProxyFilter(String key, ProxyFilter proxyFilter) {
+        proxyFilterRegistry.registerProxy(key, proxyFilter);
     }
 
     public void shutDownProxy() {

@@ -26,7 +26,7 @@ public class MitIdCodeAppStep {
     private final Catalog catalog;
 
     private final MitIdScreensManager screensManager;
-    private final MitIdCodeAppPollingProxyListener pollingProxyListener;
+    private final MitIdCodeAppPollingProxyFilter pollingProxyFilter;
 
     public void authenticateWithCodeApp() {
         assertIsOnCodeAppScreenWithoutErrors();
@@ -56,7 +56,7 @@ public class MitIdCodeAppStep {
     private void waitForPollingResponse() {
         log.info("{} Awaiting code app polling response", MIT_ID_LOG_TAG);
         MitIdCodeAppPollingResult pollingResult =
-                pollingProxyListener
+                pollingProxyFilter
                         .waitForResult(WAIT_FOR_CODE_APP_POLLING_RESULTS)
                         .orElseThrow(
                                 () ->

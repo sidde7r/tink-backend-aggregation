@@ -18,13 +18,13 @@ import org.mockito.Mockito;
 import se.tink.integration.webdriver.service.proxy.ProxyResponse;
 
 @RunWith(JUnitParamsRunner.class)
-public class MitIdCodeAppPollingProxyListenerTest {
+public class MitIdCodeAppPollingProxyFilterTest {
 
-    private MitIdCodeAppPollingProxyListener listener;
+    private MitIdCodeAppPollingProxyFilter listener;
 
     @Before
     public void setup() {
-        listener = new MitIdCodeAppPollingProxyListener();
+        listener = new MitIdCodeAppPollingProxyFilter();
     }
 
     @Test

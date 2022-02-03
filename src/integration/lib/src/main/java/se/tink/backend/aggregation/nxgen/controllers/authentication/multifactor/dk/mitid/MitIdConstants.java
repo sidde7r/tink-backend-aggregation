@@ -34,7 +34,7 @@ public class MitIdConstants {
     }
 
     @UtilityClass
-    public static class ProxyListenerKeys {
+    public static class ProxyFilterKeys {
         public static final String LISTEN_CODE_APP_POLLING_FINISHED = "LISTEN_POLL_CODE_APP";
         public static final String LISTEN_WEB_AUTH_FINISHED = "LISTEN_WEB_AUTH_FINISHED";
     }

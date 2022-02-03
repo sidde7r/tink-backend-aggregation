@@ -6,14 +6,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 
-public class ProxySaveResponseListener implements ProxyListener {
+public class ProxySaveResponseFilter implements ProxyFilter {
 
     private final CountDownLatch responseLatch;
     private ProxyResponse savedResponse;
 
     private final ProxySaveResponseMatcher proxySaveResponseMatcher;
 
-    public ProxySaveResponseListener(ProxySaveResponseMatcher proxySaveResponseMatcher) {
+    public ProxySaveResponseFilter(ProxySaveResponseMatcher proxySaveResponseMatcher) {
         this.responseLatch = new CountDownLatch(1);
         this.proxySaveResponseMatcher = proxySaveResponseMatcher;
 
