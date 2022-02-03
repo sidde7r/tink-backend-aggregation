@@ -27,6 +27,9 @@ import se.tink.backend.aggregation.nxgen.raw_data_events.decision_strategy.Allow
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.unleash.provider.FakeUnleashClientWithEnabledTogglesProvider;
 import se.tink.libraries.unleash.provider.UnleashClientProvider;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.ProviderProviderModule;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.StaticBankCredentialsProviderModule;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.UserProviderModule;
 
 public final class AgentWireMockComponentProviderModule extends AbstractModule {
 
@@ -61,6 +64,9 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new UserProviderModule());
+        install(new StaticBankCredentialsProviderModule());
+        install(new ProviderProviderModule());
         bind(TinkHttpClientProvider.class).toInstance(wireMockTinkHttpClientProvider);
         bind(MockServerUrlProvider.class).toInstance(wireMockMockServerUrlProvider);
         bind(SupplementalInformationProvider.class).toInstance(mockSupplementalInformationProvider);

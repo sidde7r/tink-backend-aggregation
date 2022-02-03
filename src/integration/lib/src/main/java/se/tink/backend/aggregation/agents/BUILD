@@ -25,6 +25,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/payments",
     ],
     deps = [
+        "//src/agent_sdk/compatibility_layers/aggregation_service/src/modules",
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/amount",
