@@ -47,7 +47,7 @@ public class MitIdScreensErrorHandlerTest {
     @Test
     @Parameters(method = "paramsForShouldThrowIllegalStateExceptionOnCannotFindScreen")
     public void should_throw_illegal_state_exception_on_cannot_find_screen(
-            MitIdScreensQuery query, MitIdScreen currentScreen, String expectedMessage) {
+            MitIdScreenQuery query, MitIdScreen currentScreen, String expectedMessage) {
         // when
         Throwable throwable = errorHandler.cannotFindScreenException(query, currentScreen);
 
@@ -59,7 +59,7 @@ public class MitIdScreensErrorHandlerTest {
     private static Object[] paramsForShouldThrowIllegalStateExceptionOnCannotFindScreen() {
         return new Object[] {
             asArray(
-                    MitIdScreensQuery.builder()
+                    MitIdScreenQuery.builder()
                             .searchForExpectedScreens(
                                     MitIdScreen.USER_ID_SCREEN, MitIdScreen.CODE_APP_SCREEN)
                             .build(),
@@ -68,7 +68,7 @@ public class MitIdScreensErrorHandlerTest {
                             + "\nExpected screens: [USER_ID_SCREEN, CODE_APP_SCREEN]"
                             + "\nCurrent screen: [CPR_SCREEN]"),
             asArray(
-                    MitIdScreensQuery.builder()
+                    MitIdScreenQuery.builder()
                             .searchForExpectedScreens(MitIdScreen.CODE_APP_SCREEN)
                             .build(),
                     null,
@@ -92,7 +92,7 @@ public class MitIdScreensErrorHandlerTest {
 
         // when
         Throwable throwable =
-                errorHandler.unexpectedErrorScreenException(mock(MitIdScreensQuery.class));
+                errorHandler.unexpectedErrorScreenException(mock(MitIdScreenQuery.class));
 
         // then
         assertThat(throwable).isInstanceOf(expectedError.exception().getClass());
@@ -169,7 +169,7 @@ public class MitIdScreensErrorHandlerTest {
     @Test
     @Parameters(method = "paramsForShouldThrowMitIdErrorWithCorrectMessage")
     public void should_throw_mit_id_error_with_correct_message_on_unexpected_error_screen(
-            MitIdScreensQuery query, String errorScreenText, String expectedExceptionMessage) {
+            MitIdScreenQuery query, String errorScreenText, String expectedExceptionMessage) {
         // given
         ElementLocator errorElementLocator = mock(ElementLocator.class);
         when(locators.getElementLocator(LOC_ERROR_NOTIFICATION)).thenReturn(errorElementLocator);
@@ -189,7 +189,7 @@ public class MitIdScreensErrorHandlerTest {
     private static Object[] paramsForShouldThrowMitIdErrorWithCorrectMessage() {
         return new Object[] {
             asArray(
-                    MitIdScreensQuery.builder()
+                    MitIdScreenQuery.builder()
                             .searchForExpectedScreens(
                                     MitIdScreen.CODE_APP_SCREEN, MitIdScreen.USER_ID_SCREEN)
                             .build(),
@@ -198,7 +198,7 @@ public class MitIdScreensErrorHandlerTest {
                             + "\nError message: [First line /n Second line]"
                             + "\nExpected screens: [CODE_APP_SCREEN, USER_ID_SCREEN]"),
             asArray(
-                    MitIdScreensQuery.builder()
+                    MitIdScreenQuery.builder()
                             .searchForExpectedScreens(MitIdScreen.CODE_APP_SCREEN)
                             .build(),
                     "\tFirst line  \n\n \n Second line... \t ... \t\t",

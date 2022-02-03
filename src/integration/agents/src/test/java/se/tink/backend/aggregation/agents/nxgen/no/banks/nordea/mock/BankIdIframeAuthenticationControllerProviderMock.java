@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthFinishProxyFilter;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationControllerProvider;
@@ -22,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.proxy.ProxyManager;
 import se.tink.integration.webdriver.service.proxy.ProxyResponse;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
@@ -46,8 +46,7 @@ public class BankIdIframeAuthenticationControllerProviderMock
 
         WebDriverService bankIdWebDriver = mock(WebDriverService.class);
 
-        BankIdAuthFinishProxyFilter authFinishProxyListener =
-                mock(BankIdAuthFinishProxyFilter.class);
+        ProxySaveResponseFilter authFinishProxyFilter = mock(ProxySaveResponseFilter.class);
         ProxyResponse proxyResponse =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(
@@ -57,7 +56,7 @@ public class BankIdIframeAuthenticationControllerProviderMock
                                 "http://redirect.url?key1=value1&code=AUTH_CODE&key2=value2",
                                 "someKey2",
                                 "someValue2"));
-        when(authFinishProxyListener.waitForResponse(anyInt(), any()))
+        when(authFinishProxyFilter.waitForResponse(anyInt(), any()))
                 .thenReturn(Optional.of(proxyResponse));
 
         BankIdAuthenticationState authenticationState = mock(BankIdAuthenticationState.class);
@@ -70,7 +69,7 @@ public class BankIdIframeAuthenticationControllerProviderMock
                 authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,
-                authFinishProxyListener,
+                authFinishProxyFilter,
                 iframeController,
                 userAvailability);
     }

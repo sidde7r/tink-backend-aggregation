@@ -70,8 +70,8 @@ public class MitIdScreensManagerTest {
     @Test
     public void should_try_search_and_return_expected_screen_that_was_found_twice() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1, SCREEN_2)
                         .searchForSeconds(10)
                         .build();
@@ -94,8 +94,8 @@ public class MitIdScreensManagerTest {
     @Test
     public void should_search_and_return_expected_screen_that_was_found_twice() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_2, SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -125,8 +125,8 @@ public class MitIdScreensManagerTest {
     public void should_try_search_and_return_expected_screen_not_found(
             List<MitIdScreen> otherScreensFound) {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -148,8 +148,8 @@ public class MitIdScreensManagerTest {
     public void should_search_and_and_throw_screen_not_found_with_current_screen_detected(
             List<MitIdScreen> otherScreensFound) {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -176,8 +176,8 @@ public class MitIdScreensManagerTest {
             should_search_and_and_throw_screen_not_found_with_current_screen_detected_even_if_it_was_expected_in_query(
                     List<MitIdScreen> otherScreensFound) {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -218,8 +218,8 @@ public class MitIdScreensManagerTest {
     @Test
     public void should_try_search_and_return_expected_error_screen() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1, ERROR_NOTIFICATION_SCREEN)
                         .searchForSeconds(10)
                         .build();
@@ -241,8 +241,8 @@ public class MitIdScreensManagerTest {
     @Test
     public void should_search_and_return_expected_error_screen() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1, ERROR_NOTIFICATION_SCREEN)
                         .searchForSeconds(10)
                         .build();
@@ -268,8 +268,8 @@ public class MitIdScreensManagerTest {
     @Test
     public void should_try_search_and_throw_unexpected_error_screen_from_first_search() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -288,8 +288,8 @@ public class MitIdScreensManagerTest {
     @Test
     public void should_try_search_and_throw_unexpected_error_screen_from_second_search() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -310,8 +310,8 @@ public class MitIdScreensManagerTest {
     @Test
     public void should_search_and_throw_unexpected_error_screen_from_first_search() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -330,8 +330,8 @@ public class MitIdScreensManagerTest {
     @Test
     public void should_search_and_throw_unexpected_error_screen_from_second_search() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -357,8 +357,8 @@ public class MitIdScreensManagerTest {
     public void
             should_try_search_and_throw_unexpected_error_screen_even_if_expected_screen_was_found() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();
@@ -378,8 +378,8 @@ public class MitIdScreensManagerTest {
     public void
             should_search_and_throw_unexpected_error_screen_even_if_expected_screen_was_found() {
         // given
-        MitIdScreensQuery query =
-                MitIdScreensQuery.builder()
+        MitIdScreenQuery query =
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(SCREEN_1)
                         .searchForSeconds(10)
                         .build();

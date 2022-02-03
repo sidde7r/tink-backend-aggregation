@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.proxy.ProxyResponse;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 import se.tink.integration.webdriver.service.proxy.ProxySaveResponseMatcher;
 import se.tink.libraries.credentials.service.UserAvailability;
 
@@ -36,7 +37,7 @@ public class BankIdIframeAuthenticationControllerTest {
     private BankIdAuthenticationState authenticationState;
     private BankIdIframeInitializer iframeInitializer;
     private BankIdIframeAuthenticator iframeAuthenticator;
-    private BankIdAuthFinishProxyFilter authFinishProxyListener;
+    private ProxySaveResponseFilter authFinishProxyListener;
     private BankIdIframeController iframeController;
 
     private Credentials credentials;
@@ -55,7 +56,7 @@ public class BankIdIframeAuthenticationControllerTest {
         authenticationState = mock(BankIdAuthenticationState.class);
         iframeInitializer = mock(BankIdIframeInitializer.class);
         iframeAuthenticator = mock(BankIdIframeAuthenticator.class);
-        authFinishProxyListener = mock(BankIdAuthFinishProxyFilter.class);
+        authFinishProxyListener = mock(ProxySaveResponseFilter.class);
         iframeController = mock(BankIdIframeController.class);
         credentials = mock(Credentials.class);
         userAvailability = mock(UserAvailability.class);

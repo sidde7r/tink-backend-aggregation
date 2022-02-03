@@ -198,7 +198,7 @@ public class BankIdConstants {
 
         private static ElementLocator.Builder inIframeLocator() {
             return ElementLocator.builder()
-                    .topMostIframe(BY_IFRAME)
+                    .topmostIframe(BY_IFRAME)
                     .shadowHost(getIframeShadowHost());
         }
 

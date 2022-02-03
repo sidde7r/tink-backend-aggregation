@@ -66,7 +66,7 @@ public class ElementLocator {
             this.additionalFilters = new ArrayList<>();
         }
 
-        public Builder topMostIframe(By iframeSelector) {
+        public Builder topmostIframe(By iframeSelector) {
             this.iframeSelectors.add(0, iframeSelector);
             return this;
         }

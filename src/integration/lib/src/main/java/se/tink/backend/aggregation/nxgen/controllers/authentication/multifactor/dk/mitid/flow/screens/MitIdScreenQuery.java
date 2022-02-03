@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class MitIdScreensQuery {
+public class MitIdScreenQuery {
 
     private final List<MitIdScreen> expectedScreensToSearchFor;
     private final int searchForSeconds;
@@ -36,9 +36,9 @@ public class MitIdScreensQuery {
             searchForSeconds = 0;
         }
 
-        public MitIdScreensQueryBuilder(MitIdScreensQuery screensQuery) {
-            this.screensToWaitFor = screensQuery.getExpectedScreensToSearchFor();
-            this.searchForSeconds = screensQuery.getSearchForSeconds();
+        public MitIdScreensQueryBuilder(MitIdScreenQuery screenQuery) {
+            this.screensToWaitFor = screenQuery.getExpectedScreensToSearchFor();
+            this.searchForSeconds = screenQuery.getSearchForSeconds();
         }
 
         public MitIdScreensQueryBuilder searchForExpectedScreens(MitIdScreen... screens) {
@@ -61,8 +61,8 @@ public class MitIdScreensQuery {
             return this;
         }
 
-        public MitIdScreensQuery build() {
-            return new MitIdScreensQuery(screensToWaitFor, searchForSeconds);
+        public MitIdScreenQuery build() {
+            return new MitIdScreenQuery(screensToWaitFor, searchForSeconds);
         }
     }
 }

@@ -18,7 +18,7 @@ import org.mockito.InOrder;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdFlowController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdScreenFlowController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.libraries.credentials.service.UserAvailability;
@@ -32,7 +32,7 @@ public class MitIdAuthenticationControllerTest {
     private WebDriverService driverService;
     private AgentTemporaryStorage agentTemporaryStorage;
     private MitIdAuthenticator authenticator;
-    private MitIdFlowController flowController;
+    private MitIdScreenFlowController flowController;
     private InOrder mocksToVerifyInOrder;
 
     private MitIdAuthenticationController authenticationController;
@@ -46,8 +46,8 @@ public class MitIdAuthenticationControllerTest {
         driverService = mock(WebDriverService.class);
         agentTemporaryStorage = mock(AgentTemporaryStorage.class);
         authenticator = mock(MitIdAuthenticator.class);
-        flowController = mock(MitIdFlowController.class);
-        when(flowController.authenticate()).thenReturn(mitIdAuthenticationResult);
+        flowController = mock(MitIdScreenFlowController.class);
+        when(flowController.runScreenFlow()).thenReturn(mitIdAuthenticationResult);
 
         mocksToVerifyInOrder = inOrder(flowController, authenticator, driverService);
 
@@ -85,7 +85,7 @@ public class MitIdAuthenticationControllerTest {
         // then
         mocksToVerifyInOrder.verify(flowController).registerProxyFilters();
         mocksToVerifyInOrder.verify(authenticator).initializeMitIdWindow(driverService);
-        mocksToVerifyInOrder.verify(flowController).authenticate();
+        mocksToVerifyInOrder.verify(flowController).runScreenFlow();
         mocksToVerifyInOrder.verify(authenticator).finishAuthentication(mitIdAuthenticationResult);
         mocksToVerifyInOrder.verify(driverService).terminate(agentTemporaryStorage);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
@@ -100,7 +100,7 @@ public class MitIdAuthenticationControllerTest {
         when(driverService.getFullPageSourceLog(anyInt())).thenReturn("--PAGE SOURCE--");
 
         RuntimeException exception = new RuntimeException("some message");
-        when(flowController.authenticate()).thenThrow(exception);
+        when(flowController.runScreenFlow()).thenThrow(exception);
 
         // when
         Throwable throwable =

@@ -30,16 +30,17 @@ public interface MitIdAuthenticator {
     void finishAuthentication(MitIdAuthenticationResult authenticationResult);
 
     /**
-     * Allows agent to look for its own specific signs that authentication has finished abnormally,
-     * e.g. a distinct error screen.
+     * Allows agent to look for its own specific signs that authentication has finished with an
+     * error, e.g. a distinct error screen.
      */
-    default boolean isAuthenticationFinishedAbnormally(WebDriverService driverService) {
+    default boolean isAuthenticationFinishedWithAgentSpecificError(WebDriverService driverService) {
         return false;
     }
 
     /**
      * Allows agent to throw appropriate exception when it detects that authentication has finished
-     * abnormally.
+     * with agent specific error.
      */
-    default void handleAuthenticationFinishedAbnormally(WebDriverService driverService) {}
+    default void handleAuthenticationFinishedWithAgentSpecificError(
+            WebDriverService driverService) {}
 }

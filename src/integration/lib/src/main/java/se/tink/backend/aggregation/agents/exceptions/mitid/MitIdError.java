@@ -31,6 +31,8 @@ public enum MitIdError implements AgentError {
     UNSPECIFIED_ERROR(
             new LocalizableKey("MitID authentication has failed with an unspecified error.")),
     UNKNOWN_ERROR_NOTIFICATION(
+            new LocalizableKey("MitID authentication has failed with an unknown error message.")),
+    CANNOT_FIND_ERROR_NOTIFICATION(
             new LocalizableKey("MitID authentication has failed with an unknown error message."));
 
     private final LocalizableKey userMessage;

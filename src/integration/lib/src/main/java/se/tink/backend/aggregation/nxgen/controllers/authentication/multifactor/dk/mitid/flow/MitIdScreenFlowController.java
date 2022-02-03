@@ -13,36 +13,35 @@ import se.tink.backend.aggregation.agents.exceptions.mitid.MitIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdAuthenticationResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreen;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreenQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreensManager;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreensQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.MitId2FAStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.MitIdEnterCprStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.MitIdUserIdStep;
 import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class MitIdFlowController {
+public class MitIdScreenFlowController {
 
     private final WebDriverService driverService;
 
     private final MitIdScreensManager screensManager;
     private final MitIdProxyFiltersRegistry filtersRegistry;
-    private final MitIdAuthFinishProxyFilter authFinishProxyFilter;
+    private final ProxySaveResponseFilter authFinishProxyFilter;
     private final MitIdAuthenticator mitIdAuthenticator;
 
     private final MitIdUserIdStep userIdStep;
     private final MitId2FAStep secondFactorStep;
     private final MitIdEnterCprStep enterCprStep;
 
-    /** Register all proxy filters required in MitID authentication flow */
     public void registerProxyFilters() {
         log.info("{} Registering proxy filters", MIT_ID_LOG_TAG);
         filtersRegistry.registerFilters();
     }
 
-    /** Conduct the whole MitID flow */
-    public MitIdAuthenticationResult authenticate() {
+    public MitIdAuthenticationResult runScreenFlow() {
         MitIdScreen firstScreen = waitForFirstAuthenticationScreen();
 
         if (firstScreen == MitIdScreen.USER_ID_SCREEN) {
@@ -62,7 +61,7 @@ public class MitIdFlowController {
     private MitIdScreen waitForFirstAuthenticationScreen() {
         MitIdScreen screen =
                 screensManager.searchForFirstScreen(
-                        MitIdScreensQuery.builder()
+                        MitIdScreenQuery.builder()
                                 .searchForExpectedScreens(MitIdScreen.USER_ID_SCREEN)
                                 .searchForExpectedScreens(MitIdScreen.SECOND_FACTOR_SCREENS)
                                 .searchForSeconds(WAIT_FOR_FIRST_AUTHENTICATION_SCREEN)
@@ -81,11 +80,12 @@ public class MitIdFlowController {
                 return false;
             }
 
-            boolean authFinishedAbnormally =
-                    mitIdAuthenticator.isAuthenticationFinishedAbnormally(driverService);
-            if (authFinishedAbnormally) {
-                log.warn("{} Authentication finished abnormally before CPR", MIT_ID_LOG_TAG);
-                mitIdAuthenticator.handleAuthenticationFinishedAbnormally(driverService);
+            if (mitIdAuthenticator.isAuthenticationFinishedWithAgentSpecificError(driverService)) {
+                log.warn(
+                        "{} Authentication finished with agent specific error before CPR",
+                        MIT_ID_LOG_TAG);
+                mitIdAuthenticator.handleAuthenticationFinishedWithAgentSpecificError(
+                        driverService);
             }
 
             if (isOnCprScreen()) {
@@ -96,7 +96,7 @@ public class MitIdFlowController {
 
         // search one more time for CPR, this time throw a screen not found error
         screensManager.searchForFirstScreen(
-                MitIdScreensQuery.builder()
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(MitIdScreen.CPR_SCREEN)
                         .searchOnlyOnce()
                         .build());
@@ -116,11 +116,12 @@ public class MitIdFlowController {
                         .build();
             }
 
-            boolean authFinishedAbnormally =
-                    mitIdAuthenticator.isAuthenticationFinishedAbnormally(driverService);
-            if (authFinishedAbnormally) {
-                log.warn("{} Authentication finished abnormally after CPR", MIT_ID_LOG_TAG);
-                mitIdAuthenticator.handleAuthenticationFinishedAbnormally(driverService);
+            if (mitIdAuthenticator.isAuthenticationFinishedWithAgentSpecificError(driverService)) {
+                log.warn(
+                        "{} Authentication finished with agent specific error after CPR",
+                        MIT_ID_LOG_TAG);
+                mitIdAuthenticator.handleAuthenticationFinishedWithAgentSpecificError(
+                        driverService);
                 break;
             }
 
@@ -137,7 +138,7 @@ public class MitIdFlowController {
     private boolean isOnCprScreen() {
         return screensManager
                 .trySearchForFirstScreen(
-                        MitIdScreensQuery.builder()
+                        MitIdScreenQuery.builder()
                                 .searchForExpectedScreens(MitIdScreen.CPR_SCREEN)
                                 .searchOnlyOnce()
                                 .build())

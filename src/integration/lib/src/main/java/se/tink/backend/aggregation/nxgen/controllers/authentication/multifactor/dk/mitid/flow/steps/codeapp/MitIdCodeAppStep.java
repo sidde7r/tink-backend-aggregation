@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.mitid.MitIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.fields.MitIdCodeAppField;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreen;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreenQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreensManager;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreensQuery;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 
@@ -36,7 +36,7 @@ public class MitIdCodeAppStep {
 
     private void assertIsOnCodeAppScreenWithoutErrors() {
         screensManager.searchForFirstScreen(
-                MitIdScreensQuery.builder()
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(MitIdScreen.CODE_APP_SCREEN)
                         .searchForSeconds(WAIT_FOR_CODE_APP_SCREEN)
                         .build());

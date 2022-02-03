@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.proxy.ProxyResponse;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 /**
@@ -63,7 +64,7 @@ public class BankIdIframeAuthenticationController
     private final BankIdAuthenticationState authenticationState;
     private final BankIdIframeInitializer iframeInitializer;
     private final BankIdIframeAuthenticator iframeAuthenticator;
-    private final BankIdAuthFinishProxyFilter authFinishProxyFilter;
+    private final ProxySaveResponseFilter authFinishProxyFilter;
     private final BankIdIframeController iframeController;
     private final UserAvailability userAvailability;
 

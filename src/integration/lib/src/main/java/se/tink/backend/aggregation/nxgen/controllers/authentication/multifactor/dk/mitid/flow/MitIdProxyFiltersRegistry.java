@@ -7,13 +7,14 @@ import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.codeapp.MitIdCodeAppPollingProxyFilter;
 import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class MitIdProxyFiltersRegistry {
 
     private final WebDriverService driverService;
 
-    private final MitIdAuthFinishProxyFilter authFinishProxyFilter;
+    private final ProxySaveResponseFilter authFinishProxyFilter;
     private final MitIdCodeAppPollingProxyFilter codeAppPollingProxyFilter;
 
     /** For consistency, this the place where we should register all proxy filters */

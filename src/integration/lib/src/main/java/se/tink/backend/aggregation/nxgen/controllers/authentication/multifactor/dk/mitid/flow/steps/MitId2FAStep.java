@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_TO_CHECK_IF_THERE_IS_CHANGE_METHOD_LINK;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_TO_DETECT_2FA_SCREEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator.LOC_CHANGE_AUTH_METHOD_LINK;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator.LOC_CONTINUE_BUTTON;
 
 import com.google.inject.Inject;
 import java.util.List;
@@ -17,8 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreen;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreenQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreensManager;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreensQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.codeapp.MitIdCodeAppStep;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.searchelements.ElementLocator;
@@ -31,13 +32,12 @@ public class MitId2FAStep {
 
     private final WebDriverService driverService;
     private final MitIdLocators locators;
-    private final MitIdCommonStepUtils commonStepUtils;
     private final MitIdScreensManager screensManager;
     private final MitIdCodeAppStep codeAppStep;
 
     public void perform2FA() {
         log.info("{} Performing 2FA", MIT_ID_LOG_TAG);
-        MitIdScreen secondFactorScreen = assertIsOn2FAScreen();
+        MitIdScreen secondFactorScreen = find2FAScreen();
 
         switch (secondFactorScreen) {
             case CODE_APP_SCREEN:
@@ -58,9 +58,9 @@ public class MitId2FAStep {
         }
     }
 
-    private MitIdScreen assertIsOn2FAScreen() {
+    private MitIdScreen find2FAScreen() {
         return screensManager.searchForFirstScreen(
-                MitIdScreensQuery.builder()
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(MitIdScreen.SECOND_FACTOR_SCREENS)
                         .searchForSeconds(WAIT_TO_DETECT_2FA_SCREEN)
                         .build());
@@ -88,7 +88,7 @@ public class MitId2FAStep {
         }
 
         selectMethod(MitId2FAMethod.CODE_APP_METHOD);
-        commonStepUtils.clickContinue();
+        driverService.clickButton(locators.getElementLocator(LOC_CONTINUE_BUTTON));
     }
 
     public boolean hasLinkToChangeMethod() {
@@ -103,7 +103,7 @@ public class MitId2FAStep {
 
     public void assertIsOnMethodSelectorScreen() {
         screensManager.searchForFirstScreen(
-                MitIdScreensQuery.builder()
+                MitIdScreenQuery.builder()
                         .searchForExpectedScreens(MitIdScreen.METHOD_SELECTOR_SCREEN)
                         .searchForSeconds(WAIT_FOR_METHOD_SELECTOR_SCREEN)
                         .build());

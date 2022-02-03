@@ -12,7 +12,7 @@ import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.proxy.ProxySaveResponseMatcher;
 import se.tink.libraries.i18n.Catalog;
 
-public class MitIdFlowControllerModuleTest {
+public class MitIdScreenFlowControllerModuleTest {
 
     @Test
     public void should_initialize_module_without_errors() {
@@ -26,8 +26,8 @@ public class MitIdFlowControllerModuleTest {
         when(mitIdAuthenticator.getLocators()).thenReturn(locators);
 
         // when
-        MitIdFlowController flowController =
-                MitIdFlowControllerModule.createMitIdFlowController(
+        MitIdScreenFlowController flowController =
+                MitIdScreenFlowControllerModule.createMitIdScreenFlowController(
                         mock(Catalog.class),
                         mock(StatusUpdater.class),
                         mock(SupplementalInformationController.class),

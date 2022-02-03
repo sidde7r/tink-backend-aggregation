@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens;
 
-import static java.lang.String.format;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator.LOC_ERROR_NOTIFICATION;
 
 import com.google.inject.Inject;
@@ -11,6 +10,7 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.mitid.MitIdError;
+import se.tink.backend.aggregation.agents.exceptions.mitid.MitIdException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
 import se.tink.integration.webdriver.service.WebDriverService;
@@ -31,36 +31,29 @@ public class MitIdScreensErrorHandler {
             "\nUnexpected error screen found" + "\nError message: [%s]" + "\nExpected screens: %s";
 
     public RuntimeException cannotFindScreenException(
-            MitIdScreensQuery screensQuery, @Nullable MitIdScreen currentScreen) {
+            MitIdScreenQuery screenQuery, @Nullable MitIdScreen currentScreen) {
         String exceptionMessage =
                 String.format(
                         CANNOT_FIND_SCREEN_EXCEPTION_FORMAT,
-                        screensQuery.getExpectedScreensToSearchFor(),
+                        screenQuery.getExpectedScreensToSearchFor(),
                         currentScreen);
         return new IllegalStateException(exceptionMessage);
     }
 
-    public RuntimeException unexpectedErrorScreenException(MitIdScreensQuery screensQuery) {
-        String errorMessage = readErrorMessage().orElse(null);
-        if (errorMessage != null) {
-            // remove new lines to consistently have only 1 line in Kibana
-            errorMessage =
-                    Stream.of(errorMessage.split("\\n"))
-                            .map(String::trim)
-                            .filter(StringUtils::isNotBlank)
-                            .collect(Collectors.joining(" /n "));
+    public RuntimeException unexpectedErrorScreenException(MitIdScreenQuery screenQuery) {
+        String errorMessage =
+                readErrorMessage()
+                        .map(MitIdScreensErrorHandler::removeNewLinesForClearKibanaMessage)
+                        .orElse(null);
+        if (errorMessage == null) {
+            return unexpectedErrorScreenException(
+                    MitIdError.CANNOT_FIND_ERROR_NOTIFICATION, "", screenQuery);
         }
-
-        String exceptionMessage =
-                format(
-                        ERROR_SCREEN_EXCEPTION_FORMAT,
-                        errorMessage,
-                        screensQuery.getExpectedScreensToSearchFor());
 
         MitIdError error =
                 MitIdConstants.Errors.findErrorForMessage(errorMessage)
                         .orElse(MitIdError.UNKNOWN_ERROR_NOTIFICATION);
-        return error.exception(exceptionMessage);
+        return unexpectedErrorScreenException(error, errorMessage, screenQuery);
     }
 
     private Optional<String> readErrorMessage() {
@@ -72,5 +65,22 @@ public class MitIdScreensErrorHandler {
                                 .build())
                 .getFirstFoundElement()
                 .map(element -> element.getAttribute("textContent"));
+    }
+
+    private static String removeNewLinesForClearKibanaMessage(String message) {
+        return Stream.of(message.split("\\n"))
+                .map(String::trim)
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.joining(" /n "));
+    }
+
+    private static MitIdException unexpectedErrorScreenException(
+            MitIdError error, String errorMessage, MitIdScreenQuery screenQuery) {
+        String internalMessage =
+                String.format(
+                        ERROR_SCREEN_EXCEPTION_FORMAT,
+                        errorMessage,
+                        screenQuery.getExpectedScreensToSearchFor());
+        return error.exception(internalMessage);
     }
 }

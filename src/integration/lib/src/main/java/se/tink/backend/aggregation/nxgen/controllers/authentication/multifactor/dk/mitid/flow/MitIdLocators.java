@@ -35,6 +35,9 @@ public class MitIdLocators {
 
     private static final String ATTR_ARIA_LABEL = "aria-label";
 
+    private static final List<String> ATTRIBUTES_THAT_MIGHT_CONTAIN_CPR =
+            asList("id", "class", "name", "placeholder", ATTR_ARIA_LABEL);
+
     private Map<MitIdLocator, ElementLocator> locators = new HashMap<>();
 
     public ElementLocator getElementLocator(MitIdLocator mitIdLocator) {
@@ -150,7 +153,7 @@ public class MitIdLocators {
         locators.put(
                 LOC_ENTER_PASSWORD_INPUT,
                 ElementLocator.builder()
-                        .topMostIframe(By.tagName("iframe"))
+                        .topmostIframe(By.tagName("iframe"))
                         .element(By.tagName(TAG_INPUT))
                         .mustHaveAttributeContainAnyTextLowerCase(
                                 ATTR_ARIA_LABEL, "Enter your password", "Indtast din adgangskode")
@@ -196,10 +199,8 @@ public class MitIdLocators {
     }
 
     private ElementFilter isCprRelatedElement() {
-        List<String> attributesThatMightContainCpr =
-                asList("id", "class", "name", "placeholder", ATTR_ARIA_LABEL);
         return (element, driverWrapper, basicUtils) ->
-                attributesThatMightContainCpr.stream()
+                ATTRIBUTES_THAT_MIGHT_CONTAIN_CPR.stream()
                         .anyMatch(
                                 attributeName -> {
                                     String attributeValue = element.getAttribute(attributeName);

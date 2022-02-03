@@ -9,10 +9,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.codeapp.MitIdCodeAppPollingProxyFilter;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.integration.webdriver.service.WebDriverService;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor
-public class MitIdFlowControllerModule extends AbstractModule {
+public class MitIdScreenFlowControllerModule extends AbstractModule {
 
     /*
     Dependencies for module components
@@ -32,10 +33,10 @@ public class MitIdFlowControllerModule extends AbstractModule {
         bind(MitIdLocators.class).toInstance(mitIdAuthenticator.getLocators());
         bind(MitIdAuthenticator.class).toInstance(mitIdAuthenticator);
 
-        MitIdAuthFinishProxyFilter proxySaveResponseFilter =
-                new MitIdAuthFinishProxyFilter(
+        ProxySaveResponseFilter proxySaveResponseFilter =
+                new ProxySaveResponseFilter(
                         mitIdAuthenticator.getMatcherForAuthenticationFinishResponse());
-        bind(MitIdAuthFinishProxyFilter.class).toInstance(proxySaveResponseFilter);
+        bind(ProxySaveResponseFilter.class).toInstance(proxySaveResponseFilter);
 
         MitIdCodeAppPollingProxyFilter codeAppPollingProxyFilter =
                 new MitIdCodeAppPollingProxyFilter();
@@ -43,24 +44,24 @@ public class MitIdFlowControllerModule extends AbstractModule {
     }
 
     /**
-     * This is the only correct way of initializing {@link MitIdFlowController} with all
+     * This is the only correct way of initializing {@link MitIdScreenFlowController} with all
      * dependencies it requires.
      */
-    public static MitIdFlowController createMitIdFlowController(
+    public static MitIdScreenFlowController createMitIdScreenFlowController(
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
             WebDriverService driverService,
             MitIdAuthenticator authenticator) {
 
-        MitIdFlowControllerModule module =
-                new MitIdFlowControllerModule(
+        MitIdScreenFlowControllerModule module =
+                new MitIdScreenFlowControllerModule(
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
                         driverService,
                         authenticator);
         Injector injector = Guice.createInjector(module);
-        return injector.getInstance(MitIdFlowController.class);
+        return injector.getInstance(MitIdScreenFlowController.class);
     }
 }

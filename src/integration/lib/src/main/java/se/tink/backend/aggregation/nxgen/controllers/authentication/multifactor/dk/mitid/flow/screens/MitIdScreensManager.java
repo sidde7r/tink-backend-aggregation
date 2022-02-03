@@ -27,12 +27,12 @@ public class MitIdScreensManager {
     private final MitIdScreensErrorHandler screensErrorHandler;
 
     /**
-     * Search for screens defined in {@link MitIdScreensQuery}.
+     * Search for screens defined in {@link MitIdScreenQuery}.
      *
      * @return the very first screen that was found or throw exception if no screen was found.
      */
-    public MitIdScreen searchForFirstScreen(MitIdScreensQuery screensQuery) {
-        Optional<MitIdScreen> maybeScreenFound = trySearchForFirstScreen(screensQuery);
+    public MitIdScreen searchForFirstScreen(MitIdScreenQuery screenQuery) {
+        Optional<MitIdScreen> maybeScreenFound = trySearchForFirstScreen(screenQuery);
         if (maybeScreenFound.isPresent()) {
             return maybeScreenFound.get();
         }
@@ -40,7 +40,7 @@ public class MitIdScreensManager {
         // search for any known screen
         Optional<MitIdScreen> maybeCurrentScreenFound =
                 trySearchForFirstScreenInternal(
-                        MitIdScreensQuery.builder()
+                        MitIdScreenQuery.builder()
                                 .searchForExpectedScreens(MitIdScreen.values())
                                 .searchOnlyOnce()
                                 .build());
@@ -49,22 +49,21 @@ public class MitIdScreensManager {
         we should adjust the time of first search
          */
         throw screensErrorHandler.cannotFindScreenException(
-                screensQuery, maybeCurrentScreenFound.orElse(null));
+                screenQuery, maybeCurrentScreenFound.orElse(null));
     }
 
     /**
-     * Search for screens defined in {@link MitIdScreensQuery}.
+     * Search for screens defined in {@link MitIdScreenQuery}.
      *
      * @return the very first screen that was found or empty.
      */
-    public Optional<MitIdScreen> trySearchForFirstScreen(MitIdScreensQuery screensQuery) {
-        MitIdScreen firstScreenFound = trySearchForFirstScreenInternal(screensQuery).orElse(null);
+    public Optional<MitIdScreen> trySearchForFirstScreen(MitIdScreenQuery screenQuery) {
+        MitIdScreen firstScreenFound = trySearchForFirstScreenInternal(screenQuery).orElse(null);
         if (firstScreenFound == null) {
-            log.info("{} No screen found. Query: {}", MIT_ID_LOG_TAG, screensQuery);
+            log.info("{} No screen found. Query: {}", MIT_ID_LOG_TAG, screenQuery);
             return Optional.empty();
         }
-        log.info(
-                "{} Found a screen: {}. Query: {}", MIT_ID_LOG_TAG, firstScreenFound, screensQuery);
+        log.info("{} Found a screen: {}. Query: {}", MIT_ID_LOG_TAG, firstScreenFound, screenQuery);
 
         /*
         Some screens may initially appear ok but after a brief moment an error screen
@@ -74,7 +73,7 @@ public class MitIdScreensManager {
         log.info("{} Sleeping {} milliseconds before second search.", MIT_ID_LOG_TAG, sleepFor);
         driverService.sleepFor(sleepFor);
 
-        MitIdScreensQuery secondQuery = screensQuery.toBuilder().searchOnlyOnce().build();
+        MitIdScreenQuery secondQuery = screenQuery.toBuilder().searchOnlyOnce().build();
         MitIdScreen secondScreenFound = trySearchForFirstScreenInternal(secondQuery).orElse(null);
         if (secondScreenFound == null) {
             log.warn(
@@ -99,8 +98,8 @@ public class MitIdScreensManager {
         return Optional.of(secondScreenFound);
     }
 
-    private Optional<MitIdScreen> trySearchForFirstScreenInternal(MitIdScreensQuery screensQuery) {
-        List<MitIdScreen> expectedScreens = screensQuery.getExpectedScreensToSearchFor();
+    private Optional<MitIdScreen> trySearchForFirstScreenInternal(MitIdScreenQuery screenQuery) {
+        List<MitIdScreen> expectedScreens = screenQuery.getExpectedScreensToSearchFor();
         List<ElementLocator> locatorsToSearchFor = getScreenLocators(expectedScreens);
 
         boolean isErrorScreenExpected =
@@ -109,10 +108,10 @@ public class MitIdScreensManager {
             locatorsToSearchFor.addAll(getScreenLocators(MitIdScreen.ERROR_NOTIFICATION_SCREEN));
         }
 
-        List<MitIdScreen> screensFound = searchForAllScreens(locatorsToSearchFor, screensQuery);
+        List<MitIdScreen> screensFound = searchForAllScreens(locatorsToSearchFor, screenQuery);
         if (screensFound.contains(MitIdScreen.ERROR_NOTIFICATION_SCREEN)
                 && !isErrorScreenExpected) {
-            throw screensErrorHandler.unexpectedErrorScreenException(screensQuery);
+            throw screensErrorHandler.unexpectedErrorScreenException(screenQuery);
         }
 
         List<MitIdScreen> expectedScreensFound =
@@ -125,12 +124,12 @@ public class MitIdScreensManager {
     }
 
     private List<MitIdScreen> searchForAllScreens(
-            List<ElementLocator> screenLocators, MitIdScreensQuery screensQuery) {
+            List<ElementLocator> screenLocators, MitIdScreenQuery screenQuery) {
         List<ElementsSearchResult> searchResults =
                 driverService.searchForAllMatchingLocators(
                         ElementsSearchQuery.builder()
                                 .searchFor(screenLocators)
-                                .searchForSeconds(screensQuery.getSearchForSeconds())
+                                .searchForSeconds(screenQuery.getSearchForSeconds())
                                 .build());
         return searchResults.stream()
                 .map(

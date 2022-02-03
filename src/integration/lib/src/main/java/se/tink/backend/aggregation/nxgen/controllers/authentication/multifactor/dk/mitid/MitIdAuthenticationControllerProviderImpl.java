@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid;
 
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdFlowController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdFlowControllerModule;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdScreenFlowController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdScreenFlowControllerModule;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
@@ -25,8 +25,8 @@ public class MitIdAuthenticationControllerProviderImpl
         WebDriverService driverService =
                 WebDriverServiceModule.createWebDriverService(agentTemporaryStorage);
 
-        MitIdFlowController mitIdFlowController =
-                MitIdFlowControllerModule.createMitIdFlowController(
+        MitIdScreenFlowController mitIdScreenFlowController =
+                MitIdScreenFlowControllerModule.createMitIdScreenFlowController(
                         catalog,
                         statusUpdater,
                         supplementalInformationController,
@@ -38,6 +38,6 @@ public class MitIdAuthenticationControllerProviderImpl
                 driverService,
                 agentTemporaryStorage,
                 mitIdAuthenticator,
-                mitIdFlowController);
+                mitIdScreenFlowController);
     }
 }

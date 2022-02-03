@@ -8,7 +8,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdFlowController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdScreenFlowController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.libraries.credentials.service.UserAvailability;
@@ -22,7 +22,7 @@ public class MitIdAuthenticationController implements MultiFactorAuthenticator {
     private final AgentTemporaryStorage agentTemporaryStorage;
 
     private final MitIdAuthenticator authenticator;
-    private final MitIdFlowController flowController;
+    private final MitIdScreenFlowController flowController;
 
     @Override
     public CredentialsTypes getType() {
@@ -42,7 +42,7 @@ public class MitIdAuthenticationController implements MultiFactorAuthenticator {
 
             authenticator.initializeMitIdWindow(driverService);
 
-            MitIdAuthenticationResult authenticationResult = flowController.authenticate();
+            MitIdAuthenticationResult authenticationResult = flowController.runScreenFlow();
 
             authenticator.finishAuthentication(authenticationResult);
 

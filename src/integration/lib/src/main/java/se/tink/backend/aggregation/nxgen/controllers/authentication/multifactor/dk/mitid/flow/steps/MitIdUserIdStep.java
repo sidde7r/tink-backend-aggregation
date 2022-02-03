@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.MIT_ID_LOG_TAG;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator.LOC_CONTINUE_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator.LOC_USERNAME_INPUT;
 
 import com.google.inject.Inject;
@@ -22,13 +23,12 @@ public class MitIdUserIdStep {
 
     private final WebDriverService driverService;
     private final MitIdLocators locators;
-    private final MitIdCommonStepUtils commonStepUtils;
 
     public void enterUserId() {
         log.info("{} Entering user id", MIT_ID_LOG_TAG);
         String userId = askUserForValidUserId();
         setUserIdInput(userId);
-        commonStepUtils.clickContinue();
+        driverService.clickButton(locators.getElementLocator(LOC_CONTINUE_BUTTON));
     }
 
     private String askUserForValidUserId() {
