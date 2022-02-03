@@ -4,13 +4,14 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_FOR_FIRST_AUTHENTICATION_SCREEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_TO_GIVE_CPR_SCREEN_TIME_TO_EXIT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.CPR_SCREEN_EXIT_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.FIRST_AUTHENTICATION_SCREEN_SEARCH_TIMEOUT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,10 @@ import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 @RunWith(JUnitParamsRunner.class)
 public class MitIdScreenFlowControllerTest {
 
-    private static final RuntimeException AUTH_FINISHED_ABNORMALLY =
-            new RuntimeException("Auth finished");
+    private static final RuntimeException AUTH_FINISHED_WITH_AGENT_SPECIFIC_ERROR =
+            new RuntimeException("Agent specific error");
     private ReturnsElementsOfValues ifProxyHasResponseValues;
-    private ReturnsElementsOfValues ifAuthFinishedAbnormallyValues;
+    private ReturnsElementsOfValues ifAuthFinishedWithAgentSpecificErrorValues;
     private ReturnsElementsOfValues ifCprScreenValues;
 
     private WebDriverService driverService;
@@ -63,7 +64,7 @@ public class MitIdScreenFlowControllerTest {
         MitIdProxyFiltersRegistry proxyFiltersRegistry = mock(MitIdProxyFiltersRegistry.class);
         authFinishProxyFilter = mock(ProxySaveResponseFilter.class);
         mitIdAuthenticator = mock(MitIdAuthenticator.class);
-        doThrow(AUTH_FINISHED_ABNORMALLY)
+        doThrow(AUTH_FINISHED_WITH_AGENT_SPECIFIC_ERROR)
                 .when(mitIdAuthenticator)
                 .handleAuthenticationFinishedWithAgentSpecificError(driverService);
 
@@ -83,7 +84,7 @@ public class MitIdScreenFlowControllerTest {
                         enterCprStep);
 
         ifProxyHasResponseValues = new ReturnsElementsOfValues();
-        ifAuthFinishedAbnormallyValues = new ReturnsElementsOfValues();
+        ifAuthFinishedWithAgentSpecificErrorValues = new ReturnsElementsOfValues();
         ifCprScreenValues = new ReturnsElementsOfValues();
     }
 
@@ -117,7 +118,7 @@ public class MitIdScreenFlowControllerTest {
         mockFirstScreen(MitIdScreen.USER_ID_SCREEN);
 
         mockIfProxyHasResponse(false, false, true);
-        mockIfAuthFinishedAbnormally(false, false);
+        mockIfAuthFinishedWithAgentSpecificError(false, false);
         mockIfCprScreen(false, false);
 
         // when
@@ -130,19 +131,19 @@ public class MitIdScreenFlowControllerTest {
     }
 
     @Test
-    public void should_not_enter_cpr_if_authentication_has_finished_abnormally_after_2FA() {
+    public void should_not_enter_cpr_on_agent_specific_error_after_2FA() {
         // given
         mockFirstScreen(MitIdScreen.USER_ID_SCREEN);
 
         mockIfProxyHasResponse(false, false, false);
-        mockIfAuthFinishedAbnormally(false, false, true);
+        mockIfAuthFinishedWithAgentSpecificError(false, false, true);
         mockIfCprScreen(false, false);
 
         // when
         Throwable throwable = catchThrowable(() -> flowController.runScreenFlow());
 
         // then
-        assertThat(throwable).isEqualTo(AUTH_FINISHED_ABNORMALLY);
+        assertThat(throwable).isEqualTo(AUTH_FINISHED_WITH_AGENT_SPECIFIC_ERROR);
 
         verify(userIdStep).enterUserId();
         verify(secondFactorStep).perform2FA();
@@ -150,16 +151,40 @@ public class MitIdScreenFlowControllerTest {
     }
 
     @Test
-    public void should_enter_cpr_screen_and_detect_authentication_finished_normally() {
+    public void should_throw_illegal_state_when_agent_specific_error_is_not_handled() {
+        // given
+        doNothing()
+                .when(mitIdAuthenticator)
+                .handleAuthenticationFinishedWithAgentSpecificError(driverService);
+        mockFirstScreen(MitIdScreen.USER_ID_SCREEN);
+
+        mockIfProxyHasResponse(false, false, false);
+        mockIfAuthFinishedWithAgentSpecificError(false, false, true);
+        mockIfCprScreen(false, false);
+
+        // when
+        Throwable throwable = catchThrowable(() -> flowController.runScreenFlow());
+
+        // then
+        assertThat(throwable).isInstanceOf(IllegalStateException.class);
+
+        verify(userIdStep).enterUserId();
+        verify(secondFactorStep).perform2FA();
+        verifyNoInteractions(enterCprStep);
+    }
+
+    @Test
+    public void should_enter_cpr_screen_and_detect_authentication_finished() {
         // given
         mockFirstScreen(MitIdScreen.USER_ID_SCREEN);
 
         mockIfProxyHasResponse(false, false, false);
-        mockIfAuthFinishedAbnormally(false, false, false);
+        mockIfAuthFinishedWithAgentSpecificError(false, false, false);
         mockIfCprScreen(false, false, true);
+        mockIfCprScreen(false);
 
         mockIfProxyHasResponse(false, true);
-        mockIfAuthFinishedAbnormally(false);
+        mockIfAuthFinishedWithAgentSpecificError(false);
 
         // when
         flowController.runScreenFlow();
@@ -171,22 +196,23 @@ public class MitIdScreenFlowControllerTest {
     }
 
     @Test
-    public void should_enter_cpr_screen_and_detect_authentication_finished_abnormally() {
+    public void should_enter_cpr_screen_and_detect_agent_specific_error() {
         // given
         mockFirstScreen(MitIdScreen.USER_ID_SCREEN);
 
         mockIfProxyHasResponse(false, false, false);
-        mockIfAuthFinishedAbnormally(false, false, false);
+        mockIfAuthFinishedWithAgentSpecificError(false, false, false);
         mockIfCprScreen(false, false, true);
+        mockIfCprScreen(false);
 
         mockIfProxyHasResponse(false, false);
-        mockIfAuthFinishedAbnormally(false, true);
+        mockIfAuthFinishedWithAgentSpecificError(false, true);
 
         // when
         Throwable throwable = catchThrowable(() -> flowController.runScreenFlow());
 
         // then
-        assertThat(throwable).isEqualTo(AUTH_FINISHED_ABNORMALLY);
+        assertThat(throwable).isEqualTo(AUTH_FINISHED_WITH_AGENT_SPECIFIC_ERROR);
 
         verify(userIdStep).enterUserId();
         verify(secondFactorStep).perform2FA();
@@ -200,13 +226,7 @@ public class MitIdScreenFlowControllerTest {
 
         mockIfProxyHasResponse(false, false, false, false);
         mockIfCprScreen(false, false, false, true);
-
-        mockIfProxyHasResponse(nCopies(WAIT_TO_GIVE_CPR_SCREEN_TIME_TO_EXIT, false));
-        mockIfAuthFinishedAbnormally(nCopies(WAIT_TO_GIVE_CPR_SCREEN_TIME_TO_EXIT, false));
-
-        mockIfProxyHasResponse(false);
-        mockIfAuthFinishedAbnormally(false);
-        mockIfCprScreen(true);
+        mockIfCprScreen(nCopies(CPR_SCREEN_EXIT_TIMEOUT, true));
 
         // when
         Throwable throwable = catchThrowable(() -> flowController.runScreenFlow());
@@ -247,7 +267,7 @@ public class MitIdScreenFlowControllerTest {
                         MitIdScreenQuery.builder()
                                 .searchForExpectedScreens(MitIdScreen.USER_ID_SCREEN)
                                 .searchForExpectedScreens(MitIdScreen.SECOND_FACTOR_SCREENS)
-                                .searchForSeconds(WAIT_FOR_FIRST_AUTHENTICATION_SCREEN)
+                                .searchForSeconds(FIRST_AUTHENTICATION_SCREEN_SEARCH_TIMEOUT)
                                 .build()))
                 .thenReturn(screen);
     }
@@ -262,17 +282,23 @@ public class MitIdScreenFlowControllerTest {
                 .thenAnswer(new ReturnsElementsOf(ifProxyHasResponseValues.getAllValues()));
     }
 
-    private void mockIfAuthFinishedAbnormally(Boolean... values) {
-        mockIfAuthFinishedAbnormally(asList(values));
+    private void mockIfAuthFinishedWithAgentSpecificError(Boolean... values) {
+        mockIfAuthFinishedWithAgentSpecificError(asList(values));
     }
 
-    private void mockIfAuthFinishedAbnormally(List<Boolean> values) {
-        ifAuthFinishedAbnormallyValues.add(values);
+    private void mockIfAuthFinishedWithAgentSpecificError(List<Boolean> values) {
+        ifAuthFinishedWithAgentSpecificErrorValues.add(values);
         when(mitIdAuthenticator.isAuthenticationFinishedWithAgentSpecificError(driverService))
-                .thenAnswer(new ReturnsElementsOf(ifAuthFinishedAbnormallyValues.getAllValues()));
+                .thenAnswer(
+                        new ReturnsElementsOf(
+                                ifAuthFinishedWithAgentSpecificErrorValues.getAllValues()));
     }
 
     private void mockIfCprScreen(Boolean... values) {
+        mockIfCprScreen(asList(values));
+    }
+
+    private void mockIfCprScreen(List<Boolean> values) {
         ifCprScreenValues.add(values);
         when(screensManager.trySearchForFirstScreen(
                         MitIdScreenQuery.builder()

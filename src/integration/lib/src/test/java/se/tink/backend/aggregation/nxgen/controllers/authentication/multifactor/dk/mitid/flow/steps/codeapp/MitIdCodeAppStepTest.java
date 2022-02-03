@@ -6,8 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_FOR_CODE_APP_POLLING_RESULTS;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_FOR_CODE_APP_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.CODE_APP_POLLING_RESULT_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.CODE_APP_SCREEN_SEARCH_TIMEOUT;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -144,12 +144,12 @@ public class MitIdCodeAppStepTest {
     }
 
     private void mockPollingResult(@Nullable MitIdCodeAppPollingResult pollingResult) {
-        when(pollingProxyListener.waitForResult(WAIT_FOR_CODE_APP_POLLING_RESULTS))
+        when(pollingProxyListener.waitForResult(CODE_APP_POLLING_RESULT_TIMEOUT))
                 .thenReturn(Optional.ofNullable(pollingResult));
     }
 
     private void verifyPollsAppResult() {
-        verify(pollingProxyListener).waitForResult(WAIT_FOR_CODE_APP_POLLING_RESULTS);
+        verify(pollingProxyListener).waitForResult(CODE_APP_POLLING_RESULT_TIMEOUT);
     }
 
     private void mockIsOnCodeAppScreen() {
@@ -161,7 +161,7 @@ public class MitIdCodeAppStepTest {
                 .searchForFirstScreen(
                         MitIdScreenQuery.builder()
                                 .searchForExpectedScreens(MitIdScreen.CODE_APP_SCREEN)
-                                .searchForSeconds(WAIT_FOR_CODE_APP_SCREEN)
+                                .searchForSeconds(CODE_APP_SCREEN_SEARCH_TIMEOUT)
                                 .build());
     }
 

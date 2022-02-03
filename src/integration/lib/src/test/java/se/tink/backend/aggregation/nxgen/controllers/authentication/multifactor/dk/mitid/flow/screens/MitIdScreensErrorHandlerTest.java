@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.mitid.MitIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
@@ -32,16 +32,16 @@ import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult
 public class MitIdScreensErrorHandlerTest {
 
     private WebDriverService driverService;
-    private MitIdLocators locators;
+    private MitIdLocatorsElements locatorsElements;
 
     private MitIdScreensErrorHandler errorHandler;
 
     @Before
     public void setup() {
         driverService = mock(WebDriverService.class);
-        locators = mock(MitIdLocators.class);
+        locatorsElements = mock(MitIdLocatorsElements.class);
 
-        errorHandler = new MitIdScreensErrorHandler(driverService, locators);
+        errorHandler = new MitIdScreensErrorHandler(driverService, locatorsElements);
     }
 
     @Test
@@ -84,7 +84,8 @@ public class MitIdScreensErrorHandlerTest {
             String errorMessage, MitIdError expectedError) {
         // given
         ElementLocator errorElementLocator = mock(ElementLocator.class);
-        when(locators.getElementLocator(LOC_ERROR_NOTIFICATION)).thenReturn(errorElementLocator);
+        when(locatorsElements.getElementLocator(LOC_ERROR_NOTIFICATION))
+                .thenReturn(errorElementLocator);
 
         WebElement errorElement = elementWithTextContent(errorMessage);
         when(driverService.searchForFirstMatchingLocator(any()))
@@ -100,7 +101,8 @@ public class MitIdScreensErrorHandlerTest {
         verify(driverService)
                 .searchForFirstMatchingLocator(
                         ElementsSearchQuery.builder()
-                                .searchFor(locators.getElementLocator(LOC_ERROR_NOTIFICATION))
+                                .searchFor(
+                                        locatorsElements.getElementLocator(LOC_ERROR_NOTIFICATION))
                                 .searchOnlyOnce()
                                 .build());
     }
@@ -172,7 +174,8 @@ public class MitIdScreensErrorHandlerTest {
             MitIdScreenQuery query, String errorScreenText, String expectedExceptionMessage) {
         // given
         ElementLocator errorElementLocator = mock(ElementLocator.class);
-        when(locators.getElementLocator(LOC_ERROR_NOTIFICATION)).thenReturn(errorElementLocator);
+        when(locatorsElements.getElementLocator(LOC_ERROR_NOTIFICATION))
+                .thenReturn(errorElementLocator);
 
         WebElement errorElement = elementWithTextContent(errorScreenText);
         when(driverService.searchForFirstMatchingLocator(any()))

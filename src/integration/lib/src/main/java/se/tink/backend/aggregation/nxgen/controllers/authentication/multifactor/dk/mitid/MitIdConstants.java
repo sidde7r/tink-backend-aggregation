@@ -14,21 +14,21 @@ public class MitIdConstants {
     public static final LogTag MIT_ID_LOG_TAG = LogTag.from("[MitID]");
 
     @UtilityClass
+    public static class Timeouts {
+        public static final int FIRST_AUTHENTICATION_SCREEN_SEARCH_TIMEOUT = 20;
+        public static final int SECOND_FACTOR_SCREEN_SEARCH_TIMEOUT = 10;
+        public static final int CODE_APP_SCREEN_SEARCH_TIMEOUT = 10;
+        public static final int CODE_APP_POLLING_RESULT_TIMEOUT = 300;
+        public static final int CHANGE_METHOD_LINK_SEARCH_TIMEOUT = 1;
+        public static final int METHOD_SELECTOR_SCREEN_SEARCH_TIMEOUT = 5;
+        public static final int SELECT_METHOD_BUTTON_SEARCH_TIMEOUT = 2;
+        public static final int HANDLE_CPR_TIMEOUT = 10;
+        public static final int CPR_SCREEN_EXIT_TIMEOUT = 3;
+        public static final int GET_AUTH_RESULT_TIMEOUT = 10;
+    }
+
+    @UtilityClass
     public static class WaitTime {
-        public static final int WAIT_FOR_FIRST_AUTHENTICATION_SCREEN = 20;
-        public static final int WAIT_TO_DETECT_2FA_SCREEN = 10;
-
-        public static final int WAIT_FOR_CODE_APP_SCREEN = 10;
-        public static final int WAIT_FOR_CODE_APP_POLLING_RESULTS = 300;
-
-        public static final int WAIT_TO_CHECK_IF_THERE_IS_CHANGE_METHOD_LINK = 1;
-        public static final int WAIT_FOR_METHOD_SELECTOR_SCREEN = 5;
-        public static final int WAIT_FOR_ANY_SELECT_METHOD_BUTTON = 2;
-
-        public static final int WAIT_TO_CHECK_IF_USER_HAS_TO_ENTER_CPR = 10;
-        public static final int WAIT_TO_GIVE_CPR_SCREEN_TIME_TO_EXIT = 3;
-        public static final int WAIT_TO_CHECK_IF_AUTH_FINISHED = 10;
-
         public static final int WAIT_TO_CHECK_IF_FOUND_SCREEN_WAS_NOT_REPLACED_WITH_ERROR_SCREEN =
                 2;
     }

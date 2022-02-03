@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.MIT_ID_LOG_TAG;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_FOR_FIRST_AUTHENTICATION_SCREEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_TO_CHECK_IF_AUTH_FINISHED;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_TO_CHECK_IF_USER_HAS_TO_ENTER_CPR;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_TO_GIVE_CPR_SCREEN_TIME_TO_EXIT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.CPR_SCREEN_EXIT_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.FIRST_AUTHENTICATION_SCREEN_SEARCH_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.GET_AUTH_RESULT_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.HANDLE_CPR_TIMEOUT;
 
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
@@ -43,19 +43,12 @@ public class MitIdScreenFlowController {
 
     public MitIdAuthenticationResult runScreenFlow() {
         MitIdScreen firstScreen = waitForFirstAuthenticationScreen();
-
         if (firstScreen == MitIdScreen.USER_ID_SCREEN) {
             userIdStep.enterUserId();
         }
         secondFactorStep.perform2FA();
-
-        boolean shouldEnterCpr = hasToEnterCpr();
-        log.info("{} Should enter cpr: {}", MIT_ID_LOG_TAG, shouldEnterCpr);
-        if (shouldEnterCpr) {
-            enterCprStep.enterCpr();
-        }
-
-        return waitForAuthenticationResult(shouldEnterCpr);
+        handleCpr();
+        return getAuthenticationResult();
     }
 
     private MitIdScreen waitForFirstAuthenticationScreen() {
@@ -64,75 +57,66 @@ public class MitIdScreenFlowController {
                         MitIdScreenQuery.builder()
                                 .searchForExpectedScreens(MitIdScreen.USER_ID_SCREEN)
                                 .searchForExpectedScreens(MitIdScreen.SECOND_FACTOR_SCREENS)
-                                .searchForSeconds(WAIT_FOR_FIRST_AUTHENTICATION_SCREEN)
+                                .searchForSeconds(FIRST_AUTHENTICATION_SCREEN_SEARCH_TIMEOUT)
                                 .build());
         log.info("{} First screen detected: {}", MIT_ID_LOG_TAG, screen);
         return screen;
     }
 
-    private boolean hasToEnterCpr() {
-        for (int i = 0; i < WAIT_TO_CHECK_IF_USER_HAS_TO_ENTER_CPR; i++) {
-            boolean authFinished = authFinishProxyFilter.hasResponse();
-            if (authFinished) {
-                log.warn(
-                        "{} Authentication finished with proxy response before CPR",
-                        MIT_ID_LOG_TAG);
-                return false;
+    private void handleCpr() {
+        for (int i = 0; i < HANDLE_CPR_TIMEOUT; i++) {
+            if (isAuthFinished()) {
+                log.info("Auth finished before CPR");
+                return;
             }
-
-            if (mitIdAuthenticator.isAuthenticationFinishedWithAgentSpecificError(driverService)) {
-                log.warn(
-                        "{} Authentication finished with agent specific error before CPR",
-                        MIT_ID_LOG_TAG);
-                mitIdAuthenticator.handleAuthenticationFinishedWithAgentSpecificError(
-                        driverService);
+            if (isAgentSpecificError()) {
+                log.info("Agent specific error before CPR");
+                return;
             }
-
             if (isOnCprScreen()) {
-                return true;
+                enterCprStep.enterCpr();
+                letCprExit();
+                return;
             }
             driverService.sleepFor(1_000);
         }
-
-        // search one more time for CPR, this time throw a screen not found error
-        screensManager.searchForFirstScreen(
-                MitIdScreenQuery.builder()
-                        .searchForExpectedScreens(MitIdScreen.CPR_SCREEN)
-                        .searchOnlyOnce()
-                        .build());
-        return true;
+        throw new IllegalStateException("Authentication not finished and no CPR screen");
     }
 
-    private MitIdAuthenticationResult waitForAuthenticationResult(boolean wasOnCprScreen) {
-        for (int i = 0; i < WAIT_TO_CHECK_IF_AUTH_FINISHED; i++) {
-
-            boolean authFinished = authFinishProxyFilter.hasResponse();
-            if (authFinished) {
-                log.warn(
-                        "{} Authentication finished with proxy response after CPR", MIT_ID_LOG_TAG);
+    private MitIdAuthenticationResult getAuthenticationResult() {
+        for (int i = 0; i < GET_AUTH_RESULT_TIMEOUT; i++) {
+            if (isAuthFinished()) {
                 return MitIdAuthenticationResult.builder()
                         .proxyResponse(authFinishProxyFilter.getResponse())
                         .driverService(driverService)
                         .build();
             }
-
-            if (mitIdAuthenticator.isAuthenticationFinishedWithAgentSpecificError(driverService)) {
-                log.warn(
-                        "{} Authentication finished with agent specific error after CPR",
-                        MIT_ID_LOG_TAG);
+            if (isAgentSpecificError()) {
                 mitIdAuthenticator.handleAuthenticationFinishedWithAgentSpecificError(
                         driverService);
-                break;
+                throw new IllegalStateException("Unhandled agent specific error");
             }
-
-            if (wasOnCprScreen && i > WAIT_TO_GIVE_CPR_SCREEN_TIME_TO_EXIT && isOnCprScreen()) {
-                throw MitIdError.INVALID_CPR.exception();
-            }
-
             driverService.sleepFor(1_000);
         }
-
         throw new IllegalStateException("Did not receive auth finish response from proxy");
+    }
+
+    private boolean isAuthFinished() {
+        return authFinishProxyFilter.hasResponse();
+    }
+
+    private boolean isAgentSpecificError() {
+        return mitIdAuthenticator.isAuthenticationFinishedWithAgentSpecificError(driverService);
+    }
+
+    private void letCprExit() {
+        for (int i = 0; i < CPR_SCREEN_EXIT_TIMEOUT; i++) {
+            if (!isOnCprScreen()) {
+                return;
+            }
+            driverService.sleepFor(1_000);
+        }
+        throw MitIdError.INVALID_CPR.exception();
     }
 
     private boolean isOnCprScreen() {

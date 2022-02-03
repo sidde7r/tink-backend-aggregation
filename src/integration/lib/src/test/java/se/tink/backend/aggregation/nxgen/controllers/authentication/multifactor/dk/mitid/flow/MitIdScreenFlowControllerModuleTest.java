@@ -22,8 +22,8 @@ public class MitIdScreenFlowControllerModuleTest {
         ProxySaveResponseMatcher matcher = mock(ProxySaveResponseMatcher.class);
         when(mitIdAuthenticator.getMatcherForAuthenticationFinishResponse()).thenReturn(matcher);
 
-        MitIdLocators locators = mock(MitIdLocators.class);
-        when(mitIdAuthenticator.getLocators()).thenReturn(locators);
+        MitIdLocatorsElements locatorsElements = mock(MitIdLocatorsElements.class);
+        when(mitIdAuthenticator.getLocatorsElements()).thenReturn(locatorsElements);
 
         // when
         MitIdScreenFlowController flowController =

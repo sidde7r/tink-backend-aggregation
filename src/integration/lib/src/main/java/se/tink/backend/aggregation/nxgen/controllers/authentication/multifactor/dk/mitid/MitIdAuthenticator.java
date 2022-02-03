@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.proxy.ProxySaveResponseMatcher;
 import se.tink.integration.webdriver.service.searchelements.ElementLocator;
@@ -18,7 +18,7 @@ public interface MitIdAuthenticator {
      * Using this method, you can customize the exact {@link ElementLocator} that will be used to
      * find the element marked by specific {@link MitIdLocator}.
      */
-    MitIdLocators getLocators();
+    MitIdLocatorsElements getLocatorsElements();
 
     /**
      * Define a matcher looking for proxy response that will contain some authorization code which

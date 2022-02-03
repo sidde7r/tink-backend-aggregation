@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.stubbing.answers.ReturnsElementsOf;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
@@ -43,7 +43,7 @@ public class MitIdScreensManagerTest {
             new RuntimeException("Unexpected error screen");
 
     private WebDriverService driverService;
-    private MitIdLocators mitIdLocators;
+    private MitIdLocatorsElements mitIdLocatorsElements;
     private MitIdScreensErrorHandler screensErrorHandler;
 
     private MitIdScreensManager screensManager;
@@ -51,7 +51,7 @@ public class MitIdScreensManagerTest {
     @Before
     public void setup() {
         driverService = mock(WebDriverService.class);
-        mitIdLocators = new MitIdLocators();
+        mitIdLocatorsElements = new MitIdLocatorsElements();
 
         screensErrorHandler = mock(MitIdScreensErrorHandler.class);
         when(screensErrorHandler.cannotFindScreenException(any(), any()))
@@ -59,7 +59,8 @@ public class MitIdScreensManagerTest {
         when(screensErrorHandler.unexpectedErrorScreenException(any()))
                 .thenReturn(UNEXPECTED_ERROR_SCREEN_EXCEPTION);
 
-        screensManager = new MitIdScreensManager(driverService, mitIdLocators, screensErrorHandler);
+        screensManager =
+                new MitIdScreensManager(driverService, mitIdLocatorsElements, screensErrorHandler);
     }
 
     /*
@@ -418,12 +419,12 @@ public class MitIdScreensManagerTest {
 
     private List<ElementsSearchResult> screensFoundResult(List<MitIdScreen> screens) {
         return screens.stream()
-                .map(s -> mitIdLocators.getElementLocator(s.getLocatorIdentifyingScreen()))
+                .map(s -> mitIdLocatorsElements.getElementLocator(s.getLocatorIdentifyingScreen()))
                 .map(ElementsSearchResult::of)
                 .collect(Collectors.toList());
     }
 
     private ElementLocator getScreenLocator(MitIdScreen screen) {
-        return mitIdLocators.getElementLocator(screen.getLocatorIdentifyingScreen());
+        return mitIdLocatorsElements.getElementLocator(screen.getLocatorIdentifyingScreen());
     }
 }

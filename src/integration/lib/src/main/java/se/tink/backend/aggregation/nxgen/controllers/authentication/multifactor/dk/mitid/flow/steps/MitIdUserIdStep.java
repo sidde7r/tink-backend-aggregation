@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.fields.MitIdUserIdField;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.integration.webdriver.service.WebDriverService;
@@ -22,13 +22,13 @@ public class MitIdUserIdStep {
     private final SupplementalInformationController supplementalInformationController;
 
     private final WebDriverService driverService;
-    private final MitIdLocators locators;
+    private final MitIdLocatorsElements locatorsElements;
 
     public void enterUserId() {
         log.info("{} Entering user id", MIT_ID_LOG_TAG);
         String userId = askUserForValidUserId();
         setUserIdInput(userId);
-        driverService.clickButton(locators.getElementLocator(LOC_CONTINUE_BUTTON));
+        driverService.clickButton(locatorsElements.getElementLocator(LOC_CONTINUE_BUTTON));
     }
 
     private String askUserForValidUserId() {
@@ -44,6 +44,7 @@ public class MitIdUserIdStep {
     }
 
     public void setUserIdInput(String username) {
-        driverService.setValueToElement(username, locators.getElementLocator(LOC_USERNAME_INPUT));
+        driverService.setValueToElement(
+                username, locatorsElements.getElementLocator(LOC_USERNAME_INPUT));
     }
 }

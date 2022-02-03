@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.fields.MitIdCprField;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.integration.webdriver.service.WebDriverService;
@@ -22,7 +22,7 @@ public class MitIdEnterCprStep {
     private final Catalog catalog;
 
     private final WebDriverService driverService;
-    private final MitIdLocators locators;
+    private final MitIdLocatorsElements locatorsElements;
 
     public void enterCpr() {
         log.info("{} Entering CPR", MIT_ID_LOG_TAG);
@@ -32,7 +32,7 @@ public class MitIdEnterCprStep {
 
     public void enterCpr(String cpr) {
         setCprInput(cpr);
-        driverService.clickButton(locators.getElementLocator(LOC_CPR_BUTTON_OK));
+        driverService.clickButton(locatorsElements.getElementLocator(LOC_CPR_BUTTON_OK));
     }
 
     private String askUserForValidCpr() {
@@ -49,6 +49,6 @@ public class MitIdEnterCprStep {
     }
 
     public void setCprInput(String cpr) {
-        driverService.setValueToElement(cpr, locators.getElementLocator(LOC_CPR_INPUT));
+        driverService.setValueToElement(cpr, locatorsElements.getElementLocator(LOC_CPR_INPUT));
     }
 }

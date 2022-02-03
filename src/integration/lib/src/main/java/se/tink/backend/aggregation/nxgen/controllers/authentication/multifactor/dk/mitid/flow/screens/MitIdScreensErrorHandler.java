@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.mitid.MitIdError;
 import se.tink.backend.aggregation.agents.exceptions.mitid.MitIdException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 
@@ -20,7 +20,7 @@ import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
 public class MitIdScreensErrorHandler {
 
     private final WebDriverService driverService;
-    private final MitIdLocators locators;
+    private final MitIdLocatorsElements locatorsElements;
 
     private static final String CANNOT_FIND_SCREEN_EXCEPTION_FORMAT =
             "\nCould not find expected screens"
@@ -60,7 +60,8 @@ public class MitIdScreensErrorHandler {
         return driverService
                 .searchForFirstMatchingLocator(
                         ElementsSearchQuery.builder()
-                                .searchFor(locators.getElementLocator(LOC_ERROR_NOTIFICATION))
+                                .searchFor(
+                                        locatorsElements.getElementLocator(LOC_ERROR_NOTIFICATION))
                                 .searchOnlyOnce()
                                 .build())
                 .getFirstFoundElement()

@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearchQuery;
@@ -23,7 +23,7 @@ import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult
 public class MitIdScreensManager {
 
     private final WebDriverService driverService;
-    private final MitIdLocators mitIdLocators;
+    private final MitIdLocatorsElements mitIdLocatorsElements;
     private final MitIdScreensErrorHandler screensErrorHandler;
 
     /**
@@ -135,7 +135,7 @@ public class MitIdScreensManager {
                 .map(
                         searchResult -> {
                             MitIdLocator locator =
-                                    mitIdLocators.getMitIdLocatorByElementLocator(
+                                    mitIdLocatorsElements.getMitIdLocatorByElementLocator(
                                             searchResult.getLocatorFound());
                             return MitIdScreen.getByMitIdLocator(locator);
                         })
@@ -151,7 +151,7 @@ public class MitIdScreensManager {
     private List<ElementLocator> getScreenLocators(List<MitIdScreen> screens) {
         return screens.stream()
                 .map(MitIdScreen::getLocatorIdentifyingScreen)
-                .map(mitIdLocators::getElementLocator)
+                .map(mitIdLocatorsElements::getElementLocator)
                 .collect(Collectors.toList());
     }
 }

@@ -21,10 +21,10 @@ public enum MitId2FAMethod {
 
     private final MitIdLocator locatorToChooseMethodOnSelectorScreen;
 
-    public static List<ElementLocator> getAllLocators(MitIdLocators locators) {
+    public static List<ElementLocator> getAllLocators(MitIdLocatorsElements locatorsElements) {
         return Stream.of(MitId2FAMethod.values())
                 .map(MitId2FAMethod::getLocatorToChooseMethodOnSelectorScreen)
-                .map(locators::getElementLocator)
+                .map(locatorsElements::getElementLocator)
                 .collect(Collectors.toList());
     }
 

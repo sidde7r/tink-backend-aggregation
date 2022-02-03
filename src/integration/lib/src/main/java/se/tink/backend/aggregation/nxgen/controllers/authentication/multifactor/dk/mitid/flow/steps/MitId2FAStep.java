@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.MIT_ID_LOG_TAG;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_FOR_ANY_SELECT_METHOD_BUTTON;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_FOR_METHOD_SELECTOR_SCREEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_TO_CHECK_IF_THERE_IS_CHANGE_METHOD_LINK;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_TO_DETECT_2FA_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.CHANGE_METHOD_LINK_SEARCH_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.METHOD_SELECTOR_SCREEN_SEARCH_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.SECOND_FACTOR_SCREEN_SEARCH_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.SELECT_METHOD_BUTTON_SEARCH_TIMEOUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator.LOC_CHANGE_AUTH_METHOD_LINK;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator.LOC_CONTINUE_BUTTON;
 
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.mitid.MitIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitId2FAMethod;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreenQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.screens.MitIdScreensManager;
@@ -31,7 +31,7 @@ import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult
 public class MitId2FAStep {
 
     private final WebDriverService driverService;
-    private final MitIdLocators locators;
+    private final MitIdLocatorsElements locatorsElements;
     private final MitIdScreensManager screensManager;
     private final MitIdCodeAppStep codeAppStep;
 
@@ -62,7 +62,7 @@ public class MitId2FAStep {
         return screensManager.searchForFirstScreen(
                 MitIdScreenQuery.builder()
                         .searchForExpectedScreens(MitIdScreen.SECOND_FACTOR_SCREENS)
-                        .searchForSeconds(WAIT_TO_DETECT_2FA_SCREEN)
+                        .searchForSeconds(SECOND_FACTOR_SCREEN_SEARCH_TIMEOUT)
                         .build());
     }
 
@@ -88,15 +88,17 @@ public class MitId2FAStep {
         }
 
         selectMethod(MitId2FAMethod.CODE_APP_METHOD);
-        driverService.clickButton(locators.getElementLocator(LOC_CONTINUE_BUTTON));
+        driverService.clickButton(locatorsElements.getElementLocator(LOC_CONTINUE_BUTTON));
     }
 
     public boolean hasLinkToChangeMethod() {
         return driverService
                 .searchForFirstMatchingLocator(
                         ElementsSearchQuery.builder()
-                                .searchFor(locators.getElementLocator(LOC_CHANGE_AUTH_METHOD_LINK))
-                                .searchForSeconds(WAIT_TO_CHECK_IF_THERE_IS_CHANGE_METHOD_LINK)
+                                .searchFor(
+                                        locatorsElements.getElementLocator(
+                                                LOC_CHANGE_AUTH_METHOD_LINK))
+                                .searchForSeconds(CHANGE_METHOD_LINK_SEARCH_TIMEOUT)
                                 .build())
                 .isNotEmpty();
     }
@@ -105,27 +107,27 @@ public class MitId2FAStep {
         screensManager.searchForFirstScreen(
                 MitIdScreenQuery.builder()
                         .searchForExpectedScreens(MitIdScreen.METHOD_SELECTOR_SCREEN)
-                        .searchForSeconds(WAIT_FOR_METHOD_SELECTOR_SCREEN)
+                        .searchForSeconds(METHOD_SELECTOR_SCREEN_SEARCH_TIMEOUT)
                         .build());
     }
 
     public void clickLinkToChangeMethod() {
-        driverService.clickButton(locators.getElementLocator(LOC_CHANGE_AUTH_METHOD_LINK));
+        driverService.clickButton(locatorsElements.getElementLocator(LOC_CHANGE_AUTH_METHOD_LINK));
     }
 
     public List<MitId2FAMethod> getAvailable2FAMethods() {
         List<ElementsSearchResult> searchResults =
                 driverService.searchForAllMatchingLocators(
                         ElementsSearchQuery.builder()
-                                .searchFor(MitId2FAMethod.getAllLocators(locators))
-                                .searchForSeconds(WAIT_FOR_ANY_SELECT_METHOD_BUTTON)
+                                .searchFor(MitId2FAMethod.getAllLocators(locatorsElements))
+                                .searchForSeconds(SELECT_METHOD_BUTTON_SEARCH_TIMEOUT)
                                 .build());
         return searchResults.stream()
                 .map(
                         result -> {
                             ElementLocator locator = result.getLocatorFound();
                             MitIdLocator mitIdLocator =
-                                    locators.getMitIdLocatorByElementLocator(locator);
+                                    locatorsElements.getMitIdLocatorByElementLocator(locator);
                             return MitId2FAMethod.getByMitIdLocator(mitIdLocator)
                                     .orElseThrow(
                                             () ->
@@ -138,6 +140,7 @@ public class MitId2FAStep {
 
     public void selectMethod(MitId2FAMethod method) {
         driverService.clickButton(
-                locators.getElementLocator(method.getLocatorToChooseMethodOnSelectorScreen()));
+                locatorsElements.getElementLocator(
+                        method.getLocatorToChooseMethodOnSelectorScreen()));
     }
 }

@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocators;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.MitIdLocatorsElements;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.proxy.ProxySaveResponseMatcher;
@@ -23,8 +23,8 @@ public class MitIdAuthenticationControllerProviderTest {
         ProxySaveResponseMatcher matcher = mock(ProxySaveResponseMatcher.class);
         when(mitIdAuthenticator.getMatcherForAuthenticationFinishResponse()).thenReturn(matcher);
 
-        MitIdLocators locators = mock(MitIdLocators.class);
-        when(mitIdAuthenticator.getLocators()).thenReturn(locators);
+        MitIdLocatorsElements locatorsElements = mock(MitIdLocatorsElements.class);
+        when(mitIdAuthenticator.getLocatorsElements()).thenReturn(locatorsElements);
 
         // when
         MitIdAuthenticationController authenticationController =

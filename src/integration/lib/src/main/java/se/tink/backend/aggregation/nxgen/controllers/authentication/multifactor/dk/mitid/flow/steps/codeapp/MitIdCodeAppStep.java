@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.flow.steps.codeapp;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.MIT_ID_LOG_TAG;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_FOR_CODE_APP_POLLING_RESULTS;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.WaitTime.WAIT_FOR_CODE_APP_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.CODE_APP_POLLING_RESULT_TIMEOUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdConstants.Timeouts.CODE_APP_SCREEN_SEARCH_TIMEOUT;
 
 import com.google.inject.Inject;
 import java.util.List;
@@ -38,7 +38,7 @@ public class MitIdCodeAppStep {
         screensManager.searchForFirstScreen(
                 MitIdScreenQuery.builder()
                         .searchForExpectedScreens(MitIdScreen.CODE_APP_SCREEN)
-                        .searchForSeconds(WAIT_FOR_CODE_APP_SCREEN)
+                        .searchForSeconds(CODE_APP_SCREEN_SEARCH_TIMEOUT)
                         .build());
     }
 
@@ -57,7 +57,7 @@ public class MitIdCodeAppStep {
         log.info("{} Awaiting code app polling response", MIT_ID_LOG_TAG);
         MitIdCodeAppPollingResult pollingResult =
                 pollingProxyFilter
-                        .waitForResult(WAIT_FOR_CODE_APP_POLLING_RESULTS)
+                        .waitForResult(CODE_APP_POLLING_RESULT_TIMEOUT)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(

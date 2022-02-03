@@ -30,7 +30,7 @@ public class MitIdScreenFlowControllerModule extends AbstractModule {
         bind(StatusUpdater.class).toInstance(statusUpdater);
         bind(SupplementalInformationController.class).toInstance(supplementalInformationController);
         bind(WebDriverService.class).toInstance(driverService);
-        bind(MitIdLocators.class).toInstance(mitIdAuthenticator.getLocators());
+        bind(MitIdLocatorsElements.class).toInstance(mitIdAuthenticator.getLocatorsElements());
         bind(MitIdAuthenticator.class).toInstance(mitIdAuthenticator);
 
         ProxySaveResponseFilter proxySaveResponseFilter =
