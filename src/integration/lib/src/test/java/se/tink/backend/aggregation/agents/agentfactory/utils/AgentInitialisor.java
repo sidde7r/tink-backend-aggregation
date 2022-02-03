@@ -155,7 +155,8 @@ public class AgentInitialisor {
                         context.getAppId(),
                         "clusterIdForSecretsService",
                         context.getCertId(),
-                        credentialsRequest.getCallbackUri());
+                        credentialsRequest.getCallbackUri(),
+                        false);
 
         doReturn(agentConfigurationController).when(context).getAgentConfigurationController();
         doReturn(new FakeLogMasker()).when(context).getLogMasker();

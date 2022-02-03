@@ -187,7 +187,8 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
                 DEFAULT_APP_ID,
                 "oxford-preprod",
                 "DEFAULT",
-                null);
+                null,
+                false);
     }
 
     @Provides
