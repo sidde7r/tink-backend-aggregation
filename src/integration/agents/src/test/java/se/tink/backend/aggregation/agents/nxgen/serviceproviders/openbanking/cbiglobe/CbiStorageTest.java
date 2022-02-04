@@ -74,4 +74,17 @@ public class CbiStorageTest {
         assertThat(temporaryStorage.get("pages-" + accountIdToSave, Integer.class))
                 .hasValue(numberOfPagesToSave);
     }
+
+    @Test
+    public void shouldSaveScaLinkForPaymentsInSessionStorage() {
+        // given
+        String linkToSave = "super link 1234";
+
+        // when
+        cbiStorage.saveScaLinkForPayments(linkToSave);
+
+        // then
+        assertThat(cbiStorage.getScaLinkForPayments()).isEqualTo(linkToSave);
+        assertThat(sessionStorage.get("sca-link", String.class)).hasValue(linkToSave);
+    }
 }

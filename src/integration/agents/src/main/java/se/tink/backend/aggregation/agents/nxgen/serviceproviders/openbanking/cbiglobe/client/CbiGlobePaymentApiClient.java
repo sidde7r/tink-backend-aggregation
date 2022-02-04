@@ -15,18 +15,17 @@ import se.tink.libraries.payment.rpc.Payment;
 @RequiredArgsConstructor
 public class CbiGlobePaymentApiClient {
 
-    private final CbiGlobeRequestBuilder cbiRequestBuilder;
+    private final CbiGlobeHttpClient client;
     private final CbiUrlProvider urlProvider;
     private final CbiGlobeProviderConfiguration providerConfiguration;
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, Payment payment) {
-        String okFullRedirectUrl = cbiRequestBuilder.buildRedirectUri(true);
-        String nokFullRedirectUrl = cbiRequestBuilder.buildRedirectUri(false);
+        String okFullRedirectUrl = client.buildRedirectUri(true);
+        String nokFullRedirectUrl = client.buildRedirectUri(false);
 
         RequestBuilder requestBuilder =
-                cbiRequestBuilder
-                        .createRequestInSession(
+                client.createRequestInSessionWithPsuIp(
                                 PaymentUrlUtil.fillCommonPaymentParams(
                                         urlProvider.getPaymentsUrl(), payment))
                         .header(
@@ -36,8 +35,8 @@ public class CbiGlobePaymentApiClient {
                         .header(HeaderKeys.TPP_REDIRECT_URI, okFullRedirectUrl)
                         .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokFullRedirectUrl);
 
-        return cbiRequestBuilder.makeRequest(
-                cbiRequestBuilder.addPsuIpAddressHeader(requestBuilder),
+        return client.makeRequest(
+                requestBuilder,
                 HttpMethod.POST,
                 CreatePaymentResponse.class,
                 RequestContext.PAYMENT_CREATE,
@@ -46,16 +45,15 @@ public class CbiGlobePaymentApiClient {
 
     public CreatePaymentResponse getPayment(Payment payment) {
         RequestBuilder requestBuilder =
-                cbiRequestBuilder
-                        .createRequestInSession(
+                client.createRequestInSessionWithPsuIp(
                                 PaymentUrlUtil.fillCommonPaymentParams(
                                         urlProvider.getFetchPaymentUrl(), payment))
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode());
 
-        return cbiRequestBuilder.makeRequest(
-                cbiRequestBuilder.addPsuIpAddressHeader(requestBuilder),
+        return client.makeRequest(
+                requestBuilder,
                 HttpMethod.GET,
                 CreatePaymentResponse.class,
                 RequestContext.PAYMENT_GET,
@@ -64,11 +62,11 @@ public class CbiGlobePaymentApiClient {
 
     public CreatePaymentResponse getPaymentStatus(Payment payment) {
         RequestBuilder requestBuilder =
-                cbiRequestBuilder.createRequestInSession(
+                client.createRequestInSession(
                         PaymentUrlUtil.fillCommonPaymentParams(
                                 urlProvider.getFetchPaymentStatusUrl(), payment));
 
-        return cbiRequestBuilder.makeRequest(
+        return client.makeRequest(
                 requestBuilder,
                 HttpMethod.GET,
                 CreatePaymentResponse.class,

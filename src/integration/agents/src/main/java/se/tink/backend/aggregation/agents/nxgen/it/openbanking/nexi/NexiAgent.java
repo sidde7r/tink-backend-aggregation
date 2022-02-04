@@ -20,6 +20,6 @@ public final class NexiAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeFetcherApiClient buildFetcherApiClient() {
-        return new NexiFetcherApiClient(cbiRequestBuilder, urlProvider, storage);
+        return new NexiFetcherApiClient(cbiGlobeHttpClient, urlProvider, storage);
     }
 }

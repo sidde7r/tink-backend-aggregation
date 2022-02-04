@@ -31,7 +31,7 @@ Content-Type: application/json
 Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
 x-request-id: 00000000-0000-4000-0000-000000000000
 aspsp-code: 01030
-date: Fri, 10 Apr 1992 12:00:00 UTC
+date: Thu, 09 Apr 1992 10:00:00 UTC
 aspsp-product-code: retail
 tpp-redirect-preferred: true
 tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
@@ -73,7 +73,7 @@ Content-Type: application/json
 Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
 x-request-id: 00000000-0000-4000-0000-000000000000
 aspsp-code: 01030
-date: Fri, 10 Apr 1992 12:00:00 UTC
+date: Thu, 09 Apr 1992 10:00:00 UTC
 
 -----------------------------------------------------------------------------------
 RESPONSE 3

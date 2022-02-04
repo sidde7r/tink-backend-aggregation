@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiAccountFetchingStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiConsentCreationStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiConsentRediredtAuthorizationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiConsentRedirectAuthorizationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiFinishAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CbiConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
@@ -19,7 +19,7 @@ public class BancoPostaAuthenticator implements TypedAuthenticator {
 
     private final CbiConsentCreationStep consentCreationStep;
     private final BancoPostaScaMethodSelectionStep scaMethodSelectionStep;
-    private final CbiConsentRediredtAuthorizationStep redirectAuthorizationStep;
+    private final CbiConsentRedirectAuthorizationStep redirectAuthorizationStep;
     private final CbiFinishAuthenticationStep finishAuthenticationStep;
     private final CbiAccountFetchingStep accountFetchingStep;
 
@@ -37,7 +37,7 @@ public class BancoPostaAuthenticator implements TypedAuthenticator {
                 new BancoPostaScaMethodSelectionStep(
                         authApiClient, urlProvider.getUpdateConsentsRawUrl());
         redirectAuthorizationStep =
-                new CbiConsentRediredtAuthorizationStep(
+                new CbiConsentRedirectAuthorizationStep(
                         supplementalInformationController, authApiClient, storage);
         finishAuthenticationStep =
                 new CbiFinishAuthenticationStep(authApiClient, credentials, storage);

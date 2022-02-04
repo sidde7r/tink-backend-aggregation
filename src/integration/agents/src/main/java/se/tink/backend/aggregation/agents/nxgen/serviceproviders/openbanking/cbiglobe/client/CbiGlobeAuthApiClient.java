@@ -20,24 +20,23 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @RequiredArgsConstructor
 public class CbiGlobeAuthApiClient {
 
-    private final CbiGlobeRequestBuilder cbiRequestBuilder;
+    private final CbiGlobeHttpClient client;
     private final CbiGlobeProviderConfiguration providerConfiguration;
     private final CbiUrlProvider urlProvider;
 
     public CbiConsentResponse createConsent(ConsentRequest consentRequest) {
-        String okFullRedirectUrl = cbiRequestBuilder.buildRedirectUri(true);
-        String nokFullRedirectUrl = cbiRequestBuilder.buildRedirectUri(false);
+        String okFullRedirectUrl = client.buildRedirectUri(true);
+        String nokFullRedirectUrl = client.buildRedirectUri(false);
 
         RequestBuilder request =
-                cbiRequestBuilder
-                        .createRequestInSession(urlProvider.getConsentsUrl())
+                client.createRequestInSession(urlProvider.getConsentsUrl())
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode())
                         .header(HeaderKeys.TPP_REDIRECT_URI, okFullRedirectUrl)
                         .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokFullRedirectUrl);
 
-        return cbiRequestBuilder.makeRequest(
+        return client.makeRequest(
                 request,
                 HttpMethod.POST,
                 CbiConsentResponse.class,
@@ -47,10 +46,10 @@ public class CbiGlobeAuthApiClient {
 
     public CbiConsentStatusResponse fetchConsentStatus(String consentId) {
         RequestBuilder requestBuilder =
-                cbiRequestBuilder.createRequestInSession(
+                client.createRequestInSession(
                         urlProvider.getConsentsStatusUrl().parameter(IdTags.CONSENT_ID, consentId));
 
-        return cbiRequestBuilder.makeRequest(
+        return client.makeRequest(
                 requestBuilder,
                 HttpMethod.GET,
                 CbiConsentStatusResponse.class,
@@ -60,12 +59,12 @@ public class CbiGlobeAuthApiClient {
 
     public ConsentDetailsResponse fetchConsentDetails(String consentId) {
         RequestBuilder requestBuilder =
-                cbiRequestBuilder.createRequestInSession(
+                client.createRequestInSession(
                         urlProvider
                                 .getConsentsDetailsUrl()
                                 .parameter(IdTags.CONSENT_ID, consentId));
 
-        return cbiRequestBuilder.makeRequest(
+        return client.makeRequest(
                 requestBuilder,
                 HttpMethod.GET,
                 ConsentDetailsResponse.class,
@@ -74,9 +73,8 @@ public class CbiGlobeAuthApiClient {
     }
 
     public CbiConsentResponse selectScaMethod(URL url, SelectAuthorizationMethodRequest body) {
-        return cbiRequestBuilder.makeRequest(
-                cbiRequestBuilder
-                        .createRequestInSession(url)
+        return client.makeRequest(
+                client.createRequestInSession(url)
                         .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA),
                 HttpMethod.PUT,
                 CbiConsentResponse.class,
@@ -86,9 +84,8 @@ public class CbiGlobeAuthApiClient {
 
     public <T> T updatePsuCredentials(
             URL url, UpdatePsuCredentialsRequest body, Class<T> responseClass) {
-        return cbiRequestBuilder.makeRequest(
-                cbiRequestBuilder
-                        .createRequestInSession(url)
+        return client.makeRequest(
+                client.createRequestInSession(url)
                         .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA),
                 HttpMethod.PUT,
                 responseClass,

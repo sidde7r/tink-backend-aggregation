@@ -63,14 +63,14 @@ public final class IccreaAgent extends CbiGlobeAgent {
                 new IccreaPaymentExecutor(
                         authApiClient,
                         new CbiGlobePaymentApiClient(
-                                cbiRequestBuilder, urlProvider, providerConfiguration),
+                                cbiGlobeHttpClient, urlProvider, providerConfiguration),
                         supplementalInformationHelper,
-                        sessionStorage,
                         strongAuthenticationState,
                         provider,
                         new UserInteractions(supplementalInformationController, catalog),
                         urlProvider,
-                        credentials);
+                        credentials,
+                        storage);
         return Optional.of(
                 new PaymentController(
                         paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));

@@ -167,7 +167,7 @@ public class AccountEntityTest {
         // then
         assertThatCode(() -> accountEntity.toTinkAccount(balancesResponse))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Balance cannot be found.");
+                .hasMessage("Balance could not be found.");
     }
 
     private BalancesResponse givenAllPossibleBalances() {

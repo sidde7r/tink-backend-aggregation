@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -12,15 +11,11 @@ public final class CbiGlobeConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String BALANCE_NOT_FOUND = "Balance cannot be found.";
+        public static final String BALANCE_NOT_FOUND = "Balance could not be found.";
         public static final String MAPPING =
                 "Cannot map payment status: %s to Tink payment status.";
         public static final String RESOURCE_UNKNOWN =
                 "The addressed resource is unknown relative to the TPP";
-        public static final String CBI_BAD_GATEWAY = "Controllo titolarita' conto fallito";
         public static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
     }
 
@@ -28,18 +23,9 @@ public final class CbiGlobeConstants {
         public static final String BASE_URL = "https://cbiglobeopenbankingapigateway.nexi.it";
     }
 
-    public static class StorageKeys {
-        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
-        public static final String CONSENT_ID = "consent-id";
-        public static final String SCA_URL = "sca_url";
-        public static final String ACCOUNTS = "accounts";
-        public static final String LINK = "link";
-    }
-
     public static class QueryKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String STATE = "state";
-        public static final String CODE = "code";
         public static final String BOOKING_STATUS = "booking_status";
         public static final String DATE_FROM = "date_from";
         public static final String DATE_TO = "date_to";
@@ -70,7 +56,6 @@ public final class CbiGlobeConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
         public static final String OPERATION_NAME = "operation-name";
-        public static final String CODE = "code";
     }
 
     public static class HeaderValues {
@@ -84,7 +69,6 @@ public final class CbiGlobeConstants {
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
-        public static final String PAYMENT_ID = "payment-id";
     }
 
     public static class PSUAuthenticationStatus {
@@ -98,11 +82,6 @@ public final class CbiGlobeConstants {
 
     public static class PaymentStep {
         public static final String IN_PROGRESS = "IN_PROGRESS";
-    }
-
-    public static class PaymentProduct {
-        public static final String SEPA_CREDIT_TRANSFERS = "sepa-credit-transfers";
-        public static final String INSTANT_SEPA_CREDIT_TRANSFERS = "instant-sepa-credit-transfers";
     }
 
     public static class HttpClient {
@@ -150,13 +129,4 @@ public final class CbiGlobeConstants {
                             "ONDP",
                             "SVGS")
                     .build();
-
-    public enum MessageCodes {
-        RESOURCE_UNKNOWN,
-        CONSENT_INVALID,
-        CONSENT_EXPIRED,
-        NO_ACCESS_TOKEN_IN_STORAGE,
-        CONSENT_ALREADY_IN_USE,
-        PSU_CREDENTIALS_INVALID
-    }
 }

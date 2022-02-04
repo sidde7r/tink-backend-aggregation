@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class CbiConsentRediredtAuthorizationStepTest {
+public class CbiConsentRedirectAuthorizationStepTest {
 
     private static final CbiConsentResponse CONSENT_RESPONSE =
             TestDataReader.readFromFile(
@@ -38,7 +38,7 @@ public class CbiConsentRediredtAuthorizationStepTest {
     private CbiGlobeAuthApiClient mockAuthApiClient;
     private CbiStorage mockStorage;
 
-    private CbiConsentRediredtAuthorizationStep consentRediredtAuthorizationStep;
+    private CbiConsentRedirectAuthorizationStep consentRedirectAuthorizationStep;
 
     @Before
     public void setup() {
@@ -47,8 +47,8 @@ public class CbiConsentRediredtAuthorizationStepTest {
         mockStorage = mock(CbiStorage.class);
         when(mockStorage.getConsentId()).thenReturn(TEST_CONSENT_ID);
 
-        consentRediredtAuthorizationStep =
-                new CbiConsentRediredtAuthorizationStep(
+        consentRedirectAuthorizationStep =
+                new CbiConsentRedirectAuthorizationStep(
                         mockSupplementalInformationController, mockAuthApiClient, mockStorage);
     }
 
@@ -62,7 +62,7 @@ public class CbiConsentRediredtAuthorizationStepTest {
         // when
         Throwable throwable =
                 catchThrowable(
-                        () -> consentRediredtAuthorizationStep.authorizeConsent(CONSENT_RESPONSE));
+                        () -> consentRedirectAuthorizationStep.authorizeConsent(CONSENT_RESPONSE));
 
         // then
         assertThat(throwable)
@@ -84,7 +84,7 @@ public class CbiConsentRediredtAuthorizationStepTest {
         // when
         Throwable throwable =
                 catchThrowable(
-                        () -> consentRediredtAuthorizationStep.authorizeConsent(CONSENT_RESPONSE));
+                        () -> consentRedirectAuthorizationStep.authorizeConsent(CONSENT_RESPONSE));
 
         // then
         assertThat(throwable)
@@ -112,7 +112,7 @@ public class CbiConsentRediredtAuthorizationStepTest {
         // when
         Throwable throwable =
                 catchThrowable(
-                        () -> consentRediredtAuthorizationStep.authorizeConsent(CONSENT_RESPONSE));
+                        () -> consentRedirectAuthorizationStep.authorizeConsent(CONSENT_RESPONSE));
 
         // then
         assertThat(throwable)
@@ -138,7 +138,7 @@ public class CbiConsentRediredtAuthorizationStepTest {
                                 CbiConsentStatusResponse.class));
 
         // when & then
-        assertThatCode(() -> consentRediredtAuthorizationStep.authorizeConsent(CONSENT_RESPONSE))
+        assertThatCode(() -> consentRedirectAuthorizationStep.authorizeConsent(CONSENT_RESPONSE))
                 .doesNotThrowAnyException();
     }
 }

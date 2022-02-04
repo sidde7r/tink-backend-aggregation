@@ -34,7 +34,7 @@ POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestr
 Content-Type: application/json
 Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
 x-request-id: 00000000-0000-4000-0000-000000000000
-date: Fri, 10 Apr 1992 12:00:00 UTC
+date: Thu, 09 Apr 1992 10:00:00 UTC
 aspsp-code: 05034
 aspsp-product-code: IBP01
 tpp-redirect-preferred: true
@@ -54,7 +54,7 @@ X-Frame-Options: SAMEORIGIN
 Location: ***
 Cache-Control: no-store
 x-request-id: 00000000-0000-4000-0000-000000000000
-date: Fri, 10 Apr 1992 12:00:00 UTC
+date: Thu, 09 Apr 1992 10:00:00 UTC
 Pragma: no-cache
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 X-XSS-Protection: 1; mode=block
@@ -72,7 +72,7 @@ GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestra
 Content-Type: application/json
 Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
 x-request-id: 00000000-0000-4000-0000-000000000000
-date: Fri, 10 Apr 1992 12:00:00 UTC
+date: Thu, 09 Apr 1992 10:00:00 UTC
 aspsp-code: 05034
 X-Aggregator: Tink Testing
 
@@ -83,7 +83,7 @@ X-Frame-Options: SAMEORIGIN
 aspsp-sca-approach: ***
 psu-id: ***
 x-request-id: 00000000-0000-4000-0000-000000000000
-date: Fri, 10 Apr 1992 12:00:00 UTC
+date: Thu, 09 Apr 1992 10:00:00 UTC
 Cache-Control: no-store
 Pragma: no-cache
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
@@ -104,7 +104,7 @@ GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestra
 Content-Type: application/json
 Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
 x-request-id: 00000000-0000-4000-0000-000000000000
-date: Fri, 10 Apr 1992 12:00:00 UTC
+date: Thu, 09 Apr 1992 10:00:00 UTC
 aspsp-code: 05034
 X-Aggregator: Tink Testing
 
@@ -118,7 +118,7 @@ X-Frame-Options: SAMEORIGIN
 X-Frame-Options: SAMEORIGIN
 aspsp-sca-approach: ***
 x-request-id: 00000000-0000-4000-0000-000000000000
-date: Fri, 10 Apr 1992 12:00:00 UTC
+date: Thu, 09 Apr 1992 10:00:00 UTC
 psu-id: ***
 Cache-Control: no-store
 Pragma: no-cache

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 import javax.ws.rs.core.MediaType;
@@ -23,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
 @Slf4j
-public class CbiGlobeRequestBuilder {
+public class CbiGlobeHttpClient {
 
     private final TinkHttpClient client;
     private final RandomValueGenerator randomValueGenerator;
@@ -95,16 +96,18 @@ public class CbiGlobeRequestBuilder {
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .header(HeaderKeys.ASPSP_CODE, providerConfiguration.getAspspCode())
-                .header(HeaderKeys.DATE, formatDate(Date.from(localDateTimeSource.getInstant())));
+                .header(
+                        HeaderKeys.DATE,
+                        formatDate(Date.from(localDateTimeSource.getInstant(ZoneId.of("CET")))));
+    }
+
+    RequestBuilder createRequestInSessionWithPsuIp(URL url) {
+        return createRequestInSession(url).header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
     }
 
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z", Locale.ENGLISH);
         return sdf.format(date);
-    }
-
-    RequestBuilder addPsuIpAddressHeader(RequestBuilder requestBuilder) {
-        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
     }
 
     protected String buildRedirectUri(boolean isOk) {

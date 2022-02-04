@@ -6,17 +6,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeFetcherApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeHttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.TransactionsResponse;
 
 public class BpmFetcherApiClient extends CbiGlobeFetcherApiClient {
     private static final String TRANSACTION_LIMIT = "900";
 
     public BpmFetcherApiClient(
-            CbiGlobeRequestBuilder cbiRequestBuilder,
-            CbiUrlProvider urlProvider,
-            CbiStorage storage) {
-        super(cbiRequestBuilder, urlProvider, storage);
+            CbiGlobeHttpClient cbiGlobeHttpClient, CbiUrlProvider urlProvider, CbiStorage storage) {
+        super(cbiGlobeHttpClient, urlProvider, storage);
     }
 
     @Override

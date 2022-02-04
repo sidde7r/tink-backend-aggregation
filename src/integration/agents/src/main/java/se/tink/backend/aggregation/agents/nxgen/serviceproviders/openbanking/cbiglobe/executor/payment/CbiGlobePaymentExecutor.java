@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
@@ -20,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.errorhandle.ErrorResponse;
@@ -49,7 +48,6 @@ import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.pair.Pair;
@@ -62,17 +60,16 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     protected final CbiGlobeAuthApiClient authApiClient;
     protected final CbiGlobePaymentApiClient paymentApiClient;
     private List<PaymentResponse> paymentResponses = new ArrayList<>();
     private final SupplementalInformationHelper supplementalInformationHelper;
-    protected final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final Provider provider;
-
-    private static final Logger logger = LoggerFactory.getLogger(CbiGlobePaymentExecutor.class);
+    private final CbiStorage storage;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
@@ -89,8 +86,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     protected void authorizePayment(CreatePaymentResponse createPaymentResponse) {
-        sessionStorage.put(
-                StorageKeys.LINK,
+        storage.saveScaLinkForPayments(
                 createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
     }
 
@@ -219,7 +215,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             case RJCT: // cancelled case
                 return handleReject(scaStatus, psuAuthenticationStatus);
             default:
-                logger.error(
+                log.error(
                         "Payment failed. Invalid Payment status returned by CBI Globe cbiGlobePaymentStatus={}",
                         cbiGlobePaymentStatus);
                 throw new PaymentException("Payment failed");
@@ -233,15 +229,15 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     private CreatePaymentResponse fetchPaymentStatus(
             PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
         CreatePaymentResponse createPaymentResponse;
-        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
+        String redirectUrl = storage.getScaLinkForPayments();
         // We observed that in case of sepa payments fetching payment status for the 1st time
         // doesn't give us redirectUrl, so we need to repeat this operation. There is no clear
         // explanation from CBI. It usually doesn't happen for instant payments
         if (redirectUrl == null) {
-            logger.info("No redirect, fetching payment status to get redirect link");
+            log.info("No redirect, fetching payment status to get redirect link");
             createPaymentResponse = fetchPaymentStatusOrThrowException(paymentMultiStepRequest);
         } else {
-            logger.info("Redirect present, fetching payment status depending on supplementalInfo");
+            log.info("Redirect present, fetching payment status depending on supplementalInfo");
             Map<String, String> supplementalInfo = fetchSupplementalInfo(redirectUrl);
             if (QueryValues.SUCCESS.equals(supplementalInfo.get(QueryKeys.RESULT))) {
                 createPaymentResponse = fetchPaymentStatusOrThrowException(paymentMultiStepRequest);
@@ -258,7 +254,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             // after redirect is done remove old redirect link from session, because
             // if 5xx received from CBI Globe bank status polling then old redirect link is not
             // removed from session and TL again redirect to bank.
-            sessionStorage.put(StorageKeys.LINK, null);
+            storage.clearScaLinkForPayments();
             return waitForSupplementalInformation();
         } else {
             throw new PaymentAuthorizationException();
@@ -291,13 +287,13 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             throws PaymentAuthenticationException, PaymentRejectedException {
         if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_FAILED.equalsIgnoreCase(
                 psuAuthenticationStatus)) {
-            logger.error(
+            log.error(
                     "PSU Authentication failed, psuAuthenticationStatus={}",
                     psuAuthenticationStatus);
             throw new PaymentAuthenticationException(
                     "Payment authentication failed.", new PaymentRejectedException());
         } else {
-            logger.error(
+            log.error(
                     "Payment rejected by ASPSP: psuAuthenticationStatus={} , scaStatus={}",
                     psuAuthenticationStatus,
                     scaStatus);
@@ -319,7 +315,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             PaymentMultiStepRequest paymentMultiStepRequest,
             CreatePaymentResponse createPaymentResponse)
             throws PaymentException {
-        sessionStorage.put(StorageKeys.LINK, null);
+        storage.clearScaLinkForPayments();
         // As for BPM payment is parked for 30 min at bank in RCVD state we need special handling.
         // Ref: https://tinkab.atlassian.net/browse/PAY2-734
         if (isBPMProvider()) {
@@ -339,19 +335,17 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         psuAuthenticationStatus)
                 || CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_REQUIRED
                         .equalsIgnoreCase(psuAuthenticationStatus)) {
-            sessionStorage.put(
-                    StorageKeys.LINK,
+            storage.saveScaLinkForPayments(
                     createPaymentResponse
                             .getLinks()
                             .getUpdatePsuAuthenticationRedirect()
                             .getHref());
 
         } else if (createPaymentResponse.getLinks().getScaRedirect() != null) {
-            sessionStorage.put(
-                    StorageKeys.LINK, createPaymentResponse.getLinks().getScaRedirect().getHref());
+            storage.saveScaLinkForPayments(
+                    createPaymentResponse.getLinks().getScaRedirect().getHref());
         } else if (createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect() != null) {
-            sessionStorage.put(
-                    StorageKeys.LINK,
+            storage.saveScaLinkForPayments(
                     createPaymentResponse
                             .getLinks()
                             .getUpdatePsuAuthenticationRedirect()
@@ -394,7 +388,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private PaymentMultiStepResponse logAndThrowPaymentCancelledException(
             CreatePaymentResponse createPaymentResponse) throws PaymentCancelledException {
-        logger.error(
+        log.error(
                 "Payment cancelled by user: psuAuthenticationStatus={} , scaStatus={}",
                 createPaymentResponse.getPsuAuthenticationStatus(),
                 createPaymentResponse.getScaStatus());
@@ -422,11 +416,10 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             // redirect URl from Bank should be null for intermediate states, If
             // not null then it may be bug on CBI globe
             if (redirectURL != null) {
-                logger.warn("IntermediatePaymentStates redirectURl was NOT null, check logs");
+                log.warn("IntermediatePaymentStates redirectURl was NOT null, check logs");
             }
         }
-        sessionStorage.put(
-                StorageKeys.LINK,
+        storage.saveScaLinkForPayments(
                 redirectURL); // redirectURL should be set to null to avoid multiple redirect to
 
         return new PaymentMultiStepResponse(

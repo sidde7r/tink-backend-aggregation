@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @AllArgsConstructor
 @Slf4j
-public class CbiConsentRediredtAuthorizationStep {
+public class CbiConsentRedirectAuthorizationStep {
 
     private final SupplementalInformationController supplementalInformationController;
     private final CbiGlobeAuthApiClient authApiClient;

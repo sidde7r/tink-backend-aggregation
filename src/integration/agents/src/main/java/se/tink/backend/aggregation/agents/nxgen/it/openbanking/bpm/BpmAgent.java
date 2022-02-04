@@ -25,6 +25,6 @@ public final class BpmAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeFetcherApiClient buildFetcherApiClient() {
-        return new BpmFetcherApiClient(cbiRequestBuilder, urlProvider, storage);
+        return new BpmFetcherApiClient(cbiGlobeHttpClient, urlProvider, storage);
     }
 }

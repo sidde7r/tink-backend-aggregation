@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaCredentialsAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaScaMethodSelectionStep;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.UserInteractions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.PaymentAuthorizationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
 
@@ -28,19 +28,19 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
             CbiGlobeAuthApiClient authApiClient,
             CbiGlobePaymentApiClient paymentApiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState,
             Provider provider,
             UserInteractions userInteractions,
             CbiUrlProvider urlProvider,
-            Credentials credentials) {
+            Credentials credentials,
+            CbiStorage storage) {
         super(
                 authApiClient,
                 paymentApiClient,
                 supplementalInformationHelper,
-                sessionStorage,
                 strongAuthenticationState,
-                provider);
+                provider,
+                storage);
         this.userInteractions = userInteractions;
         credentialsAuthenticationStep =
                 new IccreaCredentialsAuthenticationStep(

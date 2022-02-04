@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeFetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeHttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
@@ -62,7 +62,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     protected final CbiStorage storage;
     protected final CbiUrlProvider urlProvider;
 
-    protected final CbiGlobeRequestBuilder cbiRequestBuilder;
+    protected final CbiGlobeHttpClient cbiGlobeHttpClient;
     protected final CbiGlobeAuthApiClient authApiClient;
     protected final CbiGlobeFetcherApiClient fetcherApiClient;
 
@@ -81,7 +81,7 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         storage = new CbiStorage(persistentStorage, sessionStorage, new TemporaryStorage());
         urlProvider = new CbiUrlProvider(getBaseUrl());
 
-        cbiRequestBuilder = buildRequestBuilder();
+        cbiGlobeHttpClient = buildHttpClient();
         authApiClient = buildAuthApiClient();
         fetcherApiClient = buildFetcherApiClient();
 
@@ -128,8 +128,8 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
         return Urls.BASE_URL;
     }
 
-    protected CbiGlobeRequestBuilder buildRequestBuilder() {
-        return new CbiGlobeRequestBuilder(
+    protected CbiGlobeHttpClient buildHttpClient() {
+        return new CbiGlobeHttpClient(
                 client,
                 randomValueGenerator,
                 localDateTimeSource,
@@ -140,11 +140,11 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     }
 
     protected CbiGlobeAuthApiClient buildAuthApiClient() {
-        return new CbiGlobeAuthApiClient(cbiRequestBuilder, providerConfiguration, urlProvider);
+        return new CbiGlobeAuthApiClient(cbiGlobeHttpClient, providerConfiguration, urlProvider);
     }
 
     protected CbiGlobeFetcherApiClient buildFetcherApiClient() {
-        return new CbiGlobeFetcherApiClient(cbiRequestBuilder, urlProvider, storage);
+        return new CbiGlobeFetcherApiClient(cbiGlobeHttpClient, urlProvider, storage);
     }
 
     @Override
@@ -207,11 +207,11 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
                 new CbiGlobePaymentExecutor(
                         authApiClient,
                         new CbiGlobePaymentApiClient(
-                                cbiRequestBuilder, urlProvider, providerConfiguration),
+                                cbiGlobeHttpClient, urlProvider, providerConfiguration),
                         supplementalInformationHelper,
-                        sessionStorage,
                         strongAuthenticationState,
-                        provider);
+                        provider,
+                        storage);
 
         return Optional.of(
                 new PaymentController(

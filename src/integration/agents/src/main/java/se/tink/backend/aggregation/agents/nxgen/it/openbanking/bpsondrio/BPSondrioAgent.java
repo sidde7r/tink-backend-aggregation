@@ -5,9 +5,9 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio.client.BPSondrioRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio.client.BPSondrioHttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeHttpClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
@@ -19,8 +19,8 @@ public final class BPSondrioAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeRequestBuilder buildRequestBuilder() {
-        return new BPSondrioRequestBuilder(
+    protected CbiGlobeHttpClient buildHttpClient() {
+        return new BPSondrioHttpClient(
                 client,
                 randomValueGenerator,
                 localDateTimeSource,

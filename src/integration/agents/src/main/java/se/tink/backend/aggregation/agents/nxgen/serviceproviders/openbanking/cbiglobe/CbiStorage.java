@@ -17,6 +17,7 @@ public class CbiStorage {
     private static final String CONSENT_ID = "consent-id";
     private static final String ACCOUNTS = "accounts";
     private static final String PAGES = "pages-";
+    private static final String SCA_LINK = "sca-link";
 
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
@@ -56,5 +57,20 @@ public class CbiStorage {
                 .get(PAGES + accountIdentifier, Integer.class)
                 .map(OptionalInt::of)
                 .orElseGet(OptionalInt::empty);
+    }
+
+    // These methods should only be used for payments.
+    // The payment executor is a bit of a mess, and it was written in a way that transfer sca link
+    // via session storage.
+    public void saveScaLinkForPayments(String scaLink) {
+        sessionStorage.put(SCA_LINK, scaLink);
+    }
+
+    public void clearScaLinkForPayments() {
+        sessionStorage.put(SCA_LINK, null);
+    }
+
+    public String getScaLinkForPayments() {
+        return sessionStorage.get(SCA_LINK);
     }
 }

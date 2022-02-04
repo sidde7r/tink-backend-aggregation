@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 public class CbiGlobeAuthenticator implements TypedAuthenticator {
 
     private final CbiConsentCreationStep consentCreationStep;
-    private final CbiConsentRediredtAuthorizationStep rediredtAuthorizationStep;
+    private final CbiConsentRedirectAuthorizationStep redirectAuthorizationStep;
     private final CbiAccountFetchingStep accountFetchingStep;
     private final CbiFinishAuthenticationStep finishAuthenticationStep;
 
@@ -26,8 +26,8 @@ public class CbiGlobeAuthenticator implements TypedAuthenticator {
             Credentials credentials) {
         consentCreationStep =
                 new CbiConsentCreationStep(authApiClient, localDateTimeSource, storage);
-        rediredtAuthorizationStep =
-                new CbiConsentRediredtAuthorizationStep(
+        redirectAuthorizationStep =
+                new CbiConsentRedirectAuthorizationStep(
                         supplementalInformationController, authApiClient, storage);
         accountFetchingStep = new CbiAccountFetchingStep(fetcherApiClient, storage);
         finishAuthenticationStep =
@@ -37,7 +37,7 @@ public class CbiGlobeAuthenticator implements TypedAuthenticator {
     @Override
     public void authenticate(Credentials credentials) {
         CbiConsentResponse consentResponse = consentCreationStep.createConsentAndSaveId();
-        rediredtAuthorizationStep.authorizeConsent(consentResponse);
+        redirectAuthorizationStep.authorizeConsent(consentResponse);
         finishAuthenticationStep.storeConsentValidUntilDateInCredentials();
         accountFetchingStep.fetchAndSaveAccounts();
     }

@@ -23,15 +23,13 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @Slf4j
 public class CbiGlobeFetcherApiClient {
 
-    private final CbiGlobeRequestBuilder cbiRequestBuilder;
+    private final CbiGlobeHttpClient client;
     protected final CbiUrlProvider urlProvider;
     private final CbiStorage storage;
 
     protected RequestBuilder createFetchingRequest(URL url) {
-        return cbiRequestBuilder.addPsuIpAddressHeader(
-                cbiRequestBuilder
-                        .createRequestInSession(url)
-                        .header(HeaderKeys.CONSENT_ID, storage.getConsentId()));
+        return client.createRequestInSessionWithPsuIp(url)
+                .header(HeaderKeys.CONSENT_ID, storage.getConsentId());
     }
 
     // Currently, CBI is supporting either accounts or card accounts, in a weird way, of setting up
@@ -41,7 +39,7 @@ public class CbiGlobeFetcherApiClient {
     }
 
     public AccountsResponse getAccounts() {
-        return cbiRequestBuilder.makeRequest(
+        return client.makeRequest(
                 createFetchingRequest(getAccountsUrl()),
                 HttpMethod.GET,
                 AccountsResponse.class,
@@ -56,7 +54,7 @@ public class CbiGlobeFetcherApiClient {
     }
 
     public BalancesResponse getBalances(String resourceId) {
-        return cbiRequestBuilder.makeRequest(
+        return client.makeRequest(
                 createFetchingRequest(
                         getBalancesUrl().parameterNoEncoding(IdTags.ACCOUNT_ID, resourceId)),
                 HttpMethod.GET,
@@ -78,7 +76,7 @@ public class CbiGlobeFetcherApiClient {
             String bookingType,
             int page) {
         HttpResponse response =
-                cbiRequestBuilder.makeRequest(
+                client.makeRequest(
                         createFetchingRequest(
                                         getTransactionsUrl()
                                                 .parameterNoEncoding(
