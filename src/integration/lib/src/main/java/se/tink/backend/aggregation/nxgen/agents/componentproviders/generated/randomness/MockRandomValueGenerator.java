@@ -10,6 +10,8 @@ public class MockRandomValueGenerator implements RandomValueGenerator {
     private static final Base64.Encoder encoder = Base64.getUrlEncoder();
     private static final String VALID_V1_UUID = "e701e58a-dda4-11eb-ba80-0242ac130004";
     private static final String VALID_V4_UUID = "00000000-0000-4000-0000-000000000000";
+    private static final String VALID_V4_UUID_WITH_TINK_TAG =
+            "00000000-0000-4000-0000-00000000feed";
 
     @Override
     public UUID getUUID() {
@@ -65,7 +67,7 @@ public class MockRandomValueGenerator implements RandomValueGenerator {
 
     @Override
     public String generateUuidWithTinkTag() {
-        return getUUID().toString();
+        return VALID_V4_UUID_WITH_TINK_TAG;
     }
 
     private String createConstantString(int size, char c) {
