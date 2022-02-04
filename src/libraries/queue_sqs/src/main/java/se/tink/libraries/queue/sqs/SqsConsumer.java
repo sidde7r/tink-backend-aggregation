@@ -111,7 +111,7 @@ public class SqsConsumer {
                                 e);
                         producer.requeueRateLimit(sqsMessage.getBody());
                     } catch (RejectedExecutionException e) {
-                        log.debug(
+                        log.info(
                                 "[SqsConsumer] Failed to consume message from '{}' SQS. Requeuing it. SqsMessageId: {}",
                                 name,
                                 sqsMessage.getMessageId(),
