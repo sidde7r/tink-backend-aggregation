@@ -37,7 +37,6 @@ import org.apache.http.HttpStatus;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
@@ -50,7 +49,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AccountInfoEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ParticipantsDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.CardEntity;
@@ -312,13 +310,7 @@ public class BbvaApiClient {
             setTsec(httpResponse.getHeaders().getFirst(HeaderKeys.TSEC_KEY));
             return httpResponse.getBody(AccountTransactionsResponse.class);
         } catch (HttpResponseException ex) {
-            if (ex.getResponse().getStatus() == 401) {
-                ErrorEntity error = ex.getResponse().getBody(ErrorEntity.class);
-                if ("168".equals(error.getCode())) {
-                    throw SupplementalInfoError.NO_VALID_CODE.exception();
-                }
-            }
-            throw ex;
+            throw BbvaErrorHandler.handle(ex).map(RuntimeException.class::cast).orElse(ex);
         }
     }
 

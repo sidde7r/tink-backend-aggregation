@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.caixa.ut
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Base64;
 import junitparams.JUnitParamsRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,12 +25,14 @@ public class CaixaRegistrationDataGeneratorTest {
                     + "_IPHONE_0.0.0_Apple_iPhone10,4_14.4.2_ADAM";
     private static final String DUMMY_PREFIX = "IMAGINBANK_";
     private static final String DUMMY_APP_VERSION = "0.0.0";
+    private static final String USER_AGENT_PREFIX_CONSTANT = "e";
 
     @Test
     public void generateEncodedIdentifier() {
         // when
         String result =
-                CaixaRegistrationDataGenerator.generateEncodedIdentifier(APP_NAME + APP_UUID);
+                CaixaRegistrationDataGenerator.generateEncodedIdentifier(
+                        APP_NAME + APP_UUID, Base64.getUrlEncoder());
 
         // then
         assertThat(result).isEqualTo(IDENTIFIER_ID);
@@ -40,7 +43,7 @@ public class CaixaRegistrationDataGeneratorTest {
         // when
         String result =
                 CaixaRegistrationDataGenerator.generateUserAgent(
-                        USERNAME, false, DUMMY_PREFIX, DUMMY_APP_VERSION);
+                        DUMMY_PREFIX, DUMMY_APP_VERSION, APP_INSTALLATION_ID);
         // then
         assertThat(result).isEqualTo(USER_AGENT);
     }
@@ -48,7 +51,9 @@ public class CaixaRegistrationDataGeneratorTest {
     @Test
     public void generateAppInstallationId() {
         // when
-        String result = CaixaRegistrationDataGenerator.generateAppInstallationId(USERNAME, false);
+        String result =
+                CaixaRegistrationDataGenerator.generateAppInstallationId(
+                        USERNAME, USER_AGENT_PREFIX_CONSTANT, Base64.getUrlEncoder());
         // then
         assertThat(result).isEqualTo(APP_INSTALLATION_ID);
     }
@@ -58,7 +63,7 @@ public class CaixaRegistrationDataGeneratorTest {
         // when
         String result =
                 CaixaRegistrationDataGenerator.generateUserAgent(
-                        "", false, DUMMY_PREFIX, DUMMY_APP_VERSION);
+                        DUMMY_PREFIX, DUMMY_APP_VERSION, DEFAULT_APP_INSTALLATION_ID);
         // then
         assertThat(result).isEqualTo(DEFAULT_USER_AGENT);
     }
@@ -66,7 +71,9 @@ public class CaixaRegistrationDataGeneratorTest {
     @Test
     public void generateDefaultAppInstallationId() {
         // when
-        String result = CaixaRegistrationDataGenerator.generateAppInstallationId("", false);
+        String result =
+                CaixaRegistrationDataGenerator.generateAppInstallationId(
+                        "", USER_AGENT_PREFIX_CONSTANT, Base64.getUrlEncoder());
         // then
         assertThat(result).isEqualTo(DEFAULT_APP_INSTALLATION_ID);
     }

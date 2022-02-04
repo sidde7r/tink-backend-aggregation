@@ -180,6 +180,7 @@ public class ImaginBankConstants {
     public static final class HeaderValues {
         public static final String UA_PREFIX = "no-cache";
         public static final String UA_APP_VERSION = "4.13.2";
+        public static final String UA_PREFIX_CONSTANT = "e";
     }
 
     public static final class HeaderKeys {
