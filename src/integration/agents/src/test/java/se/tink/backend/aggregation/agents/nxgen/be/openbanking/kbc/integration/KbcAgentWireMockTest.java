@@ -185,7 +185,9 @@ public class KbcAgentWireMockTest {
 
         // and
         Error errorDetails = sourceAgentPlatformError.getDetails();
-        assertThat(errorDetails.getErrorMessage()).contains("Session expired.");
+        assertThat(errorDetails.getErrorMessage())
+                .contains(
+                        "For safety reasons you have been logged out. Please login again to continue.");
         assertThat(errorDetails.getErrorCode()).contains("APAG-5");
     }
 

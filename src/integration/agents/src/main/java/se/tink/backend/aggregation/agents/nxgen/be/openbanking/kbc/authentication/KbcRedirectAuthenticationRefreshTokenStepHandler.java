@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticati
 
 import java.util.HashMap;
 import java.util.UUID;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -25,14 +26,14 @@ final class KbcRedirectAuthenticationRefreshTokenStepHandler {
             return new AgentProceedNextStepAuthenticationResult(
                     AgentAuthenticationProcessStep.identifier(KbcConsentValidationStep.class),
                     authenticationProcessRequest.getAuthenticationPersistedData());
-        } else if (nextStepRedirectsAuthenticationToUserWhenUserIsNotAvailable(
+        } else if (nextStepIsRedirectStepAndUserIsNotAvailable(
                 authenticationResult, userAvailableForInteraction)) {
 
             return new AgentFailedAuthenticationResult(
                     new RefreshTokenFailureError(
                             Error.builder()
                                     .uniqueId(UUID.randomUUID().toString())
-                                    .errorMessage(AgentError.SESSION_EXPIRED.getMessage())
+                                    .errorMessage(SessionError.SESSION_EXPIRED.userMessage().get())
                                     .errorCode(AgentError.INVALID_CREDENTIALS.getCode())
                                     .build()),
                     new AgentAuthenticationPersistedData(new HashMap<>()));
@@ -41,7 +42,7 @@ final class KbcRedirectAuthenticationRefreshTokenStepHandler {
         return authenticationResult;
     }
 
-    private boolean nextStepRedirectsAuthenticationToUserWhenUserIsNotAvailable(
+    private boolean nextStepIsRedirectStepAndUserIsNotAvailable(
             AgentAuthenticationResult authenticationResult, boolean userAvailableForInteraction) {
         return authenticationResult instanceof AgentProceedNextStepAuthenticationResult
                 && !userAvailableForInteraction

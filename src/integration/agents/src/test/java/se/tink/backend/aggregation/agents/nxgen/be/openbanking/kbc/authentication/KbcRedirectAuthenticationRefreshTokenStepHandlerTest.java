@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticati
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
 import java.util.Optional;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -110,11 +111,14 @@ public class KbcRedirectAuthenticationRefreshTokenStepHandlerTest {
 
         // and
         Error errorDetails = errorThrown.getDetails();
-        assertThat(errorDetails.getErrorMessage()).contains("Session expired.");
+        assertThat(errorDetails.getErrorMessage())
+                .contains(
+                        "For safety reasons you have been logged out. Please login again to continue.");
         assertThat(errorDetails.getErrorCode()).contains("APAG-5");
 
         // and
-        assertThat(tokenRefreshResult.getAuthenticationPersistedData().valuesCopy()).isEmpty();
+        assertThat(new AgentAuthenticationPersistedData(new HashMap<>()))
+                .isEqualTo(tokenRefreshResult.getAuthenticationPersistedData());
     }
 
     private void assertThatTokenWasNotRefreshedAndNextStepWillFollow(
