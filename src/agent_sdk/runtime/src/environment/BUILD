@@ -4,7 +4,6 @@ java_library_with_sources(
     name = "environment",
     srcs = glob(["*.java"]),
     extdeps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "@aggregation//:org_projectlombok_lombok",
     ],
     intdeps = [
