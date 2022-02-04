@@ -23,6 +23,6 @@ public class BnpParibasFortisAgent extends BnpParibasFortisBaseAgent {
                 qsealcSigner,
                 new BnpParibasFortisBaseBankConfiguration(
                         "https://regulatory.api.bnpparibasfortis.be",
-                        "https://services.bnpparibasfortis.be/SEPLJ04/sps/oauth/oauth20/authorize"));
+                        "https://services.bnpparibasfortis.be/SEPLJ04-IND/sps/oauth/oauth20/authorize"));
     }
 }
