@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Token;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.OpenIdErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -64,7 +65,7 @@ public class OpenIdClientTokenRequester implements ClientTokenRequester {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        authenticationValidator.validateClientToken(clientToken);
+        authenticationValidator.validateToken(clientToken, Token.CLIENT_ACCESS_TOKEN_MSG);
         return clientToken;
     }
 

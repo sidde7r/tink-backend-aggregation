@@ -171,11 +171,16 @@ public class UkOpenBankingPaymentAuthenticator {
     private void validateIdToken(Map<String, String> callbackData, String authCode) {
         final String state =
                 getCallbackElement(callbackData, OpenIdConstants.Params.STATE).orElse(null);
-        final Optional<String> maybeIdToken =
+        final Optional<String> idToken =
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN);
 
-        maybeIdToken.ifPresent(
-                idToken -> authenticationValidator.validateIdToken(idToken, authCode, state));
+        if (idToken.isPresent()) {
+            authenticationValidator.validateIdToken(idToken.get(), authCode, state);
+        } else {
+            log.warn(
+                    "[UkOpenBankingPaymentAuthenticator] ID Token (code and state) "
+                            + "validation - no token provided");
+        }
     }
 
     private static TransferExecutionException createFailedTransferException() {

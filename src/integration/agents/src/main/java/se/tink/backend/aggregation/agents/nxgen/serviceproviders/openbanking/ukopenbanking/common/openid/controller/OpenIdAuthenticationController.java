@@ -137,6 +137,7 @@ public class OpenIdAuthenticationController
                 CallbackDataExtractor.get(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN);
 
         if (idToken.isPresent()) {
+
             authenticationValidator.validateIdToken(idToken.get(), code, state);
         } else {
             log.warn(

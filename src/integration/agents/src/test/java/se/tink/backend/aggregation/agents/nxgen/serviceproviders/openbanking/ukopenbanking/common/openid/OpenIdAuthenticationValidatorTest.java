@@ -10,6 +10,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Token;
 
 public class OpenIdAuthenticationValidatorTest {
 
@@ -70,7 +71,10 @@ public class OpenIdAuthenticationValidatorTest {
     public void shouldValidateCorrectClientToken() {
         // when
         final Throwable thrown =
-                catchThrowable(() -> authenticationValidator.validateClientToken(CORRECT_TOKEN));
+                catchThrowable(
+                        () ->
+                                authenticationValidator.validateToken(
+                                        CORRECT_TOKEN, Token.CLIENT_ACCESS_TOKEN_MSG));
 
         // then
         assertThat(thrown).isNull();
@@ -81,12 +85,14 @@ public class OpenIdAuthenticationValidatorTest {
         // when
         final Throwable thrown =
                 catchThrowable(
-                        () -> authenticationValidator.validateClientToken(INCORRECT_TOKEN_EXPIRED));
+                        () ->
+                                authenticationValidator.validateToken(
+                                        INCORRECT_TOKEN_EXPIRED, Token.CLIENT_ACCESS_TOKEN_MSG));
 
         // then
         assertThat(thrown)
                 .isExactlyInstanceOf(SessionException.class)
                 .hasNoCause()
-                .hasMessage("[OpenIdAuthenticationValidator] Client access token is not valid.");
+                .hasMessage("[OpenIdAuthenticationValidator] Invalid client access token.");
     }
 }
