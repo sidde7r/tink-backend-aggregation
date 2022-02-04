@@ -25,8 +25,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.validation.impl.SepaCapabilitiesInitializationValidator;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.enums.MarketCode;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(capabilities = {PisCapability.SEPA_CREDIT_TRANSFER})
@@ -74,8 +76,13 @@ public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent
                         credentials);
 
         return Optional.of(
-                new PaymentController(
-                        commerzBankPaymentExecutor, new PaymentControllerExceptionMapper()));
+                PaymentController.builder()
+                        .paymentExecutor(commerzBankPaymentExecutor)
+                        .exceptionHandler(new PaymentControllerExceptionMapper())
+                        .validator(
+                                new SepaCapabilitiesInitializationValidator(
+                                        this.getClass(), MarketCode.valueOf(provider.getMarket())))
+                        .build());
     }
 
     @Override

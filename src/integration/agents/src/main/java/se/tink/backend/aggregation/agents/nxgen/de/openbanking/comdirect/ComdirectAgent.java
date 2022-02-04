@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.validation.impl.SepaCapabilitiesInitializationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
@@ -37,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.enums.MarketCode;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(capabilities = {PisCapability.SEPA_CREDIT_TRANSFER})
@@ -106,8 +108,13 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent
                         credentials);
 
         return Optional.of(
-                new PaymentController(
-                        commerzBankPaymentExecutor, new PaymentControllerExceptionMapper()));
+                PaymentController.builder()
+                        .paymentExecutor(commerzBankPaymentExecutor)
+                        .exceptionHandler(new PaymentControllerExceptionMapper())
+                        .validator(
+                                new SepaCapabilitiesInitializationValidator(
+                                        this.getClass(), MarketCode.valueOf(provider.getMarket())))
+                        .build());
     }
 
     @Override

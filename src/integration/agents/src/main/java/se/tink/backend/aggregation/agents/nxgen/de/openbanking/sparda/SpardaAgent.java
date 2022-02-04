@@ -48,10 +48,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.validation.impl.SepaCapabilitiesInitializationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.enums.MarketCode;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
@@ -227,9 +229,16 @@ public class SpardaAgent extends NextGenerationAgent
         BasePaymentExecutor paymentExecutor =
                 new BasePaymentExecutor(
                         spardaPaymentApiClient, redirectPaymentAuthenticator, sessionStorage);
+
         return Optional.of(
-                new PaymentController(
-                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
+                PaymentController.builder()
+                        .paymentExecutor(paymentExecutor)
+                        .fetchablePaymentExecutor(paymentExecutor)
+                        .exceptionHandler(new PaymentControllerExceptionMapper())
+                        .validator(
+                                new SepaCapabilitiesInitializationValidator(
+                                        this.getClass(), MarketCode.valueOf(provider.getMarket())))
+                        .build());
     }
 
     @SneakyThrows

@@ -43,12 +43,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.validation.impl.SepaCapabilitiesInitializationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceDownExceptionFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.enums.MarketCode;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
@@ -164,8 +166,14 @@ public class SparkassenAgent extends NextGenerationAgent
                         apiClient, sparkassenPaymentAuthenticator, sessionStorage);
 
         return Optional.of(
-                new PaymentController(
-                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
+                PaymentController.builder()
+                        .paymentExecutor(paymentExecutor)
+                        .fetchablePaymentExecutor(paymentExecutor)
+                        .exceptionHandler(new PaymentControllerExceptionMapper())
+                        .validator(
+                                new SepaCapabilitiesInitializationValidator(
+                                        this.getClass(), MarketCode.valueOf(provider.getMarket())))
+                        .build());
     }
 
     @Override

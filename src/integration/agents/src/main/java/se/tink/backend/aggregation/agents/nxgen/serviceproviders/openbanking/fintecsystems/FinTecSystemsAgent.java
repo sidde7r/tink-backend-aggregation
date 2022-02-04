@@ -26,8 +26,10 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.validation.impl.SepaCapabilitiesInitializationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 
 @AgentCapabilities({TRANSFERS, CHECKING_ACCOUNTS})
@@ -104,7 +106,13 @@ public class FinTecSystemsAgent extends NextGenerationAgent
                         this);
 
         return Optional.of(
-                new PaymentController(paymentExecutor, new PaymentControllerExceptionMapper()));
+                PaymentController.builder()
+                        .paymentExecutor(paymentExecutor)
+                        .exceptionHandler(new PaymentControllerExceptionMapper())
+                        .validator(
+                                new SepaCapabilitiesInitializationValidator(
+                                        this.getClass(), MarketCode.valueOf(provider.getMarket())))
+                        .build());
     }
 
     @Override
