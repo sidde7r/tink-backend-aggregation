@@ -6,6 +6,6 @@ import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 
 @Ignore
 @AuthenticationOption(
-        definition = AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE,
+        definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE,
         overallDefault = true)
 public class TestAgentWithOneAuthenticationOption extends BaseTestAgent {}

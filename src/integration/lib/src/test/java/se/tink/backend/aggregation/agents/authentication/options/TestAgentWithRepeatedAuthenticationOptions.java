@@ -8,8 +8,8 @@ import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 @Ignore
 @AuthenticationOptions({
     @AuthenticationOption(
-            definition = AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE,
+            definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE,
             overallDefault = true),
-    @AuthenticationOption(definition = AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE)
+    @AuthenticationOption(definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE)
 })
 public class TestAgentWithRepeatedAuthenticationOptions extends BaseTestAgent {}

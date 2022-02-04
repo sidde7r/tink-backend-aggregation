@@ -67,7 +67,7 @@ public class AuthenticationOptionsExtractorTest {
                 new ArrayList<>(authenticationOptionsGroupDto.getAuthenticationOptions());
         AuthenticationOptionDto authenticationOptionDto = authenticationOptionDtoList.get(0);
         assertThat(authenticationOptionDto.getDefinition())
-                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE);
+                .isEqualTo(AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE);
         assertThat(authenticationOptionDto.isOverallDefault()).isTrue();
     }
 
@@ -103,7 +103,7 @@ public class AuthenticationOptionsExtractorTest {
         // assertions on the first of authentication options, including verification of fields
         AuthenticationOptionDto authenticationOptionDtoOther = authenticationOptionDtoList.get(0);
         assertThat(authenticationOptionDtoOther.getDefinition())
-                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE);
+                .isEqualTo(AuthenticationOptionDefinition.SE_MOBILE_BANKID_OTHER_DEVICE);
 
         Set<String> fieldsNames =
                 authenticationOptionDtoOther.getFields().stream()
@@ -116,7 +116,7 @@ public class AuthenticationOptionsExtractorTest {
         // assertions on the second authentication option
         AuthenticationOptionDto authenticationOptionDtoSame = authenticationOptionDtoList.get(1);
         assertThat(authenticationOptionDtoSame.getDefinition())
-                .isEqualTo(AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE);
+                .isEqualTo(AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE);
         assertThat(authenticationOptionDtoSame.isOverallDefault()).isTrue();
     }
 
@@ -151,6 +151,6 @@ public class AuthenticationOptionsExtractorTest {
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
         assertThat(throwable.getMessage())
                 .isEqualTo(
-                        "Agent authentication.options.TestAgentWithRepeatedAuthenticationOptions has more than one authentication option of type SE_BANKID_SAME_DEVICE");
+                        "Agent authentication.options.TestAgentWithRepeatedAuthenticationOptions has more than one authentication option of type SE_MOBILE_BANKID_SAME_DEVICE");
     }
 }

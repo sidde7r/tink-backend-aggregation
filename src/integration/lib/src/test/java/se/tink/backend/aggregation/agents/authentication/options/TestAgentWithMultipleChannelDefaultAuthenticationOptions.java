@@ -6,7 +6,7 @@ import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 
 @Ignore
 @AuthenticationOption(
-        definition = AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE,
+        definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE,
         overallDefault = true)
-@AuthenticationOption(definition = AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE)
+@AuthenticationOption(definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_OTHER_DEVICE)
 public class TestAgentWithMultipleChannelDefaultAuthenticationOptions extends BaseTestAgent {}

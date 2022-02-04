@@ -9,10 +9,10 @@ import se.tink.libraries.authentication_options.AuthenticationOptionField;
 @Ignore
 @AuthenticationOptions({
     @AuthenticationOption(
-            definition = AuthenticationOptionDefinition.SE_BANKID_SAME_DEVICE,
+            definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE,
             overallDefault = true),
     @AuthenticationOption(
-            definition = AuthenticationOptionDefinition.SE_BANKID_OTHER_DEVICE,
+            definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_OTHER_DEVICE,
             fields = {AuthenticationOptionField.SE_SOCIAL_SECURITY_NUMBER})
 })
 public class TestAgentWithMultipleAuthenticationOptions extends BaseTestAgent {}
