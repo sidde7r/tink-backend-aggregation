@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc;
 
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -16,16 +16,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.fetcher.HsbcKineticPartyFetcher;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -35,8 +34,9 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA})
-public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+public final class HsbcV31NetAgent extends UkOpenBankingBaseAgent {
+
     private static final UkOpenBankingAisConfig aisConfig;
     private final AgentComponentProvider componentProvider;
 
@@ -44,14 +44,13 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
                         .withOrganisationId(HsbcConstants.ORGANISATION_ID)
-                        .withApiBaseURL(HsbcConstants.KINETIC_AIS_API_URL)
-                        .withWellKnownURL(HsbcConstants.KINETIC_WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTIES)
+                        .withApiBaseURL(HsbcConstants.NET_AIS_API_URL)
+                        .withWellKnownURL(HsbcConstants.NET_WELL_KNOWN_URL)
                         .build();
     }
 
     @Inject
-    public HsbcV31KineticAgent(
+    public HsbcV31NetAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
         this.componentProvider = componentProvider;
@@ -69,28 +68,8 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 persistentStorage,
                 localDateTimeSource,
-                new HsbcKineticPartyFetcher(apiClient, aisConfig, persistentStorage),
+                new PartyV31Fetcher(apiClient, aisConfig, persistentStorage, SCA_LIMIT_MINUTES),
                 transactionPaginationHelper);
-    }
-
-    @Override
-    protected UkOpenBankingApiClient createApiClient(
-            TinkHttpClient httpClient,
-            JwtSigner signer,
-            SoftwareStatementAssertion softwareStatement,
-            String redirectUrl,
-            ClientInfo providerConfiguration) {
-
-        return new HsbcGroupApiClient(
-                httpClient,
-                signer,
-                softwareStatement,
-                redirectUrl,
-                providerConfiguration,
-                randomValueGenerator,
-                persistentStorage,
-                aisConfig,
-                componentProvider);
     }
 
     private UkOpenBankingAisAuthenticationController createUkObAuthController() {
@@ -116,5 +95,25 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
                 new ThirdPartyAppAuthenticationController<>(
                         authController, this.supplementalInformationHelper),
                 authController);
+    }
+
+    @Override
+    protected UkOpenBankingApiClient createApiClient(
+            TinkHttpClient httpClient,
+            JwtSigner signer,
+            SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
+            ClientInfo providerConfiguration) {
+
+        return new HsbcGroupApiClient(
+                httpClient,
+                signer,
+                softwareStatement,
+                redirectUrl,
+                providerConfiguration,
+                randomValueGenerator,
+                persistentStorage,
+                aisConfig,
+                componentProvider);
     }
 }

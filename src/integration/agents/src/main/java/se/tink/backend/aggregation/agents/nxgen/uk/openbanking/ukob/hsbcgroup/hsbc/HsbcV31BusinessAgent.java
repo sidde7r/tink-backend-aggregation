@@ -1,6 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.markandspencer;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc;
 
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.*;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -13,17 +16,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingFlowModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.PartyV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.HsbcGroupApiClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -34,7 +35,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
-public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
+public final class HsbcV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
     private final AgentComponentProvider componentProvider;
@@ -42,15 +43,14 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId("0015800000jeukaAAA")
-                        .withApiBaseURL(MarksAndSpencerConstants.AIS_API_URL)
-                        .withWellKnownURL(MarksAndSpencerConstants.WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTY)
+                        .withOrganisationId(HsbcConstants.ORGANISATION_ID)
+                        .withApiBaseURL(HsbcConstants.BUSINESS_AIS_API_URL)
+                        .withWellKnownURL(HsbcConstants.BUSINESS_WELL_KNOWN_URL)
                         .build();
     }
 
     @Inject
-    public MarkAndSpencerV31Agent(
+    public HsbcV31BusinessAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
         this.componentProvider = componentProvider;
@@ -64,10 +64,11 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(
+        return new HsbcV31Ais(
                 aisConfig,
                 persistentStorage,
-                componentProvider.getLocalDateTimeSource(),
+                localDateTimeSource,
+                new PartyV31Fetcher(apiClient, aisConfig, persistentStorage, SCA_LIMIT_MINUTES),
                 transactionPaginationHelper);
     }
 
@@ -79,7 +80,6 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
             String redirectUrl,
             ClientInfo providerConfiguration) {
 
-        // M&S is hsbc subsidiary so need to have the same overridden client
         return new HsbcGroupApiClient(
                 httpClient,
                 signer,

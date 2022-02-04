@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc;
 
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;

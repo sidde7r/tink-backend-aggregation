@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.pis.signature;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.pis.signature;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;

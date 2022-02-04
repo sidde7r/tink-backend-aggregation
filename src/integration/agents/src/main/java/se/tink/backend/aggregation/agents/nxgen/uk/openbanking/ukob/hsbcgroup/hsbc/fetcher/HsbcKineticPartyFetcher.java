@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.fetcher;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.fetcher;
 
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.HsbcConstants.SCA_LIMIT_MINUTES;
 
 import java.util.Collections;
 import java.util.List;
