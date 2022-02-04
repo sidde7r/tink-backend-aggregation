@@ -9,7 +9,9 @@ import static org.mockito.BDDMockito.then;
 import com.google.common.collect.ImmutableList;
 import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.GetPaymentRequest;
@@ -23,18 +25,33 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@RunWith(MockitoJUnitRunner.class)
 public class LclPaymentApiClientTest {
+
+    @Mock private LclConfiguration lclConfiguration;
+    @Mock private GetPaymentRequest getPaymentRequest;
+    @Mock private PaymentRequestResource paymentRequestResource;
+    @Mock private GetPaymentResponse expectedPaymentResponse;
+    @Mock private RequestBuilder confirmRequestBuilder;
+    @Mock private PaymentRequestResource confirmingPaymentRequestResource;
+    @Mock private GetPaymentRequest confirmingGetPaymentRequest;
+    @Mock private ConfirmPaymentRequest confirmPaymentRequest;
+    @Mock private CreatePaymentRequest createPaymentRequest;
+    @Mock private PaymentRequestResource requestResource;
+    @Mock private SupplementaryDataEntity dataEntity;
+    @Mock private RequestBuilder requestBuilder;
+    @Mock private HttpResponse httpResponse;
+    @Mock private MultivaluedMap<String, String> headers;
+    @Mock private CreatePaymentResponse expectedResponse;
+    @Mock private SessionStorage sessionStorage;
+    @Mock private AgentConfiguration<LclConfiguration> agentConfiguration;
+    @Mock private LclRequestFactory lclRequestFactory;
+    @Mock private TokenFetcher tokenFetcher;
+    @Mock private PaymentRequestResourceFactory resourceFactory;
 
     @Test
     public void shouldCreatePaymentRequestAndExecuteIt() {
         // given:
-        SessionStorage sessionStorage = Mockito.mock(SessionStorage.class);
-        AgentConfiguration<LclConfiguration> agentConfiguration =
-                Mockito.mock(AgentConfiguration.class);
-        LclRequestFactory lclRequestFactory = Mockito.mock(LclRequestFactory.class);
-        TokenFetcher tokenFetcher = Mockito.mock(TokenFetcher.class);
-        PaymentRequestResourceFactory resourceFactory =
-                Mockito.mock(PaymentRequestResourceFactory.class);
         LclPaymentApiClient paymentApiClient =
                 new LclPaymentApiClient(
                         sessionStorage,
@@ -42,23 +59,15 @@ public class LclPaymentApiClientTest {
                         lclRequestFactory,
                         tokenFetcher,
                         resourceFactory);
-        CreatePaymentRequest createPaymentRequest = Mockito.mock(CreatePaymentRequest.class);
-        PaymentRequestResource requestResource = Mockito.mock(PaymentRequestResource.class);
-        SupplementaryDataEntity dataEntity = Mockito.mock(SupplementaryDataEntity.class);
         given(dataEntity.getSuccessfulReportUrl()).willReturn("testUrl");
         given(createPaymentRequest.getSupplementaryData()).willReturn(dataEntity);
         given(resourceFactory.createPaymentRequestResource(createPaymentRequest))
                 .willReturn(requestResource);
-        RequestBuilder requestBuilder = Mockito.mock(RequestBuilder.class);
         given(lclRequestFactory.createPaymentRequest(requestResource)).willReturn(requestBuilder);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
         given(resourceFactory.serializeBody(requestResource)).willReturn("body");
-
         given(requestBuilder.post(eq(HttpResponse.class), eq("body"))).willReturn(httpResponse);
-        MultivaluedMap<String, String> headers = Mockito.mock(MultivaluedMap.class);
         given(headers.get("location")).willReturn(ImmutableList.of("ignore/ignore/locationValue"));
         given(httpResponse.getHeaders()).willReturn(headers);
-        CreatePaymentResponse expectedResponse = Mockito.mock(CreatePaymentResponse.class);
         given(httpResponse.getBody(CreatePaymentResponse.class)).willReturn(expectedResponse);
 
         // when:
@@ -76,13 +85,6 @@ public class LclPaymentApiClientTest {
     @Test
     public void shouldThrowExceptionWhenThereIsNoLocationInResponse() {
         // given:
-        SessionStorage sessionStorage = Mockito.mock(SessionStorage.class);
-        AgentConfiguration<LclConfiguration> agentConfiguration =
-                Mockito.mock(AgentConfiguration.class);
-        LclRequestFactory lclRequestFactory = Mockito.mock(LclRequestFactory.class);
-        TokenFetcher tokenFetcher = Mockito.mock(TokenFetcher.class);
-        PaymentRequestResourceFactory resourceFactory =
-                Mockito.mock(PaymentRequestResourceFactory.class);
         LclPaymentApiClient paymentApiClient =
                 new LclPaymentApiClient(
                         sessionStorage,
@@ -90,19 +92,13 @@ public class LclPaymentApiClientTest {
                         lclRequestFactory,
                         tokenFetcher,
                         resourceFactory);
-        CreatePaymentRequest createPaymentRequest = Mockito.mock(CreatePaymentRequest.class);
-        PaymentRequestResource requestResource = Mockito.mock(PaymentRequestResource.class);
-        SupplementaryDataEntity dataEntity = Mockito.mock(SupplementaryDataEntity.class);
         given(dataEntity.getSuccessfulReportUrl()).willReturn("testUrl");
         given(createPaymentRequest.getSupplementaryData()).willReturn(dataEntity);
         given(resourceFactory.createPaymentRequestResource(createPaymentRequest))
                 .willReturn(requestResource);
-        RequestBuilder requestBuilder = Mockito.mock(RequestBuilder.class);
         given(lclRequestFactory.createPaymentRequest(requestResource)).willReturn(requestBuilder);
-        HttpResponse httpResponse = Mockito.mock(HttpResponse.class);
         given(resourceFactory.serializeBody(requestResource)).willReturn("body");
         given(requestBuilder.post(eq(HttpResponse.class), eq("body"))).willReturn(httpResponse);
-        MultivaluedMap<String, String> headers = Mockito.mock(MultivaluedMap.class);
         given(headers.get("location")).willReturn(ImmutableList.of());
         given(httpResponse.getHeaders()).willReturn(headers);
 
@@ -122,13 +118,6 @@ public class LclPaymentApiClientTest {
     @Test
     public void shouldFetchToken() {
         // given:
-        SessionStorage sessionStorage = Mockito.mock(SessionStorage.class);
-        AgentConfiguration<LclConfiguration> agentConfiguration =
-                Mockito.mock(AgentConfiguration.class);
-        LclRequestFactory lclRequestFactory = Mockito.mock(LclRequestFactory.class);
-        TokenFetcher tokenFetcher = Mockito.mock(TokenFetcher.class);
-        PaymentRequestResourceFactory resourceFactory =
-                Mockito.mock(PaymentRequestResourceFactory.class);
         LclPaymentApiClient paymentApiClient =
                 new LclPaymentApiClient(
                         sessionStorage,
@@ -147,13 +136,6 @@ public class LclPaymentApiClientTest {
     @Test
     public void shouldFindPayment() {
         // given:
-        SessionStorage sessionStorage = Mockito.mock(SessionStorage.class);
-        AgentConfiguration<LclConfiguration> agentConfiguration =
-                Mockito.mock(AgentConfiguration.class);
-        LclRequestFactory lclRequestFactory = Mockito.mock(LclRequestFactory.class);
-        TokenFetcher tokenFetcher = Mockito.mock(TokenFetcher.class);
-        PaymentRequestResourceFactory resourceFactory =
-                Mockito.mock(PaymentRequestResourceFactory.class);
         LclPaymentApiClient paymentApiClient =
                 new LclPaymentApiClient(
                         sessionStorage,
@@ -163,7 +145,6 @@ public class LclPaymentApiClientTest {
                         resourceFactory);
 
         String authUrl = "http://something.com/redirect?id=123";
-        LclConfiguration lclConfiguration = Mockito.mock(LclConfiguration.class);
         given(lclConfiguration.getClientId()).willReturn("clientIdValue");
         given(agentConfiguration.getProviderSpecificConfiguration()).willReturn(lclConfiguration);
         given(sessionStorage.get("FULL_REDIRECT_URL")).willReturn("redirectUrlValue");
@@ -188,13 +169,6 @@ public class LclPaymentApiClientTest {
     @Test
     public void shouldGetPaymentByPaymentId() {
         // given:
-        SessionStorage sessionStorage = Mockito.mock(SessionStorage.class);
-        AgentConfiguration<LclConfiguration> agentConfiguration =
-                Mockito.mock(AgentConfiguration.class);
-        LclRequestFactory lclRequestFactory = Mockito.mock(LclRequestFactory.class);
-        TokenFetcher tokenFetcher = Mockito.mock(TokenFetcher.class);
-        PaymentRequestResourceFactory resourceFactory =
-                Mockito.mock(PaymentRequestResourceFactory.class);
         LclPaymentApiClient paymentApiClient =
                 new LclPaymentApiClient(
                         sessionStorage,
@@ -204,14 +178,10 @@ public class LclPaymentApiClientTest {
                         resourceFactory);
 
         String paymentId = "paymentIdValue";
-        RequestBuilder requestBuilder = Mockito.mock(RequestBuilder.class);
-        GetPaymentRequest getPaymentRequest = Mockito.mock(GetPaymentRequest.class);
-        PaymentRequestResource paymentRequestResource = Mockito.mock(PaymentRequestResource.class);
         given(paymentRequestResource.getPaymentInformationStatus()).willReturn("statusValue");
         given(getPaymentRequest.getPaymentRequest()).willReturn(paymentRequestResource);
         given(requestBuilder.get(eq(GetPaymentRequest.class))).willReturn(getPaymentRequest);
         given(lclRequestFactory.getPaymentRequest(eq(paymentId))).willReturn(requestBuilder);
-        GetPaymentResponse expectedPaymentResponse = Mockito.mock(GetPaymentResponse.class);
         given(paymentRequestResource.toPaymentResponse()).willReturn(expectedPaymentResponse);
 
         // when:
@@ -225,13 +195,6 @@ public class LclPaymentApiClientTest {
     @Test
     public void shouldConfirmPaymentWhenWaitingForConfirmation() {
         // given:
-        SessionStorage sessionStorage = Mockito.mock(SessionStorage.class);
-        AgentConfiguration<LclConfiguration> agentConfiguration =
-                Mockito.mock(AgentConfiguration.class);
-        LclRequestFactory lclRequestFactory = Mockito.mock(LclRequestFactory.class);
-        TokenFetcher tokenFetcher = Mockito.mock(TokenFetcher.class);
-        PaymentRequestResourceFactory resourceFactory =
-                Mockito.mock(PaymentRequestResourceFactory.class);
         LclPaymentApiClient paymentApiClient =
                 new LclPaymentApiClient(
                         sessionStorage,
@@ -241,25 +204,14 @@ public class LclPaymentApiClientTest {
                         resourceFactory);
 
         String paymentId = "paymentIdValue";
-        RequestBuilder requestBuilder = Mockito.mock(RequestBuilder.class);
-        GetPaymentRequest getPaymentRequest = Mockito.mock(GetPaymentRequest.class);
-        RequestBuilder confirmRequestBuilder = Mockito.mock(RequestBuilder.class);
-
-        PaymentRequestResource confirmingPaymentRequestResource =
-                Mockito.mock(PaymentRequestResource.class);
-        GetPaymentRequest confirmingGetPaymentRequest = Mockito.mock(GetPaymentRequest.class);
         given(confirmingGetPaymentRequest.getPaymentRequest())
                 .willReturn(confirmingPaymentRequestResource);
-
-        PaymentRequestResource paymentRequestResource = Mockito.mock(PaymentRequestResource.class);
         given(paymentRequestResource.getPaymentInformationStatus()).willReturn("ACTC");
         given(getPaymentRequest.getPaymentRequest()).willReturn(paymentRequestResource);
         given(requestBuilder.get(eq(GetPaymentRequest.class))).willReturn(getPaymentRequest);
         given(lclRequestFactory.getPaymentRequest(eq(paymentId))).willReturn(requestBuilder);
-        GetPaymentResponse expectedPaymentResponse = Mockito.mock(GetPaymentResponse.class);
         given(confirmingPaymentRequestResource.toPaymentResponse())
                 .willReturn(expectedPaymentResponse);
-        ConfirmPaymentRequest confirmPaymentRequest = Mockito.mock(ConfirmPaymentRequest.class);
         given(lclRequestFactory.createConfirmPaymentRequest()).willReturn(confirmPaymentRequest);
         given(lclRequestFactory.confirmPaymentRequest(eq(paymentId), eq(confirmPaymentRequest)))
                 .willReturn(confirmRequestBuilder);

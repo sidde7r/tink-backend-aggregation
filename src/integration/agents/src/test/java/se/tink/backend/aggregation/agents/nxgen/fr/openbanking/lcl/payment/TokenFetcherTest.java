@@ -4,28 +4,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 
 import java.util.Optional;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclTokenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.TokenResponseDto;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TokenFetcherTest {
+
+    @Mock private LclTokenApiClient tokenApiClient;
+    @Mock private SessionStorage sessionStorage;
+    @Mock private TokenResponseDto tokenResponseDto;
+    @Mock private OAuth2Token oAuth2Token;
 
     @Test
     public void shouldFetchTokenIfInvalid() {
 
         // given:
-        LclTokenApiClient tokenApiClient = mock(LclTokenApiClient.class);
-        SessionStorage sessionStorage = mock(SessionStorage.class);
         TokenFetcher tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
         Optional<OAuth2Token> tokenOptional = Optional.empty();
         given(sessionStorage.get(eq("pis_token"), eq(OAuth2Token.class))).willReturn(tokenOptional);
-        TokenResponseDto tokenResponseDto = mock(TokenResponseDto.class);
-        OAuth2Token oAuth2Token = mock(OAuth2Token.class);
         given(tokenResponseDto.toOauthToken()).willReturn(oAuth2Token);
         given(tokenApiClient.getPispToken()).willReturn(tokenResponseDto);
 
@@ -43,10 +47,7 @@ public class TokenFetcherTest {
     public void shouldNotFetchTokenIsValid() {
 
         // given:
-        LclTokenApiClient tokenApiClient = mock(LclTokenApiClient.class);
-        SessionStorage sessionStorage = mock(SessionStorage.class);
         TokenFetcher tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
-        OAuth2Token oAuth2Token = mock(OAuth2Token.class);
         given(oAuth2Token.isValid()).willReturn(true);
         Optional<OAuth2Token> tokenOptional = Optional.of(oAuth2Token);
         given(sessionStorage.get(eq("pis_token"), eq(OAuth2Token.class))).willReturn(tokenOptional);
@@ -63,10 +64,7 @@ public class TokenFetcherTest {
     public void shouldReuseToken() {
 
         // given:
-        LclTokenApiClient tokenApiClient = mock(LclTokenApiClient.class);
-        SessionStorage sessionStorage = mock(SessionStorage.class);
         TokenFetcher tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
-        OAuth2Token oAuth2Token = mock(OAuth2Token.class);
         given(oAuth2Token.canUseAccessToken()).willReturn(true);
         Optional<OAuth2Token> tokenOptional = Optional.of(oAuth2Token);
         given(sessionStorage.get(eq("pis_token"), eq(OAuth2Token.class))).willReturn(tokenOptional);
@@ -84,14 +82,10 @@ public class TokenFetcherTest {
     public void shouldRefetchTokenIfCannotBeUsed() {
 
         // given:
-        LclTokenApiClient tokenApiClient = mock(LclTokenApiClient.class);
-        SessionStorage sessionStorage = mock(SessionStorage.class);
         TokenFetcher tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
-        OAuth2Token oAuth2Token = mock(OAuth2Token.class);
         given(oAuth2Token.canUseAccessToken()).willReturn(false);
         Optional<OAuth2Token> tokenOptional = Optional.of(oAuth2Token);
         given(sessionStorage.get(eq("pis_token"), eq(OAuth2Token.class))).willReturn(tokenOptional);
-        TokenResponseDto tokenResponseDto = mock(TokenResponseDto.class);
         given(tokenResponseDto.toOauthToken()).willReturn(oAuth2Token);
         given(tokenApiClient.getPispToken()).willReturn(tokenResponseDto);
 
