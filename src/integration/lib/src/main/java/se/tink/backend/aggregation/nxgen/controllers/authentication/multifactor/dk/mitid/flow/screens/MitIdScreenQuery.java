@@ -18,45 +18,45 @@ public class MitIdScreenQuery {
     private final List<MitIdScreen> expectedScreensToSearchFor;
     private final int searchForSeconds;
 
-    public static MitIdScreensQueryBuilder builder() {
-        return new MitIdScreensQueryBuilder();
+    public static MitIdScreenQueryBuilder builder() {
+        return new MitIdScreenQueryBuilder();
     }
 
-    public MitIdScreensQueryBuilder toBuilder() {
-        return new MitIdScreensQueryBuilder(this);
+    public MitIdScreenQueryBuilder toBuilder() {
+        return new MitIdScreenQueryBuilder(this);
     }
 
-    public static class MitIdScreensQueryBuilder {
+    public static class MitIdScreenQueryBuilder {
 
         private final List<MitIdScreen> screensToWaitFor;
         private int searchForSeconds;
 
-        public MitIdScreensQueryBuilder() {
+        public MitIdScreenQueryBuilder() {
             screensToWaitFor = new ArrayList<>();
             searchForSeconds = 0;
         }
 
-        public MitIdScreensQueryBuilder(MitIdScreenQuery screenQuery) {
+        public MitIdScreenQueryBuilder(MitIdScreenQuery screenQuery) {
             this.screensToWaitFor = screenQuery.getExpectedScreensToSearchFor();
             this.searchForSeconds = screenQuery.getSearchForSeconds();
         }
 
-        public MitIdScreensQueryBuilder searchForExpectedScreens(MitIdScreen... screens) {
+        public MitIdScreenQueryBuilder searchForExpectedScreens(MitIdScreen... screens) {
             screensToWaitFor.addAll(asList(screens));
             return this;
         }
 
-        public MitIdScreensQueryBuilder searchForExpectedScreens(List<MitIdScreen> screens) {
+        public MitIdScreenQueryBuilder searchForExpectedScreens(List<MitIdScreen> screens) {
             screensToWaitFor.addAll(screens);
             return this;
         }
 
-        public MitIdScreensQueryBuilder searchForSeconds(int seconds) {
+        public MitIdScreenQueryBuilder searchForSeconds(int seconds) {
             this.searchForSeconds = seconds;
             return this;
         }
 
-        public MitIdScreensQueryBuilder searchOnlyOnce() {
+        public MitIdScreenQueryBuilder searchOnlyOnce() {
             this.searchForSeconds = 0;
             return this;
         }
