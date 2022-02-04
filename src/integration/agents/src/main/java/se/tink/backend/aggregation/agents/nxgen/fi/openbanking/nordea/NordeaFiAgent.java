@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.NordeaFiConstants.RetryFilter.NUM_TIMEOUT_RETRIES;
+import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.NordeaFiConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS;
 
 import com.google.inject.Inject;
 import java.util.List;
@@ -23,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.cr
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.creditcard.OneYearLimitCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.transactionalaccount.NordeaFiTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.transactionalaccount.OneYearLimitGetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.filter.NordeaFiRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.payment.NordeaFiPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
@@ -63,6 +66,7 @@ public final class NordeaFiAgent extends NordeaBaseAgent
     @Inject
     public NordeaFiAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
+        client.addFilter(new NordeaFiRetryFilter(NUM_TIMEOUT_RETRIES, RETRY_SLEEP_MILLISECONDS));
         apiClient =
                 new NordeaFiApiClient(
                         componentProvider,
