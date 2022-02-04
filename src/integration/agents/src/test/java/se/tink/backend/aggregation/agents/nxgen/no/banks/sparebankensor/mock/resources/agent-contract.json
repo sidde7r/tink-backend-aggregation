@@ -1,574 +1,424 @@
 {
-    "accounts": [
-        {
-            "accountNumber": "30004254445",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": -4033751.57,
-                "scale": 2,
-                "unscaledValue": -403375157,
-                "exactValue": -4033751.57
-            },
-            "currencyCode": "NOK",
-            "bankId": "30004254445",
-            "excluded": false,
-            "favored": false,
-            "name": "Grønt fleksilån knif",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://NO2530004254445\",\"bban://30004254445\"]",
-            "closed": false,
-            "holderName": "Owner B",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner B",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": -4033751.57
+    "accounts" : [ {
+        "accountNumber" : "30004254445",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : -403375157,
+            "exactValue" : -4033751.57,
+            "doubleValue" : -4033751.57
         },
-        {
-            "accountNumber": "30003804077",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": 401.73,
-                "scale": 2,
-                "unscaledValue": 40173,
-                "exactValue": 401.73
-            },
-            "currencyCode": "NOK",
-            "bankId": "30003804077",
-            "excluded": false,
-            "favored": false,
-            "name": "Ole Martin - Bruk",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://NO4130003804077\",\"bban://30003804077\"]",
-            "closed": false,
-            "holderName": "Owner B",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner B",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 401.73
+        "currencyCode" : "NOK",
+        "availableBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 1624843,
+            "exactValue" : 16248.43,
+            "doubleValue" : 16248.43
         },
-        {
-            "accountNumber": "30003806959",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": 5.63,
-                "scale": 2,
-                "unscaledValue": 563,
-                "exactValue": 5.63
-            },
-            "currencyCode": "NOK",
-            "bankId": "30003806959",
-            "excluded": false,
-            "favored": false,
-            "name": "Ekstra penger - Felles",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://NO2130003806959\",\"bban://30003806959\"]",
-            "closed": false,
-            "holderName": "Owner B",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner B",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 5.63
+        "bankId" : "30004254445",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Grønt fleksilån knif",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://NO2530004254445\",\"bban://30004254445\"]",
+        "closed" : false,
+        "holderName" : "Owner B",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Owner B",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "accountNumber": "30003804093",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": 30.72,
-                "scale": 2,
-                "unscaledValue": 3072,
-                "exactValue": 30.72
-            },
-            "currencyCode": "NOK",
-            "bankId": "30003804093",
-            "excluded": false,
-            "favored": false,
-            "name": "Reise - Felles",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"bban://30003804093\",\"iban://NO9430003804093\"]",
-            "closed": false,
-            "holderName": "Owner B",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner B",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 30.72
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : -4033751.57
+    }, {
+        "accountNumber" : "4444411111",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 3028513,
+            "exactValue" : 30285.13,
+            "doubleValue" : 30285.13
         },
-        {
-            "accountNumber": "4441112223",
-            "accountExclusion": "NONE",
-            "exactAvailableCredit": {
-                "currencyCode": "NOK",
-                "doubleValue": 27884.0,
-                "scale": 1,
-                "unscaledValue": 278840,
-                "exactValue": 27884.0
-            },
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": -2116.0,
-                "scale": 1,
-                "unscaledValue": -21160,
-                "exactValue": -2116.0
-            },
-            "currencyCode": "NOK",
-            "bankId": "4441112223",
-            "excluded": false,
-            "favored": false,
-            "name": "Visa Kredittkort ",
-            "ownership": 1.0,
-            "type": "CREDIT_CARD",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"masked-pan://123456******1234\"]",
-            "closed": false,
-            "holderName": "Firstname Middlename Lastname",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Firstname Middlename Lastname",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 27884.0,
-            "balance": -2116.0
+        "exactBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : -1969857,
+            "exactValue" : -19698.57,
+            "doubleValue" : -19698.57
         },
-        {
-            "accountNumber": "30003806916",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": 4.42,
-                "scale": 2,
-                "unscaledValue": 442,
-                "exactValue": 4.42
-            },
-            "currencyCode": "NOK",
-            "bankId": "30003806916",
-            "excluded": false,
-            "favored": false,
-            "name": "Sparekonto - Asfalt",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://NO1830003806916\",\"bban://30003806916\"]",
-            "closed": false,
-            "holderName": "Owner B",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner B",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 4.42
+        "currencyCode" : "NOK",
+        "bankId" : "4444411111",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Visa Kredittkort ",
+        "ownership" : 1.0,
+        "type" : "CREDIT_CARD",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"masked-pan://479674******9440\"]",
+        "closed" : false,
+        "holderName" : "Name Lastname",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Name Lastname",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "accountNumber": "30002743279",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": 127.43,
-                "scale": 2,
-                "unscaledValue": 12743,
-                "exactValue": 127.43
-            },
-            "currencyCode": "NOK",
-            "bankId": "30002743279",
-            "excluded": false,
-            "favored": false,
-            "name": "Lån og faste kostnader - Felles",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://NO0930002743279\",\"bban://30002743279\"]",
-            "closed": false,
-            "holderName": "Owner B",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner B",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 127.43
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 30285.13,
+        "balance" : -19698.57
+    }, {
+        "accountNumber" : "44444111111",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 563,
+            "exactValue" : 5.63,
+            "doubleValue" : 5.63
         },
-        {
-            "accountNumber": "30003804085",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": 9680.21,
-                "scale": 2,
-                "unscaledValue": 968021,
-                "exactValue": 9680.21
-            },
-            "currencyCode": "NOK",
-            "bankId": "30003804085",
-            "excluded": false,
-            "favored": false,
-            "name": "Mat - Felles",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://NO1930003804085\",\"bban://30003804085\"]",
-            "closed": false,
-            "holderName": "Owner B",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner B",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 9680.21
+        "currencyCode" : "NOK",
+        "availableBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 563,
+            "exactValue" : 5.63,
+            "doubleValue" : 5.63
         },
-        {
-            "accountNumber": "30002429299",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": 10844.94,
-                "scale": 2,
-                "unscaledValue": 1084494,
-                "exactValue": 10844.94
-            },
-            "currencyCode": "NOK",
-            "bankId": "30002429299",
-            "excluded": false,
-            "favored": false,
-            "name": "Owner A",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"bban://30002429299\",\"iban://NO5730002429299\"]",
-            "closed": false,
-            "holderName": "Owner A",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner A",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 10844.94
+        "bankId" : "44444111111",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Ekstra penger - Felles",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"bban://44444111111\"]",
+        "closed" : false,
+        "holderName" : "Owner B",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Owner B",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "accountNumber": "30003804107",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "NOK",
-                "doubleValue": 50.48,
-                "scale": 2,
-                "unscaledValue": 5048,
-                "exactValue": 50.48
-            },
-            "currencyCode": "NOK",
-            "bankId": "30003804107",
-            "excluded": false,
-            "favored": false,
-            "name": "Regninger og variable kost - Felles",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"iban://NO0730003804107\",\"bban://30003804107\"]",
-            "closed": false,
-            "holderName": "Owner B",
-            "accountHolder": {
-                "accountId": null,
-                "type": "PERSONAL",
-                "identities": [
-                    {
-                        "name": "Owner B",
-                        "role": "HOLDER"
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 50.48
-        }
-    ],
-    "transactions": [
-        {
-            "amount": -1700.0,
-            "date": 1634983200000,
-            "description": "OESTERVAAG SKO A/S",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 5.63
+    }, {
+        "accountNumber" : "30003806916",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 442,
+            "exactValue" : 4.42,
+            "doubleValue" : 4.42
         },
-        {
-            "amount": 1700.0,
-            "date": 1635069600000,
-            "description": "Overføring kredittkort",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "currencyCode" : "NOK",
+        "availableBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 442,
+            "exactValue" : 4.42,
+            "doubleValue" : 4.42
         },
-        {
-            "amount": -859.0,
-            "date": 1634810400000,
-            "description": "CIRCLE K HAUGESUNDSGATEN",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "bankId" : "30003806916",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Sparekonto - Asfalt",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://NO1830003806916\",\"bban://30003806916\"]",
+        "closed" : false,
+        "holderName" : "Owner B",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Owner B",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "amount": -1257.0,
-            "date": 1634724000000,
-            "description": "GULL-FUNN KVADR",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 4.42
+    }, {
+        "accountNumber" : "30002743279",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 12743,
+            "exactValue" : 127.43,
+            "doubleValue" : 127.43
         },
-        {
-            "amount": 5001.6,
-            "date": 1634205600000,
-            "description": "Reiseregninger",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "currencyCode" : "NOK",
+        "availableBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 12743,
+            "exactValue" : 127.43,
+            "doubleValue" : 127.43
         },
-        {
-            "amount": -1550.0,
-            "date": 1633946400000,
-            "description": "THON HOTEL",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "bankId" : "30002743279",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Lån og faste kostnader - Felles",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://NO0930002743279\",\"bban://30002743279\"]",
+        "closed" : false,
+        "holderName" : "Owner B",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Owner B",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "amount": -177.0,
-            "date": 1634032800000,
-            "description": "TROMSO TAXI AS",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 127.43
+    }, {
+        "accountNumber" : "30003804085",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 968021,
+            "exactValue" : 9680.21,
+            "doubleValue" : 9680.21
         },
-        {
-            "amount": 1250.0,
-            "date": 1633514400000,
-            "description": "Overføring kredittkort",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "currencyCode" : "NOK",
+        "availableBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 968021,
+            "exactValue" : 9680.21,
+            "doubleValue" : 9680.21
         },
-        {
-            "amount": -1250.0,
-            "date": 1632477600000,
-            "description": "PAA FORUS AS",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "bankId" : "30003804085",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Mat - Felles",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://NO1930003804085\",\"bban://30003804085\"]",
+        "closed" : false,
+        "holderName" : "Owner B",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Owner B",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "amount": -63.6,
-            "date": 1631440800000,
-            "description": "BERG-HANSEN 52713937",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 9680.21
+    }, {
+        "accountNumber" : "30002429299",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 1084494,
+            "exactValue" : 10844.94,
+            "doubleValue" : 10844.94
         },
-        {
-            "amount": -3211.0,
-            "date": 1631440800000,
-            "description": "SAS AIRLINE 1176525295481",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "currencyCode" : "NOK",
+        "availableBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 1084494,
+            "exactValue" : 10844.94,
+            "doubleValue" : 10844.94
         },
-        {
-            "amount": 15571.0,
-            "date": 1630576800000,
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "bankId" : "30002429299",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Owner A",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"bban://30002429299\",\"iban://NO5730002429299\"]",
+        "closed" : false,
+        "holderName" : "Owner A",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Owner A",
+                "role" : "HOLDER"
+            } ]
         },
-        {
-            "amount": -15571.0,
-            "date": 1629885600000,
-            "description": "FORUS BILVERKSTED AS",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": false,
-            "timestamp": 0,
-            "type": "CREDIT_CARD",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        }
-    ]
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 10844.94
+    }, {
+        "accountNumber" : "30003804107",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 5048,
+            "exactValue" : 50.48,
+            "doubleValue" : 50.48
+        },
+        "currencyCode" : "NOK",
+        "availableBalance" : {
+            "currencyCode" : "NOK",
+            "scale" : 2,
+            "unscaledValue" : 5048,
+            "exactValue" : 50.48,
+            "doubleValue" : 50.48
+        },
+        "bankId" : "30003804107",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Regninger og variable kost - Felles",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"iban://NO0730003804107\",\"bban://30003804107\"]",
+        "closed" : false,
+        "holderName" : "Owner B",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Owner B",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 50.48
+    } ],
+    "transactions" : [ {
+        "amount" : -252.0,
+        "date" : 1644231600000,
+        "description" : "JYSKFLOROEN560",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -2099.7,
+        "date" : 1644231600000,
+        "description" : "435PRINCESSAVDFLOROE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -150.0,
+        "date" : 1643972400000,
+        "description" : "Vipps*KRUSE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -269.0,
+        "date" : 1643972400000,
+        "description" : "MESTERGRUPPENASAVDFLOR",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -89.38,
+        "date" : 1643972400000,
+        "description" : "MESTERGRUPPENASAVDFLOR",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    }, {
+        "amount" : -750.0,
+        "date" : 1644058800000,
+        "description" : "JYSKFLOROEN560",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "CREDIT_CARD",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ],
+        "booked" : true
+    } ]
 }
