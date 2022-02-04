@@ -162,7 +162,6 @@ public class KbcAgentWireMockTest {
                         .addPersistentStorageData("consentId", "dummy_consent_id")
                         .addPersistentStorageData("oauth2_access_token", getExpiredToken())
                         .addCredentialField("iban", FAKE_BELGIUM_IBAN)
-                        .addCallbackData("code", "123")
                         .build();
 
         // when
@@ -186,9 +185,8 @@ public class KbcAgentWireMockTest {
 
         // and
         Error errorDetails = sourceAgentPlatformError.getDetails();
-        assertThat(errorDetails.getErrorMessage())
-                .contains("Access token refresh has failed. User must authenticate manually.");
-        assertThat(errorDetails.getErrorCode()).contains("ACCESS_TOKEN_REFRESH_FAILED");
+        assertThat(errorDetails.getErrorMessage()).contains("Session expired.");
+        assertThat(errorDetails.getErrorCode()).contains("APAG-5");
     }
 
     private String getToken() {

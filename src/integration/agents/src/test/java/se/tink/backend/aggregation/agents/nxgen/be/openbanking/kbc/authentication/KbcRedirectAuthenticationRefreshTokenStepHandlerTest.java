@@ -52,7 +52,7 @@ public class KbcRedirectAuthenticationRefreshTokenStepHandlerTest {
                 kbcRedirectAuthenticationRefreshTokenStepHandler.defineResultOfAccessTokenRefresh(
                         agentProceedNextStepAuthenticationRequest, authenticationResult, false);
 
-        // then
+        // expect
         assertThatAccessTokenWasNotRefreshedSuccessfully(tokenRefreshResult);
     }
 
@@ -67,7 +67,7 @@ public class KbcRedirectAuthenticationRefreshTokenStepHandlerTest {
                         authenticationResult,
                         userAvailableForInteraction);
 
-        // then
+        // expect
         assertThatTokenWasNotRefreshedAndNextStepWillFollow(tokenRefreshResult);
     }
 
@@ -93,13 +93,13 @@ public class KbcRedirectAuthenticationRefreshTokenStepHandlerTest {
                 kbcRedirectAuthenticationRefreshTokenStepHandler.defineResultOfAccessTokenRefresh(
                         agentProceedNextStepAuthenticationRequest, authenticationResult, true);
 
-        // then
+        // expect
         assertThat(accessTokenIsSuccessfullyRefreshed(tokenRefreshResult)).isTrue();
     }
 
     private void assertThatAccessTokenWasNotRefreshedSuccessfully(
             AgentAuthenticationResult tokenRefreshResult) {
-        // then
+        // expect
         assertThat(tokenRefreshResult).isExactlyInstanceOf(AgentFailedAuthenticationResult.class);
 
         // and
@@ -110,14 +110,16 @@ public class KbcRedirectAuthenticationRefreshTokenStepHandlerTest {
 
         // and
         Error errorDetails = errorThrown.getDetails();
-        assertThat(errorDetails.getErrorMessage())
-                .contains("Access token refresh has failed. User must authenticate manually.");
-        assertThat(errorDetails.getErrorCode()).contains("ACCESS_TOKEN_REFRESH_FAILED");
+        assertThat(errorDetails.getErrorMessage()).contains("Session expired.");
+        assertThat(errorDetails.getErrorCode()).contains("APAG-5");
+
+        // and
+        assertThat(tokenRefreshResult.getAuthenticationPersistedData().valuesCopy()).isEmpty();
     }
 
     private void assertThatTokenWasNotRefreshedAndNextStepWillFollow(
             AgentAuthenticationResult tokenRefreshResult) {
-        // then
+        // expect
         assertThat(tokenRefreshResult).isNotInstanceOf(AgentFailedAuthenticationResult.class);
 
         // and

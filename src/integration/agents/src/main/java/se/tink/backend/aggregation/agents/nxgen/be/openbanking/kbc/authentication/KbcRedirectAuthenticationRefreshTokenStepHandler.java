@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication;
 
-import java.util.Optional;
+import java.util.HashMap;
 import java.util.UUID;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
@@ -10,12 +10,13 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectPreparationRedirectUrlStep;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.RefreshTokenFailureError;
 import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 
-public class KbcRedirectAuthenticationRefreshTokenStepHandler {
+final class KbcRedirectAuthenticationRefreshTokenStepHandler {
 
-    public AgentAuthenticationResult defineResultOfAccessTokenRefresh(
+    AgentAuthenticationResult defineResultOfAccessTokenRefresh(
             AgentProceedNextStepAuthenticationRequest authenticationProcessRequest,
             AgentAuthenticationResult authenticationResult,
             boolean userAvailableForInteraction) {
@@ -24,33 +25,38 @@ public class KbcRedirectAuthenticationRefreshTokenStepHandler {
             return new AgentProceedNextStepAuthenticationResult(
                     AgentAuthenticationProcessStep.identifier(KbcConsentValidationStep.class),
                     authenticationProcessRequest.getAuthenticationPersistedData());
-        } else if (shouldNotAllowNextStep(authenticationResult, userAvailableForInteraction)) {
+        } else if (nextStepRedirectsAuthenticationToUserWhenUserIsNotAvailable(
+                authenticationResult, userAvailableForInteraction)) {
 
             return new AgentFailedAuthenticationResult(
                     new RefreshTokenFailureError(
                             Error.builder()
                                     .uniqueId(UUID.randomUUID().toString())
-                                    .errorMessage(
-                                            "Access token refresh has failed. User must authenticate manually.")
-                                    .errorCode("ACCESS_TOKEN_REFRESH_FAILED")
+                                    .errorMessage(AgentError.SESSION_EXPIRED.getMessage())
+                                    .errorCode(AgentError.INVALID_CREDENTIALS.getCode())
                                     .build()),
-                    authenticationProcessRequest.getAuthenticationPersistedData());
+                    new AgentAuthenticationPersistedData(new HashMap<>()));
         }
 
         return authenticationResult;
     }
 
-    private boolean shouldNotAllowNextStep(
+    private boolean nextStepRedirectsAuthenticationToUserWhenUserIsNotAvailable(
             AgentAuthenticationResult authenticationResult, boolean userAvailableForInteraction) {
-        Optional<AgentAuthenticationProcessStepIdentifier> stepIdentifier =
-                authenticationResult.getAuthenticationProcessStepIdentifier();
-
         return authenticationResult instanceof AgentProceedNextStepAuthenticationResult
                 && !userAvailableForInteraction
-                && stepIdentifier.isPresent()
-                && stepIdentifier
-                        .get()
-                        .getValue()
-                        .equals(RedirectPreparationRedirectUrlStep.class.getSimpleName());
+                && nextStepIsRedirectPreparationRedirectUrlStep(authenticationResult);
+    }
+
+    private boolean nextStepIsRedirectPreparationRedirectUrlStep(
+            AgentAuthenticationResult authenticationResult) {
+        return authenticationResult
+                .getAuthenticationProcessStepIdentifier()
+                .map(
+                        stepIdentifier ->
+                                RedirectPreparationRedirectUrlStep.class
+                                        .getSimpleName()
+                                        .equals(stepIdentifier.getValue()))
+                .orElse(false);
     }
 }
