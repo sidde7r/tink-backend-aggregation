@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS, LIST_BENEFICIARIES})
 @AgentPisCapability(
         capabilities = PisCapability.SEPA_CREDIT_TRANSFER,
-        markets = {"FR", "IT", "ES", "DE", "PT", "FI", "AT"})
+        markets = {"FR", "IT", "ES", "DE", "PT", "FI", "AT", "NL", "EE", "LT"})
 public final class RevolutEEAAgent extends RevolutBaseAgent {
 
     @Inject
