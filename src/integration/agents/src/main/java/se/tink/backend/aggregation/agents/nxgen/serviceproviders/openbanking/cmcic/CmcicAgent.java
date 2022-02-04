@@ -91,7 +91,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         agentConfig,
                         new CmcicRequestValuesProvider(
                                 componentProvider.getRandomValueGenerator(),
-                                componentProvider.getLocalDateTimeSource()));
+                                componentProvider.getLocalDateTimeSource(),
+                                agentConfiguration.getQsealc()));
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(this.apiClient);
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
