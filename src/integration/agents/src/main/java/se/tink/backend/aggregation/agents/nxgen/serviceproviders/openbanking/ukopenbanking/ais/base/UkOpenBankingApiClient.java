@@ -190,6 +190,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
         String consentId = consentResponse.getConsentId();
         consentDataStorage.saveConsentId(consentId);
+        log.info("[UkOpenBankingApiClient] Created consent - consentId: {}", consentId);
 
         Instant creationDate = consentResponse.getCreationDate();
         consentDataStorage.saveConsentCreationDate(creationDate);
@@ -198,6 +199,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public ConsentResponse fetchConsent(String consentId) {
+        log.info("[UkOpenBankingApiClient] Fetching consent - consentId: {}", consentId);
         return createAisRequest(aisConfig.getConsentDetailsRequestURL(consentId))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .get(ConsentResponse.class);
