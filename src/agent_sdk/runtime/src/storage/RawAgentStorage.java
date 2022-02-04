@@ -11,9 +11,17 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class RawAgentStorage {
     private final Map<String, String> rawStorage;
 
-    public <T> Optional<T> getValue(Field.Key key, TypeReference<T> typeReference) {
+    private <T> Optional<T> getValue(Field.Key key, TypeReference<T> typeReference) {
         return Optional.ofNullable(rawStorage)
                 .map(storage -> storage.getOrDefault(key.getFieldKey(), null))
                 .map(value -> SerializationUtils.deserializeFromString(value, typeReference));
+    }
+
+    public Optional<Map<String, String>> getPersistentStorage() {
+        return getValue(Field.Key.PERSISTENT_STORAGE, new TypeReference<Map<String, String>>() {});
+    }
+
+    public Optional<Map<String, String>> getSessionStorage() {
+        return getValue(Field.Key.SESSION_STORAGE, new TypeReference<Map<String, String>>() {});
     }
 }
