@@ -34,6 +34,7 @@ junit_test(
     runtime_deps = [
     ],
     deps = [
+        "//src/agent_sdk/compatibility_layers/aggregation_service/src/modules",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/amex",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",

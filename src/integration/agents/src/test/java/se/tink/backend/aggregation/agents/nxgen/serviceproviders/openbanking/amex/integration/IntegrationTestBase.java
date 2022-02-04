@@ -59,6 +59,9 @@ import se.tink.libraries.metrics.types.timers.Timer;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.ProviderProviderModule;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.StaticBankCredentialsProviderModule;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.UserProviderModule;
 
 @Ignore
 public abstract class IntegrationTestBase {
@@ -96,7 +99,10 @@ public abstract class IntegrationTestBase {
                 new AgentTemporaryStorageProviderImpl(agentContext.getAgentTemporaryStorage()),
                 new WireMockServerUrlProvider(fakeBankSocket),
                 new WiremockProxyProfilesProvider(),
-                new WiremockQSealcSignerProvider());
+                new WiremockQSealcSignerProvider(),
+                UserProviderModule.mapToUser(credentialsRequest),
+                StaticBankCredentialsProviderModule.mapToStaticBankCredentials(credentialsRequest),
+                ProviderProviderModule.mapToProvider(credentialsRequest));
     }
 
     CredentialsRequest createCredentialsRequest() {
