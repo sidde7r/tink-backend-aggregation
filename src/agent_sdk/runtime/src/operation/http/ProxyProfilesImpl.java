@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.operation.http;
+package se.tink.agent.runtime.operation.http;
 
 import se.tink.agent.sdk.operation.http.ProxyProfiles;
 import se.tink.backend.aggregation.nxgen.http.proxy.ProxyProfile;

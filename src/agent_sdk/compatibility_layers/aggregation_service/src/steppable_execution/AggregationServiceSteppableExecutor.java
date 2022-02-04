@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.agent.runtime.steppable_execution.SteppableExecutor;
+import se.tink.agent.runtime.user_interaction.UserResponseDataImpl;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.base_step.StepResponse;
 import se.tink.agent.sdk.steppable_execution.execution_flow.ExecutionFlow;
@@ -12,8 +14,6 @@ import se.tink.agent.sdk.storage.Storage;
 import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import src.agent_sdk.runtime.src.steppable_execution.SteppableExecutor;
-import src.agent_sdk.runtime.src.user_interaction.UserResponseDataImpl;
 
 public class AggregationServiceSteppableExecutor {
     private static final Duration SUPPLEMENTAL_INFORMATION_WAIT_TIME = Duration.ofMinutes(9);

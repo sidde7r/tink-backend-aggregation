@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.payments.single;
+package se.tink.agent.runtime.payments.single;
 
 import se.tink.agent.sdk.models.payments.payment.Payment;
 import se.tink.agent.sdk.models.payments.payment_reference.PaymentReference;

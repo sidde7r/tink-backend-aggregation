@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.operation;
+package se.tink.agent.runtime.operation;
 
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.user_interaction.SupplementalInformation;

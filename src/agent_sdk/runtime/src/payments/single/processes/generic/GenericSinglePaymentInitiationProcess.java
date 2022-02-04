@@ -1,10 +1,10 @@
-package src.agent_sdk.runtime.src.payments.single.processes.generic;
+package se.tink.agent.runtime.payments.single.processes.generic;
 
 import java.util.Optional;
+import se.tink.agent.runtime.instance.AgentInstance;
+import se.tink.agent.runtime.payments.single.process.SinglePaymentInitiationProcess;
 import se.tink.agent.sdk.payments.features.single.InitiateSinglePaymentGeneric;
 import se.tink.agent.sdk.payments.single.generic.GenericSinglePaymentInitiator;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
-import src.agent_sdk.runtime.src.payments.single.process.SinglePaymentInitiationProcess;
 
 public class GenericSinglePaymentInitiationProcess implements SinglePaymentInitiationProcess {
     @Override

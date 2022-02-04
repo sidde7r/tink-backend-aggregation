@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.steppable_execution;
+package se.tink.agent.runtime.steppable_execution;
 
 import java.time.Duration;
 import java.time.Instant;

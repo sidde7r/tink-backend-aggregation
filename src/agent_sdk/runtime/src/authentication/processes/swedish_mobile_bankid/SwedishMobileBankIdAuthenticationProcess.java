@@ -1,6 +1,8 @@
-package src.agent_sdk.runtime.src.authentication.processes.swedish_mobile_bankid;
+package se.tink.agent.runtime.authentication.processes.swedish_mobile_bankid;
 
 import java.util.Optional;
+import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
+import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.swedish_mobile_bankid.SwedishMobileBankIdAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.swedish_mobile_bankid.steps.SwedishMobileBankIdOpenAppStep;
 import se.tink.agent.sdk.authentication.authenticators.thirdparty_app.steps.ThirdPartyAppInitStep;
@@ -11,8 +13,6 @@ import se.tink.agent.sdk.authentication.features.AuthenticateSwedishMobileBankId
 import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
 import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.utils.Sleeper;
-import src.agent_sdk.runtime.src.authentication.processes.AuthenticationProcess;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
 
 public class SwedishMobileBankIdAuthenticationProcess
         implements AuthenticationProcess<SwedishMobileBankIdAuthenticator> {

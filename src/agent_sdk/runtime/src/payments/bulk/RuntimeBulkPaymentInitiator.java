@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.payments.bulk;
+package se.tink.agent.runtime.payments.bulk;
 
 import java.util.List;
 import se.tink.agent.sdk.models.payments.BulkPaymentSigningBasket;

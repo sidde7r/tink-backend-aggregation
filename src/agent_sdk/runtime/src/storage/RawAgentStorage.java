@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.storage;
+package se.tink.agent.runtime.storage;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Map;

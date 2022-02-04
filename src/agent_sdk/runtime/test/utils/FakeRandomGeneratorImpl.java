@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.test.utils;
+package se.tink.agent.runtime.test.utils;
 
 import java.util.Arrays;
 import java.util.Base64;

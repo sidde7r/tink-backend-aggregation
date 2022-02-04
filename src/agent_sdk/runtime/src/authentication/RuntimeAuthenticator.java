@@ -1,8 +1,19 @@
-package src.agent_sdk.runtime.src.authentication;
+package se.tink.agent.runtime.authentication;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
+import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.berlingroup.BerlinGroupAuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.generic.GenericAuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.oauth2.Oauth2AuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.oauth2_decoupled_app.Oauth2DecoupledAppAuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.oauth2_decoupled_swedish_mobile_bankid.Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.swedish_mobile_bankid.SwedishMobileBankIdAuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.thirdparty_app.ThirdPartyAppAuthenticationProcess;
+import se.tink.agent.runtime.authentication.processes.username_password.UsernameAndPasswordAuthenticationProcess;
+import se.tink.agent.runtime.instance.AgentInstance;
+import se.tink.agent.runtime.operation.MultifactorAuthenticationStateImpl;
 import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
 import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.environment.Operation;
@@ -12,17 +23,6 @@ import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.base_step.StepResponse;
 import se.tink.agent.sdk.steppable_execution.execution_flow.ExecutionFlow;
-import src.agent_sdk.runtime.src.authentication.processes.AuthenticationProcess;
-import src.agent_sdk.runtime.src.authentication.processes.berlingroup.BerlinGroupAuthenticationProcess;
-import src.agent_sdk.runtime.src.authentication.processes.generic.GenericAuthenticationProcess;
-import src.agent_sdk.runtime.src.authentication.processes.oauth2.Oauth2AuthenticationProcess;
-import src.agent_sdk.runtime.src.authentication.processes.oauth2_decoupled_app.Oauth2DecoupledAppAuthenticationProcess;
-import src.agent_sdk.runtime.src.authentication.processes.oauth2_decoupled_swedish_mobile_bankid.Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess;
-import src.agent_sdk.runtime.src.authentication.processes.swedish_mobile_bankid.SwedishMobileBankIdAuthenticationProcess;
-import src.agent_sdk.runtime.src.authentication.processes.thirdparty_app.ThirdPartyAppAuthenticationProcess;
-import src.agent_sdk.runtime.src.authentication.processes.username_password.UsernameAndPasswordAuthenticationProcess;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
-import src.agent_sdk.runtime.src.operation.MultifactorAuthenticationStateImpl;
 
 public class RuntimeAuthenticator {
     private final AgentInstance agentInstance;

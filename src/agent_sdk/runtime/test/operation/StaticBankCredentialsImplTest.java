@@ -1,11 +1,11 @@
-package src.agent_sdk.runtime.test.operation;
+package se.tink.agent.runtime.test.operation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import src.agent_sdk.runtime.src.operation.StaticBankCredentialsImpl;
+import se.tink.agent.runtime.operation.StaticBankCredentialsImpl;
 
 public class StaticBankCredentialsImplTest {
     @Test

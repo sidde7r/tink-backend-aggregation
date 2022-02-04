@@ -1,6 +1,8 @@
-package src.agent_sdk.runtime.src.authentication.processes.oauth2;
+package se.tink.agent.runtime.authentication.processes.oauth2;
 
 import java.util.Optional;
+import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
+import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.Oauth2Authenticator;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.steps.Oauth2ExchangeAuthorizationCodeStep;
 import se.tink.agent.sdk.authentication.authenticators.oauth2.steps.Oauth2OpenAuthorizationAppStep;
@@ -10,8 +12,6 @@ import se.tink.agent.sdk.authentication.features.AuthenticateOauth2;
 import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
 import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
-import src.agent_sdk.runtime.src.authentication.processes.AuthenticationProcess;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
 
 public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2Authenticator> {
     private final MultifactorAuthenticationState multifactorAuthenticationState;

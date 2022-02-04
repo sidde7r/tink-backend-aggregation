@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.payments.beneficiary;
+package se.tink.agent.runtime.payments.beneficiary;
 
 import se.tink.agent.sdk.models.payments.beneficiary.Beneficiary;
 import se.tink.agent.sdk.models.payments.beneficiary_register_result.BeneficiaryRegisterResult;

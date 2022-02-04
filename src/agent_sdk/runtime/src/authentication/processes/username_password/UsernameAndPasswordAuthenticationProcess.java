@@ -1,6 +1,8 @@
-package src.agent_sdk.runtime.src.authentication.processes.username_password;
+package se.tink.agent.runtime.authentication.processes.username_password;
 
 import java.util.Optional;
+import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
+import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.username_password.UsernameAndPasswordAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.username_password.steps.UsernameAndPasswordStep;
 import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
@@ -8,8 +10,6 @@ import se.tink.agent.sdk.authentication.features.AuthenticateUsernameAndPassword
 import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
 import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
-import src.agent_sdk.runtime.src.authentication.processes.AuthenticationProcess;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
 
 public class UsernameAndPasswordAuthenticationProcess
         implements AuthenticationProcess<UsernameAndPasswordAuthenticator> {

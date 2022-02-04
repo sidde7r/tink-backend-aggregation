@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.http_proxy;
 
 import com.google.inject.Inject;
+import se.tink.agent.runtime.operation.http.ProxyProfilesImpl;
 import se.tink.agent.sdk.operation.http.ProxyProfiles;
 import se.tink.backend.aggregation.nxgen.http.proxy.NoopProxyProfile;
-import src.agent_sdk.runtime.src.operation.http.ProxyProfilesImpl;
 
 public class WiremockProxyProfilesProvider implements ProxyProfilesProvider {
     private final ProxyProfilesImpl proxyProfiles;

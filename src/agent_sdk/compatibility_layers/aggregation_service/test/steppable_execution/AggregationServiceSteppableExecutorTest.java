@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import se.tink.agent.runtime.steppable_execution.SteppableExecutor;
 import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.execution_flow.ExecutionFlowBuilder;
@@ -21,7 +22,6 @@ import se.tink.agent.sdk.user_interaction.UserResponseData;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.steppable_execution.AggregationServiceSteppableExecutor;
-import src.agent_sdk.runtime.src.steppable_execution.SteppableExecutor;
 
 public class AggregationServiceSteppableExecutorTest {
     private AggregationServiceSteppableExecutor executor;

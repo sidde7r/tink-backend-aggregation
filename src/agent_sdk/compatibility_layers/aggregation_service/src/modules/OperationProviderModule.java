@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.agent.runtime.environment.OperationImpl;
+import se.tink.agent.runtime.storage.RawAgentStorage;
 import se.tink.agent.sdk.environment.Operation;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
@@ -15,8 +17,6 @@ import se.tink.agent.sdk.operation.aggregator_configuration.AggregatorConfigurat
 import se.tink.agent.sdk.storage.SerializableStorage;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.http_proxy.ProxyProfilesProvider;
-import src.agent_sdk.runtime.src.environment.OperationImpl;
-import src.agent_sdk.runtime.src.storage.RawAgentStorage;
 
 @Slf4j
 public class OperationProviderModule extends AbstractModule {

@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.operation.aggregator_configuration;
+package se.tink.agent.runtime.operation.aggregator_configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

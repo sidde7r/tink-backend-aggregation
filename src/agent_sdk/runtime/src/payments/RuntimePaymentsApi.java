@@ -1,18 +1,18 @@
-package src.agent_sdk.runtime.src.payments;
+package se.tink.agent.runtime.payments;
 
 import java.util.Optional;
 import java.util.stream.Stream;
+import se.tink.agent.runtime.instance.AgentInstance;
+import se.tink.agent.runtime.payments.beneficiary.RuntimeBeneficiariesFetcher;
+import se.tink.agent.runtime.payments.beneficiary.RuntimeBeneficiaryRegistrator;
+import se.tink.agent.runtime.payments.beneficiary.processes.generic.GenericBeneficiaryRegistrationProcess;
+import se.tink.agent.runtime.payments.bulk.RuntimeBulkPaymentInitiator;
+import se.tink.agent.runtime.payments.bulk.processes.generic.GenericBulkPaymentInitiationProcess;
+import se.tink.agent.runtime.payments.global_signing_basket.RuntimeUnsignedPaymentsDeleter;
+import se.tink.agent.runtime.payments.single.RuntimeSinglePaymentInitiator;
+import se.tink.agent.runtime.payments.single.processes.generic.GenericSinglePaymentInitiationProcess;
 import se.tink.agent.sdk.payments.features.beneficiary.FetchBeneficiaries;
 import se.tink.agent.sdk.payments.features.global_signing_basket.DeleteUnsignedPayments;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
-import src.agent_sdk.runtime.src.payments.beneficiary.RuntimeBeneficiariesFetcher;
-import src.agent_sdk.runtime.src.payments.beneficiary.RuntimeBeneficiaryRegistrator;
-import src.agent_sdk.runtime.src.payments.beneficiary.processes.generic.GenericBeneficiaryRegistrationProcess;
-import src.agent_sdk.runtime.src.payments.bulk.RuntimeBulkPaymentInitiator;
-import src.agent_sdk.runtime.src.payments.bulk.processes.generic.GenericBulkPaymentInitiationProcess;
-import src.agent_sdk.runtime.src.payments.global_signing_basket.RuntimeUnsignedPaymentsDeleter;
-import src.agent_sdk.runtime.src.payments.single.RuntimeSinglePaymentInitiator;
-import src.agent_sdk.runtime.src.payments.single.processes.generic.GenericSinglePaymentInitiationProcess;
 
 public class RuntimePaymentsApi {
     private final AgentInstance agentInstance;

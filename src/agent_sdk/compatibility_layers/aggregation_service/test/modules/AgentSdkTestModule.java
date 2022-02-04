@@ -1,6 +1,9 @@
 package src.agent_sdk.compatibility_layers.aggregation_service.test.modules;
 
 import com.google.inject.AbstractModule;
+import se.tink.agent.runtime.test.utils.FakeRandomGeneratorImpl;
+import se.tink.agent.runtime.test.utils.FakeSleeperImpl;
+import se.tink.agent.runtime.test.utils.FakeTimeGeneratorImpl;
 import se.tink.agent.sdk.utils.RandomGenerator;
 import se.tink.agent.sdk.utils.Sleeper;
 import se.tink.agent.sdk.utils.TimeGenerator;
@@ -11,9 +14,6 @@ import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.RawAge
 import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.StaticBankCredentialsProviderModule;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.SupplementalInformationHelperProviderModule;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.UserProviderModule;
-import src.agent_sdk.runtime.test.utils.FakeRandomGeneratorImpl;
-import src.agent_sdk.runtime.test.utils.FakeSleeperImpl;
-import src.agent_sdk.runtime.test.utils.FakeTimeGeneratorImpl;
 
 public class AgentSdkTestModule extends AbstractModule {
     private final RandomGenerator randomGenerator;

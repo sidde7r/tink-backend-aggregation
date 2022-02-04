@@ -1,10 +1,10 @@
-package src.agent_sdk.runtime.src.payments.beneficiary.processes.generic;
+package se.tink.agent.runtime.payments.beneficiary.processes.generic;
 
 import java.util.Optional;
+import se.tink.agent.runtime.instance.AgentInstance;
+import se.tink.agent.runtime.payments.beneficiary.process.BeneficiaryRegistrationProcess;
 import se.tink.agent.sdk.payments.beneficiary.generic.GenericBeneficiaryRegistrator;
 import se.tink.agent.sdk.payments.features.beneficiary.RegisterBeneficiaryGeneric;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
-import src.agent_sdk.runtime.src.payments.beneficiary.process.BeneficiaryRegistrationProcess;
 
 public class GenericBeneficiaryRegistrationProcess implements BeneficiaryRegistrationProcess {
     @Override

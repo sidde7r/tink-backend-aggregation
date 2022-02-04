@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.payments.beneficiary;
+package se.tink.agent.runtime.payments.beneficiary;
 
 import java.util.List;
 import se.tink.agent.sdk.models.payments.beneficiary.Beneficiary;

@@ -1,9 +1,9 @@
-package src.agent_sdk.runtime.src.authentication.processes;
+package se.tink.agent.runtime.authentication.processes;
 
 import java.util.Optional;
+import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
 import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
 
 public interface AuthenticationProcess<T> {
     Optional<T> tryInstantiateAuthenticator(AgentInstance agentInstance);

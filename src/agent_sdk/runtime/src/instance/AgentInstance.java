@@ -1,8 +1,8 @@
-package src.agent_sdk.runtime.src.instance;
+package se.tink.agent.runtime.instance;
 
 import com.google.common.base.Preconditions;
 import java.util.Optional;
-import src.agent_sdk.runtime.src.environment.AgentEnvironment;
+import se.tink.agent.runtime.environment.AgentEnvironment;
 
 public class AgentInstance {
     private final AgentEnvironment environment;

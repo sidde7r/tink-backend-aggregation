@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.user_interaction;
+package se.tink.agent.runtime.user_interaction;
 
 import com.google.common.base.Strings;
 import java.util.Map;
