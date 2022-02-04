@@ -1,6 +1,13 @@
 package se.tink.integration.webdriver.service;
 
+import static se.tink.integration.webdriver.service.WebDriverConstants.LOG_TAG;
+
 import com.google.inject.Inject;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
@@ -8,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.integration.webdriver.service.basicutils.WebDriverBasicUtils;
 import se.tink.integration.webdriver.service.proxy.ProxyManager;
@@ -19,23 +27,13 @@ import se.tink.integration.webdriver.service.searchelements.ElementsSearcher;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
 public class WebDriverServiceImpl implements WebDriverService {
 
+    private static final String BREAK_LINE = "<br/>";
+    private static final Pattern IFRAME_TAG_PATTERN = Pattern.compile("(?s)<iframe.*>.*</iframe>");
+
     @Delegate private final WebDriverWrapper driver;
     @Delegate private final WebDriverBasicUtils driverBasicUtils;
     @Delegate private final ElementsSearcher elementsSearcher;
     @Delegate private final ProxyManager proxyManager;
-
-    @Override
-    public String getFullPageSourceLog(By iframeSelector) {
-        driverBasicUtils.switchToParentWindow();
-        String mainPageSource = driver.getPageSource();
-
-        boolean switchedToIframe = driverBasicUtils.trySwitchToIframe(iframeSelector);
-        String iframeSource = switchedToIframe ? driver.getPageSource() : null;
-
-        return String.format(
-                "Main page source:%n" + "%s" + "%nIframe source:%n" + "%s",
-                mainPageSource, iframeSource);
-    }
 
     @Override
     public void clickButton(ElementLocator locator) {
@@ -55,7 +53,7 @@ public class WebDriverServiceImpl implements WebDriverService {
             style recalculations that cause element to be recreated.
             If such thing occurs, we should try to click button one more time.
              */
-            log.warn("{} Stale button element reference", WebDriverConstants.LOG_TAG);
+            log.warn("{} Stale button element reference", LOG_TAG);
             clickButtonInternal(locator);
         }
     }
@@ -93,5 +91,76 @@ public class WebDriverServiceImpl implements WebDriverService {
                                                 "Could not find element by " + locator));
 
         element.sendKeys(value);
+    }
+
+    @Override
+    public String getFullPageSourceLog(int maxHeight) {
+        StringBuilder stringBuilder = new StringBuilder();
+        buildPageLog("html", Collections.emptyMap(), 0, 0, maxHeight, stringBuilder);
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public void terminate(AgentTemporaryStorage agentTemporaryStorage) {
+        proxyManager.shutDownProxy();
+        agentTemporaryStorage.remove(driver.getDriverId());
+    }
+
+    void buildPageLog(
+            String tag,
+            Map<String, String> attributes,
+            int height,
+            int width,
+            int maxHeight,
+            StringBuilder stringBuilder) {
+        if (height > maxHeight) {
+            return;
+        }
+
+        String content = driver.getPageSource();
+        content = commentOutIframeTag(content);
+
+        stringBuilder
+                .append("----------")
+                .append(BREAK_LINE)
+                .append("Tag: ")
+                .append(tag)
+                .append(BREAK_LINE)
+                .append("Attributes: ")
+                .append(attributes)
+                .append(BREAK_LINE)
+                .append("Tree location: height ")
+                .append(height)
+                .append(" width ")
+                .append(width)
+                .append(BREAK_LINE)
+                .append("Page source: ")
+                .append(content)
+                .append(BREAK_LINE);
+
+        // this will return only current top level iframes, without iframes nested inside them
+        List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+        for (int index = 0; index < iframes.size(); index++) {
+
+            WebElement iframe = iframes.get(index);
+            Map<String, String> iframeAttributes = driverBasicUtils.getElementAttributes(iframe);
+
+            boolean switchedToIframe = driverBasicUtils.trySwitchToIframe(iframe);
+            if (!switchedToIframe) {
+                log.warn("{} Skipping iframe in page source - could not switch", LOG_TAG);
+                continue;
+            }
+            buildPageLog("iframe", iframeAttributes, height + 1, index, maxHeight, stringBuilder);
+            driver.switchTo().parentFrame();
+        }
+    }
+
+    private String commentOutIframeTag(String pageContent) {
+        Matcher matcher = IFRAME_TAG_PATTERN.matcher(pageContent);
+        if (matcher.find()) {
+            String iframeTag = matcher.group();
+            pageContent = pageContent.replace(iframeTag, "<!--" + iframeTag + "-->");
+        }
+        return pageContent;
     }
 }

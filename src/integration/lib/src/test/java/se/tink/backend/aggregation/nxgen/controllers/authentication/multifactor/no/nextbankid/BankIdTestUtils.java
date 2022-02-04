@@ -19,7 +19,7 @@ import org.mockito.exceptions.base.MockitoException;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.integration.webdriver.service.WebDriverService;
-import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.proxy.ProxyResponse;
 import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 import se.tink.integration.webdriver.service.searchelements.ElementsSearchResult;
 
@@ -106,14 +106,14 @@ public class BankIdTestUtils {
                                 }));
     }
 
-    public static ResponseFromProxy mockProxyResponseWithHeaders(Map<String, String> headers) {
+    public static ProxyResponse mockProxyResponseWithHeaders(Map<String, String> headers) {
         HttpHeaders httpHeaders = new DefaultHttpHeaders();
         headers.forEach(httpHeaders::add);
 
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponse.headers()).thenReturn(httpHeaders);
 
-        ResponseFromProxy proxyResponse = mock(ResponseFromProxy.class);
+        ProxyResponse proxyResponse = mock(ProxyResponse.class);
         when(proxyResponse.getResponse()).thenReturn(httpResponse);
         return proxyResponse;
     }

@@ -13,7 +13,7 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Test;
 import se.tink.integration.webdriver.service.WebDriverService;
-import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.proxy.ProxyResponse;
 
 public class BankIdIframeAuthenticationResultTest {
 
@@ -43,7 +43,7 @@ public class BankIdIframeAuthenticationResultTest {
                                         .build()));
 
         BankIdIframeAuthenticationResult authenticationResult =
-                new BankIdIframeAuthenticationResult(mock(ResponseFromProxy.class), driver);
+                new BankIdIframeAuthenticationResult(mock(ProxyResponse.class), driver);
 
         // when
         List<Cookie> cookies = authenticationResult.getCookies();

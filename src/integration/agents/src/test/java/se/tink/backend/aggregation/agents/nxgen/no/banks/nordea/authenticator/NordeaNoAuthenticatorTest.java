@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationResult;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.proxy.ProxyResponse;
 
 public class NordeaNoAuthenticatorTest {
 
@@ -65,7 +65,7 @@ public class NordeaNoAuthenticatorTest {
         when(storage.retrieveCodeVerifier()).thenReturn("STORAGE_CODE_VERIFIER");
 
         // when
-        ResponseFromProxy responseFromProxy =
+        ProxyResponse proxyResponse =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(
                                 "someKey1",
@@ -77,7 +77,7 @@ public class NordeaNoAuthenticatorTest {
         BankIdIframeAuthenticationResult iframeAuthenticationResult =
                 mock(BankIdIframeAuthenticationResult.class);
         when(iframeAuthenticationResult.getProxyResponseFromAuthFinishUrl())
-                .thenReturn(responseFromProxy);
+                .thenReturn(proxyResponse);
 
         authenticator.handleBankIdAuthenticationResult(iframeAuthenticationResult);
 
@@ -112,7 +112,7 @@ public class NordeaNoAuthenticatorTest {
         when(authenticationClient.getOathToken(any(), any())).thenReturn(tokenResponse);
 
         // when
-        ResponseFromProxy responseFromProxy =
+        ProxyResponse proxyResponse =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(
                                 "someKey1", "someValue1",
@@ -120,7 +120,7 @@ public class NordeaNoAuthenticatorTest {
         BankIdIframeAuthenticationResult iframeAuthenticationResult =
                 mock(BankIdIframeAuthenticationResult.class);
         when(iframeAuthenticationResult.getProxyResponseFromAuthFinishUrl())
-                .thenReturn(responseFromProxy);
+                .thenReturn(proxyResponse);
 
         Throwable throwable =
                 catchThrowable(
@@ -145,7 +145,7 @@ public class NordeaNoAuthenticatorTest {
         when(authenticationClient.getOathToken(any(), any())).thenReturn(tokenResponse);
 
         // when
-        ResponseFromProxy responseFromProxy =
+        ProxyResponse proxyResponse =
                 mockProxyResponseWithHeaders(
                         ImmutableMap.of(
                                 "someKey1", "someValue1",
@@ -154,7 +154,7 @@ public class NordeaNoAuthenticatorTest {
         BankIdIframeAuthenticationResult iframeAuthenticationResult =
                 mock(BankIdIframeAuthenticationResult.class);
         when(iframeAuthenticationResult.getProxyResponseFromAuthFinishUrl())
-                .thenReturn(responseFromProxy);
+                .thenReturn(proxyResponse);
 
         Throwable throwable =
                 catchThrowable(

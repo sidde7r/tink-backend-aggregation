@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
-import se.tink.integration.webdriver.service.proxy.ProxyResponseMatcher;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseMatcher;
 
 public interface BankIdIframeAuthenticator {
 
@@ -21,7 +21,7 @@ public interface BankIdIframeAuthenticator {
      * finish the rest of it in Agent. Otherwise we would have to inject some JS interceptors, which
      * is a separate task for each bank.
      */
-    ProxyResponseMatcher getMatcherForResponseThatIndicatesAuthenticationWasFinished();
+    ProxySaveResponseMatcher getProxyResponseMatcherToDetectAuthenticationWasFinished();
 
     void handleBankIdAuthenticationResult(BankIdIframeAuthenticationResult authenticationResult);
 }

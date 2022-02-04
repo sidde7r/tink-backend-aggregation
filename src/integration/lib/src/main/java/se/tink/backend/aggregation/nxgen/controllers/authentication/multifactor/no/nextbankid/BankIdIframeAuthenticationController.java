@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid;
 
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
@@ -12,7 +13,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdIframeController;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
-import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.proxy.ProxyResponse;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 import se.tink.libraries.credentials.service.UserAvailability;
 
 /**
@@ -62,6 +64,7 @@ public class BankIdIframeAuthenticationController
     private final BankIdAuthenticationState authenticationState;
     private final BankIdIframeInitializer iframeInitializer;
     private final BankIdIframeAuthenticator iframeAuthenticator;
+    private final ProxySaveResponseFilter authFinishProxyFilter;
     private final BankIdIframeController iframeController;
     private final UserAvailability userAvailability;
 
@@ -77,7 +80,7 @@ public class BankIdIframeAuthenticationController
         checkIfUserIsPresent();
 
         try {
-            setupProxyResponseListener();
+            setupProxyResponseFilter();
 
             BankIdIframeFirstWindow firstIframeWindow =
                     iframeInitializer.initializeIframe(webDriver);
@@ -85,7 +88,7 @@ public class BankIdIframeAuthenticationController
 
             iframeController.authenticateWithCredentials(credentials);
 
-            ResponseFromProxy authFinishUrlProxyResponse = waitForAuthFinishUrlResponse();
+            ProxyResponse authFinishUrlProxyResponse = waitForAuthFinishUrlResponse();
 
             iframeAuthenticator.handleBankIdAuthenticationResult(
                     BankIdIframeAuthenticationResult.builder()
@@ -97,13 +100,12 @@ public class BankIdIframeAuthenticationController
             log.error(
                     "{} BankID iframe authentication error: {}\n{}",
                     e.getMessage(),
-                    webDriver.getFullPageSourceLog(BankIdConstants.HtmlSelectors.BY_IFRAME),
+                    webDriver.getFullPageSourceLog(3),
                     e);
             throw e;
 
         } finally {
-            webDriver.shutDownProxy();
-            agentTemporaryStorage.remove(webDriver.getDriverId());
+            webDriver.terminate(agentTemporaryStorage);
         }
     }
 
@@ -114,14 +116,18 @@ public class BankIdIframeAuthenticationController
         }
     }
 
-    private void setupProxyResponseListener() {
-        webDriver.setProxyResponseMatcher(
-                iframeAuthenticator.getMatcherForResponseThatIndicatesAuthenticationWasFinished());
+    private void setupProxyResponseFilter() {
+        /*
+        NOTE: If we ever need to enable request filtering, we'll need to investigate if it's even possible.
+        Right now, when enabled, request filtering always results in BankID iframe "network issues" error.
+         */
+        webDriver.enableResponseFiltering();
+        webDriver.registerProxyFilter("authFinishProxyFilter", authFinishProxyFilter);
     }
 
-    private ResponseFromProxy waitForAuthFinishUrlResponse() {
-        return webDriver
-                .waitForMatchingProxyResponse(WAIT_FOR_PROXY_RESPONSE_IN_SECONDS)
+    private ProxyResponse waitForAuthFinishUrlResponse() {
+        return authFinishProxyFilter
+                .waitForResponse(WAIT_FOR_PROXY_RESPONSE_IN_SECONDS, TimeUnit.SECONDS)
                 .orElseThrow(() -> new IllegalStateException("Did not found proxy response"));
     }
 }

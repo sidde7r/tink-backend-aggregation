@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-17 15:27+0100\n"
+"POT-Creation-Date: 2022-01-24 18:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2013,4 +2013,82 @@ msgstr ""
 msgid ""
 "Please confirm the login in your Comdirect app and then return to continue "
 "the connection"
+msgstr ""
+
+msgid "To continue, open your MitID app"
+msgstr ""
+
+msgid "Continue"
+msgstr ""
+
+msgid "MitID method is not available for your account."
+msgstr ""
+
+msgid ""
+"Currently, the only MitID authentication method support is MitID app. Please "
+"enable it and try again."
+msgstr ""
+
+msgid "Invalid user ID format."
+msgstr ""
+
+msgid "Provided user ID does not exist."
+msgstr ""
+
+msgid ""
+"Your MitID app has received several requests at the same time. All the "
+"requests have been cancelled for security reasons."
+msgstr ""
+
+msgid "Your MitID app is temporarily blocked, please try again later."
+msgstr ""
+
+msgid "MitID code app request timed out."
+msgstr ""
+
+msgid "MitID code app request was rejected."
+msgstr ""
+
+msgid "MitID code app encountered unknown technical error. Please try again."
+msgstr ""
+
+msgid "Invalid CPR format."
+msgstr ""
+
+msgid "Invalid CPR number."
+msgstr ""
+
+msgid "MitID authentication took too long - session timed out."
+msgstr ""
+
+msgid "MitID authentication has failed with an unspecified error."
+msgstr ""
+
+msgid "MitID authentication has failed with an unknown error message."
+msgstr ""
+
+msgid "Please enter your MitID user ID"
+msgstr ""
+
+msgid ""
+"Your MitID user ID is the name you are identified by when you log on or "
+"approve using MitID."
+msgstr ""
+
+msgid ""
+"User ID must be made up of the following symbols: "
+"abcdefghijklmnopqrstuvwxyzæøå0123456789{}!#$^,*()_+-=:;?.@ and spacebar."
+msgstr ""
+
+msgid "Please enter your CPR number"
+msgstr ""
+
+msgid ""
+"CPR number is usually required only during the very first MitID login. If "
+"you're continuously asked for it, you can authenticate on your bank's "
+"website, enter CPR and select a checkbox to remember it for all future "
+"authentications."
+msgstr ""
+
+msgid "CPR must be a 10 digit number"
 msgstr ""

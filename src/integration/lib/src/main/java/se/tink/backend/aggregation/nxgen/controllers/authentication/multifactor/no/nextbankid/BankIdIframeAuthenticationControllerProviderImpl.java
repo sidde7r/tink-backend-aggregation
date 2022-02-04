@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.WebDriverServiceModule;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 import se.tink.libraries.credentials.service.UserAvailability;
 import se.tink.libraries.i18n.Catalog;
 
@@ -25,6 +26,11 @@ public class BankIdIframeAuthenticationControllerProviderImpl
         WebDriverService webDriverService =
                 WebDriverServiceModule.createWebDriverService(agentTemporaryStorage);
 
+        ProxySaveResponseFilter authFinishProxyFilter =
+                new ProxySaveResponseFilter(
+                        iframeAuthenticator
+                                .getProxyResponseMatcherToDetectAuthenticationWasFinished());
+
         BankIdAuthenticationState authenticationState = new BankIdAuthenticationState();
 
         BankIdIframeController iframeController =
@@ -41,6 +47,7 @@ public class BankIdIframeAuthenticationControllerProviderImpl
                 authenticationState,
                 iframeInitializer,
                 iframeAuthenticator,
+                authFinishProxyFilter,
                 iframeController,
                 userAvailability);
     }

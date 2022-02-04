@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.firstdirect;
 
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.*;
 import static se.tink.backend.aggregation.agents.agentcapabilities.PisCapability.FASTER_PAYMENTS;
 
 import com.google.inject.Inject;
@@ -36,9 +32,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.RequiredReferenceRemittanceInfoDomesticSchedulerPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.PaymentRequestWithRequiredReferenceRemittanceInfoValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.HsbcBankSideErrorFilter;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.HsbcGroupApiClient;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.pis.signature.HsbcSignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.HsbcBankSideErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.HsbcGroupApiClient;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.pis.signature.HsbcSignatureCreator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

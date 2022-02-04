@@ -15,6 +15,6 @@ public final class AgentsCanBeFoundTest {
         AgentClassFactory.getAgentClass("nxgen.uk.openbanking.ukob.aib.AibV31Agent");
         AgentClassFactory.getAgentClass("nxgen.uk.openbanking.danskebank.DanskeBankV31Agent");
         AgentClassFactory.getAgentClass(
-                "nxgen.uk.openbanking.ukob.firstdirect.FirstDirectV31Agent");
+                "nxgen.uk.openbanking.ukob.hsbcgroup.firstdirect.FirstDirectV31Agent");
     }
 }

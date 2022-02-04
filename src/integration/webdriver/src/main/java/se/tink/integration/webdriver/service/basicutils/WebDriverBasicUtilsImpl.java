@@ -1,9 +1,11 @@
 package se.tink.integration.webdriver.service.basicutils;
 
 import com.google.inject.Inject;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
@@ -31,14 +33,14 @@ public class WebDriverBasicUtilsImpl implements WebDriverBasicUtils {
 
     @Override
     public boolean trySwitchToIframe(By iframeSelector) {
+        return tryFindElement(iframeSelector).map(this::trySwitchToIframe).orElse(false);
+    }
+
+    @Override
+    public boolean trySwitchToIframe(WebElement iframe) {
         try {
-            return tryFindElement(iframeSelector)
-                    .map(
-                            element -> {
-                                driver.switchTo().frame(element);
-                                return true;
-                            })
-                    .orElse(false);
+            driver.switchTo().frame(iframe);
+            return true;
         } catch (NoSuchFrameException e) {
             log.warn("{} Couldn't switch to iFrame", WebDriverConstants.LOG_TAG);
             return false;
@@ -51,7 +53,39 @@ public class WebDriverBasicUtilsImpl implements WebDriverBasicUtils {
     }
 
     @Override
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getElementAttributes(WebElement element) {
+        String script =
+                "var element = arguments[0];"
+                        + "var items = {};"
+                        + "for (index = 0; index < element.attributes.length; ++index) {"
+                        + "   items[element.attributes[index].name] = element.attributes[index].value"
+                        + "};"
+                        + "return items;";
+        return (Map<String, String>) driver.executeScript(script, element);
+    }
+
+    @Override
     public void sleepFor(int millis) {
         sleeper.sleepFor(millis);
+    }
+
+    @Override
+    public boolean isElementVisible(WebElement element) {
+        String script =
+                ""
+                        + "element = arguments[0]\n"
+                        + "if (element == null) {\n"
+                        + "    return false\n"
+                        + "}\n"
+                        + "\n"
+                        + "const isDisplayed = !!element.offsetParent\n"
+                        + "\n"
+                        + "const elementComputedStyle = window.getComputedStyle(element)\n"
+                        + "const isVisible = elementComputedStyle.visibility === 'visible'\n"
+                        + "\n"
+                        + "return isDisplayed && isVisible";
+        return (boolean) driver.executeScript(script, element);
     }
 }

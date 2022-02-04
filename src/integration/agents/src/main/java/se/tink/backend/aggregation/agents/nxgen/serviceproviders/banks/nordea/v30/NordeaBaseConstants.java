@@ -74,7 +74,7 @@ public class NordeaBaseConstants {
             ImmutableMap.<String, Object>builder()
                     .put("x-App-Country", "SE")
                     .put("x-App-Language", "en_SE")
-                    .put("x-App-Version", "3.24.2.492")
+                    .put("x-App-Version", "3.25.0.505")
                     .put("x-Device-Model", "iPhone9,3")
                     .put("x-Platform-Type", "iOS")
                     .put("x-Platform-Version", "14.7.1")
@@ -82,7 +82,7 @@ public class NordeaBaseConstants {
                     .put("x-Device-Id", "CB2D9479-34D1-4369-B1A6-9D611CA8178C")
                     .put(
                             "User-Agent",
-                            "com.nordea.SMEMobileBank.se/3.24.2.492 (Apple iPhone9,3; iOS 14.7.1)")
+                            "com.nordea.SMEMobileBank.se/3.25.0.505 (Apple iPhone9,3; iOS 14.7.1)")
                     .build();
 
     public static class Urls {

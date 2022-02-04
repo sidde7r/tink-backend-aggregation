@@ -193,7 +193,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("ed30020d-0998-4926-af92-4dc4e93164e6")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .element(BY_MAIN_ELEMENT)
                                         .build(),
                                 true)
@@ -203,7 +203,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("4b500b05-b9ae-46d8-ab65-d29557c3f60a")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .element(BY_OTHER_ELEMENT)
                                         .build(),
                                 true)
@@ -215,7 +215,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("bf8b1d9a-9b4d-43c9-a06a-1d7ec4a34bdc")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
                                         .build(),
@@ -226,7 +226,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("46108f6a-522e-4acf-8827-c18725b73250")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_OTHER_ELEMENT)
                                         .build(),
@@ -239,7 +239,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("ea6beb3e-cd63-405b-95d7-f1e7fe4d27cf")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_2)
                                         .element(BY_MAIN_ELEMENT)
                                         .build(),
@@ -250,7 +250,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("3930c99b-7db1-46ca-ba1e-578f7335d7d8")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_2)
                                         .element(BY_OTHER_ELEMENT)
                                         .build(),
@@ -313,7 +313,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("baa916ab-b7a4-4cfa-a33a-b56fbaaae3b3")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
                                         .mustContainOneOfTexts("----not existing text----")
@@ -322,7 +322,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("31767696-def0-477e-932c-2c228573106e")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
                                         .mustContainOneOfTexts("element")
@@ -334,7 +334,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("bbbce985-b45a-4a1e-a0cf-7d3dc1cca64d")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
                                         .mustContainOneOfTexts("hidden")
@@ -345,7 +345,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("45616b96-779f-4da1-bb3d-0a6ec8d96339")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
                                         .mustBeDisplayed()
@@ -356,7 +356,7 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("5fea50cf-b091-44cf-9ba7-d06f739a242e")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
                                         .mustContainOneOfTexts("main element hidden")
@@ -418,23 +418,23 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("2a04597e-63e3-42d9-b460-cd87394e4885")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_NOT_EXISTING_IFRAME)
+                                        .topmostIframe(BY_NOT_EXISTING_IFRAME)
                                         .element(BY_MAIN_ELEMENT)
                                         .build())
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .element(BY_NOT_EXISTING_ELEMENT)
                                         .build())
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .element(BY_MAIN_ELEMENT)
                                         .build(),
                                 true)
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .element(BY_OTHER_ELEMENT)
                                         .build())
                         .addIdToBeFound(IFRAME_MAIN_ELEMENT_VISIBLE)
@@ -446,38 +446,38 @@ public class ElementsSearcherResultsTest {
                 TestParams.builder("789d36f5-7bec-4ed4-9684-2a3e0084efe9")
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_NOT_EXISTING_IFRAME)
+                                        .topmostIframe(BY_NOT_EXISTING_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
                                         .build())
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_NOT_EXISTING_SHADOW_HOST)
                                         .element(BY_MAIN_ELEMENT)
                                         .build())
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_WITHOUT_ROOT)
                                         .element(BY_MAIN_ELEMENT)
                                         .build())
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_NOT_EXISTING_SHADOW_HOST)
                                         .element(BY_NOT_EXISTING_ELEMENT)
                                         .build())
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_MAIN_ELEMENT)
                                         .build(),
                                 true)
                         .addLocator(
                                 ElementLocator.builder()
-                                        .iframe(BY_IFRAME)
+                                        .topmostIframe(BY_IFRAME)
                                         .shadowHost(BY_SHADOW_HOST_1)
                                         .element(BY_OTHER_ELEMENT)
                                         .build())

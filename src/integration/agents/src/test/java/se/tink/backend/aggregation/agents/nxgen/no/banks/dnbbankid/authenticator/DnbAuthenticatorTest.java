@@ -14,8 +14,8 @@ import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnbbankid.DnbConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.BankIdIframeAuthenticationResult;
-import se.tink.integration.webdriver.service.proxy.ProxyResponseMatcher;
-import se.tink.integration.webdriver.service.proxy.ProxyResponseMatchers.ProxyResponseUrlSubstringMatcher;
+import se.tink.integration.webdriver.service.proxy.ProxyResponseMatchers.ProxyUrlSubstringMatcher;
+import se.tink.integration.webdriver.service.proxy.ProxySaveResponseMatcher;
 
 public class DnbAuthenticatorTest {
 
@@ -39,12 +39,11 @@ public class DnbAuthenticatorTest {
     @Test
     public void should_return_correct_authentication_finish_url() {
         // when
-        ProxyResponseMatcher matcher =
-                dnbAuthenticator.getMatcherForResponseThatIndicatesAuthenticationWasFinished();
+        ProxySaveResponseMatcher matcher =
+                dnbAuthenticator.getProxyResponseMatcherToDetectAuthenticationWasFinished();
 
         // then
-        assertThat(matcher)
-                .isEqualTo(new ProxyResponseUrlSubstringMatcher(DnbConstants.Url.FINISH_LOGIN));
+        assertThat(matcher).isEqualTo(new ProxyUrlSubstringMatcher(DnbConstants.Url.FINISH_LOGIN));
     }
 
     @Test

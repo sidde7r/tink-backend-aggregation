@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.markandspencer;
 
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.*;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -25,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbc.HsbcGroupApiClient;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.HsbcGroupApiClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

@@ -1,12 +1,12 @@
 package se.tink.integration.webdriver.service.proxy;
 
-import java.util.Optional;
-
 public interface ProxyManager {
 
-    void setProxyResponseMatcher(ProxyResponseMatcher proxyResponseMatcher);
+    void enableRequestsFiltering();
 
-    Optional<ResponseFromProxy> waitForMatchingProxyResponse(int waitForSeconds);
+    void enableResponseFiltering();
+
+    void registerProxyFilter(String key, ProxyFilter proxyFilter);
 
     void shutDownProxy();
 }

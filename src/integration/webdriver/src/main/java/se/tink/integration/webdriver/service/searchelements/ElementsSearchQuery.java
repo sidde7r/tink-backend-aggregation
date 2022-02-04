@@ -19,9 +19,7 @@ public class ElementsSearchQuery {
      * If this value is 0, there will be only one search performed. If this value is > 0, number of
      * searches depends on how many searches per second are run by {@link ElementsSearcher}.
      */
-    private final Integer searchForSeconds;
-
-    private final boolean searchOnlyOnce;
+    private final int searchForSeconds;
 
     public static ElementsSearchQueryBuilder builder() {
         return new ElementsSearchQueryBuilder();
@@ -32,7 +30,6 @@ public class ElementsSearchQuery {
         private final List<ElementLocator> elements = new ArrayList<>();
         private Integer searchForSeconds =
                 WebDriverConstants.DEFAULT_WAIT_FOR_ELEMENT_TIMEOUT_IN_SECONDS;
-        private boolean searchOnlyOnce;
 
         public ElementsSearchQueryBuilder searchFor(ElementLocator... locators) {
             this.elements.addAll(asList(locators));
@@ -44,18 +41,18 @@ public class ElementsSearchQuery {
             return this;
         }
 
-        public ElementsSearchQueryBuilder searchForSeconds(Integer seconds) {
-            searchForSeconds = seconds;
+        public ElementsSearchQueryBuilder searchForSeconds(Integer searchForSeconds) {
+            this.searchForSeconds = searchForSeconds;
             return this;
         }
 
         public ElementsSearchQueryBuilder searchOnlyOnce() {
-            searchOnlyOnce = true;
+            this.searchForSeconds = 0;
             return this;
         }
 
         public ElementsSearchQuery build() {
-            return new ElementsSearchQuery(elements, searchForSeconds, searchOnlyOnce);
+            return new ElementsSearchQuery(elements, searchForSeconds);
         }
     }
 }

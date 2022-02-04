@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .displayNone {
+            display: none;
+        }
+        .hidden {
+            visibility: hidden;
+        }
+        .inheritVisibility {
+            visibility: inherit;
+        }
+        .visible {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="displayNone">
+    <div id="elementWithParentDisplayNone">elementWithParentDisplayNone</div>
+</div>
+<div class="hidden">
+    <div id="elementWithParentHidden">elementWithParentHidden</div>
+    <div id="elementInheritVisibilityWithParentHidden" class="inheritVisibility">elementInheritVisibilityWithParentHidden</div>
+    <div id="elementExplicitlyVisibleWithParentHidden" class="visible">elementExplicitlyVisibleWithParentHidden</div>
+</div>
+
+<div id="containerVisible">
+    <div id="elementInheritVisibilityWithParentVisible" class="inheritVisibility">elementInheritVisibilityWithParentVisible</div>
+    <div id="elementWithParentVisible">elementWithParentVisible</div>
+</div>
+
+</body>
+</html>

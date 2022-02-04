@@ -8,13 +8,14 @@ import lombok.Getter;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import se.tink.integration.webdriver.service.WebDriverService;
-import se.tink.integration.webdriver.service.proxy.ResponseFromProxy;
+import se.tink.integration.webdriver.service.proxy.ProxyResponse;
 
 @Getter
 @EqualsAndHashCode
 @Builder
 public class BankIdIframeAuthenticationResult {
-    private final ResponseFromProxy proxyResponseFromAuthFinishUrl;
+
+    private final ProxyResponse proxyResponseFromAuthFinishUrl;
     private final WebDriverService webDriver;
 
     public List<Cookie> getCookies() {

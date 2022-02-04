@@ -1,5 +1,6 @@
 package se.tink.integration.webdriver.service.basicutils;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.openqa.selenium.By;
@@ -14,7 +15,13 @@ public interface WebDriverBasicUtils {
 
     boolean trySwitchToIframe(By iframeSelector);
 
+    boolean trySwitchToIframe(WebElement iframe);
+
     Optional<WebElement> tryFindElement(By by);
 
+    Map<String, String> getElementAttributes(WebElement element);
+
     void sleepFor(int millis);
+
+    boolean isElementVisible(WebElement element);
 }
