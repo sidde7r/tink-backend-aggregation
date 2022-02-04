@@ -11,16 +11,10 @@ import org.junit.Ignore;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AgentPropertiesFixtures {
 
-    private static final String PROPERTIES_LOADER_PATH =
+    static final String PROPERTIES_LOADER_PATH =
             "src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/propertiesloader";
 
-    static String propertiesLoaderPath() {
-        return PROPERTIES_LOADER_PATH;
-    }
-
-    static String resourcesPath() {
-        return PROPERTIES_LOADER_PATH + "/resources/";
-    }
+    static final String PROPERTIES_RESOURCE_PATH = PROPERTIES_LOADER_PATH + "/resources";
 
     static void assertPropertiesAreEqualToExpectedValues(AgentPropertiesTestEntity properties) {
         assertThat(properties.getApiVersion()).isEqualTo("v3");

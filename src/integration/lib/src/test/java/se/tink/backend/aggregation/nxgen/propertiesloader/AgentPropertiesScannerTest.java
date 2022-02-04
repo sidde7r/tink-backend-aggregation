@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.nxgen.propertiesloader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static se.tink.backend.aggregation.nxgen.propertiesloader.AgentPropertiesFixtures.PROPERTIES_LOADER_PATH;
+import static se.tink.backend.aggregation.nxgen.propertiesloader.AgentPropertiesFixtures.PROPERTIES_RESOURCE_PATH;
 
 import java.io.File;
-import java.util.Optional;
+import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
@@ -13,32 +15,32 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitParamsRunner.class)
 public class AgentPropertiesScannerTest {
 
-    private static final String PROPERTIES_TEST_SUFFIX = "-test-prod-properties.yaml";
+    private static final String PROPERTIES_TEST_SUFFIX = "-agent-prod.yaml";
 
-    private final AgentPropertiesScanner scanner = new AgentPropertiesScanner();
+    private final AgentPropertiesScanner agentPropertiesScanner = new AgentPropertiesScanner();
 
     @Test
     public void shouldFindPropertiesFileInGivenPackage() {
         // when
-        Optional<File> propertiesFile =
-                scanner.scan(AgentPropertiesFixtures.resourcesPath(), PROPERTIES_TEST_SUFFIX);
+        List<File> propertiesFile =
+                agentPropertiesScanner.scan(PROPERTIES_RESOURCE_PATH, PROPERTIES_TEST_SUFFIX);
 
         // then
-        assertThat(propertiesFile).isPresent();
+        assertThat(propertiesFile).isNotEmpty();
     }
 
     @Test
     public void shouldThrowNPEWhenPackageIsNull() {
         // expect
-        assertThatThrownBy(() -> scanner.scan(null, PROPERTIES_TEST_SUFFIX))
+        assertThatThrownBy(() -> agentPropertiesScanner.scan(null, PROPERTIES_TEST_SUFFIX))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     @Parameters
-    public void shouldReturnOptionalEmptyWhenPropertiesFileIsNotFound(String path, String suffix) {
+    public void shouldReturnEmptyListWhenPropertiesFileIsNotFound(String path, String suffix) {
         // when
-        Optional<File> propertiesFile = scanner.scan(path, suffix);
+        List<File> propertiesFile = agentPropertiesScanner.scan(path, suffix);
 
         // then
         assertThat(propertiesFile).isEmpty();
@@ -47,8 +49,8 @@ public class AgentPropertiesScannerTest {
     @SuppressWarnings("unused")
     private Object[] parametersForShouldReturnOptionalEmptyWhenPropertiesFileIsNotFound() {
         return new Object[][] {
-            {AgentPropertiesFixtures.propertiesLoaderPath(), PROPERTIES_TEST_SUFFIX},
-            {AgentPropertiesFixtures.resourcesPath(), "nonexistent-file-suffix"}
+            {PROPERTIES_LOADER_PATH, PROPERTIES_TEST_SUFFIX},
+            {PROPERTIES_RESOURCE_PATH, "nonexistent-file-suffix"}
         };
     }
 }
