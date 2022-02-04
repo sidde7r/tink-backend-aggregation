@@ -1,5 +1,6 @@
 package src.agent_sdk.runtime.src.environment;
 
+import lombok.AllArgsConstructor;
 import se.tink.agent.sdk.environment.Utilities;
 import se.tink.agent.sdk.utils.RandomGenerator;
 import se.tink.agent.sdk.utils.Sleeper;
@@ -8,6 +9,7 @@ import se.tink.agent.sdk.utils.TimeGenerator;
 import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
+@AllArgsConstructor
 public class UtilitiesImpl implements Utilities {
     private final RandomGenerator randomGenerator;
     private final TimeGenerator timeGenerator;
@@ -15,21 +17,6 @@ public class UtilitiesImpl implements Utilities {
     private final TinkHttpClient tinkHttpClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final QsealcSigner qsealcSigner;
-
-    public UtilitiesImpl(
-            RandomGenerator randomGenerator,
-            TimeGenerator timeGenerator,
-            Sleeper sleeper,
-            TinkHttpClient tinkHttpClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            QsealcSigner qsealcSigner) {
-        this.randomGenerator = randomGenerator;
-        this.timeGenerator = timeGenerator;
-        this.sleeper = sleeper;
-        this.tinkHttpClient = tinkHttpClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.qsealcSigner = qsealcSigner;
-    }
 
     @Override
     public RandomGenerator getRandomGenerator() {

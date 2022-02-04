@@ -114,4 +114,9 @@ public class SerializableStorage implements Storage {
                         data, new TypeReference<HashMap<String, String>>() {});
         return new SerializableStorage(map);
     }
+
+    @SuppressWarnings("java:S1319")
+    public static SerializableStorage from(HashMap<String, String> data) {
+        return new SerializableStorage(data);
+    }
 }
