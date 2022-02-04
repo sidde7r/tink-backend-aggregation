@@ -4246,3 +4246,9 @@ git_repository(
     commit = "19ec01a93637c5cc180ee523f25b190a79adcc35",
     remote = "https://github.com/graknlabs/bazel-distribution",
 )
+
+load("@tink_backend//tools/bzl:junit5.bzl", "junit_jupiter_java_repositories", "junit_platform_java_repositories")
+
+junit_jupiter_java_repositories()
+
+junit_platform_java_repositories()
