@@ -2,12 +2,12 @@ load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("@rules_java//java:defs.bzl", "java_library")
 
 codeowners(
-    name = "paycon-owners",
+    name = "owners",
     patterns = [
         "pis/signature/HsbcSignatureCreator.java",
     ],
     teams = [
-        "@tink-ab/payments-connectivity-maintainer",
+        "@tink-ab/aggregation-fluffy-maintainer",
     ],
     visibility = ["//:__pkg__"],
 )
