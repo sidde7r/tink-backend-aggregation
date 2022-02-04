@@ -1,0 +1,99 @@
+REQUEST 1
+POST https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID-Type: HVB_ONLINEBANKING
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?code=code
+TPP-Redirect-Preferred: false
+X-Aggregator: Tink Testing
+
+{"debtorAccount":{"iban":"DE40300209005380419896"},"creditorAccount":{"iban":"DE95760400610770740900"},"instructedAmount":{"amount":"1.0","currency":"EUR"},"creditorName":"Creditor Name","remittanceInformationStructured":{"reference":"ReferenceToCreditor","referenceType":"REFERENCE"},"requestedExecutionDate":"2022-02-01"}
+
+RESPONSE 1
+201
+X-CorrelationID: Id-1bddfc6163e14a1c6898164d 0; Id-1bddfc614c1aaf2a466c18a8 0
+ASPSP-SCA-Approach: EMBEDDED
+Location: https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"transactionStatus":"RCVD","paymentId":"PDEA903740","_links":{"startAuthorisation":{"href":"https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740/authorisations"}}}
+
+REQUEST 2
+POST https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740/authorisations
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID: test_username
+PSU-ID-Type: HVB_ONLINEBANKING
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=code
+TPP-Redirect-Preferred: false
+X-Aggregator: Tink Testing
+
+{}
+
+RESPONSE 2
+201
+X-CorrelationID: Id-1cddfc6164e151e1eaeed589 0; Id-1cddfc614d1ad3ac7824f176 0
+ASPSP-SCA-Approach: EMBEDDED
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"scaStatus":"received","authorisationId":"PDEA903740","_links":{"updatePsuAuthentication":{"href":"https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740/authorisations/PDEA903740?correlationId=CN4KNJ"},"scaStatus":{"href":"https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740/authorisations/PDEA903740"}}}
+
+REQUEST 3
+PUT https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740/authorisations/PDEA903740?correlationId=CN4KNJ
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID: test_username
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 3
+200
+X-CorrelationID: Id-1dddfc61d9dfda3f30283a7a 0; Id-1dddfc61b31a544000d06d84 0
+ASPSP-SCA-Approach: EMBEDDED
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"scaStatus":"started","chosenScaMethod":{"authenticationType":"SMS_OTP","authenticationMethodId":"03"},"challengeData":{"otpMaxLength":6,"otpFormat":"integer"},"_links":{"authoriseTransaction":{"href":"https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740/authorisations/PDEA903740?lfdNumber=493&correlationId=CN4KNJ&authenticationCurrentNumber=493"}}}
+
+REQUEST 4
+PUT https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740/authorisations/PDEA903740?lfdNumber=493&correlationId=CN4KNJ&authenticationCurrentNumber=493
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"scaAuthenticationData":"123456"}
+
+RESPONSE 4
+200
+X-CorrelationID: Id-2eddfc61ecdf405d48cd6781 0; Id-2eddfc61571a661f0f9b40aa 0
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"scaStatus":"finalised"}
+
+REQUEST 5
+GET https://api-sandbox.unicredit.de/hydrogen/v1/payments/sepa-credit-transfers/PDEA903740/status
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+X-CorrelationID: Id-2fddfc61f0df1553d367f243 0; Id-2fddfc61bf1a6e60cebf5343 0
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"transactionStatus":"ACSP"}

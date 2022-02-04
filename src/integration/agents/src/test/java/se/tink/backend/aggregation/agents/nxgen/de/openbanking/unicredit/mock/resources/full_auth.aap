@@ -1,0 +1,100 @@
+
+REQUEST 1
+POST https://api-sandbox.unicredit.de/hydrogen/v1/consents
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID-Type: HVB_ONLINEBANKING
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=code
+TPP-Redirect-Preferred: false
+X-Aggregator: Tink Testing
+
+{"access":{"accounts":[],"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"2022-05-05","frequencyPerDay":4,"combinedServiceIndicator":false}
+
+RESPONSE 1
+201
+X-CorrelationID: Id-70c8fc6113d0d208af9570e6 0; Id-70c8fc612d0d82e257a0e014 0
+ASPSP-SCA-Approach: EMBEDDED
+Location: https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"consentStatus":"received","consentId":"98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8","_links":{"startAuthorisation":{"href":"https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8/authorisations"}}}
+
+REQUEST 2
+POST https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8/authorisations
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID: test_username
+PSU-ID-Type: HVB_ONLINEBANKING
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=code
+TPP-Redirect-Preferred: false
+X-Aggregator: Tink Testing
+
+{}
+
+RESPONSE 2
+201
+X-CorrelationID: Id-71c8fc618fce1a7ddfe1b4d3 0; Id-71c8fc619b0dfe4320c27562 0
+ASPSP-SCA-Approach: EMBEDDED
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"scaStatus":"received","authorisationId":"98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8","_links":{"updatePsuAuthentication":{"href":"https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8/authorisations/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8?correlationId=ASVKLX"},"scaStatus":{"href":"https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8/authorisations/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8"}}}
+
+REQUEST 3
+PUT https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8/authorisations/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8?correlationId=ASVKLX
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+PSU-ID: test_username
+X-Aggregator: Tink Testing
+
+{"psuData":{"password":"test_password"}}
+
+RESPONSE 3
+200
+X-CorrelationID: Id-71c8fc6116d0de9b13a202a2 0; Id-71c8fc61330d546480a6dc68 0
+ASPSP-SCA-Approach: EMBEDDED
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"scaStatus":"started","chosenScaMethod":{"authenticationType":"SMS_OTP","authenticationMethodId":"03"},"challengeData":{"otpMaxLength":6,"otpFormat":"integer"},"_links":{"authoriseTransaction":{"href":"https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8/authorisations/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8?lfdNumber=381&correlationId=ASVKLX&authenticationCurrentNumber=381"}}}
+
+REQUEST 4
+PUT https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8/authorisations/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8?lfdNumber=381&correlationId=ASVKLX&authenticationCurrentNumber=381
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{"scaAuthenticationData":"123456"}
+
+RESPONSE 4
+200
+X-CorrelationID: Id-76c8fc6192ceecd0f3b857e6 0; Id-76c8fc61370dc9e22bdbcccc 0
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"scaStatus":"finalised"}
+
+REQUEST 5
+GET https://api-sandbox.unicredit.de/hydrogen/v1/consents/98d39b54-cf36-4ec8-9e9f-003f5b9b2ef8
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+PSU-IP-Address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+X-CorrelationID: Id-77c8fc61616ae5c3e054765f 0; Id-77c8fc61380dce56d6ad831a 0
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Type: application/json
+
+{"access":{"accounts":[],"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"2022-05-05","frequencyPerDay":4,"consentStatus":"valid","lastActionDate":"2019-11-05"}
