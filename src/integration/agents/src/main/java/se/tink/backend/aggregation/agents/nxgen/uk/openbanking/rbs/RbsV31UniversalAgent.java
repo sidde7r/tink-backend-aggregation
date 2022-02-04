@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -67,14 +66,11 @@ public class RbsV31UniversalAgent extends UkOpenBankingBaseAgent {
         return new UkOpenBankingV31Ais(
                 aisConfig,
                 persistentStorage,
-                localDateTimeSource,
                 new CreditCardAccountMapper(
                         new DefaultCreditCardBalanceMapper(valueExtractor),
                         new GranularBalancesMapper(new NatwestGroupBalancePreCalculator()),
                         new DefaultIdentifierMapper(valueExtractor)),
-                new RbsAccountMapper(
-                        new TransactionalAccountBalanceMapper(valueExtractor),
-                        new DefaultIdentifierMapper(valueExtractor)),
+                localDateTimeSource,
                 transactionPaginationHelper);
     }
 
