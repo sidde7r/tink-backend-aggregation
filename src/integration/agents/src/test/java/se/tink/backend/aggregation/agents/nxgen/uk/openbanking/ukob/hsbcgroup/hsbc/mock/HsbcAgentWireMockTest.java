@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.hsbc.mock;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -150,10 +150,7 @@ public class HsbcAgentWireMockTest {
     }
 
     private static String getResourceFilePath(String file) {
-        return "src/integration/agents/src/test/java/se/tink/backend"
-                + "/aggregation/agents/nxgen/serviceproviders"
-                + "/openbanking/ukopenbanking/hsbc/mock/resources"
-                + "/"
+        return "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/hsbcgroup/hsbc/mock/resources/"
                 + file;
     }
 
