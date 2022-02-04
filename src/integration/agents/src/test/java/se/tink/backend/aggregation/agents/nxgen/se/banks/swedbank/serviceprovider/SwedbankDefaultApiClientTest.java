@@ -51,7 +51,7 @@ public class SwedbankDefaultApiClientTest {
 
     @Test
     public void
-            shouldThrowNotCustomerExceptionWhenFallbackBothBanksButNoPrivateProfileInChosenBank() {
+            shouldThrowNotCustomerExceptionWhenFallbackBothBanksButNoPrivateProfileInChosenBankSavingsBank() {
         configuration =
                 new SwedbankConfiguration(
                         getProfileParameters("savingsbank-fallback", true), "host", true);
@@ -60,7 +60,7 @@ public class SwedbankDefaultApiClientTest {
                         client, configuration, swedbankStorage, profileSelector, componentProvider);
         SwedbankDefaultApiClient spyClient = spy(apiClient);
 
-        doReturn(getProfileResponseBothBanks())
+        doReturn(getProfileResponseBothBanksPrivateInSwedbank())
                 .when(spyClient)
                 .makeRequest(linkEntity, ProfileResponse.class, false);
 
@@ -70,6 +70,37 @@ public class SwedbankDefaultApiClientTest {
         assertThat(throwable)
                 .isExactlyInstanceOf(LoginException.class)
                 .hasMessage("Cause: LoginError.NOT_CUSTOMER");
+
+        Assert.assertEquals(
+                "You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) instead.",
+                ((LoginException) throwable).getUserMessage().get());
+    }
+
+    @Test
+    public void
+            shouldThrowNotCustomerExceptionWhenFallbackBothBanksButNoPrivateProfileInChosenBankSwedbank() {
+        configuration =
+                new SwedbankConfiguration(
+                        getProfileParameters("swedbank-fallback", false), "host", true);
+        SwedbankDefaultApiClient apiClient =
+                new SwedbankDefaultApiClient(
+                        client, configuration, swedbankStorage, profileSelector, componentProvider);
+        SwedbankDefaultApiClient spyClient = spy(apiClient);
+
+        doReturn(getProfileResponseBothBanksPrivateInSavingsbank())
+                .when(spyClient)
+                .makeRequest(linkEntity, ProfileResponse.class, false);
+
+        Throwable throwable =
+                Assertions.catchThrowable(() -> spyClient.completeAuthentication(linkEntity));
+
+        assertThat(throwable)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.NOT_CUSTOMER");
+
+        Assert.assertEquals(
+                "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) instead.",
+                ((LoginException) throwable).getUserMessage().get());
     }
 
     @Test
@@ -82,7 +113,7 @@ public class SwedbankDefaultApiClientTest {
                         client, configuration, swedbankStorage, profileSelector, componentProvider);
         SwedbankDefaultApiClient spyClient = spy(apiClient);
 
-        doReturn(getProfileResponseBothBanks())
+        doReturn(getProfileResponseBothBanksPrivateInSwedbank())
                 .when(spyClient)
                 .makeRequest(linkEntity, ProfileResponse.class, false);
 
@@ -124,6 +155,10 @@ public class SwedbankDefaultApiClientTest {
         assertThat(throwable)
                 .isExactlyInstanceOf(LoginException.class)
                 .hasMessage("Cause: LoginError.NOT_CUSTOMER");
+
+        Assert.assertEquals(
+                "You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) instead.",
+                ((LoginException) throwable).getUserMessage().get());
     }
 
     @Test
@@ -146,6 +181,10 @@ public class SwedbankDefaultApiClientTest {
         assertThat(throwable)
                 .isExactlyInstanceOf(LoginException.class)
                 .hasMessage("Cause: LoginError.NOT_CUSTOMER");
+
+        Assert.assertEquals(
+                "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) instead.",
+                ((LoginException) throwable).getUserMessage().get());
     }
 
     @Test
@@ -168,13 +207,210 @@ public class SwedbankDefaultApiClientTest {
         assertThat(throwable)
                 .isExactlyInstanceOf(LoginException.class)
                 .hasMessage("Cause: LoginError.NOT_CUSTOMER");
+
+        Assert.assertEquals(
+                "You don't have any commitments in the selected bank.",
+                ((LoginException) throwable).getUserMessage().get());
     }
 
     private ProfileParameters getProfileParameters(String providerName, boolean isSavingsbank) {
         return new ProfileParameters(providerName, "apiKey", isSavingsbank, "userAgent");
     }
 
-    private ProfileResponse getProfileResponseBothBanks() {
+    private ProfileResponse getProfileResponseBothBanksPrivateInSavingsbank() {
+        return SerializationUtils.deserializeFromString(
+                "{"
+                        + "    \"banks\":"
+                        + "    ["
+                        + "        {"
+                        + "            \"name\": \"Bergslagens Sparbank AB\","
+                        + "            \"bankId\": \"08999\","
+                        + "            \"url\": \"https://www.bergslagenssparbank.se\","
+                        + "            \"privateProfile\":"
+                        + "            {"
+                        + "                \"activeProfileLanguage\": \"sv\","
+                        + "                \"targetType\": \"PRIVATE\","
+                        + "                \"customerName\": \"Esbjorn Fakename\","
+                        + "                \"customerNumber\": \"personalNumber\","
+                        + "                \"id\": \"Id1\","
+                        + "                \"bankId\": \"08999\","
+                        + "                \"bankName\": \"Bergslagens Sparbank AB\","
+                        + "                \"url\": \"https://www.bergslagenssparbank.se\","
+                        + "                \"customerInternational\": false,"
+                        + "                \"youthProfile\": false,"
+                        + "                \"links\":"
+                        + "                {"
+                        + "                    \"edit\":"
+                        + "                    {"
+                        + "                        \"method\": \"PUT\","
+                        + "                        \"uri\": \"/v5/profile/subscription/Id1\""
+                        + "                    },"
+                        + "                    \"next\":"
+                        + "                    {"
+                        + "                        \"method\": \"POST\","
+                        + "                        \"uri\": \"/v5/profile/Id1\""
+                        + "                    }"
+                        + "                }"
+                        + "            },"
+                        + "            \"corporateProfiles\":"
+                        + "            ["
+                        + "                {"
+                        + "                    \"activeProfileName\": \"Esbjorn Entreprenad AB\","
+                        + "                    \"activeProfileLanguage\": \"sv\","
+                        + "                    \"targetType\": \"CORPORATE\","
+                        + "                    \"customerName\": \"Esbjorn Fakename\","
+                        + "                    \"customerNumber\": \"CorpNumber\","
+                        + "                    \"id\": \"Id2\","
+                        + "                    \"bankId\": \"08999\","
+                        + "                    \"bankName\": \"Swedbank AB (publ)\","
+                        + "                    \"url\": \"https://www.swedbank.se\","
+                        + "                    \"customerInternational\": false,"
+                        + "                    \"youthProfile\": false,"
+                        + "                    \"links\":"
+                        + "                    {"
+                        + "                        \"edit\":"
+                        + "                        {"
+                        + "                            \"method\": \"PUT\","
+                        + "                            \"uri\": \"/v5/profile/subscription/Id2\""
+                        + "                        },"
+                        + "                        \"next\":"
+                        + "                        {"
+                        + "                            \"method\": \"POST\","
+                        + "                            \"uri\": \"/v5/profile/Id2\""
+                        + "                        }"
+                        + "                    }"
+                        + "                },"
+                        + "                {"
+                        + "                    \"activeProfileName\": \"Esbjorn Entreprenad Kommanditbolag\","
+                        + "                    \"activeProfileLanguage\": \"sv\","
+                        + "                    \"targetType\": \"CORPORATE\","
+                        + "                    \"customerName\": \"Esbjorn Fakename\","
+                        + "                    \"customerNumber\": \"CorpNumber2\","
+                        + "                    \"id\": \"Id3\","
+                        + "                    \"bankId\": \"08999\","
+                        + "                    \"bankName\": \"Swedbank AB (publ)\","
+                        + "                    \"url\": \"https://www.swedbank.se\","
+                        + "                    \"customerInternational\": false,"
+                        + "                    \"youthProfile\": false,"
+                        + "                    \"links\":"
+                        + "                    {"
+                        + "                        \"edit\":"
+                        + "                        {"
+                        + "                            \"method\": \"PUT\","
+                        + "                            \"uri\": \"/v5/profile/subscription/Id3\""
+                        + "                        },"
+                        + "                        \"next\":"
+                        + "                        {"
+                        + "                            \"method\": \"POST\","
+                        + "                            \"uri\": \"/v5/profile/Id3\""
+                        + "                        }"
+                        + "                    }"
+                        + "                },"
+                        + "                {"
+                        + "                    \"activeProfileName\": \"Esbjorn Rats AB\","
+                        + "                    \"activeProfileLanguage\": \"sv\","
+                        + "                    \"targetType\": \"CORPORATE\","
+                        + "                    \"customerName\": \"Esbjorn Fakename\","
+                        + "                    \"customerNumber\": \"CorpNumber3\","
+                        + "                    \"id\": \"Id4\","
+                        + "                    \"bankId\": \"08999\","
+                        + "                    \"bankName\": \"Swedbank AB (publ)\","
+                        + "                    \"url\": \"https://www.swedbank.se\","
+                        + "                    \"customerInternational\": false,"
+                        + "                    \"youthProfile\": false,"
+                        + "                    \"links\":"
+                        + "                    {"
+                        + "                        \"edit\":"
+                        + "                        {"
+                        + "                            \"method\": \"PUT\","
+                        + "                            \"uri\": \"/v5/profile/subscription/Id4\""
+                        + "                        },"
+                        + "                        \"next\":"
+                        + "                        {"
+                        + "                            \"method\": \"POST\","
+                        + "                            \"uri\": \"/v5/profile/Id4\""
+                        + "                        }"
+                        + "                    }"
+                        + "                }"
+                        + "            ]"
+                        + "        },"
+                        + "        {"
+                        + "            \"name\": \"Bergslagens Sparbank AB\","
+                        + "            \"bankId\": \"08191\","
+                        + "            \"url\": \"https://www.bergslagenssparbank.se\","
+                        + "            \"corporateProfiles\":"
+                        + "            ["
+                        + "                {"
+                        + "                    \"activeProfileName\": \"Cat Entreprenad AB\","
+                        + "                    \"activeProfileLanguage\": \"sv\","
+                        + "                    \"targetType\": \"CORPORATE\","
+                        + "                    \"customerName\": \"Esbjorn Fakename\","
+                        + "                    \"customerNumber\": \"CorpNumber4\","
+                        + "                    \"id\": \"Id5\","
+                        + "                    \"bankId\": \"08191\","
+                        + "                    \"bankName\": \"Bergslagens Sparbank AB\","
+                        + "                    \"url\": \"https://www.bergslagenssparbank.se\","
+                        + "                    \"customerInternational\": false,"
+                        + "                    \"youthProfile\": false,"
+                        + "                    \"links\":"
+                        + "                    {"
+                        + "                        \"edit\":"
+                        + "                        {"
+                        + "                            \"method\": \"PUT\","
+                        + "                            \"uri\": \"/v5/profile/subscription/Id5\""
+                        + "                        },"
+                        + "                        \"next\":"
+                        + "                        {"
+                        + "                            \"method\": \"POST\","
+                        + "                            \"uri\": \"/v5/profile/Id5\""
+                        + "                        }"
+                        + "                    }"
+                        + "                }"
+                        + "            ]"
+                        + "        },"
+                        + "        {"
+                        + "            \"name\": \"Ulricehamns Sparbank\","
+                        + "            \"bankId\": \"08380\","
+                        + "            \"url\": \"https://www.ulricehamnssparbank.se\","
+                        + "            \"corporateProfiles\":"
+                        + "            ["
+                        + "                {"
+                        + "                    \"activeProfileName\": \"Esbjorn Fastigheter AB\","
+                        + "                    \"activeProfileLanguage\": \"sv\","
+                        + "                    \"targetType\": \"CORPORATE\","
+                        + "                    \"customerName\": \"Esbjorn Fakename\","
+                        + "                    \"customerNumber\": \"CorpNumber5\","
+                        + "                    \"id\": \"Id6\","
+                        + "                    \"bankId\": \"08380\","
+                        + "                    \"bankName\": \"Ulricehamns Sparbank\","
+                        + "                    \"url\": \"https://www.ulricehamnssparbank.se\","
+                        + "                    \"customerInternational\": false,"
+                        + "                    \"youthProfile\": false,"
+                        + "                    \"links\":"
+                        + "                    {"
+                        + "                        \"edit\":"
+                        + "                        {"
+                        + "                            \"method\": \"PUT\","
+                        + "                            \"uri\": \"/v5/profile/subscription/Id6\""
+                        + "                        },"
+                        + "                        \"next\":"
+                        + "                        {"
+                        + "                            \"method\": \"POST\","
+                        + "                            \"uri\": \"/v5/profile/Id6\""
+                        + "                        }"
+                        + "                    }"
+                        + "                }"
+                        + "            ]"
+                        + "        }"
+                        + "    ],"
+                        + "    \"hasSwedbankProfile\": true,"
+                        + "    \"hasSavingbankProfile\": true,"
+                        + "    \"userId\": \"**HASHED:XH**\""
+                        + "}",
+                ProfileResponse.class);
+    }
+
+    private ProfileResponse getProfileResponseBothBanksPrivateInSwedbank() {
         return SerializationUtils.deserializeFromString(
                 "{"
                         + "    \"banks\":"
