@@ -2,10 +2,10 @@ package src.agent_sdk.runtime.src.payments;
 
 import java.util.Optional;
 import java.util.stream.Stream;
-import se.tink.agent.sdk.payments.beneficiary.BeneficiariesFetcher;
 import se.tink.agent.sdk.payments.features.beneficiary.FetchBeneficiaries;
 import se.tink.agent.sdk.payments.features.global_signing_basket.DeleteUnsignedPayments;
 import src.agent_sdk.runtime.src.instance.AgentInstance;
+import src.agent_sdk.runtime.src.payments.beneficiary.RuntimeBeneficiariesFetcher;
 import src.agent_sdk.runtime.src.payments.beneficiary.RuntimeBeneficiaryRegistrator;
 import src.agent_sdk.runtime.src.payments.beneficiary.processes.generic.GenericBeneficiaryRegistrationProcess;
 import src.agent_sdk.runtime.src.payments.bulk.RuntimeBulkPaymentInitiator;
@@ -28,10 +28,11 @@ public class RuntimePaymentsApi {
                 .map(RuntimeUnsignedPaymentsDeleter::new);
     }
 
-    public Optional<BeneficiariesFetcher> getBeneficiariesFetcher() {
+    public Optional<RuntimeBeneficiariesFetcher> getBeneficiariesFetcher() {
         return this.agentInstance
                 .instanceOf(FetchBeneficiaries.class)
-                .map(FetchBeneficiaries::beneficiariesFetcher);
+                .map(FetchBeneficiaries::beneficiariesFetcher)
+                .map(RuntimeBeneficiariesFetcher::new);
     }
 
     public Optional<RuntimeBeneficiaryRegistrator> getBeneficiaryRegistrator() {
