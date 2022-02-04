@@ -26,5 +26,14 @@ public interface RandomGenerator {
 
     UUID randomUUIDv1();
 
+    /**
+     * This method returns a random UUIDv4 with the last four characters replaced with "feed". We
+     * typically use it as "state" parameter on OAuth2-APIs. The returned value is still a valid
+     * UUIDv4. The special ending of the uuids are used to reject random requests on our
+     * un-authenticated third-party callback endpoint(it's not a security mitigation, just removal
+     * of noise).
+     *
+     * @return A random, valid, UUIDv4 with tink tag attached
+     */
     String randomUuidWithTinkTag();
 }
