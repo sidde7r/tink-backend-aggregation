@@ -16,6 +16,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.QueueProducer;
 import se.tink.libraries.queue.sqs.configuration.SqsConsumerConfiguration;
+import se.tink.libraries.queue.sqs.exception.ExpiredMessageException;
 import se.tink.libraries.queue.sqs.exception.RateLimitException;
 
 @Slf4j
@@ -116,6 +117,12 @@ public class SqsConsumer {
                                 sqsMessage.getMessageId(),
                                 e);
                         producer.requeue(sqsMessage.getBody());
+                    } catch (ExpiredMessageException expiredException) {
+                        log.info(
+                                "[SqsConsumer] Message with id: {} is expired.,",
+                                sqsMessage.getMessageId(),
+                                expiredException);
+                        sqsQueue.expired();
                     } catch (IOException e) {
                         log.error(
                                 "[SqsConsumer] Unexpected error happened during consuming of message. SqsMessageId: {}",
@@ -128,7 +135,8 @@ public class SqsConsumer {
 
     @VisibleForTesting
     void consume(String message)
-            throws IOException, RejectedExecutionException, RateLimitException {
+            throws IOException, RejectedExecutionException, RateLimitException,
+                    ExpiredMessageException {
         queueMessageAction.handle(message);
     }
 

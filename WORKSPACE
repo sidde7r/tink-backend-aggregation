@@ -201,22 +201,6 @@ load(
 )
 
 container_pull(
-    name = "openjdk_jre8",
-    digest = "sha256:ef522c093c11cb2060e14d9a26ef8651c4b2d8fed96556abf0511d49f1bf1a62",
-    registry = "gcr.io",
-    repository = "tink-containers/openjdk-8-jre",
-    tag = "8",
-)
-
-container_pull(
-    name = "openjdk_jdk8",
-    digest = "sha256:3a69bc28fd0c481e15364089ce2bd717117ec1df507c3a5482b7aea129e06f75",
-    registry = "gcr.io",
-    repository = "tink-containers/openjdk-8-jdk",
-    tag = "8",
-)
-
-container_pull(
     name = "distroless_java_11",
     digest = "sha256:36c4fe3c58205f65a5e6ee3e960452fc49dd96196b845b0a9014bdd95d571d32",
     registry = "gcr.io",

@@ -8,8 +8,12 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueEncoder;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueHandler;
+import se.tink.backend.aggregation.queue.AutomaticRefreshValidator;
+import se.tink.backend.aggregation.queue.RefreshValidator;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.QueueConsumerService;
 import se.tink.libraries.queue.QueueProducer;
@@ -30,6 +34,8 @@ public class SqsQueueModule extends AbstractModule {
     protected void configure() {
         requireBinding(AggregationServiceConfiguration.class);
         requireBinding(MetricRegistry.class);
+        bind(LocalDateTimeSource.class).to(ActualLocalDateTimeSource.class).in(Scopes.SINGLETON);
+        bind(RefreshValidator.class).to(AutomaticRefreshValidator.class).in(Scopes.SINGLETON);
         bind(QueueMessageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
         bind(QueueConsumerService.class).to(SqsConsumerService.class).in(Scopes.SINGLETON);
         bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);

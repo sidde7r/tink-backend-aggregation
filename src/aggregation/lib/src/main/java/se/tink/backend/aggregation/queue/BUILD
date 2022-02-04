@@ -6,10 +6,12 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/cluster/exceptions",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//src/libraries/queue_sqs",
         "//src/libraries/rate_limit_service",
         "//src/libraries/serialization",

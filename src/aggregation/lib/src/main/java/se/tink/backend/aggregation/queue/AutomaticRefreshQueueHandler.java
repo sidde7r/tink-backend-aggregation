@@ -6,6 +6,7 @@ import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
@@ -17,8 +18,8 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.sqs.EncodingHandler;
 import se.tink.libraries.queue.sqs.QueueMessageAction;
+import se.tink.libraries.queue.sqs.exception.ExpiredMessageException;
 import se.tink.libraries.queue.sqs.exception.RateLimitException;
-import se.tink.libraries.rate_limit_service.RateLimitService;
 
 public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private AgentWorker agentWorker;
@@ -28,6 +29,7 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
             LoggerFactory.getLogger(AutomaticRefreshQueueHandler.class);
     private final MetricRegistry metricRegistry;
     private ClientConfigurationProvider clientConfigurationProvider;
+    private final RefreshValidator refreshValidator;
     private final MetricId metricId = MetricId.newId("aggregation_queue_consumes_by_provider");
 
     @Inject
@@ -36,28 +38,26 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
             AgentWorkerOperationFactory agentWorkerOperationFactory,
             EncodingHandler encodingHandler,
             MetricRegistry metricRegistry,
-            ClientConfigurationProvider clientConfigurationProvider) {
+            ClientConfigurationProvider clientConfigurationProvider,
+            RefreshValidator refreshValidator) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.encodingHandler = encodingHandler;
         this.metricRegistry = metricRegistry;
         this.clientConfigurationProvider = clientConfigurationProvider;
+        this.refreshValidator = refreshValidator;
     }
 
     @Override
     public void handle(String message)
-            throws IOException, RejectedExecutionException, RateLimitException {
+            throws IOException, RejectedExecutionException, ExpiredMessageException,
+                    RateLimitException {
         try {
             RefreshInformation refreshInformation = encodingHandler.decode(message);
             MDC.setContextMap(refreshInformation.getMDCContext());
             logger.info("[AutomaticRefreshQueueHandler] Started handling automatic refresh.");
-            String providerName = refreshInformation.getRequest().getProvider().getName();
-            if (RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName)) {
-                throw new RateLimitException(
-                        String.format(
-                                "Provider %s was rate limited recently. Rejecting execution to requeue.",
-                                providerName));
-            }
+            refreshValidator.validate(refreshInformation.getRequest());
+
             metricRegistry
                     .meter(
                             metricId.label(
@@ -65,35 +65,11 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                                     refreshInformation.getRequest().getProvider().getName()))
                     .inc();
 
-            ClientInfo clientInfo = null;
-            if (refreshInformation.getClientName() != null) {
-                clientInfo =
-                        ClientInfo.of(
-                                refreshInformation.getClientName(),
-                                refreshInformation.getClusterId(),
-                                refreshInformation.getAggregatorId(),
-                                refreshInformation.getAppId());
-            } else {
-                /**
-                 * Below logger is to verify if this else condition is ever met. Eventually will
-                 * remove else condition if its not in use.
-                 */
-                logger.info(
-                        "ClientName : {}, AppId : {}",
-                        refreshInformation.getClientName(),
-                        refreshInformation.getAppId());
-                ClientConfiguration configuration =
-                        clientConfigurationProvider.getClientConfiguration(
-                                refreshInformation.getName(), refreshInformation.getEnvironment());
+            ClientInfo clientInfo =
+                    refreshInformation.getClientName() != null
+                            ? createClientInfoFromRefreshInformation(refreshInformation)
+                            : createClientInfoFromConfiguration(refreshInformation);
 
-                /* passing appId as null as we don't store appId in data base entity ClientConfiguration */
-                clientInfo =
-                        ClientInfo.of(
-                                configuration.getClientName(),
-                                configuration.getClusterId(),
-                                configuration.getAggregatorId(),
-                                null);
-            }
             AgentWorkerRefreshOperationCreatorWrapper agentWorkerRefreshOperationCreatorWrapper =
                     AgentWorkerRefreshOperationCreatorWrapper.of(
                             agentWorkerCommandFactory, refreshInformation.getRequest(), clientInfo);
@@ -101,12 +77,51 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
             logger.info(
                     "[AutomaticRefreshQueueHandler] Finished handling automatic refresh handler.");
-        } catch (RateLimitException | RejectedExecutionException exception) {
+        } catch (ExpiredMessageException
+                | RateLimitException
+                | RejectedExecutionException exception) {
             throw exception;
         } catch (Exception e) {
             logger.error("Something went wrong with an automatic refresh from sqs.", e);
         } finally {
             MDC.clear();
         }
+    }
+
+    private ClientInfo createClientInfoFromConfiguration(RefreshInformation refreshInformation)
+            throws ClusterNotValid {
+        ClientInfo clientInfo;
+        /**
+         * Below logger is to verify if this else condition is ever met. Eventually will remove else
+         * condition if its not in use.
+         */
+        logger.info(
+                "ClientName : {}, AppId : {}",
+                refreshInformation.getClientName(),
+                refreshInformation.getAppId());
+        ClientConfiguration configuration =
+                clientConfigurationProvider.getClientConfiguration(
+                        refreshInformation.getName(), refreshInformation.getEnvironment());
+
+        /* passing appId as null as we don't store appId in data base entity ClientConfiguration */
+        clientInfo =
+                ClientInfo.of(
+                        configuration.getClientName(),
+                        configuration.getClusterId(),
+                        configuration.getAggregatorId(),
+                        null);
+        return clientInfo;
+    }
+
+    private ClientInfo createClientInfoFromRefreshInformation(
+            RefreshInformation refreshInformation) {
+        ClientInfo clientInfo;
+        clientInfo =
+                ClientInfo.of(
+                        refreshInformation.getClientName(),
+                        refreshInformation.getClusterId(),
+                        refreshInformation.getAggregatorId(),
+                        refreshInformation.getAppId());
+        return clientInfo;
     }
 }

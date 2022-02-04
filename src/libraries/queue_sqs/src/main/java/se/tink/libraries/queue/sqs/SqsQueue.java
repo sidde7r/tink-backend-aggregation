@@ -176,6 +176,12 @@ public class SqsQueue {
                 .inc();
     }
 
+    public void expired() {
+        metricRegistry
+                .meter(METRIC_ID_BASE.label(EVENT_LABEL, "expired").label("name", name))
+                .inc();
+    }
+
     public AmazonSQS getSqs() {
         return sqs;
     }
