@@ -9,6 +9,8 @@ public class LuminorConstants {
 
     public static class Urls {
         public static final String BASE_URL = "https://psd2.luminoropenbanking.com/v1";
+        public static final URL LOGOUT_AUTH =
+                new URL("https://login.luminoropenbanking.com/v1/am/logout");
         public static final URL AUTH =
                 new URL("https://login.luminoropenbanking.com/v1/am/oauth2/authorize");
         public static final URL TOKEN = new URL(BASE_URL + "/openam/oauth2/access_token");
@@ -66,6 +68,7 @@ public class LuminorConstants {
 
     public static class QueryKeys {
         public static final String CLIENT_ID = "client_id";
+        public static final String RETURN_URI = "return_url";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String BANK_COUNTRY = "bank_country";
         public static final String REALM = "realm";
@@ -87,12 +90,11 @@ public class LuminorConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = "oauth2_access_token";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
-        public static final String CONSENT_ID = "CONSENT_ID";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
     }
 
     public static class FormValues {
-        public static final String MAX_DATE = "2022-01-01";
+        public static final String MAX_DATE = "9999-12-31";
         public static final boolean RECURRING_INDICATOR = true;
         public static final boolean COMBINED_SERVICE_INDICATOR = false;
         public static final int FREQUENCY = 4;
