@@ -506,8 +506,8 @@ clients:
     aggregatorIdentifier: "SlimPay"
 
 eidasProxy:
-  useEidasProxyQsealcSignerHttpClient: true
-  eidasProxyQsealcSignerHttpClientRate: "0.5"
+  useEidasProxyQsealcSignerHttpClient: false
+  eidasProxyQsealcSignerHttpClientRate: "0"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
