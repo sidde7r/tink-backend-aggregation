@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.signature;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc.pis.signature;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

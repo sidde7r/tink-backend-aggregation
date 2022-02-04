@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.markandspencer;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.markandspencer;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;

@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.firstdirect;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.hsbcgroup.hsbc;
 
 import java.time.LocalDate;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -12,18 +11,19 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
-public class FirstDirectAgentTest {
+public class HsbcAgentTest {
 
+    private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
+    private static final String HSBC_FINANCIAL_INSTITUTION_ID = "6cd6d369ba8e4d72b1a7d26dabe509a3";
 
     @Test
-    public void test() throws Exception {
-        new AgentIntegrationTest.Builder("uk", "uk-firstdirect-oauth2")
+    public void testRefresh() throws Exception {
+        new AgentIntegrationTest.Builder("uk", "uk-hsbc-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("firstdirect")
+                .setFinancialInstitutionId(HSBC_FINANCIAL_INSTITUTION_ID)
                 .setAppId("tink")
                 .build()
                 .testRefresh();
@@ -32,13 +32,12 @@ public class FirstDirectAgentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("uk", "uk-firstdirect-oauth2")
+                new AgentIntegrationTest.Builder("uk", "uk-hsbc-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("firstdirect")
+                        .setFinancialInstitutionId(HSBC_FINANCIAL_INSTITUTION_ID)
                         .setAppId("tink");
-
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }
 
@@ -46,13 +45,12 @@ public class FirstDirectAgentTest {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "GBP");
         LocalDate executionDate = LocalDate.now();
         String currency = "GBP";
-
         return new Payment.Builder()
                 .withCreditor(
                         new Creditor(
                                 AccountIdentifier.create(
                                         AccountIdentifierType.SORT_CODE, DESTINATION_IDENTIFIER),
-                                "Unknown Person"))
+                                "anyname"))
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
