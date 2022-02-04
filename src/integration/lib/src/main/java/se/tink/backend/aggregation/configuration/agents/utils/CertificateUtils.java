@@ -171,13 +171,40 @@ public class CertificateUtils {
      */
     public static String getOrganizationIdentifier(String base64EncodedCertificates)
             throws CertificateException {
+        return getRelativeDistinguishedName(
+                base64EncodedCertificates, BCStyle.ORGANIZATION_IDENTIFIER);
+    }
+
+    /**
+     * Extract organization name from base64 encoded PEM
+     *
+     * @param base64EncodedCertificates base64 encoded PEM of an eIDAS certificate
+     * @return organization name.
+     * @throws CertificateException
+     */
+    public static String getOrganizationName(String base64EncodedCertificates)
+            throws CertificateException {
+        return getRelativeDistinguishedName(base64EncodedCertificates, BCStyle.O);
+    }
+
+    /**
+     * Extract Relative Distinguished Name from base64 encoded PEM
+     *
+     * @param base64EncodedCertificates base64 encoded PEM of an eIDAS certificate
+     * @param attributeType ASN1ObjectIdentifier which should be extracted
+     * @return Relative Distinguished Name as a string.
+     * @throws CertificateException
+     */
+    private static String getRelativeDistinguishedName(
+            String base64EncodedCertificates, ASN1ObjectIdentifier attributeType)
+            throws CertificateException {
         List<X509Certificate> certs =
                 getX509CertificatesFromBase64EncodedCert(base64EncodedCertificates);
         if (certs.isEmpty()) {
             throw new IllegalStateException(ERROR_COULD_NOT_FIND_CERT);
         }
         return new X500Name(certs.get(0).getSubjectX500Principal().getName())
-                .getRDNs(BCStyle.ORGANIZATION_IDENTIFIER)[0]
+                .getRDNs(attributeType)[0]
                 .getFirst()
                 .getValue()
                 .toString();
