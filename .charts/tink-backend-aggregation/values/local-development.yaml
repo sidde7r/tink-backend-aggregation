@@ -31,8 +31,8 @@ clients:
     aggregatorIdentifier: "Provision Job Testing"
 
 eidasProxy:
-  useEidasProxyQsealcSignerHttpClient: true
-  eidasProxyQsealcSignerHttpClientRate: "1.0"
+  useEidasProxyQsealcSignerHttpClient: false
+  eidasProxyQsealcSignerHttpClientRate: "0"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
