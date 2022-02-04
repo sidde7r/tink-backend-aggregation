@@ -32,7 +32,7 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
 
     static {
         aisConfig =
-                new DanskebankAisConfiguration.Builder(V31.AIS_BASE_APP_REDIRECT, MarketCode.SE)
+                new DanskebankAisConfiguration.Builder(V31.AIS_BASE, MarketCode.SE)
                         .withWellKnownURL(V31.getWellKnownUrl(MarketCode.SE))
                         .build();
     }
