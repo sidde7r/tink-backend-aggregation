@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.utils;
+package se.tink.agent.runtime.utils;
 
 import java.util.Arrays;
 import java.util.List;

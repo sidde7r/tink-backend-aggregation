@@ -5,11 +5,11 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import java.util.Map;
 import java.util.stream.Collectors;
+import se.tink.agent.runtime.utils.SupplementalInformationHelperImpl;
 import se.tink.agent.sdk.utils.SupplementalInformationHelper;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import src.agent_sdk.runtime.src.utils.SupplementalInformationHelperImpl;
 
 public class SupplementalInformationHelperProviderModule extends AbstractModule {
 

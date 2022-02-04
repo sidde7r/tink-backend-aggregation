@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.test.utils;
+package se.tink.agent.runtime.test.utils;
 
 import java.time.Duration;
 import se.tink.agent.sdk.utils.Sleeper;

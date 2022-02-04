@@ -4,10 +4,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import java.util.Map;
+import se.tink.agent.runtime.operation.aggregator_configuration.AggregatorConfigurationImpl;
 import se.tink.agent.sdk.operation.aggregator_configuration.AggregatorConfiguration;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
-import src.agent_sdk.runtime.src.operation.aggregator_configuration.AggregatorConfigurationImpl;
 
 public class AggregatorConfigurationProviderModule extends AbstractModule {
 

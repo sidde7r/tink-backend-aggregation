@@ -4,8 +4,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import java.util.Map;
+import se.tink.agent.runtime.storage.RawAgentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import src.agent_sdk.runtime.src.storage.RawAgentStorage;
 
 public class RawAgentStorageProviderModule extends AbstractModule {
 

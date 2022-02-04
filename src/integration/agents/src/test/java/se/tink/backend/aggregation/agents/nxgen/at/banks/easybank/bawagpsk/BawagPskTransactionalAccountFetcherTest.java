@@ -12,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.agent.runtime.operation.ProviderImpl;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
@@ -31,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import src.agent_sdk.runtime.src.operation.ProviderImpl;
 
 public final class BawagPskTransactionalAccountFetcherTest {
 

@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.models.payments;
+package se.tink.agent.runtime.models.payments;
 
 import java.time.LocalDate;
 import java.util.Optional;

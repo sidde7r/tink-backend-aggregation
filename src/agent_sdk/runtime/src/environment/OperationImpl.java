@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.environment;
+package se.tink.agent.runtime.environment;
 
 import lombok.AllArgsConstructor;
 import se.tink.agent.sdk.environment.Operation;

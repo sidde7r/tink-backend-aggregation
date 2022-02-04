@@ -4,10 +4,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import java.util.Optional;
+import se.tink.agent.runtime.operation.UserImpl;
 import se.tink.agent.sdk.operation.User;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
-import src.agent_sdk.runtime.src.operation.UserImpl;
 
 public class UserProviderModule extends AbstractModule {
 

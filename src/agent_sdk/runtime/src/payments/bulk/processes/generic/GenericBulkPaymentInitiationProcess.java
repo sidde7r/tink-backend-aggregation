@@ -1,10 +1,10 @@
-package src.agent_sdk.runtime.src.payments.bulk.processes.generic;
+package se.tink.agent.runtime.payments.bulk.processes.generic;
 
 import java.util.Optional;
+import se.tink.agent.runtime.instance.AgentInstance;
+import se.tink.agent.runtime.payments.bulk.process.BulkPaymentInitiationProcess;
 import se.tink.agent.sdk.payments.bulk.generic.GenericBulkPaymentInitiator;
 import se.tink.agent.sdk.payments.features.bulk.InitiateBulkPaymentGeneric;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
-import src.agent_sdk.runtime.src.payments.bulk.process.BulkPaymentInitiationProcess;
 
 public class GenericBulkPaymentInitiationProcess implements BulkPaymentInitiationProcess {
     @Override

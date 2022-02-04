@@ -1,6 +1,8 @@
-package src.agent_sdk.runtime.src.authentication.processes.berlingroup;
+package se.tink.agent.runtime.authentication.processes.berlingroup;
 
 import java.util.Optional;
+import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
+import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.BerlinGroupAuthenticator;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.steps.BerlinGroupOpenConsentAppStep;
 import se.tink.agent.sdk.authentication.authenticators.berlingroup.steps.BerlinGroupVerifyAuthorizedConsentStep;
@@ -10,8 +12,6 @@ import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
 import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.utils.TimeGenerator;
-import src.agent_sdk.runtime.src.authentication.processes.AuthenticationProcess;
-import src.agent_sdk.runtime.src.instance.AgentInstance;
 
 public class BerlinGroupAuthenticationProcess
         implements AuthenticationProcess<BerlinGroupAuthenticator> {

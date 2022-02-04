@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.payments.global_signing_basket;
+package se.tink.agent.runtime.payments.global_signing_basket;
 
 import java.util.List;
 import se.tink.agent.sdk.models.payments.unsigned_payment.UnsignedPayment;

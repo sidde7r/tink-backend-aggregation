@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.test.steppable_execution;
+package se.tink.agent.runtime.test.steppable_execution;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.agent.runtime.steppable_execution.SteppableExecutor;
+import se.tink.agent.runtime.user_interaction.UserResponseDataImpl;
 import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.base_step.StepResponse;
@@ -19,8 +21,6 @@ import se.tink.agent.sdk.user_interaction.UserInteraction;
 import se.tink.agent.sdk.user_interaction.UserInteractionType;
 import se.tink.agent.sdk.user_interaction.UserResponseData;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import src.agent_sdk.runtime.src.steppable_execution.SteppableExecutor;
-import src.agent_sdk.runtime.src.user_interaction.UserResponseDataImpl;
 
 public class SteppableExecutorTest {
 

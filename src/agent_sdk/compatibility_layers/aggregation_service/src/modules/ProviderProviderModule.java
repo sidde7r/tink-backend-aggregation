@@ -3,9 +3,9 @@ package src.agent_sdk.compatibility_layers.aggregation_service.src.modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import se.tink.agent.runtime.operation.ProviderImpl;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import src.agent_sdk.runtime.src.operation.ProviderImpl;
 
 public class ProviderProviderModule extends AbstractModule {
 

@@ -4,10 +4,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import java.util.HashMap;
+import se.tink.agent.runtime.operation.StaticBankCredentialsImpl;
 import se.tink.agent.sdk.operation.StaticBankCredentials;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import src.agent_sdk.runtime.src.operation.StaticBankCredentialsImpl;
 
 public class StaticBankCredentialsProviderModule extends AbstractModule {
 

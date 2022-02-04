@@ -1,11 +1,11 @@
-package src.agent_sdk.runtime.test.user_interaction;
+package se.tink.agent.runtime.test.user_interaction;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import src.agent_sdk.runtime.src.user_interaction.UserResponseDataImpl;
+import se.tink.agent.runtime.user_interaction.UserResponseDataImpl;
 
 public class UserResponseDataImplTest {
     @Test

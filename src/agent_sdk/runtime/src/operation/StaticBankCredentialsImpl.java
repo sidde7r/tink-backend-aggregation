@@ -1,4 +1,4 @@
-package src.agent_sdk.runtime.src.operation;
+package se.tink.agent.runtime.operation;
 
 import com.google.common.base.Strings;
 import java.util.Map;
