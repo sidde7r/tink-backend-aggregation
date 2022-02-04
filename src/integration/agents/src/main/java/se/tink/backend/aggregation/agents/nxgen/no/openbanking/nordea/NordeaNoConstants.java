@@ -8,4 +8,8 @@ public final class NordeaNoConstants {
     public static class QueryValues {
         public static final String COUNTRY = "NO";
     }
+
+    public static class ErrorMessages {
+        public static final String PAYMENT_NOT_SUPPORTED = "Not supported type of payment.";
+    }
 }

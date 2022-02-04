@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.payment;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.NordeaNoConstants.ErrorMessages.PAYMENT_NOT_SUPPORTED;
+
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -46,7 +48,7 @@ public class NordeaNoPaymentExecutorSelector implements PaymentExecutor, Fetchab
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         if (paymentRequest.getPayment().getPaymentServiceType() == PaymentServiceType.PERIODIC) {
-            throw new PaymentRejectedException("Not supported type of payment.");
+            throw new PaymentRejectedException(PAYMENT_NOT_SUPPORTED);
         } else {
             nordeaNoAuthenticator.authenticate(credentials);
             return nordeaNoStandardPaymentExecutor.create(paymentRequest);
@@ -56,7 +58,7 @@ public class NordeaNoPaymentExecutorSelector implements PaymentExecutor, Fetchab
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         if (paymentRequest.getPayment().getPaymentServiceType() == PaymentServiceType.PERIODIC) {
-            throw new PaymentRejectedException("Not supported type of payment.");
+            throw new PaymentRejectedException(PAYMENT_NOT_SUPPORTED);
         } else {
             return nordeaNoStandardPaymentExecutor.fetch(paymentRequest);
         }
@@ -67,7 +69,7 @@ public class NordeaNoPaymentExecutorSelector implements PaymentExecutor, Fetchab
             throws PaymentException {
         if (paymentMultiStepRequest.getPayment().getPaymentServiceType()
                 == PaymentServiceType.PERIODIC) {
-            throw new PaymentRejectedException("Not supported type of payment.");
+            throw new PaymentRejectedException(PAYMENT_NOT_SUPPORTED);
         } else {
             return nordeaNoStandardPaymentExecutor.sign(paymentMultiStepRequest);
         }
