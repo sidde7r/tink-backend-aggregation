@@ -119,7 +119,7 @@ public class OpenIdApiClient {
         URL authorizationEndpointUrl = wellKnownConfiguration.getAuthorizationEndpoint();
 
         List<String> requiredScopes = createRequiredScopeList(mode, wellKnownConfiguration);
-        String responseType = String.join(" ", OpenIdConstants.MANDATORY_RESPONSE_TYPES);
+        String responseType = wellKnownConfiguration.getResponseType();
         String clientId = providerConfiguration.getClientId();
 
         String scopeArray =
