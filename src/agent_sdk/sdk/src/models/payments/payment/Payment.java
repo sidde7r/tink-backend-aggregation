@@ -8,7 +8,7 @@ public interface Payment {
 
     String getTinkId();
 
-    PaymentType getPaymentType();
+    PaymentType getType();
 
     Optional<Debtor> tryGetDebtor();
 
