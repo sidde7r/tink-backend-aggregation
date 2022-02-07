@@ -16,7 +16,8 @@ public class DecoupledTemplate {
         List<Field> templatesList = new ArrayList<>();
         templatesList.add(FieldsBuilder.buildTemplateField(TemplatesEnum.DECOUPLED));
         templatesList.add(FieldsBuilder.buildIconField(decoupledData.getIconUrl(), ICON));
-        templatesList.add(FieldsBuilder.buildTitleField(decoupledData.getText(), TITLE));
+        templatesList.add(
+                FieldsBuilder.buildTextInstructionField(null, decoupledData.getText(), TITLE));
         return templatesList;
     }
 }
