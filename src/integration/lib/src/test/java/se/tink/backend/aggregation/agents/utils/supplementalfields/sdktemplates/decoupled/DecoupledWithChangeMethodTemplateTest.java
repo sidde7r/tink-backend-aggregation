@@ -29,7 +29,7 @@ public class DecoupledWithChangeMethodTemplateTest {
         assertThat(supplementalFields).hasSize(4);
         assertTemplateField(supplementalFields.get(0));
         assertIconField(supplementalFields.get(1));
-        assertTitleField(supplementalFields.get(2));
+        assertTextInstructionField(supplementalFields.get(2));
         assertChangeMethodField(supplementalFields.get(3));
     }
 
@@ -51,11 +51,11 @@ public class DecoupledWithChangeMethodTemplateTest {
         assertThat(field.getValue()).isEqualTo(ICON_URL);
     }
 
-    private void assertTitleField(Field field) {
+    private void assertTextInstructionField(Field field) {
         assertThat(field).isNotNull();
         assertThat(field.isImmutable()).isTrue();
         assertThat(field.getName()).isEqualTo("title");
-        assertThat(field.getStyle()).isEqualTo("TITLE");
+        assertThat(field.getStyle()).isEqualTo("TEXT");
         assertThat(field.getType()).isEqualTo("TEXT");
         assertThat(field.getValue()).isEqualTo("shown instruction");
         assertThat(field.getAdditionalInfo()).isEqualTo("{\"layoutType\":\"INSTRUCTIONS\"}");
