@@ -8,6 +8,7 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/agent_sdk/runtime/src/environment",
+        "//src/agent_sdk/sdk/src/payments/features/bulk",
     ],
     visibility = [
         "//src/agent_sdk/compatibility_layers:__subpackages__",
