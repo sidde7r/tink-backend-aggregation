@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Date;
@@ -96,6 +97,11 @@ public class PaginationStartDateTest {
             @Override
             public LocalDateTime now(ZoneId zoneId) {
                 return LocalDateTime.of(2021, 1, 1, 1, 1);
+            }
+
+            @Override
+            public ZonedDateTime nowZonedDateTime(ZoneId zoneId) {
+                return null;
             }
 
             @Override

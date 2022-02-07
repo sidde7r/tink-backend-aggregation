@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.queue;
 
 import com.google.inject.Inject;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.queue.sqs.exception.ExpiredMessageException;
@@ -31,8 +31,9 @@ public class AutomaticRefreshValidator implements RefreshValidator {
 
         if (request.getExpiryDate() != null
                 && localDateTimeSource
-                        .now(ZoneId.systemDefault())
-                        .isAfter(request.getExpiryDate())) {
+                                .nowZonedDateTime(ZoneOffset.UTC)
+                                .compareTo(request.getExpiryDate())
+                        > 0) {
             throw new ExpiredMessageException(
                     String.format(
                             "Message expired, refresh id:%s, expiry date: %s",

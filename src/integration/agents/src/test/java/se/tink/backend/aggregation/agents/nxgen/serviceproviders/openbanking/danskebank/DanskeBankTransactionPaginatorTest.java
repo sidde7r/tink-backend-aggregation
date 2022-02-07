@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -436,6 +437,11 @@ public class DanskeBankTransactionPaginatorTest {
         @Override
         public LocalDateTime now(ZoneId zoneId) {
             return currentTime;
+        }
+
+        @Override
+        public ZonedDateTime nowZonedDateTime(ZoneId zoneId) {
+            return null;
         }
 
         @Override
