@@ -13,12 +13,10 @@ import se.tink.agent.runtime.authentication.processes.swedish_mobile_bankid.Swed
 import se.tink.agent.runtime.authentication.processes.thirdparty_app.ThirdPartyAppAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.username_password.UsernameAndPasswordAuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.runtime.operation.MultifactorAuthenticationStateImpl;
 import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
 import se.tink.agent.sdk.authentication.consent.ConsentStatus;
 import se.tink.agent.sdk.environment.Operation;
 import se.tink.agent.sdk.environment.Utilities;
-import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
 import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.base_step.StepResponse;
@@ -34,16 +32,12 @@ public class RuntimeAuthenticator {
         Utilities utilities = agentInstance.getEnvironment().getUtilities();
         Operation operation = agentInstance.getEnvironment().getOperation();
 
-        MultifactorAuthenticationState multifactorAuthenticationState =
-                new MultifactorAuthenticationStateImpl(
-                        utilities.getRandomGenerator().randomUuidWithTinkTag());
-
         this.authenticationFlows =
                 Stream.of(
                                 getFlows(new GenericAuthenticationProcess()),
                                 getFlows(
                                         new Oauth2AuthenticationProcess(
-                                                multifactorAuthenticationState)),
+                                                utilities.getRandomGenerator())),
                                 getFlows(
                                         new Oauth2DecoupledAppAuthenticationProcess(
                                                 utilities.getSleeper())),
@@ -62,7 +56,7 @@ public class RuntimeAuthenticator {
                                 getFlows(
                                         new BerlinGroupAuthenticationProcess(
                                                 utilities.getTimeGenerator(),
-                                                multifactorAuthenticationState)))
+                                                utilities.getRandomGenerator())))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .findFirst()

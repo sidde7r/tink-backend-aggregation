@@ -211,7 +211,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         logger.info("Opening third party app with deep link URL {}, state {}", deepLinkUrl, state);
 
         // return the mfaId that can be listened for.
-        String mfaId = String.format(UNIQUE_PREFIX_TPCB, this.state);
+        String mfaId = createMfaIdFromCustomKey(this.state);
         supplementalRequester.requestSupplementalInformation(mfaId, credentials);
 
         return mfaId;
@@ -236,10 +236,18 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         credentials.setSupplementalInformation(userInteraction.getPayload());
         credentials.setStatusPayload(null);
 
-        String mfaId = userInteraction.getCustomResponseKey().orElse(credentials.getId());
+        String mfaId =
+                userInteraction
+                        .getCustomResponseKey()
+                        .map(key -> createMfaIdFromCustomKey(key))
+                        .orElse(credentials.getId());
         supplementalRequester.requestSupplementalInformation(mfaId, credentials);
 
         return mfaId;
+    }
+
+    private String createMfaIdFromCustomKey(String key) {
+        return String.format(UNIQUE_PREFIX_TPCB, key);
     }
 
     private CredentialsStatus getCredentialsStatus(UserInteractionType type) {

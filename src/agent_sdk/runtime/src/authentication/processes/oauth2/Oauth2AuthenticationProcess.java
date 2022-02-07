@@ -11,14 +11,13 @@ import se.tink.agent.sdk.authentication.common_steps.VerifyBankConnectionStep;
 import se.tink.agent.sdk.authentication.features.AuthenticateOauth2;
 import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
 import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
-import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
+import se.tink.agent.sdk.utils.RandomGenerator;
 
 public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2Authenticator> {
-    private final MultifactorAuthenticationState multifactorAuthenticationState;
+    private final RandomGenerator randomGenerator;
 
-    public Oauth2AuthenticationProcess(
-            MultifactorAuthenticationState multifactorAuthenticationState) {
-        this.multifactorAuthenticationState = multifactorAuthenticationState;
+    public Oauth2AuthenticationProcess(RandomGenerator randomGenerator) {
+        this.randomGenerator = randomGenerator;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class Oauth2AuthenticationProcess implements AuthenticationProcess<Oauth2
         return NewConsentFlow.builder()
                 .startStep(
                         new Oauth2OpenAuthorizationAppStep(
-                                this.multifactorAuthenticationState,
+                                this.randomGenerator,
                                 authenticator,
                                 Oauth2ExchangeAuthorizationCodeStep.class))
                 .addStep(new Oauth2ExchangeAuthorizationCodeStep(authenticator, authenticator))

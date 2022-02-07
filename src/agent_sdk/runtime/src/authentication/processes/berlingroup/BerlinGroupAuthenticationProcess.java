@@ -10,19 +10,18 @@ import se.tink.agent.sdk.authentication.authenticators.berlingroup.steps.BerlinG
 import se.tink.agent.sdk.authentication.features.AuthenticateBerlinGroup;
 import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
 import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
-import se.tink.agent.sdk.operation.MultifactorAuthenticationState;
+import se.tink.agent.sdk.utils.RandomGenerator;
 import se.tink.agent.sdk.utils.TimeGenerator;
 
 public class BerlinGroupAuthenticationProcess
         implements AuthenticationProcess<BerlinGroupAuthenticator> {
     private final TimeGenerator timeGenerator;
-    private final MultifactorAuthenticationState multifactorAuthenticationState;
+    private final RandomGenerator randomGenerator;
 
     public BerlinGroupAuthenticationProcess(
-            TimeGenerator timeGenerator,
-            MultifactorAuthenticationState multifactorAuthenticationState) {
+            TimeGenerator timeGenerator, RandomGenerator randomGenerator) {
         this.timeGenerator = timeGenerator;
-        this.multifactorAuthenticationState = multifactorAuthenticationState;
+        this.randomGenerator = randomGenerator;
     }
 
     @Override
@@ -39,7 +38,7 @@ public class BerlinGroupAuthenticationProcess
                 .startStep(
                         new BerlinGroupOpenConsentAppStep(
                                 this.timeGenerator,
-                                this.multifactorAuthenticationState,
+                                this.randomGenerator,
                                 authenticator,
                                 authenticator,
                                 BerlinGroupVerifyAuthorizedConsentStep.class))
