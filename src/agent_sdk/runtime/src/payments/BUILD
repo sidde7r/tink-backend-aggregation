@@ -20,5 +20,6 @@ java_library_with_sources(
         "//src/agent_sdk/runtime/src/payments/bulk",
         "//src/agent_sdk/runtime/src/payments/global_signing_basket",
         "//src/agent_sdk/runtime/src/payments/single",
+        "//src/agent_sdk/sdk/src/models/payments",
     ],
 )
