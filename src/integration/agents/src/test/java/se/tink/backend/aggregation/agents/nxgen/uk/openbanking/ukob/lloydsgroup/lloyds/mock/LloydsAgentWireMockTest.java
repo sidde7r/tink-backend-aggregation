@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.lloyds.mock;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloydsgroup.lloyds.mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -21,7 +21,7 @@ import se.tink.libraries.payment.rpc.Payment;
 public class LloydsAgentWireMockTest {
 
     private static final String RESOURCES_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/lloyds/mock/resources/";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/lloydsgroup/lloyds/mock/resources/";
     private static final String CONFIGURATION_PATH = RESOURCES_PATH + "configuration.yml";
     private static final String SUCCESSFUL_PAYMENT_MOCK_FILE =
             RESOURCES_PATH + "uk-lloyds-successful-payment.aap";

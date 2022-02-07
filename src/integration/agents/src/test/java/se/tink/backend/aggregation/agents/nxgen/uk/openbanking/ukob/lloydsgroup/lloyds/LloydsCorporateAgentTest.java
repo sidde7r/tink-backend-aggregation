@@ -1,17 +1,17 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.bankofscotland;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloydsgroup.lloyds;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-public class BankofScotlandBusinessAgentTest {
+public class LloydsCorporateAgentTest {
 
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("uk", "uk-bankofscotland-business-oauth2")
+        new AgentIntegrationTest.Builder("uk", "uk-lloyds-corporate-ob")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("d660f95b315a49d493952778ee23b509")
+                .setFinancialInstitutionId("16343e744a874337b11efdd7cbd25a53")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
