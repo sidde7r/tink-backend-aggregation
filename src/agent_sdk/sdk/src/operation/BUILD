@@ -17,7 +17,6 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/models/field",
         "//src/agent_sdk/sdk/src/storage",
         "//src/agent_sdk/sdk/src/utils",
-        "//src/agent_sdk/sdk/src/user_interaction",
         "//src/agent_sdk/sdk/src/operation/aggregator_configuration",
         "//src/agent_sdk/sdk/src/operation/http",
     ],
