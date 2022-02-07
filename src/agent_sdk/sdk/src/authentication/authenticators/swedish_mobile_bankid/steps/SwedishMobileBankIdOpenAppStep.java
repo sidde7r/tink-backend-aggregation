@@ -8,6 +8,7 @@ import se.tink.agent.sdk.steppable_execution.interactive_step.IntermediateStep;
 import se.tink.agent.sdk.steppable_execution.interactive_step.response.IntermediateStepResponse;
 import se.tink.agent.sdk.storage.SerializableReference;
 import se.tink.agent.sdk.user_interaction.SwedishMobileBankIdInfo;
+import se.tink.agent.sdk.user_interaction.UserInteraction;
 
 public class SwedishMobileBankIdOpenAppStep extends IntermediateStep {
 
@@ -34,7 +35,7 @@ public class SwedishMobileBankIdOpenAppStep extends IntermediateStep {
                 this.agentGetAutostartToken.getAutostartToken(reference);
 
         return IntermediateStepResponse.nextStep(this.nextStep)
-                .userInteraction(swedishMobileBankIdInfo.intoUserInteraction())
+                .userInteraction(UserInteraction.swedishMobileBankId(swedishMobileBankIdInfo))
                 .build();
     }
 }
