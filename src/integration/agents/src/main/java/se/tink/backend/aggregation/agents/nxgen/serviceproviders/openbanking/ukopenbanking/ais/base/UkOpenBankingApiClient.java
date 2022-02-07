@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -31,10 +32,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.validators.HSBCFailedEligibilityCheckCodeValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -88,11 +91,20 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                     .map(this::logBalanceSnapshotTime)
                     .orElse(Collections.emptyList());
         } catch (HttpResponseException e) {
-            if (AccountBlockedOrSuspendedValidator.isAccountClosed(e.getResponse())) {
+            HttpResponse httpResponse = e.getResponse();
+            if (AccountBlockedOrSuspendedValidator.isAccountClosed(httpResponse)) {
                 log.info(
                         "[AccountBlockedOrSuspendedValidator]: Account closed or suspended, "
                                 + "returning empty list ");
                 return Collections.emptyList();
+            }
+
+            if (HSBCFailedEligibilityCheckCodeValidator.validate(httpResponse)) {
+                log.info(
+                        "[{}]: HSBC failed eligibility check occurred: {},",
+                        UkOpenBankingApiClient.class.getSimpleName(),
+                        httpResponse.getBody(String.class));
+                throw SessionError.SESSION_EXPIRED.exception();
             }
             throw new AccountRefreshException("Failed to fetch balances");
         }
