@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloyds;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloydsgroup.lloyds;
 
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
@@ -25,11 +25,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 
-@AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+@AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-public final class LloydsV31CorporateAgent extends UkOpenBankingBaseAgent {
+public final class LloydsV31BusinessAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
 
@@ -38,12 +38,12 @@ public final class LloydsV31CorporateAgent extends UkOpenBankingBaseAgent {
                 UkOpenBankingAisConfiguration.builder()
                         .withOrganisationId(LloydsConstants.ORGANISATION_ID)
                         .withApiBaseURL(LloydsConstants.AIS_API_URL)
-                        .withWellKnownURL(LloydsConstants.WELL_KNOWN_CORPORATE_URL)
+                        .withWellKnownURL(LloydsConstants.WELL_KNOWN_BUSINESS_URL)
                         .build();
     }
 
     @Inject
-    public LloydsV31CorporateAgent(
+    public LloydsV31BusinessAgent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
         super(componentProvider, flowFacade, aisConfig);
     }

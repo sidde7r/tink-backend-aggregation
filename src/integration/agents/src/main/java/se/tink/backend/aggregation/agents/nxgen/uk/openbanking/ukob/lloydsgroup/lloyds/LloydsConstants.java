@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloyds;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloydsgroup.lloyds;
 
 final class LloydsConstants {
 

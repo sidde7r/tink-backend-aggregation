@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.halifax;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloydsgroup.halifax;
 
 final class HalifaxConstants {
 
