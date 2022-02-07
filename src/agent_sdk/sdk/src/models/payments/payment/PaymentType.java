@@ -1,6 +1,9 @@
 package se.tink.agent.sdk.models.payments.payment;
 
 public enum PaymentType {
-// TBD.
-// TODO: merge PaymentScheme and PaymentType and any other fields/booleans in Payment.
+    SEPA_CREDIT_TRANSFER,
+    SEPA_INSTANT_CREDIT_TRANSFER,
+    FASTER_PAYMENTS,
+    NORWEGIAN_DOMESTIC_CREDIT_TRANSFER,
+    INSTANT_NORWEGIAN_DOMESTIC_CREDIT_TRANSFER_STRAKS
 }

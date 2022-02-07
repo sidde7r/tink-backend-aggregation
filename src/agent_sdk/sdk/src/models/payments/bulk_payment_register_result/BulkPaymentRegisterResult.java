@@ -1,24 +1,27 @@
 package se.tink.agent.sdk.models.payments.bulk_payment_register_result;
 
-import se.tink.agent.sdk.models.payments.PaymentState;
+import java.util.Optional;
+import javax.annotation.Nullable;
+import se.tink.agent.sdk.models.payments.ConnectivityError;
+import se.tink.agent.sdk.models.payments.PaymentError;
 import se.tink.agent.sdk.models.payments.bulk_payment_register_result.builder.BulkPaymentRegisterResultBuildReference;
 import se.tink.agent.sdk.models.payments.payment_reference.PaymentReference;
 
 public class BulkPaymentRegisterResult {
-    private final PaymentReference paymentReference;
-    private final PaymentState paymentState;
+    private final PaymentReference reference;
+    @Nullable private final PaymentError error;
 
-    BulkPaymentRegisterResult(PaymentReference paymentReference, PaymentState paymentState) {
-        this.paymentReference = paymentReference;
-        this.paymentState = paymentState;
+    BulkPaymentRegisterResult(PaymentReference reference, @Nullable PaymentError error) {
+        this.reference = reference;
+        this.error = error;
     }
 
-    public PaymentReference getPaymentReference() {
-        return paymentReference;
+    public PaymentReference getReference() {
+        return reference;
     }
 
-    public PaymentState getPaymentState() {
-        return paymentState;
+    public Optional<ConnectivityError> getError() {
+        return Optional.ofNullable(error);
     }
 
     public static BulkPaymentRegisterResultBuildReference builder() {

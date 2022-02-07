@@ -6,8 +6,6 @@ import se.tink.agent.sdk.models.payments.payment.Payment;
 import se.tink.agent.sdk.models.payments.payment_reference.builder.PaymentReferenceBuildPayment;
 import se.tink.agent.sdk.storage.SerializableReference;
 
-// TODO: Rename the field `payment`? E.g. `tinkPayment`?
-
 /**
  * A data structure that bridge Tink's version of a Payment and the bank. The `bankReference` is
  * optional.

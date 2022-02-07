@@ -2,27 +2,28 @@ package se.tink.agent.sdk.models.payments.beneficiary_register_result;
 
 import java.util.Optional;
 import javax.annotation.Nullable;
-import se.tink.agent.sdk.models.payments.BeneficiaryState;
+import se.tink.agent.sdk.models.payments.BeneficiaryError;
+import se.tink.agent.sdk.models.payments.ConnectivityError;
 import se.tink.agent.sdk.models.payments.beneficiary_register_result.builder.BeneficiaryRegisterResultBuildError;
 import se.tink.agent.sdk.storage.SerializableReference;
 
 public class BeneficiaryRegisterResult {
     @Nullable private final SerializableReference bankReference;
 
-    private final BeneficiaryState beneficiaryState;
+    @Nullable private final BeneficiaryError error;
 
     BeneficiaryRegisterResult(
-            @Nullable SerializableReference bankReference, BeneficiaryState beneficiaryState) {
+            @Nullable SerializableReference bankReference, @Nullable BeneficiaryError error) {
         this.bankReference = bankReference;
-        this.beneficiaryState = beneficiaryState;
+        this.error = error;
     }
 
     public Optional<SerializableReference> getBankReference() {
         return Optional.ofNullable(bankReference);
     }
 
-    public BeneficiaryState getBeneficiaryState() {
-        return beneficiaryState;
+    public Optional<ConnectivityError> getError() {
+        return Optional.ofNullable(error);
     }
 
     public static BeneficiaryRegisterResultBuildError builder() {

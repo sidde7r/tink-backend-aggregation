@@ -3,6 +3,7 @@ package se.tink.agent.runtime.instance;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.agent.runtime.environment.AgentEnvironment;
+import se.tink.agent.sdk.payments.features.bulk.InitiateBulkPaymentGeneric;
 
 public class AgentInstance {
     private final AgentEnvironment environment;
@@ -33,6 +34,10 @@ public class AgentInstance {
         @SuppressWarnings("unchecked")
         T tCast = (T) this.instance;
         return Optional.of(tCast);
+    }
+
+    public boolean supportsBulkPaymentInitiation() {
+        return isInstanceOf(InitiateBulkPaymentGeneric.class);
     }
 
     public static AgentInstance createFromInstance(

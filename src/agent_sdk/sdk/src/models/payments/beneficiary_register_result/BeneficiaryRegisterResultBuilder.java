@@ -1,7 +1,7 @@
 package se.tink.agent.sdk.models.payments.beneficiary_register_result;
 
+import com.google.common.base.Preconditions;
 import se.tink.agent.sdk.models.payments.BeneficiaryError;
-import se.tink.agent.sdk.models.payments.BeneficiaryState;
 import se.tink.agent.sdk.models.payments.beneficiary_register_result.builder.BeneficiaryRegisterResultBuild;
 import se.tink.agent.sdk.models.payments.beneficiary_register_result.builder.BeneficiaryRegisterResultBuildError;
 import se.tink.agent.sdk.models.payments.beneficiary_register_result.builder.BeneficiaryRegisterResultBuildReference;
@@ -12,19 +12,19 @@ public class BeneficiaryRegisterResultBuilder
                 BeneficiaryRegisterResultBuildReference,
                 BeneficiaryRegisterResultBuild {
     private SerializableReference bankReference;
-    private BeneficiaryState beneficiaryState;
+    private BeneficiaryError error;
 
     BeneficiaryRegisterResultBuilder() {}
 
     @Override
     public BeneficiaryRegisterResultBuild error(BeneficiaryError error) {
-        this.beneficiaryState = BeneficiaryState.error(error);
+        this.error = Preconditions.checkNotNull(error);
         return this;
     }
 
     @Override
     public BeneficiaryRegisterResultBuildReference noError() {
-        this.beneficiaryState = BeneficiaryState.successful();
+        this.error = null;
         return this;
     }
 
@@ -48,6 +48,6 @@ public class BeneficiaryRegisterResultBuilder
 
     @Override
     public BeneficiaryRegisterResult build() {
-        return new BeneficiaryRegisterResult(this.bankReference, this.beneficiaryState);
+        return new BeneficiaryRegisterResult(this.bankReference, this.error);
     }
 }
