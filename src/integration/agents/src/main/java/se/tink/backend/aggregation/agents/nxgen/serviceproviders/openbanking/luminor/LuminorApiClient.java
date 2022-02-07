@@ -63,8 +63,14 @@ public class LuminorApiClient {
     }
 
     public URL getAuthorizeUrl(String state) {
-        return createRequest(LuminorConstants.Urls.AUTH)
+        return createRequest(Urls.LOGOUT_AUTH)
                 .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .queryParam(QueryKeys.RETURN_URI, getAuthUrlString(state))
+                .getUrl();
+    }
+
+    private String getAuthUrlString(String state) {
+        return createRequest(LuminorConstants.Urls.AUTH)
                 .queryParam(LuminorConstants.QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(LuminorConstants.QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(LuminorConstants.QueryKeys.REALM, QueryValues.REALM)
@@ -73,7 +79,8 @@ public class LuminorApiClient {
                 .queryParam(QueryKeys.LOCALE, getLanguage(locale))
                 .queryParam(QueryKeys.INFO_LOGO_LABEL, QueryValues.TINK)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                .getUrl();
+                .getUrl()
+                .toString();
     }
 
     public String getLanguage(String language) {

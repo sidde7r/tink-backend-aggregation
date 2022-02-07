@@ -21,7 +21,7 @@ REQUEST 3
 POST https://psd2.luminoropenbanking.com/v1/consents
 Content-Type: application/json
 
-{"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"2022-01-01","combinedServiceIndicator":false,"access":{"accounts":[{"iban":"LV44UNLA0055555555555"}]}}
+{"frequencyPerDay":4,"recurringIndicator":true,"validUntil":"9999-12-31","combinedServiceIndicator":false,"access":{"accounts":[{"iban":"LV44UNLA0055555555555"}]}}
 
 RESPONSE 3
 200

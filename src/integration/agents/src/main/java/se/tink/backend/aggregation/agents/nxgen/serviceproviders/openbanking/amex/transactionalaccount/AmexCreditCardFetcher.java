@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,8 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
         }
         storeAccountIdWithToken(accountsByToken);
 
+        Map<HmacToken, List<BalanceDto>> balanceByToken = mapBalances(accountsByToken.keySet());
+
         List<CreditCardAccount> accounts =
                 accountsByToken.entrySet().stream()
                         .filter(entry -> isAccountActive(entry.getValue().getKey()))
@@ -48,10 +51,11 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
                                         createTransactionalAccount(
                                                 entry.getKey(),
                                                 entry.getValue().getLeft(),
-                                                entry.getValue().getRight()))
+                                                entry.getValue().getRight(),
+                                                balanceByToken))
                         .collect(Collectors.toList());
 
-        List<CreditCardAccount> subAccountList = fetchSubAccounts(accountsByToken);
+        List<CreditCardAccount> subAccountList = fetchSubAccounts(accountsByToken, balanceByToken);
 
         accounts.addAll(subAccountList);
 
@@ -59,12 +63,19 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
     }
 
     private List<CreditCardAccount> fetchSubAccounts(
-            Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> accountsByToken) {
+            Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> accountsByToken,
+            Map<HmacToken, List<BalanceDto>> balanceMap) {
 
-        return accountsByToken.values().stream()
-                .filter(pair -> isAccountActive(pair.getLeft()))
-                .filter(pair -> pair.getLeft().haveSupplementaryAccounts())
-                .map(pair -> pair.getLeft().toSubCreditCardAccount(pair.getRight()))
+        return accountsByToken.entrySet().stream()
+                .filter(entry -> isAccountActive(entry.getValue().getLeft()))
+                .filter(entry -> entry.getValue().getLeft().haveSupplementaryAccounts())
+                .map(
+                        entry ->
+                                entry.getValue()
+                                        .getLeft()
+                                        .toSubCreditCardAccount(
+                                                entry.getValue().getRight(),
+                                                balanceMap.get(entry.getKey())))
                 .findFirst()
                 .orElse(Collections.emptyList());
     }
@@ -72,18 +83,27 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
     private CreditCardAccount createTransactionalAccount(
             HmacToken hmacToken,
             AccountsResponseDto accountsResponse,
-            StatementPeriodsDto statementPeriods) {
+            StatementPeriodsDto statementPeriods,
+            Map<HmacToken, List<BalanceDto>> balanceMap) {
         // only basic card (not supplementary) has balance
         final List<BalanceDto> balances =
                 accountsResponse.getIdentifiers().isBasic()
-                        ? getBalances(hmacToken)
+                        ? balanceMap.get(hmacToken)
                         : Collections.emptyList();
 
-        return accountsResponse.toCreditCardAccount(balances, statementPeriods);
+        String currencyCode =
+                balances.stream()
+                        .findFirst()
+                        .map(BalanceDto::getIsoAlphaCurrencyCode)
+                        .orElse(accountsResponse.getHolder().getCurrencyCode());
+
+        return accountsResponse.toCreditCardAccount(balances, statementPeriods, currencyCode);
     }
 
-    private List<BalanceDto> getBalances(HmacToken hmacToken) {
-        return amexApiClient.fetchBalances(hmacToken);
+    private Map<HmacToken, List<BalanceDto>> mapBalances(Set<HmacToken> keySet) {
+        return keySet.stream()
+                .map(token -> Pair.of(token, amexApiClient.fetchBalances(token)))
+                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
     }
 
     private Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> getAccounts() {
