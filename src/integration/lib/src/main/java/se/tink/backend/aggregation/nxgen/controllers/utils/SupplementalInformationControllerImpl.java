@@ -239,7 +239,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         String mfaId =
                 userInteraction
                         .getCustomResponseKey()
-                        .map(key -> createMfaIdFromCustomKey(key))
+                        .map(this::createMfaIdFromCustomKey)
                         .orElse(credentials.getId());
         supplementalRequester.requestSupplementalInformation(mfaId, credentials);
 
