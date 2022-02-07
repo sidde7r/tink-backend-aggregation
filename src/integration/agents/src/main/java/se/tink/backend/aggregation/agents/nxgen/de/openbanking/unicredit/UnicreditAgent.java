@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.detail.UnicreditEmbeddedFieldBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.authenticator.detail.UnicreditIconUrlMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.payment.UnicreditEmbeddedPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.toggle.UnicreditEmbeddedFlowToggle;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditApiClientRetryer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
@@ -37,30 +38,42 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
 
     private static final UnicreditProviderConfiguration PROVIDER_CONFIG =
             new UnicreditProviderConfiguration("HVB_ONLINEBANKING", "https://api.unicredit.de");
+    private final boolean embeddedFlowEnabled;
 
     @Inject
     public UnicreditAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, PROVIDER_CONFIG);
+        this.embeddedFlowEnabled =
+                new UnicreditEmbeddedFlowToggle(componentProvider.getUnleashClient()).isEnabled();
+        this.apiClient = getApiClient(PROVIDER_CONFIG, setupHeaderValues(componentProvider));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        UnicreditAuthenticator authenticator = constructUnicreditAuthenticator();
-
-        return new AutoAuthenticationController(request, context, authenticator, authenticator);
+        if (embeddedFlowEnabled) {
+            UnicreditAuthenticator authenticator = constructUnicreditAuthenticator();
+            return new AutoAuthenticationController(request, context, authenticator, authenticator);
+        }
+        return super.constructAuthenticator();
     }
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        UnicreditAuthenticator authenticator = constructUnicreditAuthenticator();
-
-        UnicreditEmbeddedPaymentExecutor paymentExecutor =
-                new UnicreditEmbeddedPaymentExecutor(
-                        apiClient, new UnicreditApiClientRetryer(), authenticator, sessionStorage);
-
-        return Optional.of(
-                new PaymentController(
-                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
+        if (embeddedFlowEnabled) {
+            UnicreditAuthenticator authenticator = constructUnicreditAuthenticator();
+            UnicreditEmbeddedPaymentExecutor paymentExecutor =
+                    new UnicreditEmbeddedPaymentExecutor(
+                            apiClient,
+                            new UnicreditApiClientRetryer(),
+                            authenticator,
+                            sessionStorage);
+            return Optional.of(
+                    new PaymentController(
+                            paymentExecutor,
+                            paymentExecutor,
+                            new PaymentControllerExceptionMapper()));
+        }
+        return super.constructPaymentController();
     }
 
     private UnicreditAuthenticator constructUnicreditAuthenticator() {
@@ -77,13 +90,17 @@ public final class UnicreditAgent extends UnicreditBaseAgent {
     protected UnicreditBaseApiClient getApiClient(
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
-        return new UnicreditApiClient(
-                client,
-                unicreditStorage,
-                providerConfiguration,
-                headerValues,
-                randomValueGenerator,
-                sessionStorage);
+        if (embeddedFlowEnabled) {
+            return new UnicreditApiClient(
+                    client,
+                    unicreditStorage,
+                    providerConfiguration,
+                    headerValues,
+                    randomValueGenerator,
+                    localDateTimeSource,
+                    sessionStorage);
+        }
+        return super.getApiClient(providerConfiguration, headerValues);
     }
 
     @Override

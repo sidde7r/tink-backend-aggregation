@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "unicredit",
-    srcs = glob(["*.java"]),
+    srcs = glob(["**/*.java"]),
     data = ["//:agent_test_data"],
     tags = [
         "external",
@@ -26,7 +26,9 @@ junit_test(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

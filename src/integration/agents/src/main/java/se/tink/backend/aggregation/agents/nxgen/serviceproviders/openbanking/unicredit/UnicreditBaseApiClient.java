@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -53,10 +54,13 @@ public class UnicreditBaseApiClient {
     protected final UnicreditProviderConfiguration providerConfiguration;
     protected final UnicreditBaseHeaderValues headerValues;
     protected final RandomValueGenerator randomValueGenerator;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     protected ConsentRequest getConsentRequest() {
         LocalDateTime validUntil =
-                LocalDateTime.now().plusDays(FormValues.CONSENT_VALIDATION_PERIOD_IN_DAYS);
+                localDateTimeSource
+                        .now(UnicreditConstants.ZONE_ID)
+                        .plusDays(FormValues.CONSENT_VALIDATION_PERIOD_IN_DAYS);
 
         return new ConsentRequest(
                 new UnicreditConsentAccessEntity(FormValues.ALL_ACCOUNTS),
@@ -93,8 +97,7 @@ public class UnicreditBaseApiClient {
 
     private RequestBuilder createRequestInSession(URL url) {
         final String consentId = getConsentIdFromStorage();
-        return createRequest(url)
-                .header(HeaderKeys.CONSENT_ID, consentId);
+        return createRequest(url).header(HeaderKeys.CONSENT_ID, consentId);
     }
 
     public ConsentResponse createConsent(String state) {

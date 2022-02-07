@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.Authorizatio
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.PsuDataEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentConstants.StorageValues;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -36,8 +37,15 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues,
             RandomValueGenerator randomValueGenerator,
+            LocalDateTimeSource localDateTimeSource,
             SessionStorage sessionStorage) {
-        super(client, unicreditStorage, providerConfiguration, headerValues, randomValueGenerator);
+        super(
+                client,
+                unicreditStorage,
+                providerConfiguration,
+                headerValues,
+                randomValueGenerator,
+                localDateTimeSource);
         this.sessionStorage = sessionStorage;
     }
 

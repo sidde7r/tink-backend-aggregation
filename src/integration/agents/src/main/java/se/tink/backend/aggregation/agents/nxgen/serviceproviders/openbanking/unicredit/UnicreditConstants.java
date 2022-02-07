@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
+import java.time.ZoneId;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class UnicreditConstants {
                                     new Pair<>(
                                             AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                             .build();
+    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Berlin");
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Patterns {

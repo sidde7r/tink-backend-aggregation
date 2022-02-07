@@ -22,7 +22,9 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@maven//:no_finn_unleash_unleash_client_java",
         "@org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/unleash",
     ],
 )
