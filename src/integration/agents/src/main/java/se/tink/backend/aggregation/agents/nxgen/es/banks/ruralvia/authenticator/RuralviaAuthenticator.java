@@ -123,6 +123,7 @@ public class RuralviaAuthenticator implements Authenticator {
             }
         } catch (NoSuchElementException e) {
             if (!driver.getPageSource().contains("<div id=\"HEADER\">Posición Global</div>")) {
+                log.info("Not global position html:" + driver.getPageSource());
                 throw new GlobalPositionNotFoundException("Global Position not Found");
             }
         }

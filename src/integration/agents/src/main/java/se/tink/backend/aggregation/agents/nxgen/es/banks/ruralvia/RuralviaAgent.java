@@ -18,16 +18,16 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.authenticator.RuralviaAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.authenticator.RuralviaProgressiveAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.creditcard.RuralviaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.identitydata.RuralviaIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.loan.RuralviaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.fetcher.transactionalaccount.RuralviaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.session.RuralviaSessionHandler;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -42,7 +42,7 @@ import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, IDENTITY_DATA})
-public class RuralviaAgent extends NextGenerationAgent
+public class RuralviaAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -69,24 +69,6 @@ public class RuralviaAgent extends NextGenerationAgent
         identityDataFetcher =
                 new RuralviaIdentityDataFetcher(
                         apiClient, componentProvider.getCredentialsRequest().getCredentials());
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        WebDriverWrapper driver =
-                ChromeDriverInitializer.constructChromeDriver(
-                        ChromeDriverConfig.builder()
-                                .userAgent(HeaderValues.USER_AGENT)
-                                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
-                                .build(),
-                        agentTemporaryStorage);
-
-        return new RuralviaAuthenticator(
-                apiClient,
-                agentTemporaryStorage,
-                context.getRawHttpTrafficLogger(),
-                context.getHarLogCollector(),
-                driver);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
@@ -127,6 +109,19 @@ public class RuralviaAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new RuralviaSessionHandler(apiClient);
+    }
+
+    @Override
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        WebDriverWrapper driver =
+                ChromeDriverInitializer.constructChromeDriver(
+                        ChromeDriverConfig.builder()
+                                .userAgent(HeaderValues.USER_AGENT)
+                                .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                                .build(),
+                        agentTemporaryStorage);
+        return new RuralviaProgressiveAuthenticator(
+                driver, credentials, apiClient, agentTemporaryStorage);
     }
 
     @Override

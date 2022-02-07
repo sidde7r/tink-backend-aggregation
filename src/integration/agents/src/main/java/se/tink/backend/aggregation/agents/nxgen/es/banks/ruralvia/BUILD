@@ -51,5 +51,6 @@ java_library(
         "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_support",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
     ],
 )
