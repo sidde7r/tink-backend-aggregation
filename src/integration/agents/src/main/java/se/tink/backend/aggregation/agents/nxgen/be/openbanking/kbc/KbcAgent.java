@@ -39,6 +39,7 @@ public final class KbcAgent extends AgentPlatformAgent
     private final KbcApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LogMasker logMasker;
+    private final boolean userAvailableForInteraction;
 
     @Inject
     public KbcAgent(AgentComponentProvider componentProvider) {
@@ -47,6 +48,7 @@ public final class KbcAgent extends AgentPlatformAgent
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.objectMapperFactory = new ObjectMapperFactory();
+        this.userAvailableForInteraction = componentProvider.getUser().isAvailableForInteraction();
     }
 
     @Override
@@ -95,7 +97,8 @@ public final class KbcAgent extends AgentPlatformAgent
                         agentConfiguration,
                         redirectUrl,
                         httpClient,
-                        objectMapperFactory.getInstance())
+                        objectMapperFactory.getInstance(),
+                        userAvailableForInteraction)
                 .authenticationProcess();
     }
 

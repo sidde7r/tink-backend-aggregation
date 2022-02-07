@@ -24,6 +24,7 @@ public class KbcOauth2AuthenticationConfig extends OAuth2AuthenticationConfig {
     private URI redirectUrl;
     private AgentPlatformHttpClient httpClient;
     private ObjectMapper objectMapper;
+    private boolean userAvailableForInteraction;
 
     public RedirectAuthenticationProcess authenticationProcess() {
         return new KbcRedirectAuthenticationProcess(
@@ -62,7 +63,8 @@ public class KbcOauth2AuthenticationConfig extends OAuth2AuthenticationConfig {
         return new KbcRedirectAuthenticationRefreshTokenStep(
                 refreshTokenCall,
                 agentRedirectTokensAuthenticationPersistedDataAccessorFactory(),
-                redirectTokensValidator());
+                redirectTokensValidator(),
+                userAvailableForInteraction);
     }
 
     public KbcPersistedDataAccessorFactory kbcPersistedDataAccessorFactory() {
