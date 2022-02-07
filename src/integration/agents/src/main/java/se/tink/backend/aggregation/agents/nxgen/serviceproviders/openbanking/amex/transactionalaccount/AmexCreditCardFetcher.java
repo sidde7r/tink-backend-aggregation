@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
         }
         storeAccountIdWithToken(accountsByToken);
 
-        Map<HmacToken, List<BalanceDto>> balanceByToken = mapBalances(accountsByToken.keySet());
+        Map<HmacToken, List<BalanceDto>> balanceByToken = mapBalances(accountsByToken);
 
         List<CreditCardAccount> accounts =
                 accountsByToken.entrySet().stream()
@@ -100,8 +100,13 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
         return accountsResponse.toCreditCardAccount(balances, statementPeriods, currencyCode);
     }
 
-    private Map<HmacToken, List<BalanceDto>> mapBalances(Set<HmacToken> keySet) {
-        return keySet.stream()
+    private Map<HmacToken, List<BalanceDto>> mapBalances(
+            Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> hmacTokenPairMap) {
+        return hmacTokenPairMap.entrySet().stream()
+                .filter(
+                        hmacTokenPairEntry ->
+                                isAccountBasic(hmacTokenPairEntry.getValue().getKey()))
+                .map(Entry::getKey)
                 .map(token -> Pair.of(token, amexApiClient.fetchBalances(token)))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
     }
@@ -184,5 +189,9 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
 
     private static boolean isAccountActive(AccountsResponseDto accountsResponse) {
         return accountsResponse.getStatus().getAccountStatus().contains("Active");
+    }
+
+    private static boolean isAccountBasic(AccountsResponseDto accountsResponse) {
+        return accountsResponse.getIdentifiers().isBasic();
     }
 }

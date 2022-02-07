@@ -71,16 +71,21 @@ public class AccountsResponseDto {
     public List<CreditCardAccount> toSubCreditCardAccount(
             StatementPeriodsDto statementPeriods, List<BalanceDto> balanceDtos) {
 
-        String currencyCode =
-                balanceDtos.stream()
-                        .findFirst()
-                        .map(BalanceDto::getIsoAlphaCurrencyCode)
-                        .orElse(holder.getCurrencyCode());
+        final String currencyCode = getBalanceCurrency(balanceDtos);
 
         return supplementaryAccounts.stream()
                 .filter(Objects::nonNull)
                 .map(t -> t.toCreditCardAccount(getStatementMap(statementPeriods), currencyCode))
                 .collect(Collectors.toList());
+    }
+
+    private String getBalanceCurrency(List<BalanceDto> balanceDtos) {
+        return balanceDtos != null
+                ? balanceDtos.stream()
+                        .findFirst()
+                        .map(BalanceDto::getIsoAlphaCurrencyCode)
+                        .orElse(holder.getCurrencyCode())
+                : holder.getCurrencyCode();
     }
 
     private ExactCurrencyAmount getBalance(List<BalanceDto> balances, String currencyCode) {
