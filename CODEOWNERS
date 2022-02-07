@@ -239,11 +239,6 @@ BUILD @tink-ab/aggregation-agent-platform-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/danskebank/ @tink-ab/aggregation-fluffy-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/nationwide/ @tink-ab/aggregation-fluffy-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/santander/ @tink-ab/aggregation-fluffy-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/starling/ @tink-ab/aggregation-fluffy-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/tesco/ @tink-ab/aggregation-fluffy-maintainer
-/src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/tsb/ @tink-ab/aggregation-fluffy-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/ @tink-ab/aggregation-thundercats-maintainer
 /src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ee/ @tink-ab/aggregation-thundercats-maintainer
