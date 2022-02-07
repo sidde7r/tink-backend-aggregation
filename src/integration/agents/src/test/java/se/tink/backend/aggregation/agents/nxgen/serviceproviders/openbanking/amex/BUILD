@@ -57,7 +57,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/provider",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
-        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/integration/user:rpc",
         "//src/libraries/date",
         "//src/libraries/metrics:core",

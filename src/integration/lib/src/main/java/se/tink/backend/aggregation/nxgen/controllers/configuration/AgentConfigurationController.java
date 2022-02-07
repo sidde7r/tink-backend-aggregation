@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -34,7 +33,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.utils.EntityUtils;
-import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.JsonFlattener;
@@ -47,7 +45,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private static final String TRY_READ_FROM_K8_LOGGER_MSG =
             "Trying to read information from k8s for an OB agent: {}. Consider uploading the configuration to ESS instead.";
 
-    private final TppSecretsServiceClient tppSecretsServiceClient;
     private final SecretsServiceInternalClient secretsServiceInternalClient;
     private final IntegrationsConfiguration integrationsConfiguration;
     private final boolean tppSecretsServiceEnabled;
@@ -80,12 +77,10 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         providerId = null;
         tppSecretsServiceEnabled = false;
         integrationsConfiguration = null;
-        tppSecretsServiceClient = null;
         secretsServiceInternalClient = null;
     }
 
     public AgentConfigurationController(
-            TppSecretsServiceClient tppSecretsServiceClient,
             SecretsServiceInternalClient secretsServiceInternalClient,
             IntegrationsConfiguration integrationsConfiguration,
             Provider provider,
@@ -96,7 +91,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             boolean tppSecretsServiceEnabled) {
 
         Preconditions.checkNotNull(
-                tppSecretsServiceClient, "tppSecretsServiceClient cannot be null.");
+                secretsServiceInternalClient, "secretsServiceInternalClient cannot be null.");
         Preconditions.checkNotNull(provider, "provider cannot be null.");
         Preconditions.checkNotNull(
                 Strings.emptyToNull(provider.getFinancialInstitutionId()),
@@ -117,8 +112,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             log.warn("appId cannot be empty/null for clusterId: {}", clusterId);
         }
 
-        this.tppSecretsServiceEnabled = tppSecretsServiceClient.isEnabled();
-        this.tppSecretsServiceClient = tppSecretsServiceClient;
+        this.tppSecretsServiceEnabled = tppSecretsServiceEnabled;
         this.secretsServiceInternalClient = secretsServiceInternalClient;
         if (!tppSecretsServiceEnabled) {
             Preconditions.checkNotNull(
@@ -134,16 +128,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         this.redirectUrl = redirectUrl;
         this.isOpenBankingAgent = AccessType.OPEN_BANKING == provider.getAccessType();
         this.isTestProvider = ProviderTypes.TEST == provider.getType();
-
-        if (this.tppSecretsServiceEnabled != tppSecretsServiceEnabled) {
-            log.info(
-                    "tppSecretsServiceEnabled {} does not equal to its original value {} for appId {} providerId {} and clusterId {}",
-                    tppSecretsServiceEnabled,
-                    this.tppSecretsServiceEnabled,
-                    this.appId,
-                    this.providerId,
-                    this.clusterId);
-        }
 
         if (isTestProvider) {
             log.info(
@@ -176,19 +160,11 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         if (tppSecretsServiceEnabled && isOpenBankingAgent && !isTestProvider) {
             try {
                 Optional<SecretsEntityCore> allSecretsOpt;
-                double randomDouble = ThreadLocalRandom.current().nextDouble(0.000_01, 1.0);
-                if (tppSecretsServiceClient.isUseSecretsServiceInternalClient()
-                        && randomDouble <= getRate(tppSecretsServiceClient.getRate())) {
-                    allSecretsOpt =
-                            Optional.of(
-                                    EntityUtils.createSecretsEntityCore(
-                                            secretsServiceInternalClient.getAllSecrets(
-                                                    clusterId, appId, certId, providerId)));
-                } else {
-                    allSecretsOpt =
-                            tppSecretsServiceClient.getAllSecrets(
-                                    appId, clusterId, certId, providerId);
-                }
+                allSecretsOpt =
+                        Optional.of(
+                                EntityUtils.createSecretsEntityCore(
+                                        secretsServiceInternalClient.getAllSecrets(
+                                                clusterId, appId, certId, providerId)));
 
                 // TODO: Remove if once Access team confirms there are no null appIds around.
                 if (!allSecretsOpt.isPresent()) {
@@ -230,15 +206,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                     throw e;
                 }
             }
-        }
-    }
-
-    private double getRate(String rate) {
-        try {
-            return Double.parseDouble(rate);
-        } catch (NumberFormatException e) {
-            log.error("incorrect number format of rate {}", rate);
-            return 0.0;
         }
     }
 
