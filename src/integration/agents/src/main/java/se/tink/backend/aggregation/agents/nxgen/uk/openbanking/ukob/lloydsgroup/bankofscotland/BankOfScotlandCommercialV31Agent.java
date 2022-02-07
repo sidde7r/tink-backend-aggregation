@@ -1,14 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.halifax;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloydsgroup.bankofscotland;
 
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
-import static se.tink.backend.aggregation.agents.agentcapabilities.PisCapability.FASTER_PAYMENTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.*;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
@@ -23,9 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.UkOpenBankingAisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.halifax.pis.config.HalifaxPisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -33,39 +26,29 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingFlowModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
-@AgentPisCapability(capabilities = FASTER_PAYMENTS, markets = "GB")
-public final class HalifaxV31Agent extends UkOpenBankingBaseAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+public final class BankOfScotlandCommercialV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withOrganisationId(HalifaxConstants.ORGANISATION_ID)
-                        .withApiBaseURL(HalifaxConstants.AIS_API_URL)
-                        .withWellKnownURL(HalifaxConstants.WELL_KNOWN_URL)
+                        .withApiBaseURL(BankOfScotlandConstants.AIS_API_URL)
+                        .withWellKnownURL(BankOfScotlandConstants.WELL_KNOWN_URL_COMMERCIAL)
+                        .withOrganisationId(BankOfScotlandConstants.ORGANIZATION_ID)
                         .build();
     }
 
     @Inject
-    public HalifaxV31Agent(
+    public BankOfScotlandCommercialV31Agent(
             AgentComponentProvider componentProvider, UkOpenBankingFlowFacade flowFacade) {
-        super(
-                componentProvider,
-                flowFacade,
-                aisConfig,
-                new HalifaxPisConfig(HalifaxConstants.PIS_API_URL, HalifaxConstants.WELL_KNOWN_URL),
-                createPisRequestFilterUsingPs256WithoutBase64Signature(
-                        flowFacade.getJwtSinger(), componentProvider.getRandomValueGenerator()));
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        super(componentProvider, flowFacade, aisConfig);
     }
 
     @Override
     public Authenticator constructAuthenticator() {
         UkOpenBankingAisAuthenticationController authController = createUkObAuthController();
-
         return createAutoAuthController(authController);
     }
 
