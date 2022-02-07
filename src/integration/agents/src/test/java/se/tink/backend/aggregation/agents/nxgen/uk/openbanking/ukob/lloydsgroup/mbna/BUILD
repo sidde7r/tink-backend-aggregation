@@ -2,7 +2,7 @@ load("@rules_codeowners//tools:codeowners.bzl", "codeowners")
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "lloyds",
+    name = "mbna",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
@@ -16,7 +16,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/lloyds",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/ukob/lloydsgroup/mbna",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
@@ -30,12 +30,4 @@ junit_test(
         "//third_party:com_github_tomakehurst_wiremock",
         "@tink_backend//src/libraries/account_identifier",
     ],
-)
-
-codeowners(
-    name = "owners",
-    teams = [
-        "@tink-ab/aggregation-fluffy-maintainer",
-    ],
-    visibility = ["//:__pkg__"],
 )

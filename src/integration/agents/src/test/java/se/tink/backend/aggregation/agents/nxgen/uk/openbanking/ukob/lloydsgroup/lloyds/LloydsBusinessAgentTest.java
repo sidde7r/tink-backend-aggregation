@@ -1,18 +1,18 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.mbna;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.lloydsgroup.lloyds;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-public class MbnaAgentTest {
+public class LloydsBusinessAgentTest {
 
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("uk", "uk-mbna-ob")
-                .loadCredentialsBefore(true)
+        new AgentIntegrationTest.Builder("uk", "uk-lloyds-business-ob")
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("16343e744a874337b11efdd7cbd25a53")
                 .setAppId("tink")
-                .setFinancialInstitutionId("32be621f0b3d41bf85f6834e372aeeba")
                 .build()
                 .testRefresh();
     }
