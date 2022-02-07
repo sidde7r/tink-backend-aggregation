@@ -17,29 +17,29 @@ public class BulkPaymentSignResultBuilder
                 BulkPaymentSignResultBuildDebtor,
                 BulkPaymentSignResultBuild {
 
-    private PaymentReference paymentReference;
-    private PaymentState paymentState;
+    private PaymentReference reference;
+    private PaymentState state;
     private Debtor debtor;
 
     BulkPaymentSignResultBuilder() {}
 
     @Override
     public BulkPaymentSignResultBuildStatus reference(PaymentReference paymentReference) {
-        this.paymentReference = Preconditions.checkNotNull(paymentReference);
+        this.reference = Preconditions.checkNotNull(paymentReference);
         return this;
     }
 
     @Override
     public BulkPaymentSignResultBuildDebtor status(PaymentStatus status) {
         Preconditions.checkNotNull(status);
-        this.paymentState = PaymentState.create(status);
+        this.state = PaymentState.create(status);
         return this;
     }
 
     @Override
     public BulkPaymentSignResultBuildDebtor error(PaymentError error) {
         Preconditions.checkNotNull(error);
-        this.paymentState = PaymentState.create(error);
+        this.state = PaymentState.create(error);
         return this;
     }
 
@@ -57,6 +57,6 @@ public class BulkPaymentSignResultBuilder
 
     @Override
     public BulkPaymentSignResult build() {
-        return new BulkPaymentSignResult(this.paymentReference, this.paymentState, this.debtor);
+        return new BulkPaymentSignResult(this.reference, this.state, this.debtor);
     }
 }

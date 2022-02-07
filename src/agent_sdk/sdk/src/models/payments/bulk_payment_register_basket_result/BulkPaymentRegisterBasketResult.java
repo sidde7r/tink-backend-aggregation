@@ -10,7 +10,6 @@ import se.tink.agent.sdk.storage.SerializableReference;
 public class BulkPaymentRegisterBasketResult {
     @Nullable private final SerializableReference bankBasketReference;
 
-    // Must contain all payments!
     private final List<BulkPaymentRegisterResult> paymentRegisterResults;
 
     BulkPaymentRegisterBasketResult(

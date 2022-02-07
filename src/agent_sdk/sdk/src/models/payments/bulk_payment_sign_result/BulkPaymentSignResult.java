@@ -8,31 +8,26 @@ import se.tink.agent.sdk.models.payments.payment.Debtor;
 import se.tink.agent.sdk.models.payments.payment_reference.PaymentReference;
 
 public class BulkPaymentSignResult {
-    private final PaymentReference paymentReference;
-    private final PaymentState paymentState;
+    private final PaymentReference reference;
+    private final PaymentState state;
+    @Nullable private final Debtor debtor;
 
-    // TODO: Should this be a smaller scope? E.g. only AccountIdentifier?
-    @Nullable private final Debtor paymentDebtor;
-
-    BulkPaymentSignResult(
-            PaymentReference paymentReference,
-            PaymentState paymentState,
-            @Nullable Debtor paymentDebtor) {
-        this.paymentReference = paymentReference;
-        this.paymentState = paymentState;
-        this.paymentDebtor = paymentDebtor;
+    BulkPaymentSignResult(PaymentReference reference, PaymentState state, @Nullable Debtor debtor) {
+        this.reference = reference;
+        this.state = state;
+        this.debtor = debtor;
     }
 
-    public PaymentReference getPaymentReference() {
-        return paymentReference;
+    public PaymentReference getReference() {
+        return reference;
     }
 
-    public PaymentState getPaymentState() {
-        return paymentState;
+    public PaymentState getState() {
+        return state;
     }
 
-    public Optional<Debtor> getPaymentDebtor() {
-        return Optional.ofNullable(paymentDebtor);
+    public Optional<Debtor> getDebtor() {
+        return Optional.ofNullable(debtor);
     }
 
     public static BulkPaymentSignResultBuildReference builder() {
