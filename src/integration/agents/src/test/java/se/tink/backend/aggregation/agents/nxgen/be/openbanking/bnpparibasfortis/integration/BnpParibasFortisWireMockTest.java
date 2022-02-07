@@ -10,7 +10,7 @@ import se.tink.libraries.enums.MarketCode;
 
 public class BnpParibasFortisWireMockTest {
     private static final String CONFIGURATION_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bnpparibasfortis/integration/resources/confirguration.yml";
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/bnpparibasfortis/integration/resources/configuration.yml";
 
     @Test
     public void test() throws Exception {

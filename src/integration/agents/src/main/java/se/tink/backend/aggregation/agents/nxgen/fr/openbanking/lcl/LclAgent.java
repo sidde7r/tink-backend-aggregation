@@ -68,11 +68,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
-@AgentPisCapability(
-        capabilities = {
-            PisCapability.SEPA_CREDIT_TRANSFER,
-            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER
-        })
+@AgentPisCapability(capabilities = {PisCapability.SEPA_CREDIT_TRANSFER})
 public final class LclAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshIdentityDataExecutor,
