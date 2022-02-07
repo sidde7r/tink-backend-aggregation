@@ -48,8 +48,7 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
             SparebankStorage storage) {
         this.apiClient = apiClient;
         this.storage = storage;
-        this.signer =
-                new SparebankPaymentSigner(this, apiClient, supplementalInformationHelper, storage);
+        this.signer = new SparebankPaymentSigner(apiClient, supplementalInformationHelper, storage);
     }
 
     @Override
@@ -59,17 +58,8 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
-        final Payment payment = paymentRequest.getPayment();
-        final String paymentId = payment.getUniqueId();
-        final SparebankPaymentType paymentType =
-                SparebankPaymentType.getSpareBankPaymentType(payment);
-
-        final String paymentStatus =
-                apiClient.fetchPaymentStatus(getPaymentStatusUrl(paymentId)).getTransactionStatus();
-
-        return apiClient
-                .fetchPayment(getPaymentResponseUrl(paymentId))
-                .toTinkPaymentResponse(payment, paymentType, paymentStatus);
+        throw new NotImplementedException(
+                "fetch not yet implemented for " + this.getClass().getName());
     }
 
     @Override
@@ -151,19 +141,5 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     private boolean isRemittanceInformationStructured(RemittanceInformation remittanceInformation) {
         return remittanceInformation.getType() == RemittanceInformationType.REFERENCE;
-    }
-
-    private String getPaymentStatusUrl(String paymentId) {
-        return storage.getPaymentUrls(paymentId)
-                .orElseThrow(() -> new IllegalStateException("Empty payment status url."))
-                .getStatus()
-                .getHref();
-    }
-
-    private String getPaymentResponseUrl(String paymentId) {
-        return storage.getPaymentUrls(paymentId)
-                .orElseThrow(() -> new IllegalStateException("Empty get payment response url."))
-                .getSelf()
-                .getHref();
     }
 }
