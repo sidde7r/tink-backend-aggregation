@@ -22,6 +22,7 @@ export SONAR_SCANNER_OPTS="-server"
     --deleted_packages=deb,docker \
     --curses=yes \
     --color=yes \
+    --config=jdk11 \
     -- \
     //src/...
 
