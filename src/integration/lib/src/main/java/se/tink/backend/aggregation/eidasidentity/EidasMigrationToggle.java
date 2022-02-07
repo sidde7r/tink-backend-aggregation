@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.eidasidentity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.finn.unleash.UnleashContext;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -31,10 +31,10 @@ public class EidasMigrationToggle {
 
     private static Toggle createToggle(String appId, String providerName) {
         return Toggle.of(FEATURE_TOGGLE_NAME)
-                .context(
-                        UnleashContext.builder()
-                                .addProperty("appId", appId)
-                                .addProperty("providerName", providerName)
+                .unleashContextWrapper(
+                        UnleashContextWrapper.builder()
+                                .appId(appId)
+                                .providerName(providerName)
                                 .build())
                 .build();
     }

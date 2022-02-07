@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import java.time.Period;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import no.finn.unleash.UnleashContext;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -43,7 +42,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 import se.tink.libraries.unleash.model.Toggle;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 
 @Slf4j
 public class UkOpenBankingV31Ais implements UkOpenBankingAis {
@@ -190,10 +189,8 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
             AgentComponentProvider componentProvider) {
         String providerId = componentProvider.getContext().getProviderId();
         return Toggle.of("ukob-experimental-transaction-pagination")
-                .context(
-                        UnleashContext.builder()
-                                .addProperty(Constants.Context.PROVIDER_NAME.getValue(), providerId)
-                                .build())
+                .unleashContextWrapper(
+                        UnleashContextWrapper.builder().providerName(providerId).build())
                 .build();
     }
 

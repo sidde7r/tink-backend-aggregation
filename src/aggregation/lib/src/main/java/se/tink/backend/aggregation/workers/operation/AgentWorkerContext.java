@@ -67,6 +67,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
@@ -799,10 +800,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 && getUnleashClient()
                         .isToggleEnabled(
                                 Toggle.of("supplemental-information-waiting-abort")
-                                        .context(
-                                                UnleashContext.builder()
-                                                        .userId(appId)
-                                                        .sessionId(credentialsId)
+                                        .unleashContextWrapper(
+                                                UnleashContextWrapper.builder()
+                                                        .unleashContextBuilder(
+                                                                UnleashContext.builder()
+                                                                        .userId(appId)
+                                                                        .sessionId(credentialsId))
                                                         .build())
                                         .build());
     }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common;
 
 import lombok.extern.slf4j.Slf4j;
-import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common.filter.RevolutConsentAuthorisationErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingFlowFacade;
@@ -30,7 +29,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 
 @Slf4j
 public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
@@ -130,13 +129,10 @@ public abstract class RevolutBaseAgent extends UkOpenBankingBaseAgent {
 
         Toggle toggle =
                 Toggle.of("revolut-consent-status-validation")
-                        .context(
-                                UnleashContext.builder()
-                                        .addProperty(
-                                                Constants.Context.PROVIDER_NAME.getValue(),
-                                                currentProviderName)
-                                        .addProperty(
-                                                Constants.Context.APP_ID.getValue(), currentAppId)
+                        .unleashContextWrapper(
+                                UnleashContextWrapper.builder()
+                                        .appId(currentAppId)
+                                        .providerName(currentProviderName)
                                         .build())
                         .build();
 

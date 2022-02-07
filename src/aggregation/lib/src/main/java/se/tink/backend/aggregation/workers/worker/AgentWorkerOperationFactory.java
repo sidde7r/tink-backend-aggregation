@@ -115,7 +115,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.payments_validations.java.se.tink.libraries.payments.validations.ProviderBasedValidationsUtil;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
@@ -2059,10 +2059,12 @@ public class AgentWorkerOperationFactory {
         return isUserPresent
                 && unleashClient.isToggleEnabled(
                         Toggle.of("supplemental-information-waiting-abort")
-                                .context(
-                                        UnleashContext.builder()
-                                                .userId(appId)
-                                                .sessionId(credentialsId)
+                                .unleashContextWrapper(
+                                        UnleashContextWrapper.builder()
+                                                .unleashContextBuilder(
+                                                        UnleashContext.builder()
+                                                                .userId(appId)
+                                                                .sessionId(credentialsId))
                                                 .build())
                                 .build());
     }
@@ -2070,19 +2072,17 @@ public class AgentWorkerOperationFactory {
     private boolean isBalanceCalculationEnabled(AgentWorkerCommandContext context) {
         boolean balanceCalculationEnabled;
         try {
+            String credentialsId = context.getRequest().getCredentials().getId();
             String appId = context.getAppId();
             String providerId = context.getProviderId();
-            String credentialsId = context.getRequest().getCredentials().getId();
 
             Toggle toggle =
                     Toggle.of("uk-balance-calculators")
-                            .context(
-                                    UnleashContext.builder()
-                                            .sessionId(credentialsId)
-                                            .addProperty(
-                                                    Constants.Context.PROVIDER_NAME.getValue(),
-                                                    providerId)
-                                            .addProperty(Constants.Context.APP_ID.getValue(), appId)
+                            .unleashContextWrapper(
+                                    UnleashContextWrapper.builder()
+                                            .credentialsId(credentialsId)
+                                            .appId(appId)
+                                            .providerName(providerId)
                                             .build())
                             .build();
             balanceCalculationEnabled = unleashClient.isToggleEnabled(toggle);
