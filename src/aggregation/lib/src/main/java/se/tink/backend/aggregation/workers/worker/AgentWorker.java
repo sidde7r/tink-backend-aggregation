@@ -33,8 +33,6 @@ import se.tink.libraries.unleash.model.Toggle;
 public class AgentWorker extends ManagedSafeStop {
     private static final Logger log = LoggerFactory.getLogger(AgentWorker.class);
     private static final int NUMBER_OF_THREADS = 1000;
-    private static final MetricId AGGREGATION_OPERATION_TASKS_METRIC_NAME =
-            MetricId.newId("aggregation_operation_tasks");
     private static final String MONITOR_THREAD_NAME_FORMAT = "agent-worker-operation-thread-%s";
     // On Leeds (running 3g heap size), we started GC:ing aggressively when above 180k elements in
     // the queue here. At
@@ -49,7 +47,7 @@ public class AgentWorker extends ManagedSafeStop {
 
     // Automatic Refreshes will be put on a persistent queue. This queue will be used as a buffer
     // only.
-    private static final int MAX_QUEUE_AUTOMATIC_REFRESH = 10;
+    private static final int MAX_QUEUE_AUTOMATIC_REFRESH = 500;
 
     /**
      * As of right now, the longest supplemental information timeout is 540 seconds. This is the max
