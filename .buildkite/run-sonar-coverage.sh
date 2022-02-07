@@ -24,7 +24,8 @@ time ./bazel-wrapper build \
     --workspace_status_command $(pwd)/stamp.sh \
     --deleted_packages=deb,docker \
     --curses=yes \
-    --color=yes
+    --color=yes \
+    --config=jdk11
 
 echo "--- Run coverage on tink-backend-aggregation"
 time ./bazel-wrapper coverage \
@@ -36,6 +37,7 @@ time ./bazel-wrapper coverage \
   --collect_code_coverage \
   --combined_report=lcov \
   --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator \
+  --config=jdk11 \
   //src/...
 
 set -e
