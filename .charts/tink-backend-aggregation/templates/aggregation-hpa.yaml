@@ -15,7 +15,3 @@ spec:
     pods:
       metricName: cpu_usage
       targetAverageValue: {{ default "1000m" .Values.targetAverageCpuValue }}
-  - type: Pods
-    pods:
-      metricName: container_memory_failcnt
-      targetAverageValue: {{ default "0.25" .Values.targetAverageMemoryFailCntValue }}
