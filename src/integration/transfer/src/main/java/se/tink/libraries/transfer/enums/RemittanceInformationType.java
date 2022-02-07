@@ -10,5 +10,7 @@ public enum RemittanceInformationType {
     INVOICE,
     // KID (kundeidentifikasjon / customer identification) - NO market only, reference to a
     // customer number
-    KID
+    KID,
+    // Reference for Multibanco type transfer, PT market only
+    MULTIBANCO_REFERENCE
 }
