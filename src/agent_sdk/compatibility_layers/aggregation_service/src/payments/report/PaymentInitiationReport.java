@@ -107,7 +107,7 @@ public class PaymentInitiationReport {
     }
 
     private boolean isPaymentInProgress(PaymentInitiationState paymentInitiationState) {
-        if (paymentInitiationState.getError().isEmpty()) {
+        if (!paymentInitiationState.getError().isPresent()) {
             return true;
         }
 

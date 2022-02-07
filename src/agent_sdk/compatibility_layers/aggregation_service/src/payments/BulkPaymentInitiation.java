@@ -145,7 +145,7 @@ public class BulkPaymentInitiation {
     private boolean deleteUnsignedPayments() {
         Optional<RuntimeUnsignedPaymentsDeleter> maybeUnsignedPaymentsDeleter =
                 this.runtimePaymentsApi.getUnsignedPaymentsDeleter();
-        if (maybeUnsignedPaymentsDeleter.isEmpty()) {
+        if (!maybeUnsignedPaymentsDeleter.isPresent()) {
             return true;
         }
         RuntimeUnsignedPaymentsDeleter unsignedPaymentsDeleter = maybeUnsignedPaymentsDeleter.get();
