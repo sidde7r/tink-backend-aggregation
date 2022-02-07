@@ -10,9 +10,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -68,6 +70,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.MenuItemLinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PrivateProfileEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SelectedProfileResponse;
@@ -299,6 +302,9 @@ public class SwedbankDefaultApiClient {
     }
 
     private void throwNotCustomerException(ProfileResponse profileResponse) {
+        if (configuration.getName().contains(BankName.FALLBACK)) {
+            throwFallbackUserError(profileResponse);
+        }
         if (modeAndProfileMismatch(profileResponse)) {
             if (!configuration.isSavingsBank()) {
                 throw LoginError.NOT_CUSTOMER.exception(
@@ -310,6 +316,51 @@ public class SwedbankDefaultApiClient {
         }
 
         throw LoginError.NOT_CUSTOMER.exception();
+    }
+
+    private void throwFallbackUserError(ProfileResponse profileResponse) {
+        boolean hasValidProfileSwedbank = false;
+        boolean hasValidProfileSparbank = false;
+        List<PrivateProfileEntity> privateProfileEntityList = getPrivateProfiles(profileResponse);
+
+        for (PrivateProfileEntity profileEntity : privateProfileEntityList) {
+            if (isValidSwedbankProfile(profileEntity)) {
+                hasValidProfileSwedbank = true;
+            }
+            if (isValidSavingsbankProfile(profileEntity)) {
+                hasValidProfileSparbank = true;
+            }
+        }
+
+        if (configuration.isSavingsBank() && hasValidProfileSwedbank && !hasValidProfileSparbank) {
+            throw LoginError.NOT_CUSTOMER.exception(
+                    SwedbankBaseConstants.UserMessage.WRONG_BANK_SAVINGSBANK);
+
+        } else if (configuration.isSwedbank()
+                && !hasValidProfileSwedbank
+                && hasValidProfileSparbank) {
+            throw LoginError.NOT_CUSTOMER.exception(
+                    SwedbankBaseConstants.UserMessage.WRONG_BANK_SWEDBANK);
+        }
+        // In case of only servicePortalProfile
+        throw LoginError.NOT_CUSTOMER.exception();
+    }
+
+    private boolean isValidSwedbankProfile(PrivateProfileEntity profileEntity) {
+        return profileEntity.getBankName().toLowerCase().contains(BankName.SWEDBANK);
+    }
+
+    private boolean isValidSavingsbankProfile(PrivateProfileEntity profileEntity) {
+        return profileEntity.getBankName().toLowerCase().contains(BankName.SAVINGSBANK)
+                || profileEntity.getBankName().toLowerCase().contains(BankName.SPARBANK)
+                || profileEntity.getBankName().toLowerCase().contains(BankName.OLAND);
+    }
+
+    private List<PrivateProfileEntity> getPrivateProfiles(ProfileResponse profileResponse) {
+        return profileResponse.getBanks().stream()
+                .filter(bankEntity -> Objects.nonNull(bankEntity.getPrivateProfile()))
+                .map(BankEntity::getPrivateProfile)
+                .collect(Collectors.toList());
     }
 
     public EngagementTransactionsResponse engagementTransactions(LinkEntity linkEntity) {
