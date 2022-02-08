@@ -29,6 +29,9 @@ public class RuralviaProgressiveAuthenticator extends StatelessProgressiveAuthen
                 new AutomaticAuthenticationStep(
                         new RuralviaLoginProcessor(webDriver, credentials), "loginProcessingStep"),
                 new AutomaticAuthenticationStep(
+                        new BeforeMainPageAdvertisementPageProcessor(webDriver),
+                        "beforeMainPageAdvertisementPageStep"),
+                new AutomaticAuthenticationStep(
                         new LoginResultValidationProcessor(webDriver), "loginValidationStep"),
                 new AutomaticAuthenticationStep(
                         new PostLoginProcessor(webDriver, apiClient, agentTemporaryStorage),
