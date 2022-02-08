@@ -314,6 +314,14 @@ public class LaCaixaApiClient {
     }
 
     public LoginResultResponse checkLoginResult(LoginRequest loginRequest) {
+        client.getCookies().stream()
+                .forEach(
+                        cookie ->
+                                log.info(
+                                        "Cookie:\n name: "
+                                                + cookie.getName()
+                                                + " val:"
+                                                + cookie.getValue()));
         return createRequest(Urls.CHECK_LOGIN_RESULT).post(LoginResultResponse.class, loginRequest);
     }
 
