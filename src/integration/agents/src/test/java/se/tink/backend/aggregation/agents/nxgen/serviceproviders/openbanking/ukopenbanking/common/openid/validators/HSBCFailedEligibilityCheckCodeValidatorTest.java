@@ -35,7 +35,8 @@ class HSBCFailedEligibilityCheckCodeValidatorTest {
                         + "    \"Message\" : \"Failed Eligibility check\"\n"
                         + "  } ]\n"
                         + "}";
-        UkObErrorResponse errorResponse = objectMapper.readValue(jsonResponse, UkObErrorResponse.class);
+        UkObErrorResponse errorResponse =
+                objectMapper.readValue(jsonResponse, UkObErrorResponse.class);
         when(httpResponse.getStatus()).thenReturn(400);
         when(httpResponse.getBody(UkObErrorResponse.class)).thenReturn(errorResponse);
 
@@ -69,7 +70,8 @@ class HSBCFailedEligibilityCheckCodeValidatorTest {
                         + "  \"Message\" : \"Bad Request\",\n"
                         + "  \"Errors\" : [ ]\n"
                         + "}";
-        UkObErrorResponse errorResponse = objectMapper.readValue(jsonResponse, UkObErrorResponse.class);
+        UkObErrorResponse errorResponse =
+                objectMapper.readValue(jsonResponse, UkObErrorResponse.class);
         when(httpResponse.getStatus()).thenReturn(400);
         when(httpResponse.getBody(UkObErrorResponse.class)).thenReturn(errorResponse);
 

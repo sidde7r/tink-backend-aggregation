@@ -1,81 +1,36 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.ConsentStatusValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.controller.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.OpenIdErrorResponse;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;
 
 @Slf4j
-public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticationController {
+public class OpenIdClientTokenRequester implements ClientTokenRequester {
 
-    private final UkOpenBankingApiClient apiClient;
-    private final RetryExecutor retryExecutor = new RetryExecutor();
-    private final ConsentStatusValidator consentStatusValidator;
+    private final OpenIdApiClient apiClient;
+    private final OpenIdAuthenticationValidator authenticationValidator;
+    private final RetryExecutor retryExecutor;
 
-    public UkOpenBankingAisAuthenticationController(
-            PersistentStorage persistentStorage,
-            SupplementalInformationHelper supplementalInformationHelper,
-            UkOpenBankingApiClient apiClient,
-            OpenIdAuthenticator authenticator,
-            Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState,
-            String callbackUri,
-            RandomValueGenerator randomValueGenerator,
-            OpenIdAuthenticationValidator authenticationValidator,
-            ConsentStatusValidator consentStatusValidator,
-            LogMasker logMasker) {
-        super(
-                persistentStorage,
-                supplementalInformationHelper,
-                apiClient,
-                authenticator,
-                credentials,
-                strongAuthenticationState,
-                callbackUri,
-                randomValueGenerator,
-                authenticationValidator,
-                logMasker);
-
+    public OpenIdClientTokenRequester(
+            OpenIdApiClient apiClient, OpenIdAuthenticationValidator authenticationValidator) {
         this.apiClient = apiClient;
+        this.authenticationValidator = authenticationValidator;
+        this.retryExecutor = new RetryExecutor();
         this.retryExecutor.setRetryPolicy(new RetryPolicy(2, RuntimeException.class));
-        this.consentStatusValidator = consentStatusValidator;
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
-        OAuth2Token clientOAuth2Token = requestClientToken();
-        if (!clientOAuth2Token.isValid()) {
-            throw new IllegalArgumentException("Client access token is not valid.");
-        }
-
-        apiClient.instantiateAisAuthFilter(clientOAuth2Token);
-
-        consentStatusValidator.validate();
-        super.autoAuthenticate();
-    }
-
-    // Temporary duplication until UkOpenBankingAisAuthenticationController is killed (IFD-3450)
-    private OAuth2Token requestClientToken() {
+    public OAuth2Token requestClientToken() {
         OAuth2Token clientToken;
         try {
             clientToken =
@@ -108,6 +63,8 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
                     e.getMessage());
             throw SessionError.SESSION_EXPIRED.exception();
         }
+
+        authenticationValidator.validateClientToken(clientToken);
         return clientToken;
     }
 
