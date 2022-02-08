@@ -71,11 +71,8 @@ public class NemIdWebDriverWrapper {
     public void setValueToElement(String value, By by) {
         WebElement element =
                 tryFindDisplayedElement(by)
-                        .orElseGet(
-                                () -> {
-                                    throw new IllegalStateException(
-                                            "Could not find element by " + by);
-                                });
+                        .orElseThrow(
+                                () -> new IllegalStateException("Could not find element by " + by));
         element.sendKeys(value);
     }
 

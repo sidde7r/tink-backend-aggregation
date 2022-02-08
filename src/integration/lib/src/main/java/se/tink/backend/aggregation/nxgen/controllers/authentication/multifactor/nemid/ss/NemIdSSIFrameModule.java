@@ -23,6 +23,7 @@ public class NemIdSSIFrameModule extends AbstractModule {
     Dependencies for module components
     */
     private final NemIdParametersFetcher nemIdParametersFetcher;
+    private final NemIdCredentialsProvider credentialsProvider;
     private final Catalog catalog;
     private final StatusUpdater statusUpdater;
     private final SupplementalInformationController supplementalInformationController;
@@ -37,6 +38,7 @@ public class NemIdSSIFrameModule extends AbstractModule {
 
     public static NemIdSSIFrameModule initializeModule(
             NemIdParametersFetcher nemIdParametersFetcher,
+            NemIdCredentialsProvider credentialsProvider,
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
@@ -60,6 +62,7 @@ public class NemIdSSIFrameModule extends AbstractModule {
 
         return new NemIdSSIFrameModule(
                 nemIdParametersFetcher,
+                credentialsProvider,
                 catalog,
                 statusUpdater,
                 supplementalInformationController,
@@ -75,6 +78,7 @@ public class NemIdSSIFrameModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(NemIdParametersFetcher.class).toInstance(nemIdParametersFetcher);
+        bind(NemIdCredentialsProvider.class).toInstance(credentialsProvider);
         bind(Catalog.class).toInstance(catalog);
         bind(StatusUpdater.class).toInstance(statusUpdater);
         bind(SupplementalInformationController.class).toInstance(supplementalInformationController);
