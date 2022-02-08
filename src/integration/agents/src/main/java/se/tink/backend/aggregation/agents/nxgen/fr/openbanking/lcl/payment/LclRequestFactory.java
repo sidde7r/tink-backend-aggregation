@@ -50,7 +50,8 @@ public class LclRequestFactory {
     }
 
     public RequestBuilder confirmPaymentRequest(String paymentId) {
-        ConfirmPaymentRequest confirmPaymentRequest = paymentBodyFactory.createConfirmPaymentRequest();
+        ConfirmPaymentRequest confirmPaymentRequest =
+                paymentBodyFactory.createConfirmPaymentRequest();
         RequestBuilder request =
                 createRequestWithHeaders(
                         createPaymentPathWithPaymentId(CONFIRM_PAYMENT_PATH, paymentId),

@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmablePayment;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.PaymentRequestResource;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.util.UrlParseUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
@@ -46,9 +45,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
                 REDIRECT_URL_LOCAL_KEY,
                 request.getSupplementaryData().getSuccessfulReportUrl() + CODE_CODE);
         HttpResponse httpResponse =
-                lclRequestFactory
-                        .createPaymentRequest(request)
-                        .post(HttpResponse.class);
+                lclRequestFactory.createPaymentRequest(request).post(HttpResponse.class);
         List<String> locationHeader = httpResponse.getHeaders().get(LOCATION);
         if (locationHeader.isEmpty()) {
             throw new MissingLocationException("Location does not exist in the headers");
@@ -82,8 +79,11 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
     private ConfirmablePayment confirmPaymentIfNeeded(
             String paymentId, ConfirmablePayment confirmablePayment) {
-        String paymentInformationStatus = confirmablePayment.getPaymentRequest().getPaymentInformationStatus();
-        return isStatusToBeConfirmed(paymentInformationStatus) ? confirmPaymentRequest(paymentId) : confirmablePayment;
+        String paymentInformationStatus =
+                confirmablePayment.getPaymentRequest().getPaymentInformationStatus();
+        return isStatusToBeConfirmed(paymentInformationStatus)
+                ? confirmPaymentRequest(paymentId)
+                : confirmablePayment;
     }
 
     private boolean isStatusToBeConfirmed(String statusCode) {

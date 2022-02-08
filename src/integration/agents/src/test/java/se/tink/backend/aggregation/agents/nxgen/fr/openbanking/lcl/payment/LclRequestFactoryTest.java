@@ -126,7 +126,7 @@ public class LclRequestFactoryTest {
 
         // given:
         given(paymentBodyFactory.createPaymentRequestResource(eq(createPaymentRequest)))
-            .willReturn(paymentRequestResource);
+                .willReturn(paymentRequestResource);
         given(unleashClient.isToggleEnabled(any(Toggle.class)))
                 .willReturn(
                         true); // Toggle class do not have equals or getters to check toggle name
