@@ -28,7 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
@@ -137,8 +137,8 @@ public class DomesticPaymentApiClientTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
         when(requestBuilderMock.post(
                         eq(DomesticPaymentConsentResponse.class),
@@ -231,8 +231,8 @@ public class DomesticPaymentApiClientTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
         final PaymentRequest paymentRequestMock =
                 createDomesticPaymentRequestForNotExecutedPayment(this.clockMock);
         final DomesticPaymentResponse response = createDomesticPaymentResponse();
@@ -283,8 +283,8 @@ public class DomesticPaymentApiClientTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
         when(requestBuilderMock.post(
                         eq(DomesticPaymentConsentResponse.class),

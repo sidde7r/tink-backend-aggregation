@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
@@ -33,12 +33,12 @@ public class ClydesdaleGroupAuthorisationFilterTest {
     @Test
     public void shouldHandleAuthenticationErrorAccountResponse() throws Exception {
         // given
-        ErrorResponse responseBody =
+        UkObErrorResponse responseBody =
                 objectFromString(
                         "{\"Code\":\"403 Forbidden\",\"Id\":\"00000000-6f9a-483a-76ba-000000000000\",\"Message\":\"Forbidden\",\"Errors\":[{\"ErrorCode\":\"UK.CYBG.Forbidden\",\"Message\":\"Forbidden\"}]}",
-                        ErrorResponse.class);
+                        UkObErrorResponse.class);
         given(response.getStatus()).willReturn(403);
-        given(response.getBody(ErrorResponse.class)).willReturn(responseBody);
+        given(response.getBody(UkObErrorResponse.class)).willReturn(responseBody);
         given(nextFilter.handle(any())).willReturn(response);
 
         // when

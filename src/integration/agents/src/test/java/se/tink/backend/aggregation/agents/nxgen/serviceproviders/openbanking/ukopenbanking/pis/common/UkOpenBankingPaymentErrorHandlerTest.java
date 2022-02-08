@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -27,8 +27,8 @@ public class UkOpenBankingPaymentErrorHandlerTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
 
         // when
         PaymentException paymentException =
@@ -53,8 +53,8 @@ public class UkOpenBankingPaymentErrorHandlerTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
 
         // when
         PaymentException paymentException =
@@ -79,8 +79,8 @@ public class UkOpenBankingPaymentErrorHandlerTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
 
         // when
         PaymentException paymentException =
@@ -105,8 +105,8 @@ public class UkOpenBankingPaymentErrorHandlerTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
 
         // when
         PaymentException paymentException =
@@ -129,8 +129,8 @@ public class UkOpenBankingPaymentErrorHandlerTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
 
         // when
         PaymentException paymentException =
@@ -151,8 +151,8 @@ public class UkOpenBankingPaymentErrorHandlerTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
 
         // when
         PaymentException paymentException =
@@ -178,8 +178,8 @@ public class UkOpenBankingPaymentErrorHandlerTest {
         HttpResponseException httpResponseException = mock(HttpResponseException.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponseException.getResponse()).thenReturn(httpResponse);
-        when(httpResponse.getBody(ErrorResponse.class))
-                .thenReturn(objectMapper.readValue(source, ErrorResponse.class));
+        when(httpResponse.getBody(UkObErrorResponse.class))
+                .thenReturn(objectMapper.readValue(source, UkObErrorResponse.class));
 
         // when
         PaymentException paymentException =

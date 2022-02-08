@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.function.Predicate;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorCodes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public interface OpenIdConsentValidator {
@@ -35,14 +35,14 @@ public interface OpenIdConsentValidator {
                 }),
         ERROR_CODE(
                 response -> {
-                    ErrorResponse errorBody = response.getBody(ErrorResponse.class);
+                    UkObErrorResponse errorBody = response.getBody(UkObErrorResponse.class);
                     return errorBody.hasErrorCode(ErrorCodes.NOT_FOUND)
                             || errorBody.hasErrorCode(ErrorCodes.INVALID_CONSENT_STATUS)
                             || errorBody.hasErrorCode(ErrorCodes.REAUTHENTICATE);
                 }),
         ERROR_MESSAGE(
                 response -> {
-                    ErrorResponse errorBody = response.getBody(ErrorResponse.class);
+                    UkObErrorResponse errorBody = response.getBody(UkObErrorResponse.class);
                     return errorBody.messageContains("Consent")
                             || errorBody.messageContains("Reauthenticate");
                 });

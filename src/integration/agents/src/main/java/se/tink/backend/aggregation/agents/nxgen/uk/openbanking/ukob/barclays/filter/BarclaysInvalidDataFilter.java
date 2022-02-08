@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ukob.barclays.fi
 
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -37,7 +37,7 @@ public class BarclaysInvalidDataFilter extends Filter {
     }
 
     private boolean hasSpecificCodeErrorAndMessage(HttpResponse response) {
-        ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+        UkObErrorResponse errorResponse = response.getBody(UkObErrorResponse.class);
         return errorResponse.hasErrorCode(ERROR_CODE)
                 && errorResponse.messageContains(ERROR_MESSAGE);
     }

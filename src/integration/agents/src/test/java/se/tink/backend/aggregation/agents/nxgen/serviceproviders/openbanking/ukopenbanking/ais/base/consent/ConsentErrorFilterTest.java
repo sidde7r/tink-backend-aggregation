@@ -15,7 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.ConsentErrorFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -108,11 +108,11 @@ public class ConsentErrorFilterTest {
     }
 
     private void mockResponse(int httpStatus, String messageResponse) throws Exception {
-        ErrorResponse responseBody = objectFromString(messageResponse, ErrorResponse.class);
+        UkObErrorResponse responseBody = objectFromString(messageResponse, UkObErrorResponse.class);
         HttpResponse response = mock(HttpResponse.class);
         given(response.getStatus()).willReturn(httpStatus);
         given(response.hasBody()).willReturn(true);
-        given(response.getBody(ErrorResponse.class)).willReturn(responseBody);
+        given(response.getBody(UkObErrorResponse.class)).willReturn(responseBody);
         given(filter.handle(any())).willReturn(response);
     }
 

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 class HSBCFailedEligibilityCheckCodeValidatorTest {
@@ -35,9 +35,9 @@ class HSBCFailedEligibilityCheckCodeValidatorTest {
                         + "    \"Message\" : \"Failed Eligibility check\"\n"
                         + "  } ]\n"
                         + "}";
-        ErrorResponse errorResponse = objectMapper.readValue(jsonResponse, ErrorResponse.class);
+        UkObErrorResponse errorResponse = objectMapper.readValue(jsonResponse, UkObErrorResponse.class);
         when(httpResponse.getStatus()).thenReturn(400);
-        when(httpResponse.getBody(ErrorResponse.class)).thenReturn(errorResponse);
+        when(httpResponse.getBody(UkObErrorResponse.class)).thenReturn(errorResponse);
 
         // when
         boolean isValid = HSBCFailedEligibilityCheckCodeValidator.validate(httpResponse);
@@ -69,9 +69,9 @@ class HSBCFailedEligibilityCheckCodeValidatorTest {
                         + "  \"Message\" : \"Bad Request\",\n"
                         + "  \"Errors\" : [ ]\n"
                         + "}";
-        ErrorResponse errorResponse = objectMapper.readValue(jsonResponse, ErrorResponse.class);
+        UkObErrorResponse errorResponse = objectMapper.readValue(jsonResponse, UkObErrorResponse.class);
         when(httpResponse.getStatus()).thenReturn(400);
-        when(httpResponse.getBody(ErrorResponse.class)).thenReturn(errorResponse);
+        when(httpResponse.getBody(UkObErrorResponse.class)).thenReturn(errorResponse);
 
         // when
         boolean isValid = HSBCFailedEligibilityCheckCodeValidator.validate(httpResponse);

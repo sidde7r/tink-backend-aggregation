@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.re
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.SessionKiller;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -30,7 +30,7 @@ public class RevolutConsentAuthorisationErrorFilter extends Filter {
                     String.format(
                             "[RevolutConsentAuthorisationErrorFilter] Invalid consent revoked "
                                     + "by the bank with a message: %s",
-                            response.getBody(ErrorResponse.class).getMessage());
+                            response.getBody(UkObErrorResponse.class).getMessage());
             SessionKiller.cleanUpAndExpireSession(
                     persistentStorage, SessionError.CONSENT_INVALID.exception(msgErr));
         }
@@ -43,6 +43,6 @@ public class RevolutConsentAuthorisationErrorFilter extends Filter {
     }
 
     private boolean hasConsentUnauthorizedCode(HttpResponse response) {
-        return response.getBody(ErrorResponse.class).hasErrorCode(UNAUTHORIZED);
+        return response.getBody(UkObErrorResponse.class).hasErrorCode(UNAUTHORIZED);
     }
 }
