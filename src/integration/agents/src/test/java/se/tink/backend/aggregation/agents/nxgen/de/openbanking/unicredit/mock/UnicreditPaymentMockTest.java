@@ -34,7 +34,7 @@ public class UnicreditPaymentMockTest {
     @Test
     public void testSepaPayment() {
         // given
-        final String wireMockFilePath = BASE_PATH + "sepa_payment.aap";
+        final String wireMockFilePath = BASE_PATH + "unicredit_sepa_payment.aap";
 
         Payment payment =
                 createRealDomesticPayment()

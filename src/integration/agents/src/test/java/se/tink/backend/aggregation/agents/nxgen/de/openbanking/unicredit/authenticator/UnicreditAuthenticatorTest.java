@@ -60,12 +60,10 @@ public class UnicreditAuthenticatorTest {
     @Test
     public void autoAuthenticateShouldSetSessionExpiryDate() {
         // given
-        ConsentDetailsResponse mockResponse = mock(ConsentDetailsResponse.class);
         LocalDate now = LocalDate.now();
+        ConsentDetailsResponse mockResponse = mockConsentDetailsResponse(now);
         given(storage.getConsentId()).willReturn(Optional.of(CONSENT_ID));
         given(apiClient.getConsentDetails(CONSENT_ID)).willReturn(mockResponse);
-        given(mockResponse.isValid()).willReturn(true);
-        given(mockResponse.getValidUntil()).willReturn(now);
         // when
         // then
         assertThatCode(authenticator::autoAuthenticate).doesNotThrowAnyException();
@@ -86,9 +84,9 @@ public class UnicreditAuthenticatorTest {
     public void autoAuthenticateShouldThrowExceptionOnInvalidConsent() {
         // given
         ConsentDetailsResponse mockResponse = mock(ConsentDetailsResponse.class);
+        given(mockResponse.isValid()).willReturn(false);
         given(storage.getConsentId()).willReturn(Optional.of(CONSENT_ID));
         given(apiClient.getConsentDetails(CONSENT_ID)).willReturn(mockResponse);
-        given(mockResponse.isValid()).willReturn(false);
         // when
         Throwable throwable = catchThrowable(authenticator::autoAuthenticate);
         // then
@@ -100,24 +98,14 @@ public class UnicreditAuthenticatorTest {
         // given
         UnicreditConsentResponse mockUnicreditConsentResponse = mockUnicreditConsentResponse();
         AuthorizationResponse mockAuthResponse = mockAuthResponse();
-        Field mockField = mockField();
-        mockCredentials();
-
-        ConsentDetailsResponse mockResponse = mock(ConsentDetailsResponse.class);
         LocalDate now = LocalDate.now();
-        given(apiClient.getConsentDetails(CONSENT_ID)).willReturn(mockResponse);
-        given(mockResponse.isValid()).willReturn(true);
-        given(mockResponse.getValidUntil()).willReturn(now);
+        ConsentDetailsResponse mockResponse = mockConsentDetailsResponse(now);
+
+        mockCredentials();
+        mockOtp();
 
         given(strongAuthenticationState.getState()).willReturn(STATE);
-        given(embeddedFieldBuilder.getOtpFields(any(), any()))
-                .willReturn(Collections.singletonList(mockField));
-        given(
-                        supplementalInformationController
-                                .askSupplementalInformationSync(mockField)
-                                .get(FIELD_NAME))
-                .willReturn(OTP);
-
+        given(apiClient.getConsentDetails(CONSENT_ID)).willReturn(mockResponse);
         given(apiClient.createConsent(any())).willReturn(mockUnicreditConsentResponse);
         given(apiClient.initializeAuthorization(any(), any(), any())).willReturn(mockAuthResponse);
         given(apiClient.authorizeWithPassword(any(), any(), any())).willReturn(mockAuthResponse);
@@ -137,11 +125,10 @@ public class UnicreditAuthenticatorTest {
         // given
         UnicreditConsentResponse mockUnicreditConsentResponse = mockUnicreditConsentResponse();
         AuthorizationResponse mockAuthResponse = mockAuthResponse();
-        mockField();
+
         mockCredentials();
 
         given(strongAuthenticationState.getState()).willReturn(STATE);
-
         given(apiClient.createConsent(any())).willReturn(mockUnicreditConsentResponse);
         given(apiClient.initializeAuthorization(any(), any(), any())).willReturn(mockAuthResponse);
         given(apiClient.authorizeWithPassword(any(), any(), any())).willReturn(mockAuthResponse);
@@ -157,18 +144,11 @@ public class UnicreditAuthenticatorTest {
         LinksEntity mockLinksEntity = mock(LinksEntity.class);
         given(mockLinksEntity.getStartAuthorisation()).willReturn(DUMMY_URL);
         AuthorizationResponse mockAuthResponse = mockAuthResponse();
-        Field mockField = mockField();
+
         mockCredentials();
+        mockOtp();
 
         given(strongAuthenticationState.getState()).willReturn(STATE);
-        given(embeddedFieldBuilder.getOtpFields(any(), any()))
-                .willReturn(Collections.singletonList(mockField));
-        given(
-                        supplementalInformationController
-                                .askSupplementalInformationSync(mockField)
-                                .get(FIELD_NAME))
-                .willReturn(OTP);
-
         given(apiClient.initializeAuthorization(any(), any(), any())).willReturn(mockAuthResponse);
         given(apiClient.authorizeWithPassword(any(), any(), any())).willReturn(mockAuthResponse);
         // when
@@ -180,9 +160,18 @@ public class UnicreditAuthenticatorTest {
         verify(apiClient).finalizeAuthorization(DUMMY_URL, OTP);
     }
 
-    private void mockCredentials() {
-        given(credentials.getField(Key.USERNAME)).willReturn(USERNAME);
-        given(credentials.getField(Key.PASSWORD)).willReturn(PASSWORD);
+    private ConsentDetailsResponse mockConsentDetailsResponse(LocalDate now) {
+        ConsentDetailsResponse mock = mock(ConsentDetailsResponse.class);
+        given(mock.isValid()).willReturn(true);
+        given(mock.getValidUntil()).willReturn(now);
+        return mock;
+    }
+
+    private UnicreditConsentResponse mockUnicreditConsentResponse() {
+        UnicreditConsentResponse mock = mock(UnicreditConsentResponse.class, RETURNS_DEEP_STUBS);
+        given(mock.getConsentId()).willReturn(CONSENT_ID);
+        given(mock.getLinks().getStartAuthorisation()).willReturn(DUMMY_URL);
+        return mock;
     }
 
     private AuthorizationResponse mockAuthResponse() {
@@ -192,17 +181,21 @@ public class UnicreditAuthenticatorTest {
         return mock;
     }
 
-    private Field mockField() {
-        Field mock = mock(Field.class);
-        given(mock.isImmutable()).willReturn(false);
-        given(mock.getName()).willReturn(FIELD_NAME);
-        return mock;
+    private void mockCredentials() {
+        given(credentials.getField(Key.USERNAME)).willReturn(USERNAME);
+        given(credentials.getField(Key.PASSWORD)).willReturn(PASSWORD);
     }
 
-    private UnicreditConsentResponse mockUnicreditConsentResponse() {
-        UnicreditConsentResponse mock = mock(UnicreditConsentResponse.class, RETURNS_DEEP_STUBS);
-        given(mock.getConsentId()).willReturn(CONSENT_ID);
-        given(mock.getLinks().getStartAuthorisation()).willReturn(DUMMY_URL);
-        return mock;
+    private void mockOtp() {
+        Field mockField = mock(Field.class);
+        given(mockField.isImmutable()).willReturn(false);
+        given(mockField.getName()).willReturn(FIELD_NAME);
+        given(embeddedFieldBuilder.getOtpFields(any(), any()))
+                .willReturn(Collections.singletonList(mockField));
+        given(
+                        supplementalInformationController
+                                .askSupplementalInformationSync(mockField)
+                                .get(FIELD_NAME))
+                .willReturn(OTP);
     }
 }

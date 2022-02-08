@@ -17,7 +17,7 @@ public class UnicreditMockAgentTest {
     @Test
     public void testFullAuth() throws Exception {
         // given
-        final String wireMockFilePath = BASE_PATH + "full_auth.aap";
+        final String wireMockFilePath = BASE_PATH + "unicredit_full_auth.aap";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
