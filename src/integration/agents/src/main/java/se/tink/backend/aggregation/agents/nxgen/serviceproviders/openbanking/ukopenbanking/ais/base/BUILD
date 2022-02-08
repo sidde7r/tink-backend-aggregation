@@ -12,23 +12,29 @@ java_library(
             "authenticator/entities/*.java",
             "entities/*.java",
             "tls/*.java",
+            "jwt/kid/*.java",
+            "jwt/JwksClient.java",
         ],
     ),
     visibility = ["//visibility:public"],
     exports = [
         ":deserialiser",
+        ":jwksClient",
         ":v31constants",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/api",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/authenticator/entities",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/entities",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/jwt/kid",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/tls",
     ],
     deps = [
         ":deserialiser",
+        ":jwksClient",
         ":v31constants",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/api",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/authenticator/entities",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/entities",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/jwt/kid",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/storage/data",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/tls",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid",
@@ -100,5 +106,19 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
+    ],
+)
+
+java_library(
+    name = "jwksClient",
+    srcs = [
+        "jwt/JwksClient.java",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//third_party:com_nimbusds_nimbus_jose_jwt",
+        "//third_party:lombok_libs",
     ],
 )
