@@ -14,7 +14,9 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
@@ -31,6 +33,7 @@ public class SparebankPaymentSigner implements Signer<PaymentRequest> {
 
     private final SparebankApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final StrongAuthenticationState strongAuthenticationState;
     private final SparebankStorage storage;
 
     public void sign(PaymentRequest toSign) throws AuthenticationException {
@@ -43,11 +46,15 @@ public class SparebankPaymentSigner implements Signer<PaymentRequest> {
                                 .getLinks()
                                 .getScaRedirect()
                                 .getHref()));
-        poll(toSign);
+
+        supplementalInformationHelper.waitForSupplementalInformation(
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
     }
 
     @SneakyThrows
-    private PaymentResponse poll(PaymentRequest toSign) {
+    public PaymentResponse poll(PaymentRequest toSign) {
         PaymentStatus paymentStatus = null;
         final String paymentId = toSign.getPayment().getUniqueId();
 

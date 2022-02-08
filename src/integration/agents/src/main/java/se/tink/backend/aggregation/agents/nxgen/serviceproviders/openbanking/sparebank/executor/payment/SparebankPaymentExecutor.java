@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -45,10 +46,16 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     public SparebankPaymentExecutor(
             SparebankApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
+            StrongAuthenticationState strongAuthenticationState,
             SparebankStorage storage) {
         this.apiClient = apiClient;
         this.storage = storage;
-        this.signer = new SparebankPaymentSigner(apiClient, supplementalInformationHelper, storage);
+        this.signer =
+                new SparebankPaymentSigner(
+                        apiClient,
+                        supplementalInformationHelper,
+                        strongAuthenticationState,
+                        storage);
     }
 
     @Override
@@ -75,8 +82,7 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
         signer.sign(paymentMultiStepRequest);
-
-        final Payment payment = paymentMultiStepRequest.getPayment();
+        final Payment payment = signer.poll(paymentMultiStepRequest).getPayment();
         payment.setStatus(PaymentStatus.PAID);
         return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE);
     }
