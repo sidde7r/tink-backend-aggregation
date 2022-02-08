@@ -104,7 +104,7 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.unleash.model.Toggle;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 
 @Slf4j
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
@@ -567,13 +567,15 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
             Toggle toggle =
                     Toggle.of("uk-balance-calculators")
-                            .context(
-                                    UnleashContext.builder()
-                                            .sessionId(credentialsId)
-                                            .addProperty(
-                                                    Constants.Context.PROVIDER_NAME.getValue(),
-                                                    providerId)
-                                            .addProperty(Constants.Context.APP_ID.getValue(), appId)
+                            .unleashContextWrapper(
+                                    UnleashContextWrapper.builder()
+                                            .credentialsId(credentialsId)
+                                            .providerName(providerId)
+                                            .appId(appId)
+                                            .unleashContextBuilder(
+                                                    UnleashContext.builder()
+                                                            .sessionId(credentialsId)
+                                                            .userId(appId))
                                             .build())
                             .build();
             balanceCalculationEnabled =

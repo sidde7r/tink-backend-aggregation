@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
-import no.finn.unleash.UnleashContext;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.redsys.rpc.ConsentRequestBody;
@@ -69,7 +68,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 
 @Slf4j
 public class RedsysApiClient {
@@ -449,11 +448,9 @@ public class RedsysApiClient {
     private String getAuthorizeEndpoint(UnleashClient unleashClient, String currentProviderName) {
         Toggle toggle =
                 Toggle.of("redsys-app-to-app-redirect")
-                        .context(
-                                UnleashContext.builder()
-                                        .addProperty(
-                                                Constants.Context.PROVIDER_NAME.getValue(),
-                                                currentProviderName)
+                        .unleashContextWrapper(
+                                UnleashContextWrapper.builder()
+                                        .providerName(currentProviderName)
                                         .build())
                         .build();
 

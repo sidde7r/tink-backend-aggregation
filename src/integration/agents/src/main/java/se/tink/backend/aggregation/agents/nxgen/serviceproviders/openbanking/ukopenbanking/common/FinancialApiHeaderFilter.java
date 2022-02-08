@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.finn.unleash.UnleashContext;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.HttpHeaders;
@@ -15,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,21 +50,19 @@ public class FinancialApiHeaderFilter extends Filter {
     }
 
     private Toggle getFeatureToggle() {
-        UnleashContext unleashContext = getUnleashContext();
-        return Toggle.of(FEATURE_TOGGLE_NAME).context(unleashContext).build();
+        UnleashContextWrapper unleashContextWrapper = getUnleashContextWrapper();
+        return Toggle.of(FEATURE_TOGGLE_NAME).unleashContextWrapper(unleashContextWrapper).build();
     }
 
-    private UnleashContext getUnleashContext() {
+    private UnleashContextWrapper getUnleashContextWrapper() {
         String credentialsId = getCredentialsId();
         CompositeAgentContext agentContext = agentComponentProvider.getContext();
-        String providerName = Constants.Context.PROVIDER_NAME.getValue();
-        String providerIdValue = agentContext.getProviderId();
-        String appIdName = Constants.Context.APP_ID.getValue();
-        String appIdValue = agentContext.getAppId();
-        return UnleashContext.builder()
-                .sessionId(credentialsId)
-                .addProperty(providerName, providerIdValue)
-                .addProperty(appIdName, appIdValue)
+        String providerId = agentContext.getProviderId();
+        String appId = agentContext.getAppId();
+        return UnleashContextWrapper.builder()
+                .credentialsId(credentialsId)
+                .providerName(providerId)
+                .appId(appId)
                 .build();
     }
 

@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import no.finn.unleash.UnleashContext;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -23,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 
 /**
  * Generic transaction paginator for ukob.
@@ -84,14 +83,10 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         this.unleashClient = componentProvider.getUnleashClient();
         this.toggle =
                 Toggle.of("UK_SET_MAX_ALLOWED_NUMBER_OF_MONTHS_TO_24")
-                        .context(
-                                UnleashContext.builder()
-                                        .addProperty(
-                                                Constants.Context.PROVIDER_NAME.getValue(),
-                                                provider.getName())
-                                        .addProperty(
-                                                Constants.Context.APP_ID.getValue(),
-                                                componentProvider.getContext().getAppId())
+                        .unleashContextWrapper(
+                                UnleashContextWrapper.builder()
+                                        .providerName(provider.getName())
+                                        .appId(componentProvider.getContext().getAppId())
                                         .build())
                         .build();
     }

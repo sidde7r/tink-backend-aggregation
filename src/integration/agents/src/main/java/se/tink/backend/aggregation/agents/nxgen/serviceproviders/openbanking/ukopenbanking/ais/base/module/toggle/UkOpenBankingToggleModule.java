@@ -6,11 +6,10 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import no.finn.unleash.UnleashContext;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.libraries.unleash.model.Toggle;
+import se.tink.libraries.unleash.model.UnleashContextWrapper;
 import se.tink.libraries.unleash.provider.UnleashClientProvider;
-import se.tink.libraries.unleash.strategies.aggregation.providersidsandexcludeappids.Constants.Context;
 
 public class UkOpenBankingToggleModule extends AbstractModule {
 
@@ -26,23 +25,21 @@ public class UkOpenBankingToggleModule extends AbstractModule {
     @Inject
     UkOpenBankingFlowService ukOpenBankingFlowToggle(
             UnleashClientProvider unleashClientProvider,
-            AgentComponentProvider componentProvide,
+            AgentComponentProvider componentProvider,
             @Named("featureToggleName") String toggleName) {
-        Toggle toggle =
-                Toggle.of(toggleName)
-                        .context(unleashContextForUkStrategy(componentProvide))
-                        .build();
-        return new UkOpenBankingFlowService(unleashClientProvider.getUnleashClient(), toggle);
-    }
 
-    private static UnleashContext unleashContextForUkStrategy(
-            AgentComponentProvider componentProvider) {
         String providerName = componentProvider.getCredentialsRequest().getProvider().getName();
         String appId = componentProvider.getContext().getAppId();
-        return UnleashContext.builder()
-                .addProperty(Context.PROVIDER_NAME.getValue(), providerName)
-                .addProperty(Context.APP_ID.getValue(), appId)
-                .build();
+
+        Toggle toggle =
+                Toggle.of(toggleName)
+                        .unleashContextWrapper(
+                                UnleashContextWrapper.builder()
+                                        .appId(appId)
+                                        .providerName(providerName)
+                                        .build())
+                        .build();
+        return new UkOpenBankingFlowService(unleashClientProvider.getUnleashClient(), toggle);
     }
 
     private static final class ToggleConstants {
