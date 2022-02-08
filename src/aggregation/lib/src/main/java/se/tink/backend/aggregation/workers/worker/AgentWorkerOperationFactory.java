@@ -2083,9 +2083,14 @@ public class AgentWorkerOperationFactory {
                                             .credentialsId(credentialsId)
                                             .appId(appId)
                                             .providerName(providerId)
+                                            .unleashContextBuilder(
+                                                    UnleashContext.builder()
+                                                            .userId(appId)
+                                                            .sessionId(credentialsId))
                                             .build())
                             .build();
             balanceCalculationEnabled = unleashClient.isToggleEnabled(toggle);
+            log.info("[BALANCE CALCULATOR] Toggle status: " + balanceCalculationEnabled);
         } catch (Exception e) {
             log.warn("[BALANCE CALCULATOR] Failed to fetch balance calculator toggle status");
             balanceCalculationEnabled = false;
