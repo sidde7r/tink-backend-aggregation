@@ -15,8 +15,6 @@ public class CaixaRegistrationDataGenerator {
     private static final String UA_SHORT_PHONE_MODEL = "h10,4";
     private static final String UA_PHONE_MODEL = "iPhone10,4";
 
-    private static final String APP_NAME_AND_VARIANT = "es.lacaixa.mobile.imaginBank_iPhone";
-
     /**
      * identifier = appNameAndVariant + deviceIdentifier appNameAndVariant =
      * es.lacaixa.mobile.imaginBank_iPhone deviceIdentifier = UUID Identifier. like:
@@ -25,9 +23,9 @@ public class CaixaRegistrationDataGenerator {
      * @param username
      * @return
      */
-    public static String generateIdentifierByUsername(String username, Base64.Encoder encoder) {
-        return generateEncodedIdentifier(
-                APP_NAME_AND_VARIANT + uuidFromUsername(username), encoder);
+    public static String generateIdentifierByUsername(
+            String appName, String username, Base64.Encoder encoder) {
+        return generateEncodedIdentifier(appName + uuidFromUsername(username), encoder);
     }
 
     /**
@@ -87,8 +85,12 @@ public class CaixaRegistrationDataGenerator {
      * @return
      */
     public static String generateAppInstallationId(
-            String username, String userAgentPrefixConstant, Base64.Encoder encoder) {
-        String identifier = generateIdentifierByUsername(username, encoder);
+            String appName,
+            String username,
+            String userAgentPrefixConstant,
+            Base64.Encoder encoder) {
+
+        String identifier = generateIdentifierByUsername(appName, username, encoder);
         return userAgentPrefixConstant
                 + UA_IPHONE_INDICATOR
                 + UA_SHORT_COMPANY

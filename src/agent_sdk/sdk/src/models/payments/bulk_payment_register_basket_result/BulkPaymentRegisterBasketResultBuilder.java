@@ -48,6 +48,24 @@ public class BulkPaymentRegisterBasketResultBuilder
     }
 
     @Override
+    public BulkPaymentRegisterBasketResultBuild allSuccessful(List<Payment> payments) {
+        this.paymentRegisterResults =
+                payments.stream()
+                        .map(
+                                payment ->
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentReference.builder()
+                                                                .payment(payment)
+                                                                .noBankReference()
+                                                                .build())
+                                                .noError()
+                                                .build())
+                        .collect(Collectors.toList());
+        return this;
+    }
+
+    @Override
     public BulkPaymentRegisterBasketResultBuild allWithSameError(
             List<Payment> payments, PaymentError error) {
         this.paymentRegisterResults =

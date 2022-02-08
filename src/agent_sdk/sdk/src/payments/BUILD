@@ -9,7 +9,7 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/payments/global_signing_basket",
         "//src/agent_sdk/sdk/src/payments/single",
     ],
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
+    visibility = ["//src/agent_sdk:__subpackages__"],
     exports = [
         "//src/agent_sdk/sdk/src/payments/beneficiary",
         "//src/agent_sdk/sdk/src/payments/bulk",
