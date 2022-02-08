@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -8,26 +10,30 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Payment;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SparebankPaymentSigner {
+public class SparebankPaymentSigner implements Signer<PaymentRequest> {
 
-    private static final int MAX_ATTEMPTS = 100;
+    private static final int MAX_ATTEMPTS = 90;
 
-    private final SparebankPaymentExecutor paymentExecutor;
     private final SparebankApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final StrongAuthenticationState strongAuthenticationState;
     private final SparebankStorage storage;
 
     public void sign(PaymentRequest toSign) throws AuthenticationException {
@@ -40,23 +46,26 @@ public class SparebankPaymentSigner {
                                 .getLinks()
                                 .getScaRedirect()
                                 .getHref()));
-        poll(toSign);
+
+        supplementalInformationHelper.waitForSupplementalInformation(
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
     }
 
     @SneakyThrows
-    private PaymentResponse poll(PaymentRequest toSign) {
+    public PaymentResponse poll(PaymentRequest toSign) {
         PaymentStatus paymentStatus = null;
+        final String paymentId = toSign.getPayment().getUniqueId();
 
         for (int i = 0; i < MAX_ATTEMPTS; ++i) {
-            PaymentResponse paymentResponse = collect(toSign);
-            paymentStatus = paymentResponse.getPayment().getStatus();
+            paymentStatus = getPaymentStatus(paymentId);
             switch (paymentStatus) {
                 case PAID:
-                    return paymentResponse;
+                    return getPaymentResponse(toSign, paymentStatus);
                 case CREATED:
                     log.info("Waiting for signing");
-                    Thread.sleep(2000);
-                    continue;
+                    break;
                 case REJECTED:
                     throw new PaymentRejectedException("Payment rejected by Bank");
                 case CANCELLED:
@@ -65,17 +74,27 @@ public class SparebankPaymentSigner {
                     log.warn("Unknown payment sign response status: {}", paymentStatus);
                     throw new PaymentAuthorizationException();
             }
+
+            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
         log.info("Payment sign timed out internally, last status: {}", paymentStatus);
         throw ThirdPartyAppError.TIMED_OUT.exception();
     }
 
-    private PaymentResponse collect(PaymentRequest toSign) {
-        try {
-            return paymentExecutor.fetch(toSign);
-        } catch (PaymentException e) {
-            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-        }
+    private PaymentStatus getPaymentStatus(String paymentId) {
+        return SparebankPaymentStatus.fromString(
+                        apiClient
+                                .fetchPaymentStatus(getPaymentStatusUrl(paymentId))
+                                .getTransactionStatus())
+                .getTinkPaymentStatus();
+    }
+
+    private PaymentResponse getPaymentResponse(
+            PaymentRequest paymentRequest, PaymentStatus status) {
+        final Payment payment = paymentRequest.getPayment();
+        return apiClient
+                .fetchPayment(getPaymentResponseUrl(payment.getUniqueId()))
+                .toTinkPaymentResponse(payment, status);
     }
 
     private void openThirdPartyApp(URL authorizeUrl) {
@@ -97,6 +116,20 @@ public class SparebankPaymentSigner {
         return storage.getPaymentUrls(paymentId)
                 .orElseThrow(() -> new IllegalStateException("Payment authorize Url is missing."))
                 .getStartAuthorisation()
+                .getHref();
+    }
+
+    private String getPaymentStatusUrl(String paymentId) {
+        return storage.getPaymentUrls(paymentId)
+                .orElseThrow(() -> new IllegalStateException("Empty payment status url."))
+                .getStatus()
+                .getHref();
+    }
+
+    private String getPaymentResponseUrl(String paymentId) {
+        return storage.getPaymentUrls(paymentId)
+                .orElseThrow(() -> new IllegalStateException("Empty get payment response url."))
+                .getSelf()
                 .getHref();
     }
 }

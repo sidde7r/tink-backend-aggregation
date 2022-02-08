@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.enums.SparebankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -45,11 +46,16 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     public SparebankPaymentExecutor(
             SparebankApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
+            StrongAuthenticationState strongAuthenticationState,
             SparebankStorage storage) {
         this.apiClient = apiClient;
         this.storage = storage;
         this.signer =
-                new SparebankPaymentSigner(this, apiClient, supplementalInformationHelper, storage);
+                new SparebankPaymentSigner(
+                        apiClient,
+                        supplementalInformationHelper,
+                        strongAuthenticationState,
+                        storage);
     }
 
     @Override
@@ -59,17 +65,8 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
-        final Payment payment = paymentRequest.getPayment();
-        final String paymentId = payment.getUniqueId();
-        final SparebankPaymentType paymentType =
-                SparebankPaymentType.getSpareBankPaymentType(payment);
-
-        final String paymentStatus =
-                apiClient.fetchPaymentStatus(getPaymentStatusUrl(paymentId)).getTransactionStatus();
-
-        return apiClient
-                .fetchPayment(getPaymentResponseUrl(paymentId))
-                .toTinkPaymentResponse(payment, paymentType, paymentStatus);
+        throw new NotImplementedException(
+                "fetch not yet implemented for " + this.getClass().getName());
     }
 
     @Override
@@ -85,8 +82,7 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
         signer.sign(paymentMultiStepRequest);
-
-        final Payment payment = paymentMultiStepRequest.getPayment();
+        final Payment payment = signer.poll(paymentMultiStepRequest).getPayment();
         payment.setStatus(PaymentStatus.PAID);
         return new PaymentMultiStepResponse(payment, SigningStepConstants.STEP_FINALIZE);
     }
@@ -151,19 +147,5 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     private boolean isRemittanceInformationStructured(RemittanceInformation remittanceInformation) {
         return remittanceInformation.getType() == RemittanceInformationType.REFERENCE;
-    }
-
-    private String getPaymentStatusUrl(String paymentId) {
-        return storage.getPaymentUrls(paymentId)
-                .orElseThrow(() -> new IllegalStateException("Empty payment status url."))
-                .getStatus()
-                .getHref();
-    }
-
-    private String getPaymentResponseUrl(String paymentId) {
-        return storage.getPaymentUrls(paymentId)
-                .orElseThrow(() -> new IllegalStateException("Empty get payment response url."))
-                .getSelf()
-                .getHref();
     }
 }
