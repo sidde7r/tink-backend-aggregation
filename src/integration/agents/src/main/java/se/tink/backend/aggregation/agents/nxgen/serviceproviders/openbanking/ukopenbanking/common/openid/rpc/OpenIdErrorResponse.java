@@ -23,7 +23,7 @@ public class OpenIdErrorResponse {
     }
 
     @JsonIgnore
-    public boolean hasErrorDescription(String errorDescription) {
-        return this.errorDescription.equals(errorDescription);
+    public boolean containsErrorDescription(String errorDescription) {
+        return this.errorDescription.contains(errorDescription);
     }
 }
