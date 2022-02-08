@@ -114,7 +114,7 @@ TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"recurringIndicator":false,"validUntil":"1992-07-09","frequencyPerDay":4,"combinedServiceIndicator":false,"access":{"availableAccounts":"allAccounts"}}
+{"recurringIndicator":false,"validUntil":"1992-07-09","frequencyPerDay":1,"combinedServiceIndicator":false,"access":{"availableAccounts":"allAccounts"}}
 
 RESPONSE 7
 201

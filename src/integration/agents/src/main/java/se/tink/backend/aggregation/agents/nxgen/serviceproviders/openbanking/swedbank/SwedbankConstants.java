@@ -189,6 +189,7 @@ public final class SwedbankConstants {
     public static final class BodyParameter {
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final int FREQUENCY_PER_DAY = 4;
+        public static final int FREQUENCY_PER_DAY_ALL_ACCOUNTS = 1;
         public static final boolean RECURRING_INDICATOR = false;
         public static final boolean COMBINED_SERVICE_INDICATOR = false;
     }
