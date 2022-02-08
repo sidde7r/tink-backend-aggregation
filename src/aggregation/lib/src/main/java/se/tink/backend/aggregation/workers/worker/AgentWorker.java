@@ -47,7 +47,7 @@ public class AgentWorker extends ManagedSafeStop {
 
     // Automatic Refreshes will be put on a persistent queue. This queue will be used as a buffer
     // only.
-    private static final int MAX_QUEUE_AUTOMATIC_REFRESH = 150;
+    private static final int MAX_QUEUE_AUTOMATIC_REFRESH = 200;
 
     /**
      * As of right now, the longest supplemental information timeout is 540 seconds. This is the max
