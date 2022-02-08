@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -37,8 +38,10 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshTransferDestinationExecutor {
 
-    protected final UnicreditBaseApiClient apiClient;
+    protected UnicreditBaseApiClient apiClient;
     protected final UnicreditStorage unicreditStorage;
+    protected final RandomValueGenerator randomValueGenerator;
+    protected final LocalDateTimeSource localDateTimeSource;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final UnicreditTransactionsDateFromChooser unicreditTransactionsDateFromChooser;
 
@@ -51,11 +54,14 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         unicreditStorage = new UnicreditStorage(getPersistentStorage());
         unicreditTransactionsDateFromChooser =
                 getUnicreditTransactionsDateFromChooser(componentProvider.getLocalDateTimeSource());
+        randomValueGenerator = componentProvider.getRandomValueGenerator();
+        localDateTimeSource = componentProvider.getLocalDateTimeSource();
         apiClient = getApiClient(providerConfiguration, headerValues);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    private UnicreditBaseHeaderValues setupHeaderValues(AgentComponentProvider componentProvider) {
+    protected UnicreditBaseHeaderValues setupHeaderValues(
+            AgentComponentProvider componentProvider) {
         String redirectUrl =
                 getAgentConfigurationController()
                         .getAgentConfiguration(UnicreditBaseConfiguration.class)
@@ -69,7 +75,12 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
         return new UnicreditBaseApiClient(
-                client, unicreditStorage, providerConfiguration, headerValues);
+                client,
+                unicreditStorage,
+                providerConfiguration,
+                headerValues,
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     protected abstract UnicreditTransactionsDateFromChooser getUnicreditTransactionsDateFromChooser(

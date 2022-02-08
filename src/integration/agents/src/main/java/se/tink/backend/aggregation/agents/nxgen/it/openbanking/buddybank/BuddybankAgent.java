@@ -56,7 +56,12 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
         return new BuddybankApiClient(
-                client, unicreditStorage, providerConfiguration, headerValues);
+                client,
+                unicreditStorage,
+                providerConfiguration,
+                headerValues,
+                randomValueGenerator,
+                localDateTimeSource);
     }
 
     @Override

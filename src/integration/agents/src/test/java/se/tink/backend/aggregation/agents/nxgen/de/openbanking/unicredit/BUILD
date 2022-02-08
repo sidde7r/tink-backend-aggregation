@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "unicredit",
-    srcs = glob(["*.java"]),
+    srcs = glob(["**/*.java"]),
     data = ["//:agent_test_data"],
     tags = [
         "external",
@@ -17,7 +17,11 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
@@ -26,7 +30,9 @@ junit_test(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
         "@tink_backend//src/libraries/account_identifier",
         "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
+        "@tink_backend//src/libraries/unleash",
     ],
 )

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
+import java.time.ZoneId;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
@@ -23,6 +25,12 @@ public class UnicreditConstants {
                                     new Pair<>(
                                             AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
                             .build();
+    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Berlin");
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Patterns {
+        public static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
+    }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorMessages {
@@ -95,10 +103,11 @@ public class UnicreditConstants {
     public static class HeaderKeys {
 
         public static final String X_REQUEST_ID = "X-Request-ID";
+        public static final String PSU_ID = "PSU-ID";
         public static final String PSU_ID_TYPE = "PSU-ID-Type";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String CONSENT_ID = "Consent-ID";
-        public static final String TPP_REDIRECT_PREFERED = "TPP-Redirect-Preferred";
+        public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
         public static final String STATE = "state";
         public static final String CODE = "code";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";

@@ -32,7 +32,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
-import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -52,10 +53,14 @@ public class UnicreditBaseApiClient {
     protected final UnicreditStorage unicreditStorage;
     protected final UnicreditProviderConfiguration providerConfiguration;
     protected final UnicreditBaseHeaderValues headerValues;
+    protected final RandomValueGenerator randomValueGenerator;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     protected ConsentRequest getConsentRequest() {
         LocalDateTime validUntil =
-                LocalDateTime.now().plusDays(FormValues.CONSENT_VALIDATION_PERIOD_IN_DAYS);
+                localDateTimeSource
+                        .now(UnicreditConstants.ZONE_ID)
+                        .plusDays(FormValues.CONSENT_VALIDATION_PERIOD_IN_DAYS);
 
         return new ConsentRequest(
                 new UnicreditConsentAccessEntity(FormValues.ALL_ACCOUNTS),
@@ -86,43 +91,42 @@ public class UnicreditBaseApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
     }
 
     private RequestBuilder createRequestInSession(URL url) {
         final String consentId = getConsentIdFromStorage();
-        return createRequest(url)
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.CONSENT_ID, consentId);
+        return createRequest(url).header(HeaderKeys.CONSENT_ID, consentId);
     }
 
     public ConsentResponse createConsent(String state) {
         return createRequest(new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENTS))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(headerValues.getRedirectUrl())
                                 .queryParam(HeaderKeys.STATE, state)
                                 .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
-                .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, true) // true for redirect auth
                 .post(getConsentResponseType(), getConsentRequest());
     }
 
-    public ConsentDetailsResponse getConsentDetails() {
+    public ConsentDetailsResponse getConsentDetails(String consentId) {
         HttpResponse response =
                 createRequest(
                                 new URL(
                                                 providerConfiguration.getBaseUrl()
                                                         + Endpoints.CONSENT_DETAILS)
-                                        .parameter(
-                                                PathParameters.CONSENT_ID,
-                                                getConsentIdFromStorage()))
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                                        .parameter(PathParameters.CONSENT_ID, consentId))
                         .get(HttpResponse.class);
         logLastMRHCookie(response);
 
         return response.getBody(ConsentDetailsResponse.class);
+    }
+
+    public ConsentDetailsResponse getConsentDetails() {
+        return getConsentDetails(getConsentIdFromStorage());
     }
 
     private String getConsentIdFromStorage() {
@@ -184,7 +188,6 @@ public class UnicreditBaseApiClient {
                                         .parameter(
                                                 PathParameters.PAYMENT_PRODUCT,
                                                 getPaymentProduct(paymentRequest)))
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
@@ -195,7 +198,7 @@ public class UnicreditBaseApiClient {
                                                         .getAuthenticationState()
                                                         .orElse(null))
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
-                        .header(HeaderKeys.TPP_REDIRECT_PREFERED, true)
+                        .header(HeaderKeys.TPP_REDIRECT_PREFERRED, true)
                         .post(getCreatePaymentResponseType(), request);
 
         unicreditStorage.saveScaRedirectUrlForPayment(
@@ -217,17 +220,16 @@ public class UnicreditBaseApiClient {
                                         PathParameters.PAYMENT_PRODUCT,
                                         getPaymentProduct(paymentRequest))
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .get(FetchPaymentStatusResponse.class);
     }
 
-    private String getPaymentProduct(PaymentRequest paymentRequest) {
+    protected String getPaymentProduct(PaymentRequest paymentRequest) {
         return UnicreditConstants.PAYMENT_PRODUCT_MAPPER
                 .translate(paymentRequest.getPayment().getPaymentScheme())
                 .orElse(UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString());
     }
 
-    private String getPaymentService(PaymentRequest paymentRequest) {
+    protected String getPaymentService(PaymentRequest paymentRequest) {
         return PaymentServiceType.PERIODIC == paymentRequest.getPayment().getPaymentServiceType()
                 ? UnicreditConstants.PathParameterValues.PAYMENT_SERVICE_PERIODIC_PAYMENTS
                 : UnicreditConstants.PathParameterValues.PAYMENT_SERVICE_PAYMENTS;

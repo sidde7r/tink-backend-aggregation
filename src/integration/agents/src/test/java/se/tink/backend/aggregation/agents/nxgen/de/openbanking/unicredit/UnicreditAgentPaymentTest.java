@@ -4,11 +4,12 @@ import java.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.CreditorDebtorArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.PasswordArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -24,38 +25,35 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class UnicreditAgentPaymentTest {
 
-    private final ArgumentManager<PsuIdArgumentEnum> psuIdManager =
-            new ArgumentManager<>(PsuIdArgumentEnum.values());
-    private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<UsernameArgumentEnum> usernameManager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
+    private final ArgumentManager<PasswordArgumentEnum> passwordManager =
+            new ArgumentManager<>(PasswordArgumentEnum.values());
+    private final ArgumentManager<CreditorDebtorArgumentEnum> creditorDebtorManager =
+            new ArgumentManager<>(CreditorDebtorArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        psuIdManager.before();
+        usernameManager.before();
+        passwordManager.before();
         creditorDebtorManager.before();
 
         builder =
                 new AgentIntegrationTest.Builder("de", "de-unicredit-ob")
                         .addCredentialField(
-                                Key.ADDITIONAL_INFORMATION,
-                                psuIdManager.get(PsuIdArgumentEnum.PSU_ID_TYPE))
+                                Field.Key.USERNAME,
+                                usernameManager.get(UsernameArgumentEnum.USERNAME))
+                        .addCredentialField(
+                                Field.Key.PASSWORD,
+                                passwordManager.get(PasswordArgumentEnum.PASSWORD))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false)
                         .setClusterId("oxford-preprod")
                         .setFinancialInstitutionId("unicredit-de")
                         .setAppId("tink");
-    }
-
-    private enum Arg implements ArgumentManagerEnum {
-        DEBTOR_ACCOUNT, // Domestic IBAN account number
-        CREDITOR_ACCOUNT; // Domestic IBAN account number
-
-        @Override
-        public boolean isOptional() {
-            return false;
-        }
     }
 
     @Test
@@ -74,7 +72,6 @@ public class UnicreditAgentPaymentTest {
 
     @Test
     public void testRecurringPayments() throws Exception {
-        psuIdManager.before();
         creditorDebtorManager.before();
 
         builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
@@ -105,11 +102,11 @@ public class UnicreditAgentPaymentTest {
         remittanceInformation.setType(RemittanceInformationType.REFERENCE);
 
         AccountIdentifier creditorAccountIdentifier =
-                new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
+                new IbanIdentifier(creditorDebtorManager.get(CreditorDebtorArgumentEnum.CREDITOR));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
 
         AccountIdentifier debtorAccountIdentifier =
-                new IbanIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
+                new IbanIdentifier(creditorDebtorManager.get(CreditorDebtorArgumentEnum.DEBTOR));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
