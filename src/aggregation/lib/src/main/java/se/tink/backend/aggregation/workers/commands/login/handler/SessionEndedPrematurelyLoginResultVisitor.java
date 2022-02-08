@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.exceptions.ConnectivityExceptionBusinessTypeResolver;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
@@ -27,9 +28,6 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBa
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginResultVisitor;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSuccessResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
-import se.tink.connectivity.errors.ConnectivityError;
-import se.tink.connectivity.errors.ConnectivityErrorDetails;
-import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -88,11 +86,8 @@ public class SessionEndedPrematurelyLoginResultVisitor implements LoginResultVis
     @Override
     public void visit(ConnectivityExceptionErrorResult connectivityExceptionErrorResult) {
         // We only care about auth, session excepion.
-        ConnectivityError error = connectivityExceptionErrorResult.getException().getError();
-        if (ConnectivityErrorType.AUTHORIZATION_ERROR.equals(error.getType())
-                && ConnectivityErrorDetails.AuthorizationErrors.SESSION_EXPIRED
-                        .name()
-                        .equals(error.getDetails().getReason())) {
+        if (ConnectivityExceptionBusinessTypeResolver.isSessionExpired(
+                connectivityExceptionErrorResult.getException())) {
             writeToMetric();
         }
     }

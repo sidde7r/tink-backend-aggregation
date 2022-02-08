@@ -25,9 +25,11 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.exceptions.ConnectivityExceptionBusinessTypeResolver;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshStatus;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
@@ -145,6 +147,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                     }
                 }
 
+            } catch (ConnectivityException ex) {
+                handleFailedRefreshDueToConnectivityException(action, refreshSummary, ex);
             } catch (BankServiceException e) {
                 refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_BANK_SERVICE_EXCEPTION);
                 handleFailedRefreshDueToBankError(action, e);
@@ -156,13 +160,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 return AgentWorkerCommandResult.ABORT;
 
             } catch (RuntimeException e) {
-                log.warn(
-                        "Couldn't refresh RefreshableItem({}) because of RuntimeException.",
-                        item,
-                        e);
-                refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_RUNTIME_EXCEPTION);
-                handleFailedRefreshDueToTinkException(
-                        action, e, AdditionalInfo.INTERNAL_SERVER_ERROR);
+                handleRuntimeException(action, refreshSummary, e);
             } catch (Exception e) {
                 log.warn("Couldn't refresh RefreshableItem({}) because of exception.", item, e);
                 refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_EXCEPTION);
@@ -206,6 +204,41 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             return true;
         } else {
             return RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
+        }
+    }
+
+    private void handleRuntimeException(
+            MetricAction action, RefreshSummary refreshSummary, RuntimeException e)
+            throws Exception {
+        log.warn("Couldn't refresh RefreshableItem({}) because of RuntimeException.", item, e);
+        refreshSummary.updateStatus(RefreshStatus.INTERRUPTED_BY_RUNTIME_EXCEPTION);
+        handleFailedRefreshDueToTinkException(action, e, AdditionalInfo.INTERNAL_SERVER_ERROR);
+    }
+
+    void handleFailedRefreshDueToConnectivityException(
+            MetricAction action, RefreshSummary refreshSummary, ConnectivityException ex)
+            throws Exception {
+        if (ConnectivityExceptionBusinessTypeResolver.isSessionExpired(ex)
+                || ConnectivityExceptionBusinessTypeResolver.isProviderError(ex)) {
+            context.updateStatusWithError(
+                    CredentialsStatus.TEMPORARY_ERROR,
+                    context.getCatalog().getString(ex.getUserMessage()),
+                    ex.getError());
+            action.unavailable();
+            AdditionalInfo errorInfo =
+                    ConnectivityExceptionBusinessTypeResolver.isSessionExpired(ex)
+                            ? AdditionalInfo.CONSENT_EXPIRED
+                            : AdditionalInfo.BANK_SIDE_FAILURE;
+            RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
+            refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
+            log.warn(
+                    String.format(
+                            "[REFRESH ITEM COMMAND] Due to %s credentials status set TEMPORARY_ERROR.",
+                            ConnectivityExceptionBusinessTypeResolver.isSessionExpired(ex)
+                                    ? "session error"
+                                    : "received bank error"));
+        } else {
+            handleRuntimeException(action, refreshSummary, ex);
         }
     }
 

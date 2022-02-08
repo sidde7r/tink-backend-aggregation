@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
+import se.tink.backend.aggregation.agents.exceptions.ConnectivityExceptionBusinessTypeResolver;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -27,8 +28,6 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSu
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.connectivity.errors.ConnectivityErrorDetails;
-import se.tink.connectivity.errors.ConnectivityErrorType;
 
 public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
 
@@ -180,10 +179,7 @@ public class LoginMetricLoginResultVisitor implements LoginResultVisitor {
 
     private boolean isThirdPartyAppTimeoutError(ConnectivityException connectivityException) {
         return credentials.getStatus() == CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION
-                && connectivityException.getError().getType()
-                        == ConnectivityErrorType.USER_LOGIN_ERROR
-                && ConnectivityErrorDetails.UserLoginErrors.DYNAMIC_CREDENTIALS_FLOW_TIMEOUT
-                        .name()
-                        .equals(connectivityException.getError().getDetails().getReason());
+                && ConnectivityExceptionBusinessTypeResolver.isDynamicCredentialsFlowTimeout(
+                        connectivityException);
     }
 }

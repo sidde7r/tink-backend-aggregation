@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.exceptions.ConnectivityExceptionBusinessTypeResolver;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.connectivity.ConnectivityException;
 import se.tink.backend.aggregation.events.IntegrationParameters;
@@ -42,7 +43,6 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
-import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -267,7 +267,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 persistentAgent.clearLoginSession();
             }
         } catch (ConnectivityException ex) {
-            if (ConnectivityErrorType.PROVIDER_ERROR.equals(ex.getError().getType())) {
+            if (ConnectivityExceptionBusinessTypeResolver.isProviderError(ex)) {
                 loggedInCheckUnavailable(action, ex, ex.getUserMessage());
                 return Optional.empty();
             }
