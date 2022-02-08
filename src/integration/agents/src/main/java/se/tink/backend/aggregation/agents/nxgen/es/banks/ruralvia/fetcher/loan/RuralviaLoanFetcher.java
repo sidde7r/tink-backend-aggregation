@@ -15,7 +15,6 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.Ruralvi
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Tags.ATTRIBUTE_TAG_VALUE;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.RuralviaConstants.Urls.RURALVIA_SECURE_HOST;
 
-import agents_platform_agents_framework.org.apache.commons.lang.StringUtils;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -192,7 +191,7 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
                         elements ->
                                 elements.get(0).hasText()
                                         ? elements.get(0).ownText()
-                                        : StringUtils.EMPTY);
+                                        : "");
     }
 
     private String navigateToLoanDetails(LoanEntity.LoanEntityBuilder loanBuilder) {
