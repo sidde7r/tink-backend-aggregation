@@ -26,7 +26,7 @@ public final class LinterRules {
                                                             .forClass(Date.class.getName()),
                                                     MethodMatchers.staticMethod()
                                                             .onClass(Date.class.getName())
-                                                            .withAnyName()))
+                                                            .named("now")))
                                     .changeTo("TimeGenerator.localDateTimeNow()")
                                     .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
@@ -34,7 +34,7 @@ public final class LinterRules {
                                     .matcher(
                                             MethodMatchers.staticMethod()
                                                     .onClass(LocalDate.class.getName())
-                                                    .withAnyName())
+                                                    .named("now"))
                                     .changeTo("TimeGenerator.localDateNow()")
                                     .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
@@ -42,7 +42,7 @@ public final class LinterRules {
                                     .matcher(
                                             MethodMatchers.staticMethod()
                                                     .onClass(LocalDateTime.class.getName())
-                                                    .withAnyName())
+                                                    .named("now"))
                                     .changeTo("TimeGenerator.localDateTimeNow()")
                                     .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
@@ -50,7 +50,7 @@ public final class LinterRules {
                                     .matcher(
                                             MethodMatchers.staticMethod()
                                                     .onClass(Instant.class.getName())
-                                                    .withAnyName())
+                                                    .named("now"))
                                     .changeTo("TimeGenerator.instantNow()")
                                     .readMoreLink(TBD_READ_MORE_LINK)
                                     .build(),
