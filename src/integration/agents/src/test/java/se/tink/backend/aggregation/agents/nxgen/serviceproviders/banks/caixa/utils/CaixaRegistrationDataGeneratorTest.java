@@ -53,7 +53,7 @@ public class CaixaRegistrationDataGeneratorTest {
         // when
         String result =
                 CaixaRegistrationDataGenerator.generateAppInstallationId(
-                        USERNAME, USER_AGENT_PREFIX_CONSTANT, Base64.getUrlEncoder());
+                        APP_NAME, USERNAME, USER_AGENT_PREFIX_CONSTANT, Base64.getUrlEncoder());
         // then
         assertThat(result).isEqualTo(APP_INSTALLATION_ID);
     }
@@ -73,7 +73,7 @@ public class CaixaRegistrationDataGeneratorTest {
         // when
         String result =
                 CaixaRegistrationDataGenerator.generateAppInstallationId(
-                        "", USER_AGENT_PREFIX_CONSTANT, Base64.getUrlEncoder());
+                        APP_NAME, "", USER_AGENT_PREFIX_CONSTANT, Base64.getUrlEncoder());
         // then
         assertThat(result).isEqualTo(DEFAULT_APP_INSTALLATION_ID);
     }

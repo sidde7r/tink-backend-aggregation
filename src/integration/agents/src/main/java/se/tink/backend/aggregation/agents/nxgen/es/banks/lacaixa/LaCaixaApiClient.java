@@ -4,11 +4,8 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaC
 
 import com.google.common.base.Strings;
 import java.util.Base64;
-import java.util.Optional;
 import javax.annotation.Nullable;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -74,7 +71,6 @@ public class LaCaixaApiClient {
     private final RandomValueGenerator randomValueGenerator;
 
     private UserDataResponse userDataCache;
-    private Cookie jSessionId;
 
     public SessionResponse initializeSession() {
 
@@ -87,17 +83,6 @@ public class LaCaixaApiClient {
 
         HttpResponse response =
                 createRequest(LaCaixaConstants.Urls.INIT_LOGIN).post(HttpResponse.class, request);
-
-        Optional<NewCookie> maybeJsessionId =
-                response.getCookies().stream()
-                        .filter(cookie -> ("JSESSIONID").equalsIgnoreCase(cookie.getName()))
-                        .findFirst();
-
-        if (maybeJsessionId.isPresent()) {
-            jSessionId = maybeJsessionId.get().toCookie();
-        } else {
-            log.info("JsessionId missing");
-        }
 
         return response.getBody(SessionResponse.class);
     }
@@ -281,18 +266,13 @@ public class LaCaixaApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-        RequestBuilder requestBuilder =
-                client.request(url)
-                        .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
-                        .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .accept(MediaType.APPLICATION_JSON_TYPE);
-
-        if (jSessionId != null) {
-            requestBuilder.cookie(jSessionId);
-        }
-
-        return requestBuilder;
+        return client.request(url)
+                .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
+                .header(
+                        HeaderKeys.X_REQUEST_ID,
+                        randomValueGenerator.getUUID().toString().toUpperCase())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 
     public ScaResponse initiateEnrolment() {
@@ -364,7 +344,10 @@ public class LaCaixaApiClient {
         if (appInstallationId == null) {
             appInstallationId =
                     CaixaRegistrationDataGenerator.generateAppInstallationId(
-                            username, "c", Base64.getEncoder());
+                            "com.thenetfirm.mobile.wapicon.WapIcon_iPhone",
+                            username,
+                            "c",
+                            Base64.getEncoder());
             if (StringUtils.isNotEmpty(username)) {
                 persistentStorage.put(PermStorage.APP_INSTALLATION_ID, appInstallationId);
             }

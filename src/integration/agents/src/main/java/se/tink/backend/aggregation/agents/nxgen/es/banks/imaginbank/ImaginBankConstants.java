@@ -181,6 +181,7 @@ public class ImaginBankConstants {
         public static final String UA_PREFIX = "no-cache";
         public static final String UA_APP_VERSION = "4.13.2";
         public static final String UA_PREFIX_CONSTANT = "e";
+        public static final String APP_NAME_AND_VARIANT = "es.lacaixa.mobile.imaginBank_iPhone";
     }
 
     public static final class HeaderKeys {

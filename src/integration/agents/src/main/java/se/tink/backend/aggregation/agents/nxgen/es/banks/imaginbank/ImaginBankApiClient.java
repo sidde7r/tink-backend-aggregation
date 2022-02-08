@@ -242,7 +242,10 @@ public class ImaginBankApiClient {
         if (appInstallationId == null) {
             appInstallationId =
                     CaixaRegistrationDataGenerator.generateAppInstallationId(
-                            username, HeaderValues.UA_PREFIX_CONSTANT, Base64.getUrlEncoder());
+                            HeaderValues.APP_NAME_AND_VARIANT,
+                            username,
+                            HeaderValues.UA_PREFIX_CONSTANT,
+                            Base64.getUrlEncoder());
             persistentStorage.put(APP_INSTALLATION_ID, appInstallationId);
         }
         return appInstallationId;
