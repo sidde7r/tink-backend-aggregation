@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.GetPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmablePayment;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.PaymentRequestResource;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.util.UrlParseUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentApiClient;
@@ -16,6 +17,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@AllArgsConstructor
+@Slf4j
 public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
     private static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
@@ -31,33 +34,6 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
     private final AgentConfiguration<LclConfiguration> configuration;
     private final LclRequestFactory lclRequestFactory;
     private final TokenFetcher tokenFetcher;
-    private final PaymentRequestResourceFactory paymentRequestResourceFactory;
-
-    public LclPaymentApiClient(
-            SessionStorage sessionStorage,
-            AgentConfiguration<LclConfiguration> configuration,
-            LclRequestFactory lclRequestFactory,
-            TokenFetcher tokenFetcher) {
-        this(
-                sessionStorage,
-                configuration,
-                lclRequestFactory,
-                tokenFetcher,
-                new PaymentRequestResourceFactory());
-    }
-
-    public LclPaymentApiClient(
-            SessionStorage sessionStorage,
-            AgentConfiguration<LclConfiguration> configuration,
-            LclRequestFactory lclRequestFactory,
-            TokenFetcher tokenFetcher,
-            PaymentRequestResourceFactory paymentRequestResourceFactory) {
-        this.sessionStorage = sessionStorage;
-        this.configuration = configuration;
-        this.lclRequestFactory = lclRequestFactory;
-        this.tokenFetcher = tokenFetcher;
-        this.paymentRequestResourceFactory = paymentRequestResourceFactory;
-    }
 
     @Override
     public void fetchToken() {
@@ -66,19 +42,13 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
     @Override
     public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
-        PaymentRequestResource paymentRequestResource =
-                paymentRequestResourceFactory.createPaymentRequestResource(request);
-
         sessionStorage.put(
                 REDIRECT_URL_LOCAL_KEY,
                 request.getSupplementaryData().getSuccessfulReportUrl() + CODE_CODE);
         HttpResponse httpResponse =
                 lclRequestFactory
-                        .createPaymentRequest(paymentRequestResource)
-                        .post(
-                                HttpResponse.class,
-                                paymentRequestResourceFactory.serializeBody(
-                                        paymentRequestResource));
+                        .createPaymentRequest(request)
+                        .post(HttpResponse.class);
         List<String> locationHeader = httpResponse.getHeaders().get(LOCATION);
         if (locationHeader.isEmpty()) {
             throw new MissingLocationException("Location does not exist in the headers");
@@ -104,12 +74,16 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
     @Override
     public GetPaymentResponse getPayment(String paymentId) {
-        GetPaymentRequest getPaymentRequest =
-                lclRequestFactory.getPaymentRequest(paymentId).get(GetPaymentRequest.class);
-        String statusCode = getPaymentRequest.getPaymentRequest().getPaymentInformationStatus();
-        return isStatusToBeConfirmed(statusCode)
-                ? confirmPaymentRequest(paymentId).getPaymentRequest().toPaymentResponse()
-                : getPaymentRequest.getPaymentRequest().toPaymentResponse();
+        ConfirmablePayment confirmablePayment =
+                lclRequestFactory.getPaymentRequest(paymentId).get(ConfirmablePayment.class);
+        ConfirmablePayment confirmedPayment = confirmPaymentIfNeeded(paymentId, confirmablePayment);
+        return confirmedPayment.getPaymentRequest().toPaymentResponse();
+    }
+
+    private ConfirmablePayment confirmPaymentIfNeeded(
+            String paymentId, ConfirmablePayment confirmablePayment) {
+        String paymentInformationStatus = confirmablePayment.getPaymentRequest().getPaymentInformationStatus();
+        return isStatusToBeConfirmed(paymentInformationStatus) ? confirmPaymentRequest(paymentId) : confirmablePayment;
     }
 
     private boolean isStatusToBeConfirmed(String statusCode) {
@@ -117,11 +91,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
                 && statusCode.equalsIgnoreCase(LCL_PAYMENT_STATUS_WAITING_FOR_CONFIRMATION);
     }
 
-    private GetPaymentRequest confirmPaymentRequest(String paymentId) {
-        ConfirmPaymentRequest confirmPaymentRequest =
-                lclRequestFactory.createConfirmPaymentRequest();
-        return lclRequestFactory
-                .confirmPaymentRequest(paymentId, confirmPaymentRequest)
-                .post(GetPaymentRequest.class, confirmPaymentRequest);
+    private ConfirmablePayment confirmPaymentRequest(String paymentId) {
+        return lclRequestFactory.confirmPaymentRequest(paymentId).post(ConfirmablePayment.class);
     }
 }

@@ -8,13 +8,13 @@ import static org.mockito.BDDMockito.then;
 
 import com.google.common.collect.ImmutableList;
 import javax.ws.rs.core.MultivaluedMap;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.GetPaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmablePayment;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.PaymentRequestResource;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.SupplementaryDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
@@ -29,15 +29,13 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class LclPaymentApiClientTest {
 
     @Mock private LclConfiguration lclConfiguration;
-    @Mock private GetPaymentRequest getPaymentRequest;
+    @Mock private ConfirmablePayment getPaymentRequest;
     @Mock private PaymentRequestResource paymentRequestResource;
     @Mock private GetPaymentResponse expectedPaymentResponse;
     @Mock private RequestBuilder confirmRequestBuilder;
     @Mock private PaymentRequestResource confirmingPaymentRequestResource;
-    @Mock private GetPaymentRequest confirmingGetPaymentRequest;
-    @Mock private ConfirmPaymentRequest confirmPaymentRequest;
+    @Mock private ConfirmablePayment confirmingGetPaymentRequest;
     @Mock private CreatePaymentRequest createPaymentRequest;
-    @Mock private PaymentRequestResource requestResource;
     @Mock private SupplementaryDataEntity dataEntity;
     @Mock private RequestBuilder requestBuilder;
     @Mock private HttpResponse httpResponse;
@@ -47,25 +45,23 @@ public class LclPaymentApiClientTest {
     @Mock private AgentConfiguration<LclConfiguration> agentConfiguration;
     @Mock private LclRequestFactory lclRequestFactory;
     @Mock private TokenFetcher tokenFetcher;
-    @Mock private PaymentRequestResourceFactory resourceFactory;
+    private LclPaymentApiClient paymentApiClient;
+
+    @Before
+    public void setUp() throws Exception {
+        paymentApiClient =
+                new LclPaymentApiClient(
+                        sessionStorage, agentConfiguration, lclRequestFactory, tokenFetcher);
+    }
 
     @Test
     public void shouldCreatePaymentRequestAndExecuteIt() {
         // given:
-        LclPaymentApiClient paymentApiClient =
-                new LclPaymentApiClient(
-                        sessionStorage,
-                        agentConfiguration,
-                        lclRequestFactory,
-                        tokenFetcher,
-                        resourceFactory);
         given(dataEntity.getSuccessfulReportUrl()).willReturn("testUrl");
         given(createPaymentRequest.getSupplementaryData()).willReturn(dataEntity);
-        given(resourceFactory.createPaymentRequestResource(createPaymentRequest))
-                .willReturn(requestResource);
-        given(lclRequestFactory.createPaymentRequest(requestResource)).willReturn(requestBuilder);
-        given(resourceFactory.serializeBody(requestResource)).willReturn("body");
-        given(requestBuilder.post(eq(HttpResponse.class), eq("body"))).willReturn(httpResponse);
+        given(lclRequestFactory.createPaymentRequest(createPaymentRequest))
+                .willReturn(requestBuilder);
+        given(requestBuilder.post(eq(HttpResponse.class))).willReturn(httpResponse);
         given(headers.get("location")).willReturn(ImmutableList.of("ignore/ignore/locationValue"));
         given(httpResponse.getHeaders()).willReturn(headers);
         given(httpResponse.getBody(CreatePaymentResponse.class)).willReturn(expectedResponse);
@@ -75,8 +71,8 @@ public class LclPaymentApiClientTest {
 
         // then:
         then(sessionStorage).should().put(eq("FULL_REDIRECT_URL"), eq("testUrl&code=code"));
-        then(lclRequestFactory).should().createPaymentRequest(requestResource);
-        then(requestBuilder).should().post(eq(HttpResponse.class), eq("body"));
+        then(lclRequestFactory).should().createPaymentRequest(createPaymentRequest);
+        then(requestBuilder).should().post(eq(HttpResponse.class));
         then(sessionStorage).should().put(eq("PAYMENT_ID"), eq("locationValue"));
         then(httpResponse).should().getBody(eq(CreatePaymentResponse.class));
         assertThat(actualResponse).isEqualTo(expectedResponse);
@@ -85,20 +81,11 @@ public class LclPaymentApiClientTest {
     @Test
     public void shouldThrowExceptionWhenThereIsNoLocationInResponse() {
         // given:
-        LclPaymentApiClient paymentApiClient =
-                new LclPaymentApiClient(
-                        sessionStorage,
-                        agentConfiguration,
-                        lclRequestFactory,
-                        tokenFetcher,
-                        resourceFactory);
         given(dataEntity.getSuccessfulReportUrl()).willReturn("testUrl");
         given(createPaymentRequest.getSupplementaryData()).willReturn(dataEntity);
-        given(resourceFactory.createPaymentRequestResource(createPaymentRequest))
-                .willReturn(requestResource);
-        given(lclRequestFactory.createPaymentRequest(requestResource)).willReturn(requestBuilder);
-        given(resourceFactory.serializeBody(requestResource)).willReturn("body");
-        given(requestBuilder.post(eq(HttpResponse.class), eq("body"))).willReturn(httpResponse);
+        given(lclRequestFactory.createPaymentRequest(createPaymentRequest))
+                .willReturn(requestBuilder);
+        given(requestBuilder.post(eq(HttpResponse.class))).willReturn(httpResponse);
         given(headers.get("location")).willReturn(ImmutableList.of());
         given(httpResponse.getHeaders()).willReturn(headers);
 
@@ -108,8 +95,8 @@ public class LclPaymentApiClientTest {
 
         // then:
         then(sessionStorage).should().put(eq("FULL_REDIRECT_URL"), eq("testUrl&code=code"));
-        then(lclRequestFactory).should().createPaymentRequest(requestResource);
-        then(requestBuilder).should().post(eq(HttpResponse.class), eq("body"));
+        then(lclRequestFactory).should().createPaymentRequest(createPaymentRequest);
+        then(requestBuilder).should().post(eq(HttpResponse.class));
 
         assertThat(throwable).isNotNull();
         assertThat(throwable).isInstanceOf(MissingLocationException.class);
@@ -117,15 +104,6 @@ public class LclPaymentApiClientTest {
 
     @Test
     public void shouldFetchToken() {
-        // given:
-        LclPaymentApiClient paymentApiClient =
-                new LclPaymentApiClient(
-                        sessionStorage,
-                        agentConfiguration,
-                        lclRequestFactory,
-                        tokenFetcher,
-                        resourceFactory);
-
         // when:
         paymentApiClient.fetchToken();
 
@@ -135,14 +113,6 @@ public class LclPaymentApiClientTest {
 
     @Test
     public void shouldFindPayment() {
-        // given:
-        LclPaymentApiClient paymentApiClient =
-                new LclPaymentApiClient(
-                        sessionStorage,
-                        agentConfiguration,
-                        lclRequestFactory,
-                        tokenFetcher,
-                        resourceFactory);
 
         String authUrl = "http://something.com/redirect?id=123";
         given(lclConfiguration.getClientId()).willReturn("clientIdValue");
@@ -169,18 +139,10 @@ public class LclPaymentApiClientTest {
     @Test
     public void shouldGetPaymentByPaymentId() {
         // given:
-        LclPaymentApiClient paymentApiClient =
-                new LclPaymentApiClient(
-                        sessionStorage,
-                        agentConfiguration,
-                        lclRequestFactory,
-                        tokenFetcher,
-                        resourceFactory);
-
         String paymentId = "paymentIdValue";
         given(paymentRequestResource.getPaymentInformationStatus()).willReturn("statusValue");
         given(getPaymentRequest.getPaymentRequest()).willReturn(paymentRequestResource);
-        given(requestBuilder.get(eq(GetPaymentRequest.class))).willReturn(getPaymentRequest);
+        given(requestBuilder.get(eq(ConfirmablePayment.class))).willReturn(getPaymentRequest);
         given(lclRequestFactory.getPaymentRequest(eq(paymentId))).willReturn(requestBuilder);
         given(paymentRequestResource.toPaymentResponse()).willReturn(expectedPaymentResponse);
 
@@ -195,27 +157,18 @@ public class LclPaymentApiClientTest {
     @Test
     public void shouldConfirmPaymentWhenWaitingForConfirmation() {
         // given:
-        LclPaymentApiClient paymentApiClient =
-                new LclPaymentApiClient(
-                        sessionStorage,
-                        agentConfiguration,
-                        lclRequestFactory,
-                        tokenFetcher,
-                        resourceFactory);
-
         String paymentId = "paymentIdValue";
         given(confirmingGetPaymentRequest.getPaymentRequest())
                 .willReturn(confirmingPaymentRequestResource);
         given(paymentRequestResource.getPaymentInformationStatus()).willReturn("ACTC");
         given(getPaymentRequest.getPaymentRequest()).willReturn(paymentRequestResource);
-        given(requestBuilder.get(eq(GetPaymentRequest.class))).willReturn(getPaymentRequest);
+        given(requestBuilder.get(eq(ConfirmablePayment.class))).willReturn(getPaymentRequest);
         given(lclRequestFactory.getPaymentRequest(eq(paymentId))).willReturn(requestBuilder);
         given(confirmingPaymentRequestResource.toPaymentResponse())
                 .willReturn(expectedPaymentResponse);
-        given(lclRequestFactory.createConfirmPaymentRequest()).willReturn(confirmPaymentRequest);
-        given(lclRequestFactory.confirmPaymentRequest(eq(paymentId), eq(confirmPaymentRequest)))
+        given(lclRequestFactory.confirmPaymentRequest(eq(paymentId)))
                 .willReturn(confirmRequestBuilder);
-        given(confirmRequestBuilder.post(eq(GetPaymentRequest.class), eq(confirmPaymentRequest)))
+        given(confirmRequestBuilder.post(eq(ConfirmablePayment.class)))
                 .willReturn(confirmingGetPaymentRequest);
 
         // when:
@@ -223,7 +176,6 @@ public class LclPaymentApiClientTest {
 
         // then:
         then(lclRequestFactory).should().getPaymentRequest(eq(paymentId));
-        then(lclRequestFactory).should().createConfirmPaymentRequest();
         assertThat(actualPaymentResponse).isEqualTo(expectedPaymentResponse);
     }
 }

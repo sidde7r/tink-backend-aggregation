@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import java.util.Optional;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -22,12 +23,17 @@ public class TokenFetcherTest {
     @Mock private SessionStorage sessionStorage;
     @Mock private TokenResponseDto tokenResponseDto;
     @Mock private OAuth2Token oAuth2Token;
+    private TokenFetcher tokenFetcher;
+
+    @Before
+    public void setUp() {
+        tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
+    }
 
     @Test
     public void shouldFetchTokenIfInvalid() {
 
         // given:
-        TokenFetcher tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
         Optional<OAuth2Token> tokenOptional = Optional.empty();
         given(sessionStorage.get(eq("pis_token"), eq(OAuth2Token.class))).willReturn(tokenOptional);
         given(tokenResponseDto.toOauthToken()).willReturn(oAuth2Token);
@@ -47,7 +53,6 @@ public class TokenFetcherTest {
     public void shouldNotFetchTokenIsValid() {
 
         // given:
-        TokenFetcher tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
         given(oAuth2Token.isValid()).willReturn(true);
         Optional<OAuth2Token> tokenOptional = Optional.of(oAuth2Token);
         given(sessionStorage.get(eq("pis_token"), eq(OAuth2Token.class))).willReturn(tokenOptional);
@@ -64,7 +69,6 @@ public class TokenFetcherTest {
     public void shouldReuseToken() {
 
         // given:
-        TokenFetcher tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
         given(oAuth2Token.canUseAccessToken()).willReturn(true);
         Optional<OAuth2Token> tokenOptional = Optional.of(oAuth2Token);
         given(sessionStorage.get(eq("pis_token"), eq(OAuth2Token.class))).willReturn(tokenOptional);
@@ -82,7 +86,6 @@ public class TokenFetcherTest {
     public void shouldRefetchTokenIfCannotBeUsed() {
 
         // given:
-        TokenFetcher tokenFetcher = new TokenFetcher(tokenApiClient, sessionStorage);
         given(oAuth2Token.canUseAccessToken()).willReturn(false);
         Optional<OAuth2Token> tokenOptional = Optional.of(oAuth2Token);
         given(sessionStorage.get(eq("pis_token"), eq(OAuth2Token.class))).willReturn(tokenOptional);

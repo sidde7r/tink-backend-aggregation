@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclAgent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.PaymentRequestResource;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.api.Psd2Headers.Keys;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -30,46 +31,55 @@ public class LclRequestFactory {
     private final TinkHttpClient client;
     private final UnleashClient unleashClient;
     private final TokenFetcher tokenFetcher;
+    private final PaymentBodyFactory paymentBodyFactory;
+
+    public LclRequestFactory(
+            LclHeaderValueProvider headerValueProvider,
+            TinkHttpClient client,
+            UnleashClient unleashClient,
+            TokenFetcher tokenFetcher) {
+        this(headerValueProvider, client, unleashClient, tokenFetcher, new PaymentBodyFactory());
+    }
 
     public RequestBuilder getPaymentRequest(String paymentId) {
         RequestBuilder request =
-                createRequestAndSetHeaders(
+                createRequestWithHeaders(
                         createPaymentPathWithPaymentId(GET_PAYMENT_PATH, paymentId));
         request = acceptJson(request);
         return request;
     }
 
-    public RequestBuilder confirmPaymentRequest(
-            String paymentId, ConfirmPaymentRequest confirmPaymentRequest) {
+    public RequestBuilder confirmPaymentRequest(String paymentId) {
+        ConfirmPaymentRequest confirmPaymentRequest = paymentBodyFactory.createConfirmPaymentRequest();
         RequestBuilder request =
-                createRequestAndSetHeaders(
+                createRequestWithHeaders(
                         createPaymentPathWithPaymentId(CONFIRM_PAYMENT_PATH, paymentId),
                         confirmPaymentRequest);
-        request = acceptJson(request);
+        request = acceptJson(request).body(confirmPaymentRequest);
         return request;
     }
 
-    public RequestBuilder createPaymentRequest(PaymentRequestResource paymentRequestResource) {
+    public RequestBuilder createPaymentRequest(CreatePaymentRequest paymentRequest) {
+        PaymentRequestResource requestResource =
+                paymentBodyFactory.createPaymentRequestResource(paymentRequest);
+
         RequestBuilder request =
-                createRequestAndSetHeaders(createUrl(CREATE_PAYMENT_PATH), paymentRequestResource);
+                createRequestWithHeaders(createUrl(CREATE_PAYMENT_PATH), requestResource);
 
         if (unleashClient.isToggleEnabled(Toggle.of(APP_2_APP_REDIRECT_TOGGLE).build())) {
             request.header(APP_2APP_CLIENT_TYPE_HEADER, APP_2APP_CLIENT_TYPE);
         }
 
         request = acceptJson(request);
+        request.body(paymentBodyFactory.serializeBody(requestResource));
         return request;
     }
 
-    public ConfirmPaymentRequest createConfirmPaymentRequest() {
-        return new ConfirmPaymentRequest();
+    private RequestBuilder createRequestWithHeaders(URL url) {
+        return createRequestWithHeaders(url, null);
     }
 
-    private RequestBuilder createRequestAndSetHeaders(URL url) {
-        return createRequestAndSetHeaders(url, null);
-    }
-
-    private <T> RequestBuilder createRequestAndSetHeaders(URL url, T body) {
+    private <T> RequestBuilder createRequestWithHeaders(URL url, T body) {
         final String requestId = UUID.randomUUID().toString();
         final String date = headerValueProvider.getDateHeaderValue();
         final String digest = headerValueProvider.getDigestHeaderValue(body);

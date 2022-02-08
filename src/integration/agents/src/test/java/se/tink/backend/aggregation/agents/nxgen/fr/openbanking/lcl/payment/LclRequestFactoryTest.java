@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -17,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.PaymentRequestResource;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -28,22 +30,33 @@ import se.tink.libraries.unleash.model.Toggle;
 public class LclRequestFactoryTest {
 
     @Mock private ConfirmPaymentRequest confirmPaymentRequest;
-    @Mock private PaymentRequestResource paymentRequestResource;
+    @Mock private CreatePaymentRequest createPaymentRequest;
     @Mock private OAuth2Token oAuth2Token;
     @Mock private LclHeaderValueProvider headerValueProvider;
     @Mock private TinkHttpClient tinkHttpClient;
     @Mock private UnleashClient unleashClient;
     @Mock private TokenFetcher tokenFetcher;
     @Mock private RequestBuilder requestBuilder;
+    @Mock private PaymentBodyFactory paymentBodyFactory;
+    @Mock private PaymentRequestResource paymentRequestResource;
+
+    private LclRequestFactory lclRequestFactory;
+
+    @Before
+    public void setUp() {
+        this.lclRequestFactory =
+                new LclRequestFactory(
+                        headerValueProvider,
+                        tinkHttpClient,
+                        unleashClient,
+                        tokenFetcher,
+                        paymentBodyFactory);
+    }
 
     @Test
     public void shouldCreateGetPaymentRequest() {
 
         // given:
-        LclRequestFactory lclRequestFactory =
-                new LclRequestFactory(
-                        headerValueProvider, tinkHttpClient, unleashClient, tokenFetcher);
-
         mockHeaderProviderWithNullBody();
         String paymentId = "paymentIdValue";
         ArgumentMatcher<URL> urlArgumentMatcher =
@@ -63,10 +76,7 @@ public class LclRequestFactoryTest {
     public void shouldCreateConfirmPaymentRequest() {
 
         // given:
-        LclRequestFactory lclRequestFactory =
-                new LclRequestFactory(
-                        headerValueProvider, tinkHttpClient, unleashClient, tokenFetcher);
-
+        given(paymentBodyFactory.createConfirmPaymentRequest()).willReturn(confirmPaymentRequest);
         mockHeaderProviderWithBody(confirmPaymentRequest);
 
         String paymentId = "paymentIdValue";
@@ -77,37 +87,36 @@ public class LclRequestFactoryTest {
                                 .contains("/pisp/payment-requests/" + paymentId + "/confirmation");
 
         mockRequestBuilder(urlArgumentMatcher);
+        given(requestBuilder.body(any(ConfirmPaymentRequest.class))).willReturn(requestBuilder);
 
         // when:
-        RequestBuilder actual =
-                lclRequestFactory.confirmPaymentRequest(paymentId, confirmPaymentRequest);
+        RequestBuilder actual = lclRequestFactory.confirmPaymentRequest(paymentId);
 
         // then:
         assertThat(actual).isEqualTo(requestBuilder);
+        then(paymentBodyFactory).should().createConfirmPaymentRequest();
         verifyHeaderProviderWithDigest(confirmPaymentRequest);
         verifyRequestBuilder(urlArgumentMatcher);
+        then(requestBuilder).should().body(confirmPaymentRequest);
     }
 
     @Test
     public void shouldCreatePaymentRequest() {
 
         // given:
-        LclRequestFactory lclRequestFactory =
-                new LclRequestFactory(
-                        headerValueProvider, tinkHttpClient, unleashClient, tokenFetcher);
-
+        given(paymentBodyFactory.createPaymentRequestResource(eq(createPaymentRequest)))
+                .willReturn(paymentRequestResource);
         mockHeaderProviderWithBody(paymentRequestResource);
-
         ArgumentMatcher<URL> urlArgumentMatcher =
                 argument -> argument.getUrl().get().contains("/pisp/payment-requests");
-
         mockRequestBuilder(urlArgumentMatcher);
 
         // when:
-        RequestBuilder actual = lclRequestFactory.createPaymentRequest(paymentRequestResource);
+        RequestBuilder actual = lclRequestFactory.createPaymentRequest(createPaymentRequest);
 
         // then:
         assertThat(actual).isEqualTo(requestBuilder);
+        then(paymentBodyFactory).should().createPaymentRequestResource(eq(createPaymentRequest));
         verifyHeaderProviderWithDigest(paymentRequestResource);
         verifyRequestBuilder(urlArgumentMatcher);
     }
@@ -116,10 +125,8 @@ public class LclRequestFactoryTest {
     public void shouldCreatePaymentRequestForApp2App() {
 
         // given:
-        LclRequestFactory lclRequestFactory =
-                new LclRequestFactory(
-                        headerValueProvider, tinkHttpClient, unleashClient, tokenFetcher);
-
+        given(paymentBodyFactory.createPaymentRequestResource(eq(createPaymentRequest)))
+            .willReturn(paymentRequestResource);
         given(unleashClient.isToggleEnabled(any(Toggle.class)))
                 .willReturn(
                         true); // Toggle class do not have equals or getters to check toggle name
@@ -134,10 +141,11 @@ public class LclRequestFactoryTest {
                 .willReturn(requestBuilder);
 
         // when:
-        RequestBuilder actual = lclRequestFactory.createPaymentRequest(paymentRequestResource);
+        RequestBuilder actual = lclRequestFactory.createPaymentRequest(createPaymentRequest);
 
         // then:
         assertThat(actual).isEqualTo(requestBuilder);
+        then(paymentBodyFactory).should().createPaymentRequestResource(eq(createPaymentRequest));
         verifyHeaderProviderWithDigest(paymentRequestResource);
         verifyRequestBuilder(urlArgumentMatcher);
         then(requestBuilder).should().header(eq("PSU-App2app-Client-Type"), eq("retail"));
