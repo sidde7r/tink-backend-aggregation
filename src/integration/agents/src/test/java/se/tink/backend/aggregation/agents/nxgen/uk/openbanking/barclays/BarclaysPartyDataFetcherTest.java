@@ -86,10 +86,9 @@ public class BarclaysPartyDataFetcherTest {
     public void shouldNotFetchDataForAccountsWithoutAccountType() {
         // given
         final String CURRENT_ACCOUNT =
-            "{\"AccountId\":\"xxxiddddxxxx\",\"Currency\":\"GBP\",\"AccountSubType\":\"CurrentAccount\",\"Nickname\":\"someNickname\",\"Account\":[{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"},{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"1234 NAIA 5678 1234 55 1111\",\"Name\":\"Myszo Jelen\"}]}";
+                "{\"AccountId\":\"xxxiddddxxxx\",\"Currency\":\"GBP\",\"AccountSubType\":\"CurrentAccount\",\"Nickname\":\"someNickname\",\"Account\":[{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"},{\"SchemeName\":\"UK.OBIE.IBAN\",\"Identification\":\"1234 NAIA 5678 1234 55 1111\",\"Name\":\"Myszo Jelen\"}]}";
         AccountEntity account =
-            SerializationUtils.deserializeFromString(
-                CURRENT_ACCOUNT, AccountEntity.class);
+                SerializationUtils.deserializeFromString(CURRENT_ACCOUNT, AccountEntity.class);
 
         // when
         List<PartyV31Entity> result = barclaysFetcher.fetchAccountParties(account);
