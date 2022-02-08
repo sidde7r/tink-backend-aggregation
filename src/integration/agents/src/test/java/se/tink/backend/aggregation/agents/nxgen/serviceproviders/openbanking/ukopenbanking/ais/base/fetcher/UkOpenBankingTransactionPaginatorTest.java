@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -181,6 +182,11 @@ public class UkOpenBankingTransactionPaginatorTest {
         @Override
         public LocalDateTime now(ZoneId zoneId) {
             return currentTime;
+        }
+
+        @Override
+        public ZonedDateTime nowZonedDateTime(ZoneId zoneId) {
+            return null;
         }
 
         @Override

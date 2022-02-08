@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 public final class ConstantLocalDateTimeSource implements LocalDateTimeSource {
 
@@ -15,6 +16,11 @@ public final class ConstantLocalDateTimeSource implements LocalDateTimeSource {
     @Override
     public LocalDateTime now(ZoneId zoneId) {
         return LocalDateTime.ofInstant(getInstant(zoneId), zoneId);
+    }
+
+    @Override
+    public ZonedDateTime nowZonedDateTime(ZoneId zoneId) {
+        return ZonedDateTime.ofInstant(getInstant(), zoneId);
     }
 
     @Override

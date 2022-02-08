@@ -2,7 +2,7 @@ package se.tink.libraries.credentials.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
@@ -17,7 +17,7 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
     private String refreshId;
     private RefreshScope refreshScope;
     private Integer refreshPriority;
-    private LocalDateTime expiryDate;
+    private ZonedDateTime expiryDate;
 
     public static Builder builder() {
         return new Builder();
@@ -35,7 +35,7 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
         private Set<String> requestedAccountIds;
         private UserAvailability userAvailability;
         private RefreshScope refreshScope;
-        private LocalDateTime expiryDate;
+        private ZonedDateTime expiryDate;
 
         public Builder credentials(Credentials credentials) {
             this.credentials = credentials;
@@ -92,7 +92,7 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
             return this;
         }
 
-        public Builder expiryDate(LocalDateTime expiryDate) {
+        public Builder expiryDate(ZonedDateTime expiryDate) {
             this.expiryDate = expiryDate;
             return this;
         }
@@ -176,11 +176,11 @@ public class RefreshInformationRequest extends CredentialsRequest implements Has
         this.refreshPriority = refreshPriority;
     }
 
-    public LocalDateTime getExpiryDate() {
+    public ZonedDateTime getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(LocalDateTime expiryDate) {
+    public void setExpiryDate(ZonedDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
 }

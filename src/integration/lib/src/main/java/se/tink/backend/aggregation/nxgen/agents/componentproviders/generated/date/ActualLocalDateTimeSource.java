@@ -4,6 +4,8 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 public final class ActualLocalDateTimeSource implements LocalDateTimeSource {
 
@@ -15,6 +17,11 @@ public final class ActualLocalDateTimeSource implements LocalDateTimeSource {
     @Override
     public LocalDateTime now(ZoneId zoneId) {
         return LocalDateTime.now(zoneId);
+    }
+
+    @Override
+    public ZonedDateTime nowZonedDateTime(ZoneId zoneId) {
+        return ZonedDateTime.now(ZoneOffset.UTC);
     }
 
     @Override

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.da
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public interface LocalDateTimeSource {
 
@@ -31,6 +32,8 @@ public interface LocalDateTimeSource {
     }
 
     LocalDateTime now(ZoneId zoneId);
+
+    ZonedDateTime nowZonedDateTime(ZoneId zoneId);
 
     Instant getInstant(ZoneId zoneId);
 }

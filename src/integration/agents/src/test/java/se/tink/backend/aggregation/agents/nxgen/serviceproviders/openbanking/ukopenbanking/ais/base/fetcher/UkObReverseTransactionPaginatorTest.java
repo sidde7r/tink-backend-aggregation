@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -230,6 +231,11 @@ public class UkObReverseTransactionPaginatorTest {
         @Override
         public LocalDateTime now(ZoneId zoneId) {
             return currentTime;
+        }
+
+        @Override
+        public ZonedDateTime nowZonedDateTime(ZoneId zoneId) {
+            return null;
         }
 
         @Override
