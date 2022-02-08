@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.MO
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import org.apache.http.client.config.CookieSpecs;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -42,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.DefaultCookieAwareResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
@@ -70,7 +72,8 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
                         client,
                         persistentStorage,
                         credentials.getField(Field.Key.USERNAME),
-                        componentProvider.getRandomValueGenerator());
+                        componentProvider.getRandomValueGenerator(),
+                        sessionStorage);
 
         LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(apiClient);
         investmentRefreshController =
@@ -111,6 +114,9 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
                         RetryFilterValues.MAX_ATTEMPTS,
                         RetryFilterValues.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new LaCaixaSessionExpiredFilter(persistentStorage));
+        client.setResponseStatusHandler(
+                new DefaultCookieAwareResponseStatusHandler(sessionStorage));
+        client.setCookieSpec(CookieSpecs.STANDARD);
     }
 
     @Override

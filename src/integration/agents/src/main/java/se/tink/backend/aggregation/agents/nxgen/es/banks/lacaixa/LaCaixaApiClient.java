@@ -53,6 +53,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.caixa.utils.CaixaRegistrationDataGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.http.CookieRepository;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -60,6 +61,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -69,6 +71,7 @@ public class LaCaixaApiClient {
     private final PersistentStorage persistentStorage;
     private final String username;
     private final RandomValueGenerator randomValueGenerator;
+    private final SessionStorage sessionStorage;
 
     private UserDataResponse userDataCache;
 
@@ -266,13 +269,20 @@ public class LaCaixaApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
-                .header(
-                        HeaderKeys.X_REQUEST_ID,
-                        randomValueGenerator.getUUID().toString().toUpperCase())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        CookieRepository cookieRepository = CookieRepository.getInstance(sessionStorage);
+
+        RequestBuilder requestBuilder =
+                client.request(url)
+                        .header(HeaderKeys.USER_AGENT, retrieveUserAgent())
+                        .header(
+                                HeaderKeys.X_REQUEST_ID,
+                                randomValueGenerator.getUUID().toString().toUpperCase())
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+
+        cookieRepository.getCookies().stream().forEach(cookie -> requestBuilder.cookie(cookie));
+
+        return requestBuilder;
     }
 
     public ScaResponse initiateEnrolment() {
