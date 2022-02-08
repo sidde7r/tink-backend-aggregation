@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.consent.SessionKiller;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConsentValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -48,7 +48,7 @@ public class ConsentErrorFilter extends Filter {
                         + " with HTTP status: `%s` and ErrorCodes:`%s`";
         String path = request.getUrl().toUri().getPath();
         int status = response.getStatus();
-        List<String> errorCodes = response.getBody(ErrorResponse.class).getErrorCodes();
+        List<String> errorCodes = response.getBody(UkObErrorResponse.class).getErrorCodes();
         return String.format(messagePattern, path, status, errorCodes);
     }
 }

@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.ErrorMessage;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -16,7 +16,7 @@ public class UkOpenBankingPaymentErrorHandler {
 
     public static PaymentException getPaymentError(HttpResponseException e) {
         HttpResponse httpResponse = e.getResponse();
-        ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
+        UkObErrorResponse body = httpResponse.getBody(UkObErrorResponse.class);
         if (body != null) {
 
             if (body.getErrorMessages().contains(ErrorMessage.EXCEED_DAILY_LIMIT_FAILURE)) {

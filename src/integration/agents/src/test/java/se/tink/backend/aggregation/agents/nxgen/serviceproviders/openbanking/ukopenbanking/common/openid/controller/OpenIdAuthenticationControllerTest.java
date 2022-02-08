@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,16 +36,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.ErrorDescriptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.OpenIdErrorResponse;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenIdAuthenticationControllerTest {
@@ -53,6 +57,9 @@ public class OpenIdAuthenticationControllerTest {
     private static final String DUMMY_ACCESS_TOKEN = "dummy_access_token";
     private static final String DUMMY_REFRESH_TOKEN = "dummy_refresh_token";
     private static final String DUMMY_ID_TOKEN = "dummy_id_token";
+    private static final String SERVER_ERROR = "{\"error\":\"server_error\"}";
+    private static final String ACCESS_DENIED =
+            "{\"error\":\"access denied\",\"error_description\":\"access denied\"}";
     private static final Long DUMMY_ACCESS_EXPIRES_IN_SECONDS = 1223L;
     private static final Long DUMMY_REFRESH_EXPIRES_IN_SECONDS = 1223L;
 
@@ -280,6 +287,70 @@ public class OpenIdAuthenticationControllerTest {
                 .hasMessage("Description of some other server error");
     }
 
+    @Test
+    public void
+            shouldThrowSessionExceptionErrorWhenAccessDeniedOccursAndErrorDescriptionIsAccessDenied() {
+        // given
+        HttpResponseException responseException = mockHttpResponseException(403, ACCESS_DENIED);
+        when(apiClient.requestClientCredentials(ClientMode.ACCOUNTS)).thenThrow(responseException);
+        // when
+        Throwable throwable = catchThrowable(() -> openIdAuthenticationController.init());
+
+        // then
+        assertThat(throwable).isExactlyInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void shouldThrowSessionExceptionErrorWhenServerErrorOccurs() {
+        // given
+        HttpResponseException responseException = mockHttpResponseException(400, SERVER_ERROR);
+        when(apiClient.requestClientCredentials(ClientMode.ACCOUNTS)).thenThrow(responseException);
+        // when
+        Throwable throwable = catchThrowable(() -> openIdAuthenticationController.init());
+
+        // then
+        assertThat(throwable).isExactlyInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void shouldThrowSessionExceptionErrorWhen500HttpStatusOccurs() {
+        // given
+        HttpResponse response = mock(HttpResponse.class);
+        HttpResponseException responseException = new HttpResponseException(null, response);
+        given(response.getStatus()).willReturn(500);
+        when(apiClient.requestClientCredentials(ClientMode.ACCOUNTS)).thenThrow(responseException);
+        // when
+        Throwable throwable = catchThrowable(() -> openIdAuthenticationController.init());
+
+        // then
+        assertThat(throwable).isExactlyInstanceOf(BankServiceException.class);
+    }
+
+    @Test
+    public void shouldThrowSessionExceptionErrorWhenClientTokenRequestFailed() {
+        // given
+        HttpResponse response = mock(HttpResponse.class);
+        HttpResponseException responseException = new HttpResponseException(null, response);
+        when(apiClient.requestClientCredentials(ClientMode.ACCOUNTS)).thenThrow(responseException);
+        // when
+        Throwable throwable = catchThrowable(() -> openIdAuthenticationController.init());
+
+        // then
+        assertThat(throwable).isExactlyInstanceOf(SessionException.class);
+    }
+
+    @Test
+    public void shouldThrowSessionExceptionErrorWhenHttpClientExceptionOccurs() {
+        // given
+        HttpClientException responseException = new HttpClientException(null);
+        when(apiClient.requestClientCredentials(ClientMode.ACCOUNTS)).thenThrow(responseException);
+        // when
+        Throwable throwable = catchThrowable(() -> openIdAuthenticationController.init());
+
+        // then
+        assertThat(throwable).isExactlyInstanceOf(SessionException.class);
+    }
+
     private OpenIdAuthenticationController initOpenIdAuthenticationController() {
         return new OpenIdAuthenticationController(
                 persistentStorage,
@@ -315,5 +386,15 @@ public class OpenIdAuthenticationControllerTest {
 
     private OAuth2Token createNotRefreshableOAuth2Token() {
         return OAuth2Token.create(DUMMY_TOKEN_TYPE, DUMMY_ACCESS_TOKEN, null, DUMMY_ID_TOKEN, 0, 0);
+    }
+
+    private HttpResponseException mockHttpResponseException(int status, String errorResponse) {
+        HttpResponse response = mock(HttpResponse.class);
+        HttpResponseException responseException = new HttpResponseException(null, response);
+        OpenIdErrorResponse openIdErrorResponse =
+                SerializationUtils.deserializeFromString(errorResponse, OpenIdErrorResponse.class);
+        given(response.getStatus()).willReturn(status);
+        given(response.getBody(OpenIdErrorResponse.class)).willReturn(openIdErrorResponse);
+        return responseException;
     }
 }

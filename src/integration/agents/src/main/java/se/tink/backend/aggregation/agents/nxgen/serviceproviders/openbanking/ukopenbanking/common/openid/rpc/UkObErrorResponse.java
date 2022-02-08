@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Setter
 @Getter
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class ErrorResponse {
+public class UkObErrorResponse {
 
     private String code;
     private String message;

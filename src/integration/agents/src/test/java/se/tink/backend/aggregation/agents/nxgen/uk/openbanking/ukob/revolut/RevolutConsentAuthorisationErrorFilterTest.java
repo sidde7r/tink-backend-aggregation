@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.revolut.common.filter.RevolutConsentAuthorisationErrorFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -30,9 +30,9 @@ public class RevolutConsentAuthorisationErrorFilterTest {
     public void shouldCheckConsentResponseUkRevolutWhereConsentIsUnauthorized() throws Exception {
         // given
         HttpResponse response = mock(HttpResponse.class);
-        ErrorResponse errorResponse = createErrorResponse();
+        UkObErrorResponse errorResponse = createErrorResponse();
         given(response.getStatus()).willReturn(401);
-        given(response.getBody(ErrorResponse.class)).willReturn(errorResponse);
+        given(response.getBody(UkObErrorResponse.class)).willReturn(errorResponse);
         given(nextFilter.handle(any())).willReturn(response);
 
         // when
@@ -45,7 +45,7 @@ public class RevolutConsentAuthorisationErrorFilterTest {
                         "[RevolutConsentAuthorisationErrorFilter] Consent has been revoked by the bank with message: Consent is not authorized");
     }
 
-    private ErrorResponse createErrorResponse() throws Exception {
+    private UkObErrorResponse createErrorResponse() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(
                 "{"
@@ -56,6 +56,6 @@ public class RevolutConsentAuthorisationErrorFilterTest {
                         + "\"ErrorCode\":\"UK.OBIE.Resource.Unauthorized\","
                         + "\"Message\":\"Consent is not authorized\""
                         + "}]}",
-                ErrorResponse.class);
+                UkObErrorResponse.class);
     }
 }

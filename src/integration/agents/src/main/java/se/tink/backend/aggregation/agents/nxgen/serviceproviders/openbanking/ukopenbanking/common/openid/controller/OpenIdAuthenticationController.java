@@ -84,11 +84,9 @@ public class OpenIdAuthenticationController
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        OAuth2Token clientOAuth2Token =
-                retryExecutor.execute(
-                        () -> apiClient.requestClientCredentials(ClientMode.ACCOUNTS));
-        authenticationValidator.validateClientToken(clientOAuth2Token);
+        OAuth2Token clientOAuth2Token = requestClientToken();
         apiClient.instantiateAisAuthFilter(clientOAuth2Token);
+
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
@@ -197,6 +195,12 @@ public class OpenIdAuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
+    }
+
+    private OAuth2Token requestClientToken() {
+        ClientTokenRequester clientTokenRequester =
+                new OpenIdClientTokenRequester(apiClient, authenticationValidator);
+        return clientTokenRequester.requestClientToken();
     }
 
     private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {

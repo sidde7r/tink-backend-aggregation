@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -34,6 +34,6 @@ public class ClydesdaleGroupAuthorisationFilter extends Filter {
     }
 
     private boolean hasErrorCodeForbidden(HttpResponse response) {
-        return response.getBody(ErrorResponse.class).hasErrorCode(CODE_ERROR_FORBIDDEN);
+        return response.getBody(UkObErrorResponse.class).hasErrorCode(CODE_ERROR_FORBIDDEN);
     }
 }

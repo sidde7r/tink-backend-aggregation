@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.validators;
 
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public interface HSBCFailedEligibilityCheckCodeValidator {
@@ -10,7 +10,7 @@ public interface HSBCFailedEligibilityCheckCodeValidator {
         if (!isBadRequestStatus) {
             return false;
         }
-        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        UkObErrorResponse errorResponse = httpResponse.getBody(UkObErrorResponse.class);
         return errorResponse.getErrorCodes().contains("UK.HSBC.FailedEligibilityCheck");
     }
 }

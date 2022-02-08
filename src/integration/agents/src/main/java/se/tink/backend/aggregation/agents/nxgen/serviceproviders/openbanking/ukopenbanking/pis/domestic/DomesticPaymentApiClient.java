@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationExc
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentErrorHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
@@ -100,7 +100,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                 throw NO_BANK_SERVICE.exception();
             }
 
-            ErrorResponse body = httpResponse.getBody(ErrorResponse.class);
+            UkObErrorResponse body = httpResponse.getBody(UkObErrorResponse.class);
             if (body.getErrorMessages().contains(ErrorMessage.DEBTOR_VALIDATION_FAILURE)) {
                 throw new DebtorValidationException(
                         DebtorValidationException.DEFAULT_MESSAGE,
@@ -196,7 +196,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
         } catch (HttpResponseException hre) {
             HttpResponse hreResponse = hre.getResponse();
-            ErrorResponse errorResponse = hreResponse.getBody(ErrorResponse.class);
+            UkObErrorResponse errorResponse = hreResponse.getBody(UkObErrorResponse.class);
             String errorMessage =
                     errorResponse.getErrorMessages().isEmpty()
                             ? ErrorMessage.NO_DESCRIPTION

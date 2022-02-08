@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
 public class AccountBlockedOrSuspendedValidator {
@@ -21,11 +21,11 @@ public class AccountBlockedOrSuspendedValidator {
     }
 
     private static boolean isErrorCodeResourceNotFound(HttpResponse response) {
-        return response.getBody(ErrorResponse.class).hasErrorCode(RESOURCE_NOT_FOUND);
+        return response.getBody(UkObErrorResponse.class).hasErrorCode(RESOURCE_NOT_FOUND);
     }
 
     private static boolean isMessageAccountClosedOrSuspended(HttpResponse response) {
-        return response.getBody(ErrorResponse.class)
+        return response.getBody(UkObErrorResponse.class)
                 .messageContains(CODE_ACCOUNT_CLOSED_OR_SUSPENDED);
     }
 }
