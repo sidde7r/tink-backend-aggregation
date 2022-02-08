@@ -187,11 +187,7 @@ public class RuralviaLoanFetcher implements AccountFetcher<LoanAccount> {
     private static Optional<String> extractValue(Element source, Supplier<String> query) {
         return Optional.ofNullable(source.select(query.get()))
                 .filter(elements -> !elements.isEmpty())
-                .map(
-                        elements ->
-                                elements.get(0).hasText()
-                                        ? elements.get(0).ownText()
-                                        : "");
+                .map(elements -> elements.get(0).hasText() ? elements.get(0).ownText() : "");
     }
 
     private String navigateToLoanDetails(LoanEntity.LoanEntityBuilder loanBuilder) {
