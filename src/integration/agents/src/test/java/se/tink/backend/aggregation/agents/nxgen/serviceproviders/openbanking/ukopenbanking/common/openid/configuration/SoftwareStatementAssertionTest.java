@@ -92,6 +92,30 @@ public class SoftwareStatementAssertionTest {
     }
 
     @Test
+    public void shouldThrowExceptionWhenJWTIsEmpty() {
+        // when
+        final Throwable thrown = catchThrowable(() -> SoftwareStatementAssertion.fromJWTJson(""));
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .hasNoCause()
+                .hasMessage("JWT is null or empty! Secrets are missing");
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenJWTIsNull() {
+        // when
+        final Throwable thrown = catchThrowable(() -> SoftwareStatementAssertion.fromJWTJson(null));
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(IllegalArgumentException.class)
+                .hasNoCause()
+                .hasMessage("JWT is null or empty! Secrets are missing");
+    }
+
+    @Test
     public void shouldCreateSsaWithJwksEndpointOnly() {
         // given
         final String jwksEndpoint = "https://dummy.bank.com/jwks";
