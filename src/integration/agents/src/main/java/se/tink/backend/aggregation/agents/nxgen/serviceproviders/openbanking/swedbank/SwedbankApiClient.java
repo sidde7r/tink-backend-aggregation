@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationE
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BodyParameter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.HeaderKeys;
@@ -248,7 +249,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                         .toLocalDate()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
                         .toString(),
-                SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
+                BodyParameter.FREQUENCY_PER_DAY_ALL_ACCOUNTS,
                 SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
                 new ConsentAllAccountsEntity(SwedbankConstants.BodyParameter.ALL_ACCOUNTS));
     }
