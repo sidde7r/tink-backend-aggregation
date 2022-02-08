@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.authenticator;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
@@ -13,6 +14,7 @@ import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @AllArgsConstructor
+@Slf4j
 public class LoginResultValidationProcessor implements CallbackProcessorEmpty {
 
     private final WebDriverWrapper webDriver;
@@ -27,6 +29,7 @@ public class LoginResultValidationProcessor implements CallbackProcessorEmpty {
         if (isLoginSuccess()) {
             return AuthenticationStepResponse.executeNextStep();
         }
+        log.info("Unknown login result response:" + webDriver.getPageSource());
         throw new ConnectivityException(ConnectivityErrorDetails.TinkSideErrors.UNKNOWN_ERROR);
     }
 
