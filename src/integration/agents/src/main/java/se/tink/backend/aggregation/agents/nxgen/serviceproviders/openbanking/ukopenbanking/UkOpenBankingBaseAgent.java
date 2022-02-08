@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import no.finn.unleash.UnleashContext;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -571,6 +572,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                                             .credentialsId(credentialsId)
                                             .providerName(providerId)
                                             .appId(appId)
+                                            .unleashContextBuilder(
+                                                    UnleashContext.builder()
+                                                            .sessionId(credentialsId)
+                                                            .userId(appId))
                                             .build())
                             .build();
             balanceCalculationEnabled =
