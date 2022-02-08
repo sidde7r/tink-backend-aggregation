@@ -17,10 +17,6 @@ public class SupplementalInformation {
         return fields;
     }
 
-    public UserInteraction<SupplementalInformation> intoUserInteraction() {
-        return UserInteraction.supplementalInformation(this).userResponseRequired().build();
-    }
-
     public static SupplementalInformation from(List<Field> fields) {
         return new SupplementalInformation(ImmutableList.copyOf(fields));
     }

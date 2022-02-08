@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.fetcher;
 
 import static java.util.stream.Collectors.collectingAndThen;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelConstants.NICKEL_IBAN_FORMAT;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelConstants.NICKEL_MAGIC_NUMBER;
 
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -12,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.fetcher.entity.NickelAccount;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.fetcher.entity.NickelAccountDetails;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.fetcher.entity.NickelAccountOverview;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.fetcher.entity.NickelOperation;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.utils.NickelErrorHandler;
@@ -39,10 +40,11 @@ public class NickelTransactionalAccountFetcher
             return apiClient.getAccounts()
                     .orElseThrow(() -> new IllegalStateException("Can't fetch accounts."))
                     .getAccounts().stream()
-                    .peek(account -> account.setAccountOverview(fetchOverview(account)))
-                    .filter(NickelAccount::getPrimaryAccount)
-                    .peek(account -> account.setAccountDetails(fetchDetails(account)))
-                    .map(NickelAccount::toTransactionalAccount)
+                    .map(
+                            account ->
+                                    account.toTransactionalAccount(
+                                            fetchOverview(account),
+                                            calculateIBAN(account.getNumber())))
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toList());
@@ -83,14 +85,10 @@ public class NickelTransactionalAccountFetcher
         }
     }
 
-    private NickelAccountDetails fetchDetails(NickelAccount account) {
-        try {
-            return apiClient
-                    .getAccountDetails(account.getAccessToken())
-                    .orElseThrow(() -> new IllegalStateException("Can't fetch account details."));
-        } catch (RuntimeException e) {
-            throw errorHandler.handle(e);
-        }
+    private String calculateIBAN(String accountNumber) {
+        Long nickelIBANMagicNumber = NICKEL_MAGIC_NUMBER + Long.parseLong(accountNumber) * 3;
+        Long checkKey = 97 - (nickelIBANMagicNumber) % 97;
+        return String.format(NICKEL_IBAN_FORMAT, accountNumber, checkKey);
     }
 
     private NickelAccountOverview fetchOverview(NickelAccount account) {

@@ -84,6 +84,8 @@ public class AggregationServiceResource implements AggregationService {
             MetricId.newId("aggregation_refresh_scope_presence");
     private static final MetricId REFRESH_INCLUDED_IN_PAYMENT =
             MetricId.newId("aggregation_refresh_included_in_payment");
+    private static final MetricId PAYMENT_REQUEST_ID_INCLUDED_IN_TRANSFER =
+            MetricId.newId("aggregation_payment_request_id_included_in_transfer");
     private static final MetricId REFRESH_PRIORITY = MetricId.newId("aggregation_refresh_priority");
 
     private static final String APP_ID = "app_id";
@@ -400,6 +402,7 @@ public class AggregationServiceResource implements AggregationService {
             trackUserPresentFlagPresence(TRANSFER, request);
             trackRefreshScopePresence(TRANSFER, request);
             trackRefreshIncludedInPayment(TRANSFER, !request.isSkipRefresh());
+            trackPaymentRequestIdPresence(TRANSFER, request.getPaymentRequestId());
             logger.info(
                     "Transfer Request received from main. skipRefresh is: {}",
                     request.isSkipRefresh());
@@ -418,6 +421,7 @@ public class AggregationServiceResource implements AggregationService {
             trackUserPresentFlagPresence(PAYMENT, request);
             trackRefreshScopePresence(PAYMENT, request);
             trackRefreshIncludedInPayment(PAYMENT, !request.isSkipRefresh());
+            trackPaymentRequestIdPresence(PAYMENT, request.getPaymentRequestId());
             logger.info(
                     "Transfer Request received from main. skipRefresh is: {}",
                     request.isSkipRefresh());
@@ -723,6 +727,18 @@ public class AggregationServiceResource implements AggregationService {
                         refreshScope.getRefreshableItemsIn() == null
                                 ? 0
                                 : refreshScope.getRefreshableItemsIn().size());
+    }
+
+    private void trackPaymentRequestIdPresence(String method, String paymentRequestId) {
+        try {
+            MetricId metricId =
+                    PAYMENT_REQUEST_ID_INCLUDED_IN_TRANSFER
+                            .label(METHOD, method)
+                            .label("payment_request_id_present", paymentRequestId != null);
+            metricRegistry.meter(metricId).inc();
+        } catch (Exception e) {
+            logger.error("Problems sending metric payment_request_id_present", e);
+        }
     }
 
     private void trackRefreshPriority(String method, Integer refreshPriority) {
