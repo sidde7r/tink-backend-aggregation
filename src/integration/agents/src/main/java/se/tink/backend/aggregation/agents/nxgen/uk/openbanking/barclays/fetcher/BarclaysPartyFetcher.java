@@ -27,10 +27,17 @@ public class BarclaysPartyFetcher extends PartyV31Fetcher {
     public List<PartyV31Entity> fetchAccountParties(AccountEntity account) {
         // according to the docs parties data is not available for business accounts and barclaycard
         // https://developer.barclays.com/apis/account-and-transactions/overview#accordion-section-0
-        if (isCreditCard(account) || isBusinessAccount(account)) {
+        if (isNotPossibleToFetchParties(account)) {
             return Collections.emptyList();
         }
         return super.fetchAccountParties(account);
+    }
+
+    private boolean isNotPossibleToFetchParties(AccountEntity account) {
+        if (account.getRawAccountType() == null) {
+            return true;
+        }
+        return (isCreditCard(account) || isBusinessAccount(account));
     }
 
     private boolean isCreditCard(AccountEntity account) {
