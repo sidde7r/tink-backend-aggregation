@@ -1,12 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.By;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.integration.webdriver.service.searchelements.ElementLocator;
 
+@UtilityClass
 public class NordeaDkConstants {
 
+    @UtilityClass
     public static class URLs {
         public static final String NEM_ID_AUTHENTICATION =
                 "api/dbf/ca/nemid-v1/nemid/authentications/";
@@ -33,6 +43,7 @@ public class NordeaDkConstants {
                 NORDEA_PRIVATE_BASE_URL + "api/dbf/dk/customerinfo-v3/customers/self/info";
     }
 
+    @UtilityClass
     public static class QueryParamKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String CODE_CHALLENGE = "code_challenge";
@@ -53,6 +64,7 @@ public class NordeaDkConstants {
         public static final String CONSENT_MARKETING = "consent_marketing";
     }
 
+    @UtilityClass
     public static class QueryParamValues {
         public static final String CLIENT_ID = "CDi170IiCEmvEbxWn3Hk";
         public static final String CODE_CHALLENGE_METHOD = "S256";
@@ -63,7 +75,8 @@ public class NordeaDkConstants {
         public static final String DM = "iPhone9,4";
         public static final String INSTALLED_APPS = "bankid nemid";
         public static final String SCOPE = "openid ndf agreement";
-        public static final String LOGIN_HINT = "nemid_2f";
+        public static final String NEM_ID_LOGIN_HINT = "nemid_2f";
+        public static final String MIT_ID_LOGIN_HINT = "mitid";
         public static final String APP_CHANNEL = "NDM_DK_IOS";
         public static final String ADOBE_MC =
                 "MCMID=84265909804586890540699832214415294616|MCORGID=9D193D565A0AFF460A495E66%40AdobeOrg|TS=1625491032";
@@ -71,6 +84,7 @@ public class NordeaDkConstants {
         public static final String CONSENT_MARKETING = "true";
     }
 
+    @UtilityClass
     public static class HeaderKeys {
         public static final String HOST = "Host";
         public static final String ACCEPT_ENCODING = "Accept-Encoding";
@@ -89,6 +103,7 @@ public class NordeaDkConstants {
         public static final String X_AUTHORIZATION = "x-Authorization";
     }
 
+    @UtilityClass
     public static class HeaderValues {
         public static final String NORDEA_AUTH_HOST = "identify.nordea.com";
         public static final String NORDEA_PRIVATE_HOST = "private.nordea.dk";
@@ -105,17 +120,18 @@ public class NordeaDkConstants {
         public static final String ACCEPT_LANGUAGE = "en-DK";
     }
 
+    @UtilityClass
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = "token";
         public static final String NEMID_TOKEN = "nemIdToken";
         public static final String SESSION_ID = "sessionId";
         public static final String REFERER = "referer";
         public static final String CODE_VERIFIER = "codeVerifier";
-        public static final String NONCE = "nonce";
         public static final String DEVICE_ID = "deviceId";
         public static final String PRODUCT_CODE = "product_code";
     }
 
+    @UtilityClass
     public static class FormKeys {
         public static final String COUNTRY = "country";
         public static final String STATE = "state";
@@ -130,6 +146,7 @@ public class NordeaDkConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    @UtilityClass
     public static class FormValues {
         public static final String COUNTRY = "DK";
         public static final String CLIENT_ID = "CDi170IiCEmvEbxWn3Hk";
@@ -140,12 +157,41 @@ public class NordeaDkConstants {
         public static final String SCOPE = "ndf";
     }
 
+    @UtilityClass
     public static class PathValues {
         public static final String ACCOUNT_ID_PREFIX = "NAID-DK-DKK-";
     }
 
+    @UtilityClass
     public static class LogTags {
         public static final LogTag NORDEA_TAG = LogTag.from("[NORDEA]");
+    }
+
+    @UtilityClass
+    public static class MitId {
+
+        public static final String AUTH_FINISH_REDIRECT_URL_SUBSTRING = "nordea.mitid.dk/redirect";
+
+        public static final ElementLocator LOC_ERROR_PAGE_MESSAGE =
+                ElementLocator.builder()
+                        .element(By.tagName("p"))
+                        .mustBeVisible()
+                        .mustHaveTextMatching(StringUtils::isNotBlank)
+                        .mustComplyWithFilter(
+                                (element, driverWrapper, basicUtils) ->
+                                        basicUtils.getElementAttributes(element).values().stream()
+                                                .anyMatch(
+                                                        attributeName ->
+                                                                attributeName.contains("error")))
+                        .build();
+
+        public static final Multimap<AgentError, String> ERROR_MESSAGE_MAPPING =
+                ImmutableMultimap.<AgentError, String>builder()
+                        .putAll(
+                                LoginError.NOT_CUSTOMER,
+                                "You have no agreements available",
+                                "Du har ingen aktive aftaler")
+                        .build();
     }
 
     public static final String CURRENCY = "DKK";

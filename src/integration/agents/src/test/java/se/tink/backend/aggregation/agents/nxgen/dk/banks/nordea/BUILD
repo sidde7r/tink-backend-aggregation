@@ -13,6 +13,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/dk",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
     ],
 )

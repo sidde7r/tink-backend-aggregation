@@ -23,7 +23,10 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticatorV2;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaDkAuthenticatorUtils;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaDkAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaDkMitIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaDkNemIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.NordeaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.NordeaCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.identitydata.NordeaDKIdentityDataFetcher;
@@ -35,6 +38,11 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.DkSSAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.DkSSAuthenticatorsConfig;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.DkSSMethod;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdAuthenticationControllerProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.dk.mitid.MitIdAuthenticationControllerProviderModule;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -46,6 +54,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
+import se.tink.libraries.credentials.service.UserAvailability;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -55,7 +64,11 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
     MORTGAGE_AGGREGATION,
     IDENTITY_DATA
 })
-@AgentDependencyModules(modules = NemIdIFrameControllerInitializerModule.class)
+@AgentDependencyModules(
+        modules = {
+            NemIdIFrameControllerInitializerModule.class,
+            MitIdAuthenticationControllerProviderModule.class
+        })
 public final class NordeaDkAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -64,6 +77,8 @@ public final class NordeaDkAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
 
     private final NemIdIFrameControllerInitializer iFrameControllerInitializer;
+    private final MitIdAuthenticationControllerProvider mitIdAuthenticationControllerProvider;
+    private final UserAvailability userAvailability;
     private final NordeaDkApiClient nordeaClient;
     private final AgentTemporaryStorage agentTemporaryStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -76,10 +91,14 @@ public final class NordeaDkAgent extends NextGenerationAgent
     @Inject
     public NordeaDkAgent(
             AgentComponentProvider agentComponentProvider,
-            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
+            NemIdIFrameControllerInitializer iFrameControllerInitializer,
+            MitIdAuthenticationControllerProvider mitIdAuthenticationControllerProvider) {
         super(agentComponentProvider);
         this.logMasker = agentComponentProvider.getContext().getLogMasker();
         this.iFrameControllerInitializer = iFrameControllerInitializer;
+        this.mitIdAuthenticationControllerProvider = mitIdAuthenticationControllerProvider;
+        this.userAvailability =
+                agentComponentProvider.getCredentialsRequest().getUserAvailability();
         this.nordeaClient = constructNordeaClient();
         this.agentTemporaryStorage = agentComponentProvider.getAgentTemporaryStorage();
         this.transactionalAccountRefreshController =
@@ -92,19 +111,47 @@ public final class NordeaDkAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        NordeaNemIdAuthenticatorV2 nordeaNemIdAuthenticatorV2 =
-                new NordeaNemIdAuthenticatorV2(
-                        nordeaClient,
-                        sessionStorage,
-                        persistentStorage,
-                        catalog,
-                        statusUpdater,
-                        supplementalInformationController,
-                        metricContext,
-                        agentTemporaryStorage,
-                        iFrameControllerInitializer);
+        NordeaDkAuthenticatorUtils authenticatorUtils =
+                new NordeaDkAuthenticatorUtils(sessionStorage, persistentStorage, nordeaClient);
+
+        DkSSAuthenticationController manualAuthenticator =
+                new DkSSAuthenticationController(
+                        DkSSAuthenticatorsConfig.builder()
+                                .addProvider(
+                                        DkSSMethod.NEM_ID,
+                                        () ->
+                                                new NordeaDkNemIdAuthenticator(
+                                                        nordeaClient,
+                                                        sessionStorage,
+                                                        catalog,
+                                                        statusUpdater,
+                                                        supplementalInformationController,
+                                                        metricContext,
+                                                        agentTemporaryStorage,
+                                                        iFrameControllerInitializer,
+                                                        authenticatorUtils))
+                                .addProvider(
+                                        DkSSMethod.MIT_ID,
+                                        () -> {
+                                            NordeaDkMitIdAuthenticator mitIdAuthenticator =
+                                                    new NordeaDkMitIdAuthenticator(
+                                                            authenticatorUtils, nordeaClient);
+                                            return mitIdAuthenticationControllerProvider
+                                                    .createAuthController(
+                                                            catalog,
+                                                            statusUpdater,
+                                                            supplementalInformationController,
+                                                            userAvailability,
+                                                            agentTemporaryStorage,
+                                                            mitIdAuthenticator);
+                                        })
+                                .build());
+
+        NordeaDkAutoAuthenticator autoAuthenticator =
+                new NordeaDkAutoAuthenticator(nordeaClient, persistentStorage, authenticatorUtils);
+
         return new AutoAuthenticationController(
-                request, systemUpdater, nordeaNemIdAuthenticatorV2, nordeaNemIdAuthenticatorV2);
+                request, systemUpdater, manualAuthenticator, autoAuthenticator);
     }
 
     private InvestmentRefreshController contructInvestmentRefreshController() {
