@@ -110,10 +110,7 @@ public class BulkPaymentInitiation {
         }
 
         Instant startTime = Instant.now();
-        for (;
-                canContinuePolling(startTime, paymentInitiationReport);
-                this.sleeper.sleep(Duration.ofSeconds(1))) {
-
+        while (true) {
             BulkPaymentSigningBasket signedBasket =
                     new BulkPaymentSigningBasketImpl(
                             registerBasketResult.getBankBasketReference().orElse(null),
@@ -123,17 +120,28 @@ public class BulkPaymentInitiation {
                     bulkPaymentInitiator.getSignStatus(signedBasket);
 
             paymentInitiationReport.updateInProgressPayments(signStatus);
+
+            if (shouldStopPolling(startTime, paymentInitiationReport)) {
+                break;
+            }
+            this.sleeper.sleep(Duration.ofSeconds(1));
         }
 
         return paymentInitiationReport;
     }
 
-    private boolean canContinuePolling(
+    /**
+     * This method evaluates if it's possible to continue polling for a signing status.
+     *
+     * @return `true` if we have exceeded execution time or all payments are in a final state,
+     *     otherwise `false`.
+     */
+    private boolean shouldStopPolling(
             Instant startTime, PaymentInitiationReport paymentInitiationReport) {
         Instant currentTime = Instant.now();
         Duration timeSpent = Duration.between(startTime, currentTime);
-        return timeSpent.compareTo(this.maxSignStatusPollTime) < 0
-                && !paymentInitiationReport.allPaymentsInFinalState();
+        return timeSpent.compareTo(this.maxSignStatusPollTime) >= 0
+                || paymentInitiationReport.allPaymentsInFinalState();
     }
 
     /**
