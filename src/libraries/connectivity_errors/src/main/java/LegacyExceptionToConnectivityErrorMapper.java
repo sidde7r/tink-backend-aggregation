@@ -7,8 +7,7 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -35,8 +34,8 @@ import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorDetails.AccountInformationErrors;
 import se.tink.connectivity.errors.ConnectivityErrorDetails.UserLoginErrors;
 
+@Slf4j
 class LegacyExceptionToConnectivityErrorMapper {
-    private static final Logger log = LoggerFactory.getLogger(ConnectivityErrorFactory.class);
 
     static final ImmutableMap<LoginError, ConnectivityError> LOGIN_ERROR_MAPPER =
             ImmutableMap.<LoginError, ConnectivityError>builder()
@@ -446,6 +445,7 @@ class LegacyExceptionToConnectivityErrorMapper {
         List<ConnectivityErrorCreator> connectivityErrorCreators =
                 asList(
                         new AgentExceptionErrorCreator(),
+                        new AgentsPlatformToConnectivityErrorCreator(),
                         new HttpClientExceptionErrorCreator(),
                         new JavaLangExceptionErrorCreator());
 
@@ -469,7 +469,7 @@ class LegacyExceptionToConnectivityErrorMapper {
         return unknownError;
     }
 
-    private interface ConnectivityErrorCreator {
+    interface ConnectivityErrorCreator {
         Optional<ConnectivityError> tryCreateConnectivityErrorForException(Exception exception);
     }
 
