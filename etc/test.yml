@@ -33,6 +33,18 @@ agentsServiceConfiguration:
     baseApiUrl: http://localhost:4242/api/
     developerMode: true
   integrations:
+    9df7b7a0100645c38f82915abc969c67:
+      tink:
+        clientId: dummyClientId
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    d4961d00e63511ebba800242ac130004:
+      tink:
+        clientId: dummyClientId
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    f92aff32e63511ebba800242ac130004:
+      tink:
+        clientId: dummyClientId
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     luminor:
       tink:
         clientId: dummyClientId
