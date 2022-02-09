@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetPaymentRequest {
+public class ConfirmablePayment {
 
     PaymentRequestResource paymentRequest;
 }

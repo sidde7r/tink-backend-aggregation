@@ -28,6 +28,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
@@ -37,5 +38,6 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/unleash",
     ],
 )
