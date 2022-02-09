@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.modu
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoadSessionCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.BulkTransferRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.TransferRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.VerdictModule;
@@ -35,6 +37,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@SuppressWarnings("java:S2187")
 public final class AgentWireMockPaymentTest {
 
     private final CompositeAgentTest compositeAgentTest;
@@ -54,6 +57,7 @@ public final class AgentWireMockPaymentTest {
             TestModule agentModule,
             Payment payment,
             Transfer transfer,
+            List<Transfer> bulkTransfer,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
 
@@ -89,6 +93,7 @@ public final class AgentWireMockPaymentTest {
                                 prepareUserAvailability()),
                         new PaymentRequestModule(payment),
                         new TransferRequestModule(transfer),
+                        new BulkTransferRequestModule(bulkTransfer),
                         new VerdictModule(),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of(
@@ -161,6 +166,7 @@ public final class AgentWireMockPaymentTest {
 
         private Payment payment;
         private Transfer transfer;
+        private List<Transfer> bulkTransfer;
         private AgentsServiceConfiguration configuration;
         private TestModule agentTestModule;
 
@@ -301,6 +307,12 @@ public final class AgentWireMockPaymentTest {
             this.transfer = transfer;
             return this;
         }
+
+        public Builder withBulkTransfer(Transfer... transfers) {
+            this.bulkTransfer = Arrays.asList(transfers);
+            return this;
+        }
+
         /**
          * Enables http debug trace printout
          *
@@ -332,6 +344,7 @@ public final class AgentWireMockPaymentTest {
                     agentTestModule,
                     payment,
                     transfer,
+                    bulkTransfer,
                     of(LoadSessionCommand.class, command),
                     httpDebugTrace);
         }
@@ -357,6 +370,7 @@ public final class AgentWireMockPaymentTest {
                     agentTestModule,
                     payment,
                     transfer,
+                    bulkTransfer,
                     of(LoginCommand.class, command),
                     httpDebugTrace);
         }
