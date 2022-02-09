@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.modu
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoadSessionCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.BulkPaymentRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.BulkTransferRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.TransferRequestModule;
@@ -57,6 +58,7 @@ public final class AgentWireMockPaymentTest {
             TestModule agentModule,
             Payment payment,
             Transfer transfer,
+            List<Payment> bulkPayment,
             List<Transfer> bulkTransfer,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
@@ -93,6 +95,7 @@ public final class AgentWireMockPaymentTest {
                                 prepareUserAvailability()),
                         new PaymentRequestModule(payment),
                         new TransferRequestModule(transfer),
+                        new BulkPaymentRequestModule(bulkPayment),
                         new BulkTransferRequestModule(bulkTransfer),
                         new VerdictModule(),
                         new AgentFactoryWireMockModule(
@@ -166,6 +169,7 @@ public final class AgentWireMockPaymentTest {
 
         private Payment payment;
         private Transfer transfer;
+        private List<Payment> bulkPayment;
         private List<Transfer> bulkTransfer;
         private AgentsServiceConfiguration configuration;
         private TestModule agentTestModule;
@@ -308,6 +312,11 @@ public final class AgentWireMockPaymentTest {
             return this;
         }
 
+        public Builder withBulkPayment(Payment... payments) {
+            this.bulkPayment = Arrays.asList(payments);
+            return this;
+        }
+
         public Builder withBulkTransfer(Transfer... transfers) {
             this.bulkTransfer = Arrays.asList(transfers);
             return this;
@@ -344,6 +353,7 @@ public final class AgentWireMockPaymentTest {
                     agentTestModule,
                     payment,
                     transfer,
+                    bulkPayment,
                     bulkTransfer,
                     of(LoadSessionCommand.class, command),
                     httpDebugTrace);
@@ -370,6 +380,7 @@ public final class AgentWireMockPaymentTest {
                     agentTestModule,
                     payment,
                     transfer,
+                    bulkPayment,
                     bulkTransfer,
                     of(LoginCommand.class, command),
                     httpDebugTrace);
