@@ -231,7 +231,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                 .getScaStatus();
     }
 
-    public AuthenticationResponse authenticateDecoupled(String ssn) {
+    public AuthenticationResponse authenticateDecoupled(String ssn, boolean shouldUseQRCode) {
         // If the provider is swedbank-ob, then default bankId to 08999 to prevent savingsbank
         // customer to login with single engagement
         String bankId = isSwedbank() ? SwedbankConstants.BANK_IDS.get(0) : "";
@@ -244,6 +244,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                         .scope(getScopes(componentProvider));
 
         return createRequest(SwedbankConstants.Urls.AUTHORIZATION_DECOUPLED)
+                .header(HeaderKeys.QR_CODE_REQUIRED, shouldUseQRCode)
                 .header(HeaderKeys.PSU_ID, ssn)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(AuthenticationResponse.class, requestBuilder.build());
