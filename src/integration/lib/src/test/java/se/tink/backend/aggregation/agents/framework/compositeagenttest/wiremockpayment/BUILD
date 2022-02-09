@@ -7,6 +7,8 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agent_sdk/compatibility_layers/aggregation_service/src/payments",
+        "//src/agent_sdk/runtime/src/instance",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/enums",
@@ -35,6 +37,7 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:junit_junit",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
