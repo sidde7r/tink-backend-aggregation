@@ -32,6 +32,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/accountidentifier",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/qrcode",
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",

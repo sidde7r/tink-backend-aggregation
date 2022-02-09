@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank;
 
 import com.google.common.base.Strings;
+import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -16,6 +17,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.consent.generators.se.swedbank.SwedbankConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.suppliers.ItemsSupplier;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationE
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BICProduction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.BodyParameter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorMessages;
@@ -75,12 +79,14 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.utils.qrcode.QrCodeParser;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
+@Slf4j
 public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
 
     private final TinkHttpClient client;
@@ -172,6 +178,25 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                     persistentStorage.get(StorageKeys.CONSENT));
         } else {
             return request;
+        }
+    }
+
+    public String fetchQRCodeImage(String authorizeId) {
+        RequestBuilder builder =
+                client.request(
+                                Urls.AUTHORIZATION_QR_IMAGE.parameter(
+                                        UrlParameters.AUTHORIZE_ID, authorizeId))
+                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                        .header(HeaderKeys.DATE, getFormattedDate(new Date()))
+                        .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
+                        .queryParam(QueryKeys.BIC, BICProduction.SWEDEN);
+        HttpResponse response = builder.get(HttpResponse.class);
+        try {
+            byte[] bytes = IOUtils.toByteArray(response.getBodyInputStream());
+            return QrCodeParser.decodeQRCode(Base64.getEncoder().encodeToString(bytes));
+        } catch (IOException e) {
+            log.warn("Could not download QR code. ", e);
+            throw new IllegalStateException(e);
         }
     }
 
