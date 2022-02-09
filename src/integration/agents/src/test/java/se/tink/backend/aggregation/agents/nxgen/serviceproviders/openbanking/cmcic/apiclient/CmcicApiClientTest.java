@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
@@ -40,6 +41,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.controllers.configuration.EIdasTinkCert;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -52,8 +54,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CmcicApiClientTest {
 
-    private static final String BASE_URL = "https://base-url";
-    private static final String BASE_PATH = "/base-path/";
+    private static final String ORG_NAME = "Tink AB";
+    private static final String BASE_URL = "https://cmcic.fr";
+    private static final String BASE_PATH = "/psd2/";
     private static final String TOKEN_PATH = "oauth2/token";
     private static final String TOKEN_URL = BASE_URL + BASE_PATH + TOKEN_PATH;
     private static final String BENEFICIARIES_PATH = "trusted-beneficiaries";
@@ -245,7 +248,9 @@ public class CmcicApiClientTest {
                         codeChallengeProviderMock,
                         cmcicAgentConfig,
                         new CmcicRequestValuesProvider(
-                                new RandomValueGeneratorImpl(), new ActualLocalDateTimeSource()));
+                                new RandomValueGeneratorImpl(),
+                                new ActualLocalDateTimeSource(),
+                                EIdasTinkCert.QSEALC));
     }
 
     private RequestBuilder setUpHttpClientMockForAuth() {
@@ -314,6 +319,8 @@ public class CmcicApiClientTest {
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.header(
                         CmcicConstants.HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(HeaderKeys.USER_AGENT, ORG_NAME))
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.accept(MediaType.APPLICATION_JSON)).thenReturn(requestBuilderMock);
 

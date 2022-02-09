@@ -118,4 +118,12 @@ public class CertificateUtilsTest {
         String organizationId = CertificateUtils.getOrganizationIdentifier(TEST_CERT);
         Assert.assertEquals(expectedOrgId, organizationId);
     }
+
+    @Test
+    public void testGetOrganizationName() throws CertificateException {
+        final String expectedOrgName = "PayPal (Europe) S.a r.l. et Cie S.C.A.";
+
+        String organizationName = CertificateUtils.getOrganizationName(TEST_CERT);
+        Assert.assertEquals(expectedOrgName, organizationName);
+    }
 }

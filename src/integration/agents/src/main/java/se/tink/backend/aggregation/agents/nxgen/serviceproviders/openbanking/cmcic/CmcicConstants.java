@@ -82,6 +82,7 @@ public final class CmcicConstants {
         public static final String X_REQUEST_ID = "X-Request-Id";
         public static final String SIGNATURE = "Signature";
         public static final String CONTENT_TYPE = "Content-Type";
+        public static final String USER_AGENT = "User-Agent";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
