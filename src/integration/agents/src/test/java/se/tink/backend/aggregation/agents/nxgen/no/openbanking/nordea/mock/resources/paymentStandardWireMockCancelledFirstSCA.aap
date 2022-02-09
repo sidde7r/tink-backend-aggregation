@@ -1,0 +1,29 @@
+REQUEST 1
+POST https://open.nordea.com/personal/v5/authorize
+Content-Length: 392
+Content-Type: application/json
+
+{
+  "country": "NO",
+  "scope": [
+    "CARDS_TRANSACTIONS",
+    "ACCOUNTS_DETAILS",
+    "CARDS_INFORMATION",
+    "ACCOUNTS_BALANCES",
+    "ACCOUNTS_BASIC",
+    "ACCOUNTS_TRANSACTIONS"
+  ],
+  "state": "00000000-0000-4000-0000-000000000000",
+  "duration": 129600,
+  "redirect_uri": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+  "max_tx_history": 12,
+  "account_list": [
+    "ALL_WITH_CARDS"
+  ],
+  "skip_account_selection": true
+}
+
+RESPONSE 1
+302
+Date: Fri, 04 Feb 2022 13:05:54 GMT,Fri, 04 Feb 2022 13:05:54 GMT
+Location: https://identify.nordea.com?client_id=04NCvGbfcBsObvoWh8CP&code_challenge_method=S256&redirect_uri=https%3A%2F%2Fopen.nordea.com%2Fpersonal%2Foauth%2F&response_type=code&code_challenge=4XZ4B7_0NkfXaeudE6GzDn4tQc_3Mrpmz-N4nXoV-Ns&scope=openid+ndf+agreement&state=05c89dd2-a83a-4c79-9489-aa7404024ef5%26skip_ui&nonce=HlkUaCwJ7yQYRjeIzrjAAqSkmUnL8rikLbXxP0ne
