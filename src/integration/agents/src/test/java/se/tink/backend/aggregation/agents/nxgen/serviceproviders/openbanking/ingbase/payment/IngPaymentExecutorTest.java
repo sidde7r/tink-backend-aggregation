@@ -69,13 +69,17 @@ public class IngPaymentExecutorTest {
 
         paymentExecutor =
                 new IngPaymentExecutor(
-                        sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
+                        sessionStorage,
+                        paymentApiClient,
+                        paymentAuthenticator,
+                        paymentMapper,
+                        true);
     }
 
     @SneakyThrows
     @Test
-    @Parameters(method = "regularPaymentsWithAllPossibleResponseStatuses")
-    public void createRegularPaymentShouldCallApiClientAndReturnPaymentResponse(
+    @Parameters(method = "oneTimePaymentsWithAllPossibleResponseStatuses")
+    public void createOneTimePaymentShouldCallApiClientAndReturnPaymentResponse(
             Payment payment, PaymentStatus resultPaymentStatus) {
         // given
         String authUrl = "http://something.com/redirect/XX";
@@ -112,13 +116,16 @@ public class IngPaymentExecutorTest {
     }
 
     @SuppressWarnings("unused")
-    private static Object[] regularPaymentsWithAllPossibleResponseStatuses() {
-        List<Payment> regularPayments =
-                asList(emptyPayment(), emptyPayment(PaymentServiceType.SINGLE));
+    private static Object[] oneTimePaymentsWithAllPossibleResponseStatuses() {
+        List<Payment> oneTimePayments =
+                asList(
+                        emptyPayment(PaymentScheme.SEPA_CREDIT_TRANSFER),
+                        emptyPayment(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER),
+                        emptyPayment(PaymentServiceType.SINGLE));
         PaymentStatus[] paymentStatuses = PaymentStatus.values();
 
         List<Object[]> params = new ArrayList<>();
-        for (Payment payment : regularPayments) {
+        for (Payment payment : oneTimePayments) {
             for (PaymentStatus paymentStatus : paymentStatuses) {
                 params.add(new Object[] {payment, paymentStatus});
             }
@@ -318,8 +325,17 @@ public class IngPaymentExecutorTest {
     }
 
     @Test
-    public void shouldThrowPaymentValidationExceptionIfPaymentSchemaIsInstant() {
+    public void shouldThrowPaymentValidationExceptionWhenInstantPaymentSchemaIsNotSupported() {
         // given
+        paymentExecutor =
+                new IngPaymentExecutor(
+                        sessionStorage,
+                        paymentApiClient,
+                        paymentAuthenticator,
+                        paymentMapper,
+                        false);
+
+        // and
         Payment payment =
                 new Payment.Builder()
                         .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
@@ -347,8 +363,8 @@ public class IngPaymentExecutorTest {
         }
     }
 
-    private static Payment emptyPayment() {
-        return new Payment.Builder().build();
+    private static Payment emptyPayment(PaymentScheme paymentScheme) {
+        return new Payment.Builder().withPaymentScheme(paymentScheme).build();
     }
 
     @SuppressWarnings("SameParameterValue")

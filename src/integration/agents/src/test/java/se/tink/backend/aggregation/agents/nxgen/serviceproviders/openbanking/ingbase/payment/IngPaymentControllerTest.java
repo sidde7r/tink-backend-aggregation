@@ -6,15 +6,23 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.libraries.payments.common.model.PaymentScheme.SEPA_CREDIT_TRANSFER;
+import static se.tink.libraries.payments.common.model.PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,6 +33,7 @@ import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.agent.sdk.utils.signer.signature.Signature;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngApiInputData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
@@ -66,6 +75,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -73,6 +83,8 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 @RunWith(JUnitParamsRunner.class)
 public class IngPaymentControllerTest {
 
+    private static final String RESOURCE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/resources/";
     private static final String CONNECTION_RESET_MESSAGE = "connection reset";
     private static final String CONNECTION_TIMEOUT_MESSAGE = "connect timed out";
     private static final String READ_TIMEOUT_MESSAGE = "read timed out";
@@ -82,6 +94,7 @@ public class IngPaymentControllerTest {
             "ing_payment_create_response_accepted.json";
 
     private PaymentController paymentController;
+    private IngPaymentExecutor paymentExecutor;
     private SessionStorage sessionStorage;
     private PersistentStorage persistentStorage;
 
@@ -95,24 +108,35 @@ public class IngPaymentControllerTest {
         MockitoAnnotations.openMocks(this);
         setUpStorage();
         configureBasicMocks();
-        IngPaymentExecutor paymentExecutor = createIngPaymentExecutor(createIngPaymentApiClient());
+        paymentExecutor = createIngPaymentExecutor(createIngPaymentApiClient(), false);
         paymentController = new PaymentController(paymentExecutor, paymentExecutor);
     }
 
     @Test
-    public void shouldCreatePaymentSuccessfully() {
+    @Parameters({
+        "SEPA_CREDIT_TRANSFER, true",
+        "SEPA_CREDIT_TRANSFER, false",
+        "SEPA_INSTANT_CREDIT_TRANSFER, true"
+    })
+    public void shouldCreatePaymentSuccessfully(
+            PaymentScheme paymentScheme, boolean instantSepaIsSupported) {
         // given
+        paymentExecutor =
+                createIngPaymentExecutor(createIngPaymentApiClient(), instantSepaIsSupported);
+        paymentController = new PaymentController(paymentExecutor, paymentExecutor);
+
+        // and
         prepareCreatePaymentTestSetupAndResponseData();
 
         // when
         PaymentResponse paymentResponse =
-                paymentController.create(new PaymentRequest(createPayment()));
+                paymentController.create(new PaymentRequest(createPayment(paymentScheme)));
 
         // expect
         assertThat(paymentResponse)
                 .usingRecursiveComparison()
                 .ignoringFields("payment.id")
-                .isEqualTo(getExpectedPaymentResponseOnCreate());
+                .isEqualTo(getExpectedPaymentResponseOnCreate(paymentScheme));
 
         // and
         assertThat(sessionStorage).containsKey("PAYMENT_AUTHORIZATION_URL");
@@ -151,7 +175,10 @@ public class IngPaymentControllerTest {
         given(callFilter.handle(any())).willThrow(new HttpClientException(exceptionMessage, null));
 
         // expect
-        assertThatThrownBy(() -> paymentController.create(new PaymentRequest(createPayment())))
+        assertThatThrownBy(
+                        () ->
+                                paymentController.create(
+                                        new PaymentRequest(createPayment(SEPA_CREDIT_TRANSFER))))
                 .hasFieldOrPropertyWithValue("error", agentError);
     }
 
@@ -179,7 +206,10 @@ public class IngPaymentControllerTest {
 
         // expect
         assertThatNoException()
-                .isThrownBy(() -> paymentController.create(new PaymentRequest(createPayment())));
+                .isThrownBy(
+                        () ->
+                                paymentController.create(
+                                        new PaymentRequest(createPayment(SEPA_CREDIT_TRANSFER))));
     }
 
     @Test
@@ -188,8 +218,46 @@ public class IngPaymentControllerTest {
         bankRespondsWithUnauthorizedStatusAndInvalidSignature();
 
         // expect
-        assertThatThrownBy(() -> paymentController.fetch(new PaymentRequest(createPayment())))
+        assertThatThrownBy(
+                        () ->
+                                paymentController.fetch(
+                                        new PaymentRequest(createPayment(SEPA_CREDIT_TRANSFER))))
                 .hasFieldOrPropertyWithValue("error", BankServiceError.BANK_SIDE_FAILURE);
+    }
+
+    @Test
+    @Parameters({"422", "500"})
+    public void shouldThrowWhenInstantSepaIsNotPossible(int statusCode) throws IOException {
+        // given
+        paymentExecutor = createIngPaymentExecutor(createIngPaymentApiClient(), true);
+        paymentController = new PaymentController(paymentExecutor, paymentExecutor);
+
+        // and
+        PaymentRequest paymentRequest =
+                new PaymentRequest(createPayment(SEPA_INSTANT_CREDIT_TRANSFER));
+
+        // and
+        bankRespondsWithGivenStatusAndInstantSepaNotPossible(statusCode);
+
+        // expect
+        assertInstantPaymentNotSupportedErrorThrown(() -> paymentController.create(paymentRequest));
+
+        // and
+        then(response).should(atLeastOnce()).getStatus();
+        then(response).should(atLeastOnce()).getBody(String.class);
+    }
+
+    @Test
+    public void shouldThrowWhenInstantPaymentSchemaIsNotSupported() {
+        // given
+        PaymentRequest paymentRequest =
+                new PaymentRequest(createPayment(SEPA_INSTANT_CREDIT_TRANSFER));
+
+        // expect
+        assertInstantPaymentNotSupportedErrorThrown(() -> paymentController.create(paymentRequest));
+
+        // and
+        then(response).shouldHaveNoInteractions();
     }
 
     @Ignore("Requires MINI-1708")
@@ -204,7 +272,7 @@ public class IngPaymentControllerTest {
                 tokenResponseFileName, paymentCreateResponseFileName);
 
         // and
-        PaymentRequest paymentRequest = new PaymentRequest(createPayment());
+        PaymentRequest paymentRequest = new PaymentRequest(createPayment(SEPA_CREDIT_TRANSFER));
 
         // expect
         assertThatThrownBy(() -> paymentController.create(paymentRequest))
@@ -233,14 +301,16 @@ public class IngPaymentControllerTest {
         };
     }
 
-    private PaymentResponse getExpectedPaymentResponseOnCreate() {
-        Payment payment = createPayment();
+    private PaymentResponse getExpectedPaymentResponseOnCreate(PaymentScheme paymentScheme) {
+        Payment payment = createPayment(paymentScheme);
         payment.setStatus(PaymentStatus.PENDING);
 
         return new PaymentResponse(payment, new Storage());
     }
 
-    private Payment createPayment() {
+    private Payment createPayment(PaymentScheme paymentScheme) {
+        LocalDate localDate =
+                SEPA_INSTANT_CREDIT_TRANSFER.equals(paymentScheme) ? null : LocalDate.now();
         return new Payment.Builder()
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
                 .withCreditor(
@@ -258,8 +328,9 @@ public class IngPaymentControllerTest {
                                         "accountTest2")))
                 .withCurrency("EUR")
                 .withUniqueId("DUMMY_PAYMENT_ID")
-                .withExecutionDate(LocalDate.now())
+                .withExecutionDate(localDate)
                 .withRemittanceInformation(setUpRemittanceInformation())
+                .withPaymentScheme(paymentScheme)
                 .build();
     }
 
@@ -271,13 +342,11 @@ public class IngPaymentControllerTest {
 
     private void prepareResponseBodyForPaymentCreation(
             String tokenResponseFileName, String paymentCreateResponseFileName) {
-        String resourcePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/resources/";
         TokenResponse ingTokenResponse =
-                deserializeFromFile(resourcePath + tokenResponseFileName, TokenResponse.class);
+                deserializeFromFile(RESOURCE_PATH + tokenResponseFileName, TokenResponse.class);
         IngCreatePaymentResponse ingPaymentInitiationResponseReceived =
                 deserializeFromFile(
-                        resourcePath + paymentCreateResponseFileName,
+                        RESOURCE_PATH + paymentCreateResponseFileName,
                         IngCreatePaymentResponse.class);
 
         setUpResponseBody(TokenResponse.class, ingTokenResponse);
@@ -291,6 +360,16 @@ public class IngPaymentControllerTest {
     private void bankRespondsWithUnauthorizedStatusAndInvalidSignature() {
         bankRespondsWithGivenStatus(401);
         setUpResponseBody(String.class, "Signature could not be successfully verified");
+    }
+
+    private void bankRespondsWithGivenStatusAndInstantSepaNotPossible(int status)
+            throws IOException {
+        bankRespondsWithGivenStatus(status);
+        setUpResponseBody(
+                String.class,
+                FileUtils.readFileToString(
+                        Paths.get(RESOURCE_PATH, "sepa_instant_not_possible.json").toFile(),
+                        StandardCharsets.UTF_8));
     }
 
     private void bankRespondsCorrectlyAfterSecondRequest(String exceptionMessage) {
@@ -331,6 +410,12 @@ public class IngPaymentControllerTest {
 
     private static <T> T deserializeFromFile(String filePath, Class<T> clazz) {
         return SerializationUtils.deserializeFromString(Paths.get(filePath).toFile(), clazz);
+    }
+
+    private void assertInstantPaymentNotSupportedErrorThrown(ThrowingCallable throwingCallable) {
+        assertThatThrownBy(throwingCallable)
+                .isInstanceOf(PaymentValidationException.class)
+                .hasMessage("Instant payment is not supported");
     }
 
     private TinkHttpClient createTinkHttpClient() {
@@ -378,7 +463,8 @@ public class IngPaymentControllerTest {
     }
 
     private PaymentMultiStepRequest createPaymentMultiStepRequest() {
-        return new PaymentMultiStepRequest(createPayment(), persistentStorage, "INIT", emptyList());
+        return new PaymentMultiStepRequest(
+                createPayment(SEPA_CREDIT_TRANSFER), persistentStorage, "INIT", emptyList());
     }
 
     private void setUpAgentComponentProvider() {
@@ -399,12 +485,14 @@ public class IngPaymentControllerTest {
                 .build();
     }
 
-    private IngPaymentExecutor createIngPaymentExecutor(IngPaymentApiClient ingPaymentApiClient) {
+    private IngPaymentExecutor createIngPaymentExecutor(
+            IngPaymentApiClient ingPaymentApiClient, boolean instantSepaIsSupported) {
         return new IngPaymentExecutor(
                 sessionStorage,
                 ingPaymentApiClient,
                 mock(IngPaymentAuthenticator.class),
-                new IngPaymentMapper(new BasePaymentMapper()));
+                new IngPaymentMapper(new BasePaymentMapper()),
+                instantSepaIsSupported);
     }
 
     private void setUpStorage() {

@@ -1,0 +1,9 @@
+{
+    "tppMessages": [
+        {
+            "category": "ERROR",
+            "code": "PAYMENT_FAILED",
+            "text": "Instant payment is not possible."
+        }
+    ]
+}

@@ -38,6 +38,7 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private final IngPaymentApiClient paymentApiClient;
     private final IngPaymentAuthenticator paymentAuthenticator;
     private final IngPaymentMapper paymentMapper;
+    private final boolean instantSepaIsSupported;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentRejectedException {
@@ -56,7 +57,8 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private IngCreatePaymentRequest createPaymentRequest(Payment payment)
             throws PaymentRejectedException {
         // Temporary solution to be fixed in NZG-1112
-        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()) {
+        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()
+                && !instantSepaIsSupported) {
             throw new PaymentValidationException("Instant payment is not supported");
         }
         if (PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())) {

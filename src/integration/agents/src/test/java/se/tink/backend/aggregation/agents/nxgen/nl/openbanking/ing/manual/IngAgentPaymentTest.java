@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.ing.manual;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -16,37 +16,42 @@ import se.tink.libraries.payments.common.model.PaymentScheme;
 
 public class IngAgentPaymentTest {
 
-    private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> manager =
-            new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     private final ArgumentManager<Arg> creditorDebtorManager = new ArgumentManager<>(Arg.values());
 
     @Before
     public void setup() {
-        manager.before();
         builder =
                 new AgentIntegrationTest.Builder("nl", "nl-ing-ob")
                         .setFinancialInstitutionId("ing")
                         .setAppId("tink")
-                        .loadCredentialsBefore(
-                                Boolean.parseBoolean(
-                                        manager.get(LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
-                        .saveCredentialsAfter(
-                                Boolean.parseBoolean(
-                                        manager.get(LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 
     @Test
     public void testSepaPayment() throws Exception {
-
         creditorDebtorManager.before();
-
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build()
+                .testTinkLinkPayment(createRealDomesticPayment(PaymentScheme.SEPA_CREDIT_TRANSFER));
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testInstantSepaPayment() throws Exception {
+        creditorDebtorManager.before();
+        builder.build()
+                .testTinkLinkPayment(
+                        createRealDomesticPayment(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER));
+    }
+
+    private Payment createRealDomesticPayment(PaymentScheme paymentScheme) {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
 
@@ -61,7 +66,7 @@ public class IngAgentPaymentTest {
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
                                 "Message"))
-                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                .withPaymentScheme(paymentScheme)
                 .build();
     }
 

@@ -46,7 +46,9 @@ public class IngPaymentMapperTest {
 
     @SneakyThrows
     @Test
-    public void shouldMapTinkPaymentRequestToCreatePaymentRequest() {
+    @Parameters
+    public void shouldMapTinkPaymentRequestToCreatePaymentRequest(
+            PaymentScheme paymentScheme, String localInstrumentCode, LocalDate executionDate) {
         // given
         String debtorIban = randomIban(CountryCode.FR);
         String creditorIban = randomIban(CountryCode.FR);
@@ -60,7 +62,7 @@ public class IngPaymentMapperTest {
                         .withCurrency("EUR")
                         .withRemittanceInformation(
                                 unstructuredRemittanceInformation("ReferenceToCreditor"))
-                        .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                        .withPaymentScheme(paymentScheme)
                         .withExecutionDate(LocalDate.of(2019, 4, 5))
                         .build();
 
@@ -77,15 +79,24 @@ public class IngPaymentMapperTest {
                                 .instructedAmount(new AmountEntity("1.0", "EUR"))
                                 .creditorName("Payment Creditor")
                                 .remittanceInformationUnstructured("ReferenceToCreditor")
-                                .requestedExecutionDate(LocalDate.of(2019, 4, 5))
+                                .requestedExecutionDate(executionDate)
                                 .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
                                 .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
+                                .localInstrumentCode(localInstrumentCode)
                                 .build());
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] parametersForShouldMapTinkPaymentRequestToCreatePaymentRequest() {
+        return new Object[][] {
+            {PaymentScheme.SEPA_CREDIT_TRANSFER, null, LocalDate.of(2019, 4, 5)},
+            {PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, "INST", null},
+        };
     }
 
     @SneakyThrows
     @Test
-    @Parameters(method = "executionDateTestParams")
+    @Parameters
     public void shouldAddExecutionDateTime(
             LocalDate paymentExecutionDate, LocalDate expectedExecutionDate) {
         // given
@@ -125,7 +136,7 @@ public class IngPaymentMapperTest {
     }
 
     @SuppressWarnings("unused")
-    private static Object[] executionDateTestParams() {
+    private static Object[] parametersForShouldAddExecutionDateTime() {
         return new Object[] {
             new Object[] {null, null},
             new Object[] {LocalDate.of(2019, 4, 5), LocalDate.of(2019, 4, 5)},
@@ -180,7 +191,7 @@ public class IngPaymentMapperTest {
 
     @SneakyThrows
     @Test
-    @Parameters(method = "tinkFrequencyToApiFrequencyTestParams")
+    @Parameters
     public void shouldCorrectlyMapTinkFrequencyValues(Frequency frequency, String apiFrequency) {
         // given
         Payment payment =
@@ -207,7 +218,7 @@ public class IngPaymentMapperTest {
     }
 
     @SuppressWarnings("unused")
-    private static Object[] tinkFrequencyToApiFrequencyTestParams() {
+    private static Object[] parametersForShouldCorrectlyMapTinkFrequencyValues() {
         Map<Frequency, String> testParamsMap =
                 ImmutableMap.<Frequency, String>builder()
                         .put(Frequency.DAILY, "DAIL")
@@ -300,7 +311,7 @@ public class IngPaymentMapperTest {
     }
 
     @Test
-    @Parameters(method = "transactionStatusWithExpectedPaymentStatus")
+    @Parameters
     public void shouldReturnCorrectPaymentStatus(
             String transactionStatus, PaymentStatus expectedPaymentStatus) {
         // when
@@ -311,7 +322,7 @@ public class IngPaymentMapperTest {
     }
 
     @SuppressWarnings("unused")
-    private Object[] transactionStatusWithExpectedPaymentStatus() {
+    private Object[] parametersForShouldReturnCorrectPaymentStatus() {
         Map<String, PaymentStatus> statusMap =
                 ImmutableMap.<String, PaymentStatus>builder()
                         .put("RCVD", PaymentStatus.USER_APPROVAL_FAILED)
