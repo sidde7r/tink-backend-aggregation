@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum DkSSMethod {
-    MIT_ID("mit_id"),
-    NEM_ID("nem_id");
+    MIT_ID("mitId"),
+    NEM_ID("nemId");
 
     private final String supplementalInfoKey;
 

@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel;
 
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.IDENTITY_DATA;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.nickel.NickelConstants.SESION_EXPIRED_AFTER_DAYS;
 
 import com.google.inject.Inject;
 import java.security.cert.X509Certificate;
+import java.time.ZoneId;
 import java.util.Optional;
 import lombok.SneakyThrows;
 import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
@@ -65,6 +67,7 @@ public class NickelAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.client.setResponseStatusHandler(new NickelResponseHandler());
         addFilters();
+        checkSessionExpiryDate();
     }
 
     @Override
@@ -127,5 +130,19 @@ public class NickelAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(accountFetcher).build()));
+    }
+
+    private void checkSessionExpiryDate() {
+        if (credentials.getSessionExpiryDate() == null
+                || localDateTimeSource
+                        .getInstant()
+                        .isAfter(credentials.getSessionExpiryDate().toInstant())) {
+            credentials.setSessionExpiryDate(
+                    localDateTimeSource
+                            .getInstant()
+                            .atZone(ZoneId.of("CET"))
+                            .toLocalDate()
+                            .plusDays(SESION_EXPIRED_AFTER_DAYS));
+        }
     }
 }
