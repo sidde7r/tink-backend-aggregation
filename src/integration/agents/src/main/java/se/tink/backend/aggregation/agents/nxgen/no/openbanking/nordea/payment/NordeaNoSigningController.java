@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
@@ -40,6 +41,8 @@ public class NordeaNoSigningController implements Signer<PaymentRequest> {
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
                 case USER_APPROVAL_FAILED:
                     throw ThirdPartyAppError.TIMED_OUT.exception();
+                case CANCELLED:
+                    throw new PaymentCancelledException();
                 default:
                     log.warn(String.format("Unknown payment sign response status: (%s)", status));
                     throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
