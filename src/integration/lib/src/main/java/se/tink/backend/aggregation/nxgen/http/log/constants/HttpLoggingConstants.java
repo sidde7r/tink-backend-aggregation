@@ -66,6 +66,7 @@ public final class HttpLoggingConstants {
                     "strict-transport-security",
                     "tpp-id",
                     "tpp-nok-redirect-uri",
+                    "tpp-redirect-preferred",
                     "tpp-redirect-uri",
                     "tpp-request-id",
                     "tpp-signature-certificate",

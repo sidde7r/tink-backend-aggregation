@@ -94,8 +94,9 @@ public class UnicreditApiClient extends UnicreditBaseApiClient {
                         new AuthorizationRequest(new PsuDataEntity(password)));
     }
 
-    public AuthorizationResponse finalizeAuthorization(String url, String otp) {
+    public AuthorizationResponse finalizeAuthorization(String url, String username, String otp) {
         return createRequest(new URL(url))
+                .header(HeaderKeys.PSU_ID, username)
                 .put(AuthorizationResponse.class, new FinalizeAuthorizationRequest(otp));
     }
 

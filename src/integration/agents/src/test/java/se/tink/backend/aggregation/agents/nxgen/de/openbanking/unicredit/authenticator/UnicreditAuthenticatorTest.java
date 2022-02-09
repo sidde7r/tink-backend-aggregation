@@ -117,7 +117,7 @@ public class UnicreditAuthenticatorTest {
         verify(storage).saveConsentId(CONSENT_ID);
         verify(apiClient).initializeAuthorization(DUMMY_URL, STATE, USERNAME);
         verify(apiClient).authorizeWithPassword(DUMMY_URL, USERNAME, PASSWORD);
-        verify(apiClient).finalizeAuthorization(DUMMY_URL, OTP);
+        verify(apiClient).finalizeAuthorization(DUMMY_URL, USERNAME, OTP);
     }
 
     @Test
@@ -157,7 +157,7 @@ public class UnicreditAuthenticatorTest {
                 .doesNotThrowAnyException();
         verify(apiClient).initializeAuthorization(DUMMY_URL, STATE, USERNAME);
         verify(apiClient).authorizeWithPassword(DUMMY_URL, USERNAME, PASSWORD);
-        verify(apiClient).finalizeAuthorization(DUMMY_URL, OTP);
+        verify(apiClient).finalizeAuthorization(DUMMY_URL, USERNAME, OTP);
     }
 
     private ConsentDetailsResponse mockConsentDetailsResponse(LocalDate now) {
