@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.mock.module.NordeaWireMockTestModule;
@@ -31,6 +32,8 @@ public class NordeaNoPaymentWireMockTest {
     final String WIREMOCK_SUCCESS_PATH = RESOURCE_PATH + "paymentStandardWireMock.aap";
     final String WIREMOCK_CANCELLED_FIRST_SCA_PATH =
             RESOURCE_PATH + "paymentStandardWireMockCancelledFirstSCA.aap";
+    final String WIREMOCK_CANCELLED_SECOND_SCA_PATH =
+            RESOURCE_PATH + "paymentStandardWireMockCancelledSecondSCA.aap";
 
     private AgentsServiceConfiguration configuration;
 
@@ -75,6 +78,29 @@ public class NordeaNoPaymentWireMockTest {
         assertThat(exception)
                 .isInstanceOf(ThirdPartyAppException.class)
                 .hasMessage("Cause: ThirdPartyAppError.CANCELLED");
+    }
+
+    @Test
+    public void testStandardPaymentShouldPaymentExceptionCancelledByUser() throws Exception {
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION);
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                NO, "no-nordea-ob", WIREMOCK_CANCELLED_SECOND_SCA_PATH)
+                        .withConfigurationFile(configuration)
+                        .withPayment(createStandardPayment())
+                        .withHttpDebugTrace()
+                        .addCallbackData("code", "dummyCode")
+                        .withAgentModule(new NordeaWireMockTestModule())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        Throwable exception = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        assertThat(exception)
+                .isInstanceOf(PaymentException.class)
+                .hasMessage("The payment was cancelled by the user.");
     }
 
     private Payment createStandardPayment() {
