@@ -8,6 +8,7 @@ java_library(
         "//po:i18n",
     ],
     deps = [
+        "//src/agent_sdk/runtime/src/instance",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
