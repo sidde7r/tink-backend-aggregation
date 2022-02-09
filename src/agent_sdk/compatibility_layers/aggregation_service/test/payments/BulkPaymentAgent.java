@@ -9,10 +9,12 @@ import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Ignore;
 import se.tink.agent.sdk.models.payments.BulkPaymentSigningBasket;
+import se.tink.agent.sdk.models.payments.PaymentStatus;
 import se.tink.agent.sdk.models.payments.bulk_payment_register_basket_result.BulkPaymentRegisterBasketResult;
 import se.tink.agent.sdk.models.payments.bulk_payment_register_result.BulkPaymentRegisterResult;
 import se.tink.agent.sdk.models.payments.bulk_payment_sign_basket_result.BulkPaymentSignBasketResult;
 import se.tink.agent.sdk.models.payments.bulk_payment_sign_result.BulkPaymentSignResult;
+import se.tink.agent.sdk.models.payments.bulk_payment_sign_result.builder.BulkPaymentSignResultBuildDebtor;
 import se.tink.agent.sdk.models.payments.payment.Payment;
 import se.tink.agent.sdk.models.payments.payment_reference.PaymentReference;
 import se.tink.agent.sdk.payments.bulk.generic.GenericBulkPaymentInitiator;
@@ -61,6 +63,8 @@ public class BulkPaymentAgent implements InitiateBulkPaymentGeneric {
     @Override
     public GenericBulkPaymentInitiator bulkPaymentInitiator() {
         return new GenericBulkPaymentInitiator() {
+            private boolean isFirstGetStatusPoll = true;
+
             @Override
             public BulkPaymentRegisterBasketResult registerPayments(List<Payment> payments) {
 
@@ -102,7 +106,30 @@ public class BulkPaymentAgent implements InitiateBulkPaymentGeneric {
                 // requires the lists to have the same order).
                 Collections.shuffle(results);
 
+                // Simulate a potential state transition from PENDING -> actual status by always
+                // returning PENDING the first time.
+                if (isFirstGetStatusPoll) {
+                    results =
+                            results.stream()
+                                    .map(this::switchToPendingStatus)
+                                    .collect(Collectors.toList());
+
+                    isFirstGetStatusPoll = false;
+                }
+
                 return BulkPaymentSignBasketResult.builder().paymentResults(results).build();
+            }
+
+            private BulkPaymentSignResult switchToPendingStatus(
+                    BulkPaymentSignResult originalResult) {
+                BulkPaymentSignResultBuildDebtor builder =
+                        BulkPaymentSignResult.builder()
+                                .reference(originalResult.getReference())
+                                .status(PaymentStatus.PENDING);
+                if (originalResult.getDebtor().isPresent()) {
+                    return builder.debtor(originalResult.getDebtor().get()).build();
+                }
+                return builder.noDebtor().build();
             }
         };
     }
