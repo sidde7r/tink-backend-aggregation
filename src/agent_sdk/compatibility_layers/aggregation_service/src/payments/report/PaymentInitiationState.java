@@ -4,6 +4,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import se.tink.agent.sdk.models.payments.ConnectivityError;
 import se.tink.agent.sdk.models.payments.PaymentStatus;
 import se.tink.agent.sdk.models.payments.payment.Debtor;
@@ -12,6 +13,7 @@ import se.tink.agent.sdk.models.payments.payment_reference.PaymentReference;
 
 @Builder
 @EqualsAndHashCode
+@ToString
 public class PaymentInitiationState {
     private final PaymentReference paymentReference;
 
