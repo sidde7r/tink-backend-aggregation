@@ -28,97 +28,159 @@ public class RateLimitedExecutorService implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final double MULTIPLIER = 1.25;
+
     private static final ImmutableMap<String, Double> PROVIDERS_WITH_OVERRIDDEN_RATE_LIMITER =
             ImmutableMap.<String, Double>builder()
-                    .put("fraud.CreditSafeAgent", 0.12)
-                    .put("abnamro.ics.IcsAgent", 10.)
-                    .put("other.CSNAgent", 0.12)
-                    .put("nxgen.dk.banks.danskebank.DanskeBankDKAgent", 0.015)
-                    .put("nxgen.nl.openbanking.triodos.TriodosAgent", 0.03)
-                    .put("nxgen.no.banks.danskebank.DanskeBankNOAgent", 0.015)
-                    .put("nxgen.serviceproviders.openbanking.sparebank.SparebankAgent", 0.003)
-                    .put("nxgen.se.openbanking.handelsbanken.HandelsbankenSEAgent", 0.03)
-                    .put("nxgen.se.openbanking.nordea.NordeaSeAgent", 0.015)
-                    .put("nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent.java", 0.08)
-                    .put("nxgen.se.openbanking.swedbank.SwedbankAgent", 0.02)
-                    .put("nxgen.se.openbanking.alandsbanken.AlandsbankenAgent", 0.04)
-                    .put("nxgen.se.openbanking.business.danskebank.DanskebankBusinessAgent", 0.04)
-                    .put("nxgen.se.openbanking.danskebank.DanskebankV31Agent", 0.04)
+                    .put("fraud.CreditSafeAgent", 0.12 * MULTIPLIER)
+                    .put("abnamro.ics.IcsAgent", 10. * MULTIPLIER)
+                    .put("other.CSNAgent", 0.12 * MULTIPLIER)
+                    .put("nxgen.dk.banks.danskebank.DanskeBankDKAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.nl.openbanking.triodos.TriodosAgent", 0.03 * MULTIPLIER)
+                    .put("nxgen.no.banks.danskebank.DanskeBankNOAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.serviceproviders.openbanking.sparebank.SparebankAgent",
+                            0.003 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.handelsbanken.HandelsbankenSEAgent",
+                            0.03 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.nordea.NordeaSeAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent.java",
+                            0.08 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.swedbank.SwedbankAgent", 0.02 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.alandsbanken.AlandsbankenAgent", 0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.business.danskebank.DanskebankBusinessAgent",
+                            0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.danskebank.DanskebankV31Agent", 0.04 * MULTIPLIER)
                     .put(
                             "nxgen.se.openbanking.business.handelsbanken.HandelsbankenSEBusinessAgent",
-                            0.04)
-                    .put("nxgen.se.openbanking.business.nordea.NordeaSeBusinessAgent", 0.04)
-                    .put("nxgen.se.openbanking.business.seb.SebSEBusinessAgent", 0.04)
-                    .put("nxgen.se.openbanking.entercard.coop.CoopMastercardAgent", 0.04)
-                    .put("nxgen.se.openbanking.entercard.mervarde.MervardeMasterCardAgent", 0.04)
-                    .put("nxgen.se.openbanking.entercard.moregolf.MoreGolfMastercardAgent", 0.04)
-                    .put("nxgen.se.openbanking.entercard.remember.RememberMastercardAgent", 0.04)
-                    .put("nxgen.se.openbanking.lansforsakringar.LansforsakringarAgent", 0.04)
-                    .put("nxgen.se.openbanking.nordnet.NordnetAgent", 0.04)
-                    .put("nxgen.se.openbanking.resursbank.ResursBankAgent", 0.04)
-                    .put("nxgen.se.openbanking.sbab.SbabAgent", 0.04)
-                    .put("nxgen.se.openbanking.sebkort.circlek.CircleKMastercardSeAgent", 0.015)
-                    .put("nxgen.se.openbanking.sebkort.eurocard.EurocardSeAgent", 0.04)
-                    .put("nxgen.se.openbanking.sebkort.finnair.FinnairMastercardSeAgent", 0.04)
-                    .put("nxgen.se.openbanking.sebkort.ingo.IngoMastercardSeAgent", 0.04)
-                    .put("nxgen.se.openbanking.sebkort.nk.NkNyckelnMastercardSeAgent", 0.04)
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.business.nordea.NordeaSeBusinessAgent",
+                            0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.business.seb.SebSEBusinessAgent", 0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.entercard.coop.CoopMastercardAgent",
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.entercard.mervarde.MervardeMasterCardAgent",
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.entercard.moregolf.MoreGolfMastercardAgent",
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.entercard.remember.RememberMastercardAgent",
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.lansforsakringar.LansforsakringarAgent",
+                            0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.nordnet.NordnetAgent", 0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.resursbank.ResursBankAgent", 0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.sbab.SbabAgent", 0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.circlek.CircleKMastercardSeAgent",
+                            0.015 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.sebkort.eurocard.EurocardSeAgent", 0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.finnair.FinnairMastercardSeAgent",
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.ingo.IngoMastercardSeAgent",
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.nk.NkNyckelnMastercardSeAgent",
+                            0.04 * MULTIPLIER)
                     .put(
                             "nxgen.se.openbanking.sebkort.nordicchoiceclub.NordicChoiceClubSeAgent",
-                            0.04)
-                    .put("nxgen.se.openbanking.sebkort.opel.OpelMastercardSeAgent", 0.02)
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.opel.OpelMastercardSeAgent",
+                            0.02 * MULTIPLIER)
                     .put(
                             "nxgen.se.openbanking.sebkort.quintessentially.QuintessentiallyTheCreditCardSeAgent",
-                            0.04)
-                    .put("nxgen.se.openbanking.sebkort.saab.SaabMastercardSeAgent", 0.04)
-                    .put("nxgen.se.openbanking.sebkort.sas.SasEurobonusMastercardSeAgent", 0.015)
-                    .put("nxgen.se.openbanking.sebkort.sj.SjPrioMastercardSeAgent", 0.015)
-                    .put("nxgen.se.openbanking.sebkort.wallet.WalletMastercardSeAgent", 0.04)
-                    .put("nxgen.se.openbanking.sebopenbanking.SebAgent", 0.04)
-                    .put("nxgen.se.openbanking.skandia.SkandiaAgent", 0.04)
-                    .put("nxgen.se.openbanking.volvofinans.VolvoFinansAgent", 0.04)
-                    .put("nxgen.se.openbanking.icabanken.IcaBankenAgent", 0.03)
-                    .put("nxgen.nl.creditcards.ICS.ICSAgent", 0.007)
-                    .put("nxgen.nl.banks.openbanking.rabobank.RabobankAgent", 0.007)
-                    .put("nxgen.nl.openbanking.knab.KnabAgent", 0.03)
-                    .put("nxgen.nl.openbanking.abnamro.AbnAmroAgent", 0.04)
-                    .put("nxgen.nl.openbanking.ing.IngAgent", 0.04)
-                    .put("nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent", 0.04)
-                    .put("nxgen.uk.openbanking.ukob.cashplus.CashplusAgent", 0.015)
-                    .put("nxgen.uk.openbanking.handelsbanken.HandelsbankenCorporateAgent", 0.007)
-                    .put("nxgen.uk.openbanking.ukob.lloydsgroup.lloyds.LloydsV31Agent", 0.04)
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.saab.SaabMastercardSeAgent",
+                            0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.sas.SasEurobonusMastercardSeAgent",
+                            0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.sj.SjPrioMastercardSeAgent",
+                            0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.se.openbanking.sebkort.wallet.WalletMastercardSeAgent",
+                            0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.sebopenbanking.SebAgent", 0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.skandia.SkandiaAgent", 0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.volvofinans.VolvoFinansAgent", 0.04 * MULTIPLIER)
+                    .put("nxgen.se.openbanking.icabanken.IcaBankenAgent", 0.03 * MULTIPLIER)
+                    .put("nxgen.nl.creditcards.ICS.ICSAgent", 0.007 * MULTIPLIER)
+                    .put("nxgen.nl.banks.openbanking.rabobank.RabobankAgent", 0.007 * MULTIPLIER)
+                    .put("nxgen.nl.openbanking.knab.KnabAgent", 0.03 * MULTIPLIER)
+                    .put("nxgen.nl.openbanking.abnamro.AbnAmroAgent", 0.04 * MULTIPLIER)
+                    .put("nxgen.nl.openbanking.ing.IngAgent", 0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
+                            0.04 * MULTIPLIER)
+                    .put("nxgen.uk.openbanking.ukob.cashplus.CashplusAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.uk.openbanking.handelsbanken.HandelsbankenCorporateAgent",
+                            0.007 * MULTIPLIER)
+                    .put(
+                            "nxgen.uk.openbanking.ukob.lloydsgroup.lloyds.LloydsV31Agent",
+                            0.04 * MULTIPLIER)
                     .put(
                             "nxgen.uk.openbanking.ukob.lloydsgroup.lloyds.LloydsV31BusinessAgent",
-                            0.04)
-                    .put("nxgen.uk.openbanking.nationwide.NationwideV31Agent", 0.07)
-                    .put("nxgen.uk.openbanking.ukob.revolut.RevolutV31Agent", 0.04)
-                    .put("nxgen.uk.openbanking.santander.SantanderV31Agent", 0.04)
-                    .put("nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent", 0.03)
-                    .put("nxgen.demo.openbanking.demobank.DemobankAgent", 3.)
-                    .put("nxgen.fi.openbanking.handelsbanken.HandelsbankenAgent", 0.003)
-                    .put("nxgen.fi.openbanking.nordea.NordeaFiAgent", 0.001)
-                    .put("nxgen.fi.openbanking.spankki.SPankkiAgent", 0.003)
-                    .put("nxgen.pt.openbanking.activobank.ActivoBankAgent", 0.015)
-                    .put("nxgen.pt.openbanking.atlanticoeuropa.AtlanticoEuropaAgent", 0.015)
-                    .put("nxgen.pt.openbanking.bancobpi.BancoBpiAgent", 0.015)
-                    .put("nxgen.pt.openbanking.bancoctt.BancoCttAgent", 0.015)
-                    .put("nxgen.pt.openbanking.bancomontepio.BancoMontepioAgent", 0.015)
-                    .put("nxgen.pt.openbanking.bankinter.BankinterAgent", 0.015)
-                    .put("nxgen.pt.openbanking.big.BigAgent", 0.015)
-                    .put("nxgen.pt.openbanking.bpg.BpgAgent", 0.015)
-                    .put("nxgen.pt.openbanking.caixa.CaixaRedirectAgent", 0.015)
-                    .put("nxgen.pt.openbanking.caixacrl.CaixaCrlAgent", 0.015)
-                    .put("nxgen.pt.openbanking.cemah.CemahAgent", 0.015)
-                    .put("nxgen.pt.openbanking.cofidis.CofidisAgent", 0.015)
-                    .put("nxgen.pt.openbanking.creditoagricola.CreditoAgricolaAgent", 0.015)
-                    .put("nxgen.pt.openbanking.eurobic.EurobicAgent", 0.015)
-                    .put("nxgen.pt.openbanking.millenniumbcp.MillenniumBcpAgent", 0.015)
-                    .put("nxgen.pt.openbanking.novobanco.NovoBancoAgent", 0.015)
-                    .put("nxgen.pt.openbanking.novobancoacores.NovoBancoAcoresAgent", 0.015)
-                    .put("nxgen.pt.openbanking.santander.SantanderAgent", 0.015)
-                    .put("nxgen.pt.openbanking.unicre.UnicreAgent", 0.015)
-                    .put("nxgen.fr.openbanking.bpcegroup.BpceGroupAgent", 0.06)
-                    .put("nxgen.fr.openbanking.boursorama.BoursoramaAgent", 0.06)
-                    .put("nxgen.serviceproviders.openbanking.revolut.RevolutEEAAgent", 0.04)
+                            0.04 * MULTIPLIER)
+                    .put("nxgen.uk.openbanking.nationwide.NationwideV31Agent", 0.07 * MULTIPLIER)
+                    .put("nxgen.uk.openbanking.ukob.revolut.RevolutV31Agent", 0.04 * MULTIPLIER)
+                    .put("nxgen.uk.openbanking.santander.SantanderV31Agent", 0.04 * MULTIPLIER)
+                    .put(
+                            "nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent",
+                            0.03 * MULTIPLIER)
+                    .put("nxgen.demo.openbanking.demobank.DemobankAgent", 3. * MULTIPLIER)
+                    .put(
+                            "nxgen.fi.openbanking.handelsbanken.HandelsbankenAgent",
+                            0.003 * MULTIPLIER)
+                    .put("nxgen.fi.openbanking.nordea.NordeaFiAgent", 0.001 * MULTIPLIER)
+                    .put("nxgen.fi.openbanking.spankki.SPankkiAgent", 0.003 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.activobank.ActivoBankAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.atlanticoeuropa.AtlanticoEuropaAgent",
+                            0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.bancobpi.BancoBpiAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.bancoctt.BancoCttAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.bancomontepio.BancoMontepioAgent",
+                            0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.bankinter.BankinterAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.big.BigAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.bpg.BpgAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.caixa.CaixaRedirectAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.caixacrl.CaixaCrlAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.cemah.CemahAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.cofidis.CofidisAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.creditoagricola.CreditoAgricolaAgent",
+                            0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.eurobic.EurobicAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.millenniumbcp.MillenniumBcpAgent",
+                            0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.novobanco.NovoBancoAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.novobancoacores.NovoBancoAcoresAgent",
+                            0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.santander.SantanderAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.unicre.UnicreAgent", 0.015 * MULTIPLIER)
+                    .put("nxgen.fr.openbanking.bpcegroup.BpceGroupAgent", 0.06 * MULTIPLIER)
+                    .put("nxgen.fr.openbanking.boursorama.BoursoramaAgent", 0.06 * MULTIPLIER)
+                    .put(
+                            "nxgen.serviceproviders.openbanking.revolut.RevolutEEAAgent",
+                            0.04 * MULTIPLIER)
                     .build();
 
     private final MetricRegistry metricRegistry;

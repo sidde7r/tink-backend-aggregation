@@ -62,7 +62,7 @@ public class SqsConsumerService extends ManagedSafeStop implements QueueConsumer
                             // Production rate will be way higher than this, leading to a long tail
                             // of the background refresh. Observed peak individual pods before this
                             // change has been noted to be around 5 consumptions/second.
-                            RateLimiter rateLimiter = RateLimiter.create(0.8);
+                            RateLimiter rateLimiter = RateLimiter.create(1.0);
                             while (running.get()) {
                                 rateLimiter.acquire();
                                 consume();
