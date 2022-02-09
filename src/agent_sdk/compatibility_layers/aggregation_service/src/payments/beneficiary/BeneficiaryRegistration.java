@@ -106,16 +106,22 @@ public class BeneficiaryRegistration {
             return PaymentInitiationState.builder().paymentReference(paymentReference).build();
         }
 
-        Set<AccountIdentifier> registeredBeneficiaries =
-                beneficiariesFetcher.fetchPaymentBeneficiariesFor(debtorAccountIdentifier).stream()
-                        .map(Beneficiary::getAccountIdentifier)
-                        .collect(Collectors.toSet());
+        if (!cache.hasCached(debtorAccountIdentifier)) {
+            // Only fetch beneficiaries for a debtorAccountIdentifier once.
+            // There's no point in fetching beneficiaries for the same account multiple times, the
+            // cache contain the result from the first fetch.
+            Set<AccountIdentifier> registeredBeneficiaries =
+                    beneficiariesFetcher.fetchPaymentBeneficiariesFor(debtorAccountIdentifier)
+                            .stream()
+                            .map(Beneficiary::getAccountIdentifier)
+                            .collect(Collectors.toSet());
 
-        cache.add(debtorAccountIdentifier, registeredBeneficiaries);
+            cache.add(debtorAccountIdentifier, registeredBeneficiaries);
 
-        if (cache.contains(debtorAccountIdentifier, creditorAccountIdentifier)) {
-            // The creditor is among the newly fetched payment beneficiaries.
-            return PaymentInitiationState.builder().paymentReference(paymentReference).build();
+            if (cache.contains(debtorAccountIdentifier, creditorAccountIdentifier)) {
+                // The creditor is among the newly fetched payment beneficiaries.
+                return PaymentInitiationState.builder().paymentReference(paymentReference).build();
+            }
         }
 
         Beneficiary beneficiaryToRegister =
