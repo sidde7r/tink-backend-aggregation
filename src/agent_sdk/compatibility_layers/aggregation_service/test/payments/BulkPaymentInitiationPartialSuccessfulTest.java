@@ -24,8 +24,8 @@ public class BulkPaymentInitiationPartialSuccessfulTest {
         //
         // We expect that each of the above-mentioned steps will have processed fewer and fewer
         // payments, due to earlier steps failing a payment.
-        BulkPaymentAgent agent =
-                new BulkPaymentAgent(
+        BulkPaymentTestAgent agent =
+                new BulkPaymentTestAgent(
                         List.of(
                                 BulkPaymentRegisterResult.builder()
                                         .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)

@@ -19,8 +19,8 @@ public class BulkPaymentInitiationGetStatusTimeoutTest {
         // Set up the agent to successfully register and sign the payment but to always return
         // PENDING when polling for status. The payment initiation will be constructed with a very
         // short polling timeout. We expect the final state of the payment to be PENDING.
-        BulkPaymentAgent agent =
-                new BulkPaymentAgent(
+        BulkPaymentTestAgent agent =
+                new BulkPaymentTestAgent(
                         List.of(
                                 BulkPaymentRegisterResult.builder()
                                         .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)

@@ -28,7 +28,7 @@ import se.tink.agent.sdk.steppable_execution.interactive_step.response.Interacti
 // This is an agent implementation to test bulk payment initiation. The behaviour of the process is
 // controlled via the constructor arguments, it's possible to query which payments have been
 // processed via the getter methods.
-public class BulkPaymentAgent implements InitiateBulkPaymentGeneric {
+public class BulkPaymentTestAgent implements InitiateBulkPaymentGeneric {
     private static final String BANK_BASKET_REFERENCE = "bank-basket-ref";
 
     private final List<BulkPaymentRegisterResult> registerResults;
@@ -39,7 +39,7 @@ public class BulkPaymentAgent implements InitiateBulkPaymentGeneric {
     private final List<Payment> paymentsAskedToSign = new ArrayList<>();
     private final Set<Payment> paymentsAskedToGetStatus = new HashSet<>();
 
-    public BulkPaymentAgent(
+    public BulkPaymentTestAgent(
             List<BulkPaymentRegisterResult> registerResults,
             List<BulkPaymentSignResult> signResults,
             List<BulkPaymentSignResult> statusResults) {
@@ -62,76 +62,106 @@ public class BulkPaymentAgent implements InitiateBulkPaymentGeneric {
 
     @Override
     public GenericBulkPaymentInitiator bulkPaymentInitiator() {
-        return new GenericBulkPaymentInitiator() {
-            private boolean isFirstGetStatusPoll = true;
+        return new TestAgentBulkPaymentInitiator(
+                this.registerResults,
+                this.signResults,
+                this.statusResults,
+                this.paymentsAskedToRegister,
+                this.paymentsAskedToSign,
+                this.paymentsAskedToGetStatus);
+    }
 
-            @Override
-            public BulkPaymentRegisterBasketResult registerPayments(List<Payment> payments) {
+    private static class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiator {
+        private final List<BulkPaymentRegisterResult> registerResults;
+        private final List<BulkPaymentSignResult> signResults;
+        private final List<BulkPaymentSignResult> statusResults;
 
-                paymentsAskedToRegister.addAll(payments);
+        private final List<Payment> paymentsAskedToRegister;
+        private final List<Payment> paymentsAskedToSign;
+        private final Set<Payment> paymentsAskedToGetStatus;
 
-                ArrayList<BulkPaymentRegisterResult> results = new ArrayList<>(registerResults);
+        private boolean isFirstGetStatusPoll = true;
 
-                // Shuffle the list to ensure that lists are not compared using `.equals()` (which
-                // requires the lists to have the same order).
-                Collections.shuffle(results);
+        public TestAgentBulkPaymentInitiator(
+                List<BulkPaymentRegisterResult> registerResults,
+                List<BulkPaymentSignResult> signResults,
+                List<BulkPaymentSignResult> statusResults,
+                List<Payment> paymentsAskedToRegister,
+                List<Payment> paymentsAskedToSign,
+                Set<Payment> paymentsAskedToGetStatus) {
+            this.registerResults = registerResults;
+            this.signResults = signResults;
+            this.statusResults = statusResults;
+            this.paymentsAskedToRegister = paymentsAskedToRegister;
+            this.paymentsAskedToSign = paymentsAskedToSign;
+            this.paymentsAskedToGetStatus = paymentsAskedToGetStatus;
+        }
 
-                return BulkPaymentRegisterBasketResult.builder()
-                        .basketReference(BANK_BASKET_REFERENCE)
-                        .paymentResults(results)
-                        .build();
+        @Override
+        public BulkPaymentRegisterBasketResult registerPayments(List<Payment> payments) {
+
+            paymentsAskedToRegister.addAll(payments);
+
+            ArrayList<BulkPaymentRegisterResult> results = new ArrayList<>(registerResults);
+
+            // Shuffle the list to ensure that lists are not compared using `.equals()` (which
+            // requires the lists to have the same order).
+            Collections.shuffle(results);
+
+            return BulkPaymentRegisterBasketResult.builder()
+                    .basketReference(BANK_BASKET_REFERENCE)
+                    .paymentResults(results)
+                    .build();
+        }
+
+        @Override
+        public BulkPaymentSignFlow getSignFlow() {
+            return BulkPaymentSignFlow.builder()
+                    .startStep(new SuccessfulSignStep(signResults, paymentsAskedToSign))
+                    .build();
+        }
+
+        @Override
+        public BulkPaymentSignBasketResult getSignStatus(BulkPaymentSigningBasket basket) {
+            // Ensure the bank basket reference is identical to the one reported in the register
+            // step.
+            Assert.assertEquals(BANK_BASKET_REFERENCE, basket.getBankBasketReference());
+
+            paymentsAskedToGetStatus.addAll(
+                    basket.getPaymentReferences().stream()
+                            .map(PaymentReference::getPayment)
+                            .collect(Collectors.toList()));
+
+            List<BulkPaymentSignResult> results = new ArrayList<>(statusResults);
+
+            // Shuffle the list to ensure that lists are not compared using `.equals()` (which
+            // requires the lists to have the same order).
+            Collections.shuffle(results);
+
+            // Simulate a potential state transition from PENDING -> actual status by always
+            // returning PENDING the first time.
+            if (isFirstGetStatusPoll) {
+                results =
+                        results.stream()
+                                .map(this::switchToPendingStatus)
+                                .collect(Collectors.toList());
+
+                isFirstGetStatusPoll = false;
             }
 
-            @Override
-            public BulkPaymentSignFlow getSignFlow() {
-                return BulkPaymentSignFlow.builder()
-                        .startStep(new SuccessfulSignStep(signResults, paymentsAskedToSign))
-                        .build();
+            return BulkPaymentSignBasketResult.builder().paymentResults(results).build();
+        }
+
+        private BulkPaymentSignResult switchToPendingStatus(BulkPaymentSignResult originalResult) {
+            BulkPaymentSignResultBuildDebtor builder =
+                    BulkPaymentSignResult.builder()
+                            .reference(originalResult.getReference())
+                            .status(PaymentStatus.PENDING);
+            if (originalResult.getDebtor().isPresent()) {
+                return builder.debtor(originalResult.getDebtor().get()).build();
             }
-
-            @Override
-            public BulkPaymentSignBasketResult getSignStatus(BulkPaymentSigningBasket basket) {
-                // Ensure the bank basket reference is identical to the one reported in the register
-                // step.
-                Assert.assertEquals(BANK_BASKET_REFERENCE, basket.getBankBasketReference());
-
-                paymentsAskedToGetStatus.addAll(
-                        basket.getPaymentReferences().stream()
-                                .map(PaymentReference::getPayment)
-                                .collect(Collectors.toList()));
-
-                List<BulkPaymentSignResult> results = new ArrayList<>(statusResults);
-
-                // Shuffle the list to ensure that lists are not compared using `.equals()` (which
-                // requires the lists to have the same order).
-                Collections.shuffle(results);
-
-                // Simulate a potential state transition from PENDING -> actual status by always
-                // returning PENDING the first time.
-                if (isFirstGetStatusPoll) {
-                    results =
-                            results.stream()
-                                    .map(this::switchToPendingStatus)
-                                    .collect(Collectors.toList());
-
-                    isFirstGetStatusPoll = false;
-                }
-
-                return BulkPaymentSignBasketResult.builder().paymentResults(results).build();
-            }
-
-            private BulkPaymentSignResult switchToPendingStatus(
-                    BulkPaymentSignResult originalResult) {
-                BulkPaymentSignResultBuildDebtor builder =
-                        BulkPaymentSignResult.builder()
-                                .reference(originalResult.getReference())
-                                .status(PaymentStatus.PENDING);
-                if (originalResult.getDebtor().isPresent()) {
-                    return builder.debtor(originalResult.getDebtor().get()).build();
-                }
-                return builder.noDebtor().build();
-            }
-        };
+            return builder.noDebtor().build();
+        }
     }
 
     private static class SuccessfulSignStep extends BulkPaymentSignStep {
