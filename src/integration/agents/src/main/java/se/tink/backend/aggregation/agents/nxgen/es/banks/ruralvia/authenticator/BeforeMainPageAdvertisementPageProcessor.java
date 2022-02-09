@@ -20,7 +20,7 @@ public class BeforeMainPageAdvertisementPageProcessor implements CallbackProcess
             throws AuthenticationException, AuthorizationException {
         try {
             WebElement globalPositionHyperlink =
-                    webDriver.findElement(By.xpath("//div[@id='bot']/center/a[@class='bot']"));
+                    webDriver.findElement(By.xpath("//div[@id='BOT']/center/a[@class='bot']"));
             globalPositionHyperlink.click();
         } catch (NoSuchElementException ex) {
             // nothing to do as it seems there is no advertisement page
