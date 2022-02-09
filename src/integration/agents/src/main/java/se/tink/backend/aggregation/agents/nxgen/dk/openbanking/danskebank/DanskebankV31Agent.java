@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
@@ -47,6 +48,9 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
                 aisConfig,
                 getCreditCardAccountMapperWithDanskeIdentifierMapper(),
                 getTransactionalAccountMapperWithDanskeIdentifierMapper());
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
     }
 
     private static CreditCardAccountMapper getCreditCardAccountMapperWithDanskeIdentifierMapper() {

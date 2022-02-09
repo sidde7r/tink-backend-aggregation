@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.norwegian.NorwegianBaseAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public class NorwegianDKAgent extends NorwegianBaseAgent {
@@ -14,5 +15,8 @@ public class NorwegianDKAgent extends NorwegianBaseAgent {
     @Inject
     public NorwegianDKAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, new NorwegianDKConfiguration());
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
     }
 }
