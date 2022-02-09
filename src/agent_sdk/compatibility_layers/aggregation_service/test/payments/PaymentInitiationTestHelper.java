@@ -45,19 +45,20 @@ public final class PaymentInitiationTestHelper {
     public static final SupplementalInformationController SUPPLEMENTAL_INFORMATION_CONTROLLER =
             Mockito.mock(SupplementalInformationController.class);
 
-    public static final Debtor DEBTOR_1 = new Debtor(new IbanIdentifier("SE1234567890"));
+    public static final Debtor DEBTOR_1 =
+            new Debtor(new IbanIdentifier("SE2058346122276786637656"));
 
     public static final Creditor CREDITOR_ALICE =
-            new Creditor(new IbanIdentifier("FR1282828282"), "Alice");
+            new Creditor(new IbanIdentifier("FR4030003000704651478718F10"), "Alice");
 
     public static final Creditor CREDITOR_BOB =
-            new Creditor(new IbanIdentifier("DE442123551231"), "Bob");
+            new Creditor(new IbanIdentifier("DE86500105176661867176"), "Bob");
 
     public static final Creditor CREDITOR_EVE =
-            new Creditor(new IbanIdentifier("IT800128371723"), "Eve");
+            new Creditor(new IbanIdentifier("IT42Q0300203280696486548388"), "Eve");
 
     public static final Creditor CREDITOR_JOHN =
-            new Creditor(new IbanIdentifier("BE9102381723123"), "John");
+            new Creditor(new IbanIdentifier("BE06812795264422"), "John");
 
     public static final Payment PAYMENT_1 =
             new PaymentImpl(
