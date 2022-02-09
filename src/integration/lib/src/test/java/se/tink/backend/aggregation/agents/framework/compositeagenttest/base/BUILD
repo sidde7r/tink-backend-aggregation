@@ -8,6 +8,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agent_sdk/runtime/src/instance",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/enums",

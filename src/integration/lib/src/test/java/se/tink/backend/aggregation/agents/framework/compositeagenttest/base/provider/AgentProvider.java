@@ -1,32 +1,30 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.base.provider;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class AgentProvider implements Provider<Agent> {
+public final class AgentProvider extends AbstractModule {
 
-    private final AgentFactory agentFactory;
-    private final CredentialsRequest request;
-    private final AgentContext context;
-
-    @Inject
-    public AgentProvider(
+    @Singleton
+    @Provides
+    public AgentInstance provideAgentSdkInstance(
             AgentFactory agentFactory, CredentialsRequest request, AgentContext context) {
-        this.agentFactory = agentFactory;
-        this.request = request;
-        this.context = context;
-    }
-
-    @Override
-    public Agent get() {
         try {
-            return agentFactory.create(request, context);
+            return agentFactory.createAgentSdkInstance(request, context);
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @Singleton
+    @Provides
+    public Agent provideAgent(AgentInstance agentInstance) {
+        return agentInstance.instanceOf(Agent.class).orElse(null);
     }
 }

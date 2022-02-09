@@ -6,7 +6,6 @@ import com.google.inject.Scopes;
 import com.google.inject.multibindings.Multibinder;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.agentfactory.impl.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.impl.AgentModuleFactory;
@@ -49,7 +48,7 @@ public final class AgentFactoryWireMockModule extends AbstractModule {
                                 .build());
         bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
         bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
-        bind(Agent.class).toProvider(AgentProvider.class).in(Scopes.SINGLETON);
+        install(new AgentProvider());
         bind(AgentDependencyModuleLoader.class)
                 .to(AgentDependencyModuleLoaderForDecoupled.class)
                 .in(Scopes.SINGLETON);
