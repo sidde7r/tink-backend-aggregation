@@ -1,9 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.mock;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static se.tink.libraries.enums.MarketCode.NO;
 
 import java.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.mock.module.NordeaWireMockTestModule;
@@ -20,20 +25,28 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class NordeaNoPaymentWireMockTest {
 
+    private static final String RESOURCE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/nordea/mock/resources/";
+
+    private final String CONFIGURATION = RESOURCE_PATH + "configuration.yml";
+    final String WIREMOCK_SUCCESS_PATH = RESOURCE_PATH + "paymentStandardWireMock.aap";
+    final String WIREMOCK_CANCELLED_FIRST_SCA_PATH =
+            RESOURCE_PATH + "paymentStandardWireMockCancelledFirstSCA.aap";
+    final String WIREMOCK_CANCELLED_SECOND_SCA_PATH =
+            RESOURCE_PATH + "paymentStandardWireMockCancelledSecondSCA.aap";
+
+    private AgentsServiceConfiguration configuration;
+
+    @Before
+    public void setUp() throws Exception {
+        configuration = AgentsServiceConfigurationReader.read(CONFIGURATION);
+    }
+
     @Test
     public void testStandardPayment() throws Exception {
 
-        // given
-        final String configurationPath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/nordea/mock/resources/configuration.yml";
-        final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/nordea/mock/resources/paymentStandardWireMock.aap";
-
-        final AgentsServiceConfiguration configuration =
-                AgentsServiceConfigurationReader.read(configurationPath);
-
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
-                AgentWireMockPaymentTest.builder(NO, "no-nordea-ob", wireMockFilePath)
+                AgentWireMockPaymentTest.builder(NO, "no-nordea-ob", WIREMOCK_SUCCESS_PATH)
                         .withConfigurationFile(configuration)
                         .withPayment(createStandardPayment())
                         .withHttpDebugTrace()
@@ -42,6 +55,52 @@ public class NordeaNoPaymentWireMockTest {
                         .buildWithoutLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    public void testStandardPaymentShouldThrowThirdPartyAppErrorCancelled() throws Exception {
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION);
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                NO, "no-nordea-ob", WIREMOCK_CANCELLED_FIRST_SCA_PATH)
+                        .withConfigurationFile(configuration)
+                        .withPayment(createStandardPayment())
+                        .withHttpDebugTrace()
+                        .addCallbackData("httpMessage", "error.session.cancelled")
+                        .withAgentModule(new NordeaWireMockTestModule())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        Throwable exception = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        assertThat(exception)
+                .isInstanceOf(ThirdPartyAppException.class)
+                .hasMessage("Cause: ThirdPartyAppError.CANCELLED");
+    }
+
+    @Test
+    public void testStandardPaymentShouldPaymentExceptionCancelledByUser() throws Exception {
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION);
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                NO, "no-nordea-ob", WIREMOCK_CANCELLED_SECOND_SCA_PATH)
+                        .withConfigurationFile(configuration)
+                        .withPayment(createStandardPayment())
+                        .withHttpDebugTrace()
+                        .addCallbackData("code", "dummyCode")
+                        .withAgentModule(new NordeaWireMockTestModule())
+                        .buildWithoutLogin(PaymentCommand.class);
+
+        Throwable exception = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        assertThat(exception)
+                .isInstanceOf(PaymentException.class)
+                .hasMessage("The payment was cancelled by the user.");
     }
 
     private Payment createStandardPayment() {

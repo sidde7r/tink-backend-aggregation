@@ -1,0 +1,238 @@
+REQUEST 1
+POST https://open.nordea.com/personal/v5/authorize
+Content-Length: 392
+Content-Type: application/json
+
+{
+  "country": "NO",
+  "scope": [
+    "CARDS_TRANSACTIONS",
+    "ACCOUNTS_DETAILS",
+    "CARDS_INFORMATION",
+    "ACCOUNTS_BALANCES",
+    "ACCOUNTS_BASIC",
+    "ACCOUNTS_TRANSACTIONS"
+  ],
+  "state": "00000000-0000-4000-0000-000000000000",
+  "duration": 129600,
+  "redirect_uri": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+  "max_tx_history": 12,
+  "account_list": [
+    "ALL_WITH_CARDS"
+  ],
+  "skip_account_selection": true
+}
+
+RESPONSE 1
+302
+Date: Fri, 04 Feb 2022 13:05:54 GMT,Fri, 04 Feb 2022 13:05:54 GMT
+Location: https://identify.nordea.com?client_id=04NCvGbfcBsObvoWh8CP&code_challenge_method=S256&redirect_uri=https%3A%2F%2Fopen.nordea.com%2Fpersonal%2Foauth%2F&response_type=code&code_challenge=4XZ4B7_0NkfXaeudE6GzDn4tQc_3Mrpmz-N4nXoV-Ns&scope=openid+ndf+agreement&state=05c89dd2-a83a-4c79-9489-aa7404024ef5%26skip_ui&nonce=HlkUaCwJ7yQYRjeIzrjAAqSkmUnL8rikLbXxP0ne
+
+REQUEST 2
+POST https://open.nordea.com/personal/v5/authorize/token
+Content-Length: 123
+Content-Type: application/x-www-form-urlencoded
+
+code=dummyCode&grant_type=authorization_code&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+
+RESPONSE 2
+200
+Date: Fri, 04 Feb 2022 13:06:50 GMT,Fri, 04 Feb 2022 13:06:50 GMT
+Content-Type: application/json
+
+{
+  "access_token": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..OKE-tIb0f6Jp_BR-.BDlpMAakmpgZtcR0NKaIjs8URahUGJtjlTgTLmhwZQDsTYGNi4DLWhkURX5GWmQt37KWUirdtRfsIEGiB9hG010TVgcuqt1Eh1borNfA4f6tOaF-_mXUexJxMnbA4flKWaILMEC790Q0XJcOKbzzNO4DtQXb9_RAoBPtEoQtTkT1k4JHiy3XD0AB3TrrJ7KH6mCiJaTYHmymkTZpkYG3swi_r-Syct84kv1-SFhaeq1rA2bLeEYsb8QVmqGsm6090So_KLAg737sdp3dGfjvKCHxvPHiDTMf7x-Wb4of6JolyxRtIjfoqig0X6MVCtlMHNYLkGM1nKeO7TknIbfCKbyRP-Hu1PZe9_flS4LNccXMSd4hQHhGkEWAqY0w2_pQba_47pZwYqzWdKfGwyhzpoFcptVgFfxvk2M-3U9gZBqRrVETUQZGY4PmPizucDlH5HJagC-eVZ7SyuKbbIcDIFYc19l4OPTx5qXUYPZGpJ5zEtUbJKt9dG09ui2EvYfM8POLMHRfbOM6R4a0ZBYorKmD0ZanUIkqq8CxW65sQmtSKBxrUhXF5to1fXDkjZFnCJwskF-iLtKx4n5eJ8xLs77dORzHtWCZs02k8LYE8gRh1ua-SM3KawW9oKzauB0egqKZG_1t6GevzFxdshyCecHvOEZepetDopPmCMyPh97-0zWs_Wzp8m9-CrGD5lSDzVJs0FuQAA87A--A4gDprdbxChqUxMXpnGVdNJfHvu5J03N4BDvzG3YAjzJNQt1PV4GItOPPSPv9TXUySilwQjMEdEFUweT541_5i9nIQJiFHUIGELrT9ftUHw9mZ70_0di5cHZqvvaUrbd8plNiaIBitGfpK7J7w5EgAG4ObaFmQh1-tIH16miR2Jac1xw2NQ_0hYN9Wc1WZrY0JEu3Sb0ZNDviuQ6RG80MtS91vhCsYG7s2THgW4nAIxzYYJ64VCAD_ZNg-Rp90a1uWtCn3wKvjDWWAeEZiKLwVEPgqBLhQSObH_4jKxjvV8Qi5wZsHhqCYYwj9rvnobaDAgKXn6sYgUrrwtFYDKVWh2uU0Wmbk93Xn93Haf2fksFS2T7b0wB8lEBJ6oK6LBDHdurGJZmkimu6V87BXAVOIwQrLdHzBgvbYUC6PQfFyPrRyTEv5qlRkDNwrkDT1fu5qNj7NIkHESekQc8n8gWvd0uVoPkY_6VnaY6YZF0WOrb320ydRK7DoGuS_kCw00tMh31OkCDmgk_AHCJ4PwTlHCjV448tijEKe6hbMHBnEwFmbeq2OOXoV09clcJufMLBaFnoH2KtNCCghHONDNvf2IdXo65_dDYK30CHTHP45ScAMBlF6z1lOhk31cITwMsZYejKfoTUJMfREr1ejX4uKgDKQy0fZ9BByKXlzkFfAymdpLebgxVZPHAES2bIi4vYkYekY3vOdlCdmKVS97T_OcC_HHWpI6gPmNRtnAlwIqRxkEeAsqpuGeLBSUFTiC4upxUZwc1uilCMxh6jxeN647Lhv5bnSdTo0etKu7zZAGmC8U0bWu7LZl6aVis5wicQemswgMGtDw.bUCrDBQd0V3gqRFM01oGZw",
+  "expires_in": 3599,
+  "token_type": "Bearer",
+  "refresh_token": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..Y9BAP0U1afbwwM7W.XJIxHJ_BSOEbfrM-RypE2E6xrarLk2xhRD6jIjhpWtNQnw3cxN_i_vkrJgxyndKb4mx9IprVC2OHQjeJy-36K_nzYswESwKwSvSE8cVs-sWSaXP_D-AeDillz54uWw3098dHfP7ueJTFUeQH56jo9hn1RLdshtsrmuXWTAyTM2qmKiPXlXal5FyejRMCPeh_1oQKDNEs-cshCNHXWpp_1xhuIyVTVOI1kHn2GDebz6WuKji6TXjDGHbCQeQI3sV_Oh5RWw4LwRqZM0iJrqomatXda5GeH8LHtjzC3XIMaABGKt1Gqb_kbmTs1m6klDB4OC4JvS6kobDJ3QubrP8nzXXzCEABY7CyvKBEW2KwOKaO5DDh_jY-KGuzqP2XCkEAiebZ8HBKayGgpcTyxSRHt7tiues5gKBRgWlaMMjBmpD_bHtvzc32ao8mLsfhBQEgG79MH7OVpmTblEXqVTrUKwdF5Ju-WPn_9A-80C2rMy29nSadc45v_WQ4v1M3v1wZTPltppemgoJdZyU51tSCgnugPEhcEIrg-8oymyzF_iehFReqvTQQswptqOG9iiPlzlWjjoPhcI_1uVxYjBQFZ9IQ-_nJlqB0mnvkGlxrdqvUjaxWNZhX3n055CEEQEgaHmm21xU1pCYc3bGtP4yRgQuwQYZDPzf2qNZGMj4fUeRVPWoOFQw8Xjkcdh4DV8iK-NgSZPURW938aOPtTq69SbB45ASLeD3KExePstXIVqmHhbH8ZNwXbEJhVjVf_QCbtVOw8Uzel2LVBkEOeAGxGhmOVYZVA1dD3RSlIZMnVvWE1doMo5PswGmdY3N1DGhzSROqjD9bv5v8qjOUSxjDKIaIr6P5S3Mf55y3KoR6c3cH3-7ZXhKB5t-C3P0U0GB29nwtacNyWLf3Ha4SDaLiNoqtxAXqKr54LTXZwwAFEMFIsFRNWGkudgHs8TM6jPUFBDEYCbxjADTQh5DXnJ46_KO35jgCd8GiDG-GnlU8ndYVUUkuNaX2t4YRaO81PKIfIW88lwdAdPu3EMqO8XqV8TpLoeX33W_VkqE5YABGxKk5_XEZpwKIDlzpCKMjnLudUWq1S9VsXwHowXLjL6AAGLiBht7I96-PO6igMs8D1E7q652SkMO9KCjs3F4K8hNraPp3U7LIXYz_ZiQAl12wb_jtjUAH8b4BrL6mW4uDPoiaDzeetfj0pktILs87d_zTOrfQHQ6XWid_mdmRLKubjMh7ydGa-fAjWT1z8v_5KAjX3cBA_uYx46q984HsDxmWempPwlR_2TQfzWGKjKjevH5BTD1NM-9bJnuhzGS2PDOj1AxeurYJD7g3dRWkjJb50bhiCyxkXqVLhpWmHpz5HC8vs1EldTzdoH4g8MH_gNAPHC3mUslxExQJCwjsv1cgA-x0oFNxOl0taKnIddAhb1GYLoOe6ChgIIedU8gRArZtbuINZ8w0ihdy2HFj8Al2EfYOM6irglHYo6SEPttrjrx040d_C9uvM7aOTrbqYF6iY3pFme0JduYtrFiE1u0JDcHmLrqxONI.YD7PzRCU3d8752V33tqN2g"
+}
+
+REQUEST 3
+POST https://open.nordea.com/personal/v4/payments/domestic
+Content-Type: application/json
+
+{
+  "amount": 5.0,
+  "creditor": {
+    "account": {
+      "currency": "NOK",
+      "value": "NO5657553677653",
+      "_type": "IBAN"
+    },
+    "message": "Tink-2022-02-04--13-05-49",
+    "name": "Creditor Name"
+  },
+  "currency": "NOK",
+  "debtor": {
+    "account": {
+      "currency": "NOK",
+      "value": "NO1284766456533",
+      "_type": "IBAN"
+    }
+  },
+  "requested_execution_date": "2022-02-04"
+}
+
+RESPONSE 3
+201
+Date: Fri, 04 Feb 2022 13:06:51 GMT,Fri, 04 Feb 2022 13:06:52 GMT
+Content-Length: 722
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "0c7374ef2d93160a",
+    "creation_date_time": "2022-02-04T13:06:51.991083Z",
+    "http_code": 201
+  },
+  "response": {
+    "_id": "f5c9e0cf-283e-431b-ab29-8b93e30abc19",
+    "entry_date_time": "2022-02-04T13:06:51.986257Z",
+    "debtor": {
+      "account": {
+        "value": "NO1284766456533",
+        "_type": "IBAN",
+        "currency": "NOK"
+      }
+    },
+    "creditor": {
+      "account": {
+        "value": "NO5657553677653",
+        "_type": "IBAN",
+        "currency": "NOK"
+      },
+      "name": "Creditor Name",
+      "message": "Tink-2022-02-04--13-05-49"
+    },
+    "amount": "5.00",
+    "currency": "NOK",
+    "payment_status": "PendingConfirmation",
+    "requested_execution_date": "2022-02-04",
+    "planned_execution_date": "2022-02-04",
+    "tpp_messages": [],
+    "_links": [
+      {
+        "rel": "self",
+        "href": "/v4/payments/domestic/f5c9e0cf-283e-431b-ab29-8b93e30abc19"
+      }
+    ]
+  }
+}
+
+REQUEST 4
+PUT https://open.nordea.com/personal/v4/payments/domestic/confirm
+Content-Type: application/json
+
+{
+  "state": "00000000-0000-4000-0000-000000000000",
+  "payments_ids": [
+    "f5c9e0cf-283e-431b-ab29-8b93e30abc19"
+  ]
+}
+
+RESPONSE 4
+200
+Date: Fri, 04 Feb 2022 13:07:09 GMT,Fri, 04 Feb 2022 13:07:10 GMT
+Content-Type: application/json
+
+{
+  "group_header": {
+    "message_identification": "0c7376ef2d93160a",
+    "creation_date_time": "2022-02-04T13:07:10.582514Z",
+    "http_code": 200
+  },
+  "errors": [],
+  "_links": [
+    {
+      "rel": "signing",
+      "href": "https://identify.nordea.com?client_id\u003d04NCvGbfcBsObvoWh8CP\u0026code_challenge_method\u003dS256\u0026redirect_uri\u003dhttps://open.nordea.com/personal/v4/payments/sign/callback\u0026response_type\u003dcode\u0026code_challenge\u003d6v91dW6H4IIhD5Pw3g_yY3BZhycNsxoXTcQRT7yPgTQ\u0026scope\u003dopenid+ndf+agreement\u0026state\u003dc2lnbmluZ19vcmRlcl9pZD1hN2IxMTg2Zi0zZDE4LTRlMTEtYjgxMS0zMjc4NzlhZDBlMGYmc3RhdGVfaWQ9ZjJjZWYzMGQtNWRmYi00NDgyLTg3OGUtMGJlYTQ0N2FkOThm\u0026signing_order_id\u003da7b1186f-3d18-4e11-b811-327879ad0e0f"
+    }
+  ],
+  "response": {
+    "payments": [
+      {
+        "_id": "f5c9e0cf-283e-431b-ab29-8b93e30abc19",
+        "entry_date_time": "2022-02-04T13:06:51.986257Z",
+        "debtor": {
+          "account": {
+            "value": "NO1284766456533",
+            "_type": "IBAN",
+            "currency": "NOK"
+          }
+        },
+        "creditor": {
+          "account": {
+            "value": "NO5657553677653",
+            "_type": "IBAN",
+            "currency": "NOK"
+          },
+          "name": "Creditor Name",
+          "message": "Tink-2022-02-04--13-05-49"
+        },
+        "amount": "5.00",
+        "currency": "NOK",
+        "payment_status": "PendingUserApproval",
+        "requested_execution_date": "2022-02-04",
+        "planned_execution_date": "2022-02-04",
+        "tpp_messages": [],
+        "_links": [
+          {
+            "rel": "self",
+            "href": "/v4/payments/domestic/f5c9e0cf-283e-431b-ab29-8b93e30abc19"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+REQUEST 5
+GET https://open.nordea.com/personal/v4/payments/domestic/f5c9e0cf-283e-431b-ab29-8b93e30abc19
+
+RESPONSE 5
+200
+Date: Fri, 04 Feb 2022 13:07:54 GMT,Fri, 04 Feb 2022 13:07:54 GMT
+Content-Type: application/json
+
+{
+    "group_header": {
+        "message_identification": "0cc211262d93160a",
+        "creation_date_time": "2022-02-09T11:04:37.378703Z",
+        "http_code": 200
+    },
+    "response": {
+        "_id": "61e57028-32b7-47b3-a218-add3230451a5",
+        "entry_date_time": "2022-02-09T11:02:48.912597Z",
+        "debtor": {
+            "account": {
+                "value": "NO1284766456533",
+                "_type": "IBAN",
+                "currency": "NOK"
+            }
+        },
+        "creditor": {
+            "account": {
+                "value": "NO5657553677653",
+                "_type": "IBAN",
+                "currency": "NOK"
+            },
+            "name": "Creditor Name",
+            "message": "Tink-2022-02-04--13-05-49"
+        },
+        "amount": "5.00",
+        "currency": "NOK",
+        "payment_status": "UserApprovalCancelled",
+        "requested_execution_date": "2022-02-09",
+        "planned_execution_date": "2022-02-09",
+        "tpp_messages": [],
+        "_links": [
+            {
+                "rel": "self",
+                "href": "/v4/payments/domestic/61e57028-32b7-47b3-a218-add3230451a5"
+            }
+        ]
+    }
+}
+
+
+
