@@ -10,7 +10,7 @@ import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 
 public class BulkPaymentInitiationMissingResultsTest {
-    @Test(expected = PaymentInitiationReport.MissingPaymentStateException.class)
+    @Test(expected = PaymentInitiationReport.InconsistentPaymentStateException.class)
     public void testMissingRegistrationResult() {
         // The agent will only report back two register results when it was asked to register three
         // payments.
@@ -38,7 +38,7 @@ public class BulkPaymentInitiationMissingResultsTest {
         PaymentInitiationTestHelper.initiateBulkPayments(agent, payments);
     }
 
-    @Test(expected = PaymentInitiationReport.MissingPaymentStateException.class)
+    @Test(expected = PaymentInitiationReport.InconsistentPaymentStateException.class)
     public void testMissingSignResult() {
         // The agent will only report back two sign results when it was asked to sign three
         // payments.
@@ -80,7 +80,7 @@ public class BulkPaymentInitiationMissingResultsTest {
         PaymentInitiationTestHelper.initiateBulkPayments(agent, payments);
     }
 
-    @Test(expected = PaymentInitiationReport.MissingPaymentStateException.class)
+    @Test(expected = PaymentInitiationReport.InconsistentPaymentStateException.class)
     public void testMissingStatusResult() {
         // The agent will only report back two status results when it was asked to get three payment
         // statuses.

@@ -57,7 +57,7 @@ public class PaymentInitiationReport {
 
     public void updateInProgressPayments(List<PaymentInitiationState> newPaymentStates) {
         if (!existingPaymentStatesAreInProgress(newPaymentStates)) {
-            throw new MissingPaymentStateException();
+            throw new InconsistentPaymentStateException();
         }
 
         newPaymentStates.forEach(
@@ -136,10 +136,10 @@ public class PaymentInitiationReport {
         }
     }
 
-    public static class MissingPaymentStateException extends RuntimeException {
-        public MissingPaymentStateException() {
+    public static class InconsistentPaymentStateException extends RuntimeException {
+        public InconsistentPaymentStateException() {
             super(
-                    "Payments to update are not identical to in-progress payments! The agent must have missed to report one or more payments.");
+                    "Reported payments are not identical to in-progress payments! The agent has reported either too many or too few payments.");
         }
     }
 }
