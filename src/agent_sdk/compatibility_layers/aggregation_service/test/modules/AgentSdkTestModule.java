@@ -14,6 +14,7 @@ import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.RawAge
 import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.StaticBankCredentialsProviderModule;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.SupplementalInformationHelperProviderModule;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.UserProviderModule;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.UtilitiesProviderModule;
 
 public class AgentSdkTestModule extends AbstractModule {
     private final RandomGenerator randomGenerator;
@@ -28,18 +29,14 @@ public class AgentSdkTestModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        // Remove install from AgentWireMockComponentProviderModule when AgentSdkTestModule is
-        // added to AgentWireMockComponentProviderModule
-        // ---------------------------------------------------------------------------------
         install(new UserProviderModule());
         install(new StaticBankCredentialsProviderModule());
         install(new ProviderProviderModule());
-        // ---------------------------------------------------------------------------------
-
         install(new SupplementalInformationHelperProviderModule());
         install(new AggregatorConfigurationProviderModule());
         install(new RawAgentStorageProviderModule());
         install(new OperationProviderModule());
+        install(new UtilitiesProviderModule());
         bind(RandomGenerator.class).toInstance(this.randomGenerator);
         bind(Sleeper.class).toInstance(this.sleeper);
         bind(TimeGenerator.class).toInstance(this.timeGenerator);

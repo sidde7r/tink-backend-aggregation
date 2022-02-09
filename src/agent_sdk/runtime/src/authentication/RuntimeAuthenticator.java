@@ -29,8 +29,8 @@ public class RuntimeAuthenticator {
     public RuntimeAuthenticator(AgentInstance agentInstance) throws AuthenticatorNotFoundException {
         this.agentInstance = agentInstance;
 
-        Utilities utilities = agentInstance.getEnvironment().getUtilities();
-        Operation operation = agentInstance.getEnvironment().getOperation();
+        Utilities utilities = agentInstance.getUtilities();
+        Operation operation = agentInstance.getOperation();
 
         this.authenticationFlows =
                 Stream.of(

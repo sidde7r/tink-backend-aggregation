@@ -6,6 +6,9 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import java.util.Set;
+import se.tink.agent.runtime.instance.AgentInstance;
+import se.tink.agent.sdk.environment.Operation;
+import se.tink.agent.sdk.environment.Utilities;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
@@ -50,6 +53,26 @@ public class AgentFactoryImpl implements AgentFactory {
         final Agent agent = injector.getInstance(cls);
         agent.setConfiguration(configuration);
         return agent;
+    }
+
+    @Override
+    public AgentInstance createAgentSdkInstance(CredentialsRequest request, AgentContext context)
+            throws ReflectiveOperationException {
+        Class<? extends Agent> cls = getAgentClass(request.getCredentials(), request.getProvider());
+
+        if (!AgentFactoryUtils.hasInjectAnnotatedConstructor(cls)) {
+            throw new IllegalStateException("Required for agents to run @Inject-annotated ctor");
+        }
+
+        Set<Module> modules = moduleLoader.getAgentModules(cls, request, context, configuration);
+        final Injector injector = Guice.createInjector(modules);
+        final Agent agent = injector.getInstance(cls);
+        agent.setConfiguration(configuration);
+
+        Operation operation = injector.getInstance(Operation.class);
+        Utilities utilities = injector.getInstance(Utilities.class);
+
+        return AgentInstance.createFromInstance(cls, agent, operation, utilities);
     }
 
     private static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider)

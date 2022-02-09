@@ -35,11 +35,11 @@ public class BulkPaymentInitiation {
             SupplementalInformationController supplementalInformationController,
             AgentInstance agentInstance,
             Duration maxSignStatusPollTime) {
-        this.sleeper = agentInstance.getEnvironment().getUtilities().getSleeper();
+        this.sleeper = agentInstance.getUtilities().getSleeper();
         this.steppableExecutor =
                 new AggregationServiceSteppableExecutor(
                         supplementalInformationController,
-                        agentInstance.getEnvironment().getOperation().getAgentStorage());
+                        agentInstance.getOperation().getAgentStorage());
 
         this.runtimePaymentsApi = new RuntimePaymentsApi(agentInstance);
         this.beneficiaryRegistration =
