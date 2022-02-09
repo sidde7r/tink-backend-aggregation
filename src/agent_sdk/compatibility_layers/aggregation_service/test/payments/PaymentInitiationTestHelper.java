@@ -1,5 +1,6 @@
 package src.agent_sdk.compatibility_layers.aggregation_service.test.payments;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.Ignore;
@@ -116,11 +117,17 @@ public final class PaymentInitiationTestHelper {
 
     public static PaymentInitiationReport initiateBulkPayments(
             Object agent, List<Payment> payments) {
+        return initiateBulkPayments(agent, Duration.ofMinutes(5), payments);
+    }
+
+    public static PaymentInitiationReport initiateBulkPayments(
+            Object agent, Duration maxSignStatusPollTime, List<Payment> payments) {
         AgentInstance agentInstance =
                 AgentInstance.createFromInstance(agent.getClass(), agent, OPERATION, UTILITIES);
 
         BulkPaymentInitiation bulkPaymentInitiation =
-                new BulkPaymentInitiation(SUPPLEMENTAL_INFORMATION_CONTROLLER, agentInstance);
+                new BulkPaymentInitiation(
+                        SUPPLEMENTAL_INFORMATION_CONTROLLER, agentInstance, maxSignStatusPollTime);
 
         return bulkPaymentInitiation.initiateBulkPayments(payments);
     }
