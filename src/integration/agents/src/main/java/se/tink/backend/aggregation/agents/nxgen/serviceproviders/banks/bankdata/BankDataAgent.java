@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
@@ -68,6 +69,10 @@ public abstract class BankDataAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider,
             NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         this.configuration = createConfiguration();
         configureHttpClient(client);
         this.iFrameControllerInitializer = iFrameControllerInitializer;

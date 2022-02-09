@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
@@ -77,6 +78,10 @@ public final class LunarDkAgent extends AgentPlatformAgent
             AgentComponentProvider agentComponentProvider,
             NemIdIFrameControllerInitializer iFrameControllerInitializer) {
         super(agentComponentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         configureHttpClient(client);
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         accessorFactory = new LunarDataAccessorFactory(new ObjectMapperFactory().getInstance());
