@@ -61,7 +61,7 @@ public final class PaymentsModelConverter {
                 Optional.ofNullable(payment.getDebtor().getAccountIdentifier())
                         .map(Debtor::new)
                         .orElse(null),
-                null,
+                null, // Debtor message does not exists in RpcPayment
                 new Creditor(creditor.getAccountIdentifier(), creditor.getName()),
                 payment.getExactCurrencyAmount(),
                 mapRemittanceInformation(payment.getRemittanceInformation()),
