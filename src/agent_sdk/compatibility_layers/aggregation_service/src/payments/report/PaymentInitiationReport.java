@@ -1,5 +1,6 @@
 package src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -32,6 +33,10 @@ public class PaymentInitiationReport {
 
     public boolean allPaymentsInFinalState() {
         return this.paymentStates.values().stream().noneMatch(this::isPaymentInProgress);
+    }
+
+    public List<PaymentInitiationState> getFinalPaymentStates() {
+        return new ArrayList<>(this.paymentStates.values());
     }
 
     public List<PaymentReference> getInProgressPaymentReferences() {
