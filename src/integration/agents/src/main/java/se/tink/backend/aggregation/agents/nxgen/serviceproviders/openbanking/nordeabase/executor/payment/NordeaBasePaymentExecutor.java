@@ -6,6 +6,8 @@ import io.vavr.control.Try;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -44,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -53,6 +56,8 @@ public abstract class NordeaBasePaymentExecutor
     private NordeaBaseApiClient apiClient;
     private SupplementalInformationHelper supplementalInformationHelper;
     private StrongAuthenticationState strongAuthenticationState;
+
+    private static final CountryDateHelper dateHelper = new CountryDateHelper(Locale.getDefault());
 
     public NordeaBasePaymentExecutor(NordeaBaseApiClient apiClient) {
         this.apiClient = apiClient;
@@ -72,6 +77,11 @@ public abstract class NordeaBasePaymentExecutor
         CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
 
         DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
+
+        Payment payment = paymentRequest.getPayment();
+        if (Objects.isNull(payment.getExecutionDate())) {
+            payment.setExecutionDate(dateHelper.getNowAsLocalDate());
+        }
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()

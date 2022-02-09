@@ -3,6 +3,7 @@ package src.agent_sdk.compatibility_layers.aggregation_service.src.payments.repo
 import java.util.Optional;
 import javax.annotation.Nullable;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import se.tink.agent.sdk.models.payments.ConnectivityError;
 import se.tink.agent.sdk.models.payments.PaymentStatus;
 import se.tink.agent.sdk.models.payments.payment.Debtor;
@@ -10,6 +11,7 @@ import se.tink.agent.sdk.models.payments.payment.Payment;
 import se.tink.agent.sdk.models.payments.payment_reference.PaymentReference;
 
 @Builder
+@EqualsAndHashCode
 public class PaymentInitiationState {
     private final PaymentReference paymentReference;
 

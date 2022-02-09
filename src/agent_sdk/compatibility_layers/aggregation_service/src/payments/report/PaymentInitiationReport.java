@@ -1,5 +1,6 @@
 package src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -34,6 +35,10 @@ public class PaymentInitiationReport {
         return this.paymentStates.values().stream().noneMatch(this::isPaymentInProgress);
     }
 
+    public List<PaymentInitiationState> getFinalPaymentStates() {
+        return new ArrayList<>(this.paymentStates.values());
+    }
+
     public List<PaymentReference> getInProgressPaymentReferences() {
         return getInProgressPaymentStates()
                 .map(PaymentInitiationState::getPaymentReference)
@@ -52,8 +57,7 @@ public class PaymentInitiationReport {
 
     public void updateInProgressPayments(List<PaymentInitiationState> newPaymentStates) {
         if (!existingPaymentStatesAreInProgress(newPaymentStates)) {
-            throw new IllegalStateException(
-                    "Payments to update is not identical to in-progress payments!");
+            throw new InconsistentPaymentStateException();
         }
 
         newPaymentStates.forEach(
@@ -103,7 +107,8 @@ public class PaymentInitiationReport {
                         .map(PaymentInitiationState::getPayment)
                         .collect(Collectors.toList());
 
-        return existingInProgressPayments.equals(newPayments);
+        return existingInProgressPayments.containsAll(newPayments)
+                && newPayments.containsAll(existingInProgressPayments);
     }
 
     private boolean isPaymentInProgress(PaymentInitiationState paymentInitiationState) {
@@ -128,6 +133,13 @@ public class PaymentInitiationReport {
                 return false;
             default:
                 throw new IllegalStateException("Unexpected value: " + paymentStatus);
+        }
+    }
+
+    public static class InconsistentPaymentStateException extends RuntimeException {
+        public InconsistentPaymentStateException() {
+            super(
+                    "Reported payments are not identical to in-progress payments! The agent has reported either too many or too few payments.");
         }
     }
 }

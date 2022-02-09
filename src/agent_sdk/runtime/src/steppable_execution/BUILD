@@ -5,6 +5,7 @@ java_library_with_sources(
     srcs = glob(["*.java"]),
     extdeps = [
         "@aggregation//:com_google_code_findbugs_jsr305",
+        "@aggregation//:com_google_guava_guava",
     ],
     intdeps = [
         "//src/agent_sdk/sdk/src/steppable_execution",
