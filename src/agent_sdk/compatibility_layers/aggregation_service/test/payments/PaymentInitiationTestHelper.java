@@ -55,6 +55,9 @@ public final class PaymentInitiationTestHelper {
     public static final Creditor CREDITOR_EVE =
             new Creditor(new IbanIdentifier("IT800128371723"), "Eve");
 
+    public static final Creditor CREDITOR_JOHN =
+            new Creditor(new IbanIdentifier("BE9102381723123"), "John");
+
     public static final Payment PAYMENT_1 =
             new PaymentImpl(
                     "pay-1",
@@ -96,6 +99,20 @@ public final class PaymentInitiationTestHelper {
 
     public static final PaymentReference PAYMENT_3_REF =
             PaymentReference.builder().payment(PAYMENT_3).noBankReference().build();
+
+    public static final Payment PAYMENT_4 =
+            new PaymentImpl(
+                    "pay-4",
+                    PaymentType.SEPA_CREDIT_TRANSFER,
+                    DEBTOR_1,
+                    "Debtor message",
+                    CREDITOR_JOHN,
+                    ExactCurrencyAmount.inEUR(123),
+                    new RemittanceInformation(RemittanceInformationType.REFERENCE, "some-ref-4"),
+                    LocalDate.of(2021, 3, 14));
+
+    public static final PaymentReference PAYMENT_4_REF =
+            PaymentReference.builder().payment(PAYMENT_4).noBankReference().build();
 
     public static PaymentInitiationReport initiateBulkPayments(
             Object agent, List<Payment> payments) {
