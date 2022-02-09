@@ -40,31 +40,37 @@ public class TransferCommand implements CompositeAgentTestCommand {
     @Override
     public void execute() throws Exception {
         if (bulkTransfer != null) {
-            if (agentInstance.supportsBulkPaymentInitiation()) {
-                BulkPaymentInitiation bulkPaymentInitiation =
-                        new BulkPaymentInitiation(supplementalInformationController, agentInstance);
-
-                PaymentInitiationReport paymentInitiationReport =
-                        bulkPaymentInitiation.initiateBulkPaymentsWithRpcTransfers(bulkTransfer);
-                log.info(
-                        "Final payment states: {}",
-                        paymentInitiationReport.getFinalPaymentStates());
-            } else {
-                throw new Exception("Not supported");
-            }
+            tryInitiateBulkTransfer();
         } else if (transfer != null) {
-            if (agent instanceof TransferExecutor) {
-                TransferExecutor transferExecutor = (TransferExecutor) agent;
-                transferExecutor.execute(transfer);
-            } else if (agent instanceof PaymentControllerable) {
-                TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
-                transferExecutorNxgen.execute(transfer);
-            } else {
-                throw new Exception("Not supported");
-            }
+            tryInitiateSingleTransfer();
         } else {
             throw new IllegalArgumentException(
                     "Trying to execute a transfer without supplying a transfer or a bulkTransfer.");
+        }
+    }
+
+    private void tryInitiateBulkTransfer() throws Exception {
+        if (agentInstance.supportsBulkPaymentInitiation()) {
+            BulkPaymentInitiation bulkPaymentInitiation =
+                    new BulkPaymentInitiation(supplementalInformationController, agentInstance);
+
+            PaymentInitiationReport paymentInitiationReport =
+                    bulkPaymentInitiation.initiateBulkPaymentsWithRpcTransfers(bulkTransfer);
+            log.info("Final payment states: {}", paymentInitiationReport.getFinalPaymentStates());
+        } else {
+            throw new Exception("Not supported");
+        }
+    }
+
+    private void tryInitiateSingleTransfer() throws Exception {
+        if (agent instanceof TransferExecutor) {
+            TransferExecutor transferExecutor = (TransferExecutor) agent;
+            transferExecutor.execute(transfer);
+        } else if (agent instanceof PaymentControllerable) {
+            TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
+            transferExecutorNxgen.execute(transfer);
+        } else {
+            throw new Exception("Not supported");
         }
     }
 }
