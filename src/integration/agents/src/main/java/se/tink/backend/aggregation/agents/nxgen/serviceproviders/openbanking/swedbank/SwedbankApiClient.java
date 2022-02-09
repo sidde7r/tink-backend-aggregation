@@ -238,6 +238,10 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                 .header(HeaderKeys.PSU_ID, ssn);
     }
 
+    public AuthenticationStatusResponse collectBalticAuthStatus(String ssn, String path) {
+        return createAuthBaseRequest(ssn, path).get(AuthenticationStatusResponse.class);
+    }
+
     public AuthenticationStatusResponse collectAuthStatus(String ssn, String authorizeId) {
         return createDecoupledAuthorizeRequest(ssn, authorizeId)
                 .get(AuthenticationStatusResponse.class);
