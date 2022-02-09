@@ -30,6 +30,8 @@ public class NickelConstants {
     public static final String DEVICE_NAME = "Tink";
     public static final String NICKEL_IBAN_FORMAT = "FR761659800001%s%02d";
     public static final Long NICKEL_MAGIC_NUMBER = 1477237L;
+    public static final Long SESION_EXPIRED_AFTER_DAYS = 90L;
+
     public static final int BASE_URL_LENGTH = URLs.BASE_URL.length();
     protected static final Map<String, Object> NICKEL_HEADERS = buildHeaders();
 
