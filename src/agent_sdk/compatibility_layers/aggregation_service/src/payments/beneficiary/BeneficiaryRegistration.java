@@ -38,7 +38,9 @@ public class BeneficiaryRegistration {
         Optional<RuntimeBeneficiaryRegistrator> maybeBeneficiaryRegistrator =
                 this.runtimePaymentsApi.getBeneficiaryRegistrator();
 
-        if (maybeBeneficiariesFetcher.isPresent() && maybeBeneficiaryRegistrator.isPresent()) {
+        if (maybeBeneficiariesFetcher.isEmpty() || maybeBeneficiaryRegistrator.isEmpty()) {
+            // Return early with a successful result if the agent does not implement both
+            // beneficiary fetcher and registrator.
             return payments.stream()
                     .map(
                             payment ->
@@ -71,7 +73,9 @@ public class BeneficiaryRegistration {
         Optional<RuntimeBeneficiaryRegistrator> maybeBeneficiaryRegistrator =
                 this.runtimePaymentsApi.getBeneficiaryRegistrator();
 
-        if (maybeBeneficiariesFetcher.isPresent() && maybeBeneficiaryRegistrator.isPresent()) {
+        if (maybeBeneficiariesFetcher.isEmpty() || maybeBeneficiaryRegistrator.isEmpty()) {
+            // Return early with a successful result if the agent does not implement both
+            // beneficiary fetcher and registrator.
             return PaymentInitiationState.builder()
                     .paymentReference(
                             PaymentReference.builder().payment(payment).noBankReference().build())

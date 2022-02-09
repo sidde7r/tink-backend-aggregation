@@ -29,5 +29,6 @@ targets:
 test_sources:
   src/agent_sdk/runtime/test/*
   src/agent_sdk/sdk/test/*
+  src/agent_sdk/compatibility_layers/aggregation_service/test/*
 
 java_language_level: 11
