@@ -230,12 +230,22 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                 .header(HeaderKeys.PSU_ID, ssn);
     }
 
-    public AuthenticationStatusResponse collectAuthStatus(String ssn, String path) {
-        return createAuthBaseRequest(ssn, path).get(AuthenticationStatusResponse.class);
+    private RequestBuilder createDecoupledAuthorizeRequest(String ssn, String authorizeId) {
+        return createRequest(
+                        Urls.AUTHORIZATION_DECOUPLED_AUTHORIZE_ID.parameter(
+                                UrlParameters.AUTHORIZE_ID, authorizeId))
+                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
+                .header(HeaderKeys.PSU_ID, ssn);
     }
 
-    public AuthenticationStatusResponse supplyBankId(String ssn, String path, String bankId) {
-        return createAuthBaseRequest(ssn, path)
+    public AuthenticationStatusResponse collectAuthStatus(String ssn, String authorizeId) {
+        return createDecoupledAuthorizeRequest(ssn, authorizeId)
+                .get(AuthenticationStatusResponse.class);
+    }
+
+    public AuthenticationStatusResponse supplyBankId(
+            String ssn, String authorizeId, String bankId) {
+        return createDecoupledAuthorizeRequest(ssn, authorizeId)
                 .body(new SupplyBankIdRequest(bankId), MediaType.APPLICATION_JSON)
                 .put(AuthenticationStatusResponse.class);
     }
