@@ -47,7 +47,7 @@ public class IccreaConsentAuthorizationStep {
 
         if (!consentStatusResponse.getConsentStatus().isValid()) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
-                    "[ICCREA] Conset status after decoupled polling was final, but not valid: "
+                    "Consent status after decoupled polling was final, but not valid: "
                             + consentStatusResponse.getConsentStatus());
         }
     }
@@ -66,7 +66,7 @@ public class IccreaConsentAuthorizationStep {
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (!(cause instanceof AgentException)) {
-                log.error("[ICCREA] Unhandled error while checking decoupled auth!", e);
+                log.error("Unhandled error while checking decoupled auth!", e);
             }
             throw cause;
         }

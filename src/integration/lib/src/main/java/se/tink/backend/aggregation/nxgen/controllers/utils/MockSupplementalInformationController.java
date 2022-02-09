@@ -50,7 +50,7 @@ public final class MockSupplementalInformationController
     @Override
     public Optional<Map<String, String>> openThirdPartyAppSync(
             ThirdPartyAppAuthenticationPayload payload) {
-        return Optional.of(callbackData);
+        return Optional.ofNullable(callbackData);
     }
 
     @Override

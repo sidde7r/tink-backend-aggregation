@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.filter.CbiGlobeTokenFilter;
@@ -205,17 +206,14 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         CbiGlobePaymentExecutor paymentExecutor =
                 new CbiGlobePaymentExecutor(
-                        authApiClient,
                         new CbiGlobePaymentApiClient(
                                 cbiGlobeHttpClient, urlProvider, providerConfiguration),
-                        supplementalInformationHelper,
-                        strongAuthenticationState,
-                        provider,
-                        storage);
+                        supplementalInformationController,
+                        storage,
+                        new CbiGlobePaymentRequestBuilder());
 
         return Optional.of(
-                new PaymentController(
-                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
+                new PaymentController(paymentExecutor, new PaymentControllerExceptionMapper()));
     }
 
     @Override

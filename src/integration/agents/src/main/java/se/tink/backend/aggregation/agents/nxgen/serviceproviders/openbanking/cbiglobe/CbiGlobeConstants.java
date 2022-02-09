@@ -71,17 +71,11 @@ public final class CbiGlobeConstants {
         public static final String CONSENT_ID = "consentId";
     }
 
-    public static class PSUAuthenticationStatus {
+    public static class PisStatus {
         public static final String AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
-        public static final String IDENTIFICATION_REQUIRED = "IDENTIFICATION_REQUIRED";
-        public static final String AUTHENTICATION_REQUIRED = "AUTHENTICATION_REQUIRED";
         public static final String AUTHENTICATED = "AUTHENTICATED";
         public static final String VERIFIED = "VERIFIED";
         public static final String FAILED = "FAILED";
-    }
-
-    public static class PaymentStep {
-        public static final String IN_PROGRESS = "IN_PROGRESS";
     }
 
     public static class HttpClient {

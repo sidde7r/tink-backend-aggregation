@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.payment;
 
-import java.util.Collections;
-import java.util.Map;
-import se.tink.agent.sdk.operation.Provider;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaCredentialsAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaScaMethodSelectionStep;
@@ -12,10 +9,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.PaymentAuthorizationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 
 public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
 
@@ -25,22 +22,15 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
     private final IccreaCredentialsAuthenticationStep credentialsAuthenticationStep;
 
     public IccreaPaymentExecutor(
-            CbiGlobeAuthApiClient authApiClient,
             CbiGlobePaymentApiClient paymentApiClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState,
-            Provider provider,
+            SupplementalInformationController supplementalInformationController,
+            CbiStorage storage,
+            CbiGlobePaymentRequestBuilder paymentRequestBuilder,
+            CbiGlobeAuthApiClient authApiClient,
             UserInteractions userInteractions,
             CbiUrlProvider urlProvider,
-            Credentials credentials,
-            CbiStorage storage) {
-        super(
-                authApiClient,
-                paymentApiClient,
-                supplementalInformationHelper,
-                strongAuthenticationState,
-                provider,
-                storage);
+            Credentials credentials) {
+        super(paymentApiClient, supplementalInformationController, storage, paymentRequestBuilder);
         this.userInteractions = userInteractions;
         credentialsAuthenticationStep =
                 new IccreaCredentialsAuthenticationStep(
@@ -50,7 +40,7 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
     }
 
     @Override
-    protected void authorizePayment(CreatePaymentResponse createPaymentResponse) {
+    protected void prepareAuthorization(CreatePaymentResponse createPaymentResponse) {
         PaymentAuthorizationResponse paymentAuthorizationResponse =
                 credentialsAuthenticationStep.authenticate(
                         createPaymentResponse, PaymentAuthorizationResponse.class);
@@ -59,9 +49,9 @@ public class IccreaPaymentExecutor extends CbiGlobePaymentExecutor {
     }
 
     @Override
-    // This doesn't make much sense. It is only here to fit the CBI payment executor, which in
-    // return makes the executor a bit weird.
-    protected Map<String, String> fetchSupplementalInfo(String redirectUrl) {
-        return Collections.emptyMap();
+    protected void performRedirectIfNeeded() {
+        // Iccrea does not require any redirects. Even with default implementation from super, we
+        // wouldn't really execute anything. This is kept clear here just to be explicit about not
+        // doing redirect.
     }
 }

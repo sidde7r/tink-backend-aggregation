@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.PisStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiCredentialsAuthenticatable;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entity.PsuCredentialsDefinition;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.LinksEntity;
@@ -42,10 +42,8 @@ public class CreatePaymentResponse implements CbiCredentialsAuthenticatable {
         // in case of RCVD, hence we dont want to again map transactionStatus
         // because it will be null and lead to CREATED.
         if (!(PaymentStatus.SIGNED.equals(tinkPayment.getStatus())
-                && CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATED.equalsIgnoreCase(
-                        psuAuthenticationStatus)
-                && CbiGlobeConstants.PSUAuthenticationStatus.VERIFIED.equalsIgnoreCase(
-                        scaStatus))) {
+                && PisStatus.AUTHENTICATED.equalsIgnoreCase(psuAuthenticationStatus)
+                && PisStatus.VERIFIED.equalsIgnoreCase(scaStatus))) {
             tinkPayment.setStatus(
                     CbiGlobePaymentStatus.mapToTinkPaymentStatus(
                             CbiGlobePaymentStatus.fromString(transactionStatus)));

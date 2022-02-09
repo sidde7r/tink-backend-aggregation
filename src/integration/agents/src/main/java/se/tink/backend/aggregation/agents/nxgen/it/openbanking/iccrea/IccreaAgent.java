@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentRequestBuilder;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -61,18 +62,16 @@ public final class IccreaAgent extends CbiGlobeAgent {
     public Optional<PaymentController> constructPaymentController() {
         CbiGlobePaymentExecutor paymentExecutor =
                 new IccreaPaymentExecutor(
-                        authApiClient,
                         new CbiGlobePaymentApiClient(
                                 cbiGlobeHttpClient, urlProvider, providerConfiguration),
-                        supplementalInformationHelper,
-                        strongAuthenticationState,
-                        provider,
+                        supplementalInformationController,
+                        storage,
+                        new CbiGlobePaymentRequestBuilder(),
+                        authApiClient,
                         new UserInteractions(supplementalInformationController, catalog),
                         urlProvider,
-                        credentials,
-                        storage);
+                        credentials);
         return Optional.of(
-                new PaymentController(
-                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
+                new PaymentController(paymentExecutor, new PaymentControllerExceptionMapper()));
     }
 }
