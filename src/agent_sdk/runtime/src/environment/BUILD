@@ -17,8 +17,8 @@ java_library_with_sources(
     plugins = [
         "//src/agent_sdk:lombok_plugin",
     ],
-    visibility = [
-        "//src/agent_sdk/compatibility_layers:__subpackages__",
-        "//src/agent_sdk/runtime:__subpackages__",
+    visibility = ["//visibility:public"],
+    exports = [
+        "//src/agent_sdk/sdk/src/environment",
     ],
 )

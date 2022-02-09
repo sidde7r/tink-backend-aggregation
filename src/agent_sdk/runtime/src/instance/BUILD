@@ -10,8 +10,6 @@ java_library_with_sources(
         "//src/agent_sdk/runtime/src/environment",
         "//src/agent_sdk/sdk/src/payments/features/bulk",
     ],
-    visibility = [
-        "//src/agent_sdk/compatibility_layers:__subpackages__",
-        "//src/agent_sdk/runtime:__subpackages__",
-    ],
+    visibility = ["//visibility:public"],
+    exports = ["//src/agent_sdk/runtime/src/environment"],
 )
