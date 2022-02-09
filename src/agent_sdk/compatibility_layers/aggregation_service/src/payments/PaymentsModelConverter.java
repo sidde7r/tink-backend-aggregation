@@ -17,6 +17,7 @@ import se.tink.agent.sdk.models.payments.payment.RemittanceInformationType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.payment.rpc.PaymentParty;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -58,7 +59,8 @@ public final class PaymentsModelConverter {
         return new PaymentImpl(
                 payment.getUniqueId(),
                 mapPaymentType(payment.getPaymentScheme()),
-                Optional.ofNullable(payment.getDebtor().getAccountIdentifier())
+                Optional.ofNullable(payment.getDebtor())
+                        .map(PaymentParty::getAccountIdentifier)
                         .map(Debtor::new)
                         .orElse(null),
                 null, // Debtor message does not exists in RpcPayment
