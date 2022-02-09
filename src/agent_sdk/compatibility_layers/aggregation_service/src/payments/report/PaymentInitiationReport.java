@@ -52,8 +52,7 @@ public class PaymentInitiationReport {
 
     public void updateInProgressPayments(List<PaymentInitiationState> newPaymentStates) {
         if (!existingPaymentStatesAreInProgress(newPaymentStates)) {
-            throw new IllegalStateException(
-                    "Payments to update is not identical to in-progress payments!");
+            throw new MissingPaymentStateException();
         }
 
         newPaymentStates.forEach(
@@ -103,7 +102,8 @@ public class PaymentInitiationReport {
                         .map(PaymentInitiationState::getPayment)
                         .collect(Collectors.toList());
 
-        return existingInProgressPayments.equals(newPayments);
+        return existingInProgressPayments.containsAll(newPayments)
+                && newPayments.containsAll(existingInProgressPayments);
     }
 
     private boolean isPaymentInProgress(PaymentInitiationState paymentInitiationState) {
@@ -128,6 +128,13 @@ public class PaymentInitiationReport {
                 return false;
             default:
                 throw new IllegalStateException("Unexpected value: " + paymentStatus);
+        }
+    }
+
+    public static class MissingPaymentStateException extends RuntimeException {
+        public MissingPaymentStateException() {
+            super(
+                    "Payments to update are not identical to in-progress payments! The agent must have missed to report one or more payments.");
         }
     }
 }
