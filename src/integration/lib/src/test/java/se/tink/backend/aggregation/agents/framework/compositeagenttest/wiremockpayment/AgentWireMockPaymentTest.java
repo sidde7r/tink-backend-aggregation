@@ -37,6 +37,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@SuppressWarnings("java:S2187")
 public final class AgentWireMockPaymentTest {
 
     private final CompositeAgentTest compositeAgentTest;
