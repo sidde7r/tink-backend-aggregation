@@ -8,12 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 
 public class AccountTypeMapperTest {
 
-    private static final String PERSONAL_TYPE = "Personal";
-    private static final String BUSINESS_TYPE = "Business";
     private static final String UNKNOWN_TYPE = "Unknown";
     private AccountEntity accountEntity;
 
@@ -22,34 +19,11 @@ public class AccountTypeMapperTest {
         accountEntity = mock(AccountEntity.class);
     }
 
-    @Test
-    public void shouldRecognizePersonalAccountOwnership() {
-        when(accountEntity.getRawAccountType()).thenReturn(PERSONAL_TYPE);
-
-        assertThat(AccountTypeMapper.getAccountOwnershipType(accountEntity))
-                .isEqualTo(AccountOwnershipType.PERSONAL);
-    }
-
-    @Test
-    public void shouldRecognizeBusinessAccountOwnership() {
-        when(accountEntity.getRawAccountType()).thenReturn(BUSINESS_TYPE);
-
-        assertThat(AccountTypeMapper.getAccountOwnershipType(accountEntity))
-                .isEqualTo(AccountOwnershipType.BUSINESS);
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfUnknownAccountType() {
         when(accountEntity.getRawAccountType()).thenReturn(UNKNOWN_TYPE);
 
         AccountTypeMapper.getAccountType(accountEntity);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionIfUnknownAccountOwnershipType() {
-        when(accountEntity.getRawAccountSubType()).thenReturn(UNKNOWN_TYPE);
-
-        AccountTypeMapper.getAccountOwnershipType(accountEntity);
     }
 
     @Test
