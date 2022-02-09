@@ -15,12 +15,17 @@ public class AuthenticationResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
+    private String authorizeId;
     private String scaStatus;
     private ChallengeDataEntity challengeData;
     private List<TppMessagesEntity> tppMessages;
 
     public String getCollectAuthUri() {
         return links.getScaStatus().getHref();
+    }
+
+    public String getAuthorizeId() {
+        return authorizeId;
     }
 
     public String getScaStatus() {
