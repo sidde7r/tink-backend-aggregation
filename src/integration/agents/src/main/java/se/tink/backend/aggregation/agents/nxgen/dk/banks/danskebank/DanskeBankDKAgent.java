@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 
@@ -63,6 +64,10 @@ public final class DanskeBankDKAgent extends DanskeBankAgent<DanskeBankDKApiClie
     @Inject
     public DanskeBankDKAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, new AccountEntityMarketMapper("DK"));
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         this.agentTemporaryStorage = componentProvider.getAgentTemporaryStorage();
         // DK fetches loans at a separate loan endpoint
         this.loanRefreshController =

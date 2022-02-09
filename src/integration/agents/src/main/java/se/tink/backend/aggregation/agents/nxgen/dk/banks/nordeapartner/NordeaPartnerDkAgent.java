@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption.NordeaPartnerKeystoreModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption.NordeaPartnerKeystoreProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 @AgentDependencyModules(modules = NordeaPartnerKeystoreModule.class)
@@ -23,6 +24,9 @@ public final class NordeaPartnerDkAgent extends NordeaPartnerAgent {
             AgentComponentProvider agentComponentProvider,
             NordeaPartnerKeystoreProvider keystoreProvider) {
         super(agentComponentProvider, keystoreProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
     }
 
     @Override

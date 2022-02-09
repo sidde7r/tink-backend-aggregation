@@ -53,6 +53,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.credentials.service.UserAvailability;
 
@@ -94,6 +95,10 @@ public final class NordeaDkAgent extends NextGenerationAgent
             NemIdIFrameControllerInitializer iFrameControllerInitializer,
             MitIdAuthenticationControllerProvider mitIdAuthenticationControllerProvider) {
         super(agentComponentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         this.logMasker = agentComponentProvider.getContext().getLogMasker();
         this.iFrameControllerInitializer = iFrameControllerInitializer;
         this.mitIdAuthenticationControllerProvider = mitIdAuthenticationControllerProvider;

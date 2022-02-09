@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustPinnedCertificateStrategy;
 import se.tink.libraries.cryptography.parser.Pem;
 
@@ -69,6 +70,9 @@ public final class SdcDkAgent extends SdcAgent
                 componentProvider,
                 new SdcDkConfiguration(componentProvider.getProvider()),
                 new SdcDkTransactionParser());
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
 
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
