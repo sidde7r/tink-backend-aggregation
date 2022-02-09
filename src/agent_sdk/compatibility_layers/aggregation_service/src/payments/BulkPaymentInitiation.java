@@ -53,7 +53,18 @@ public class BulkPaymentInitiation {
         this(supplementalInformationController, agentInstance, MAX_SIGN_STATUS_POLL_TIME);
     }
 
-    public PaymentInitiationReport initiateBulkPayments(List<Transfer> transfers) {
+    public PaymentInitiationReport initiateBulkPaymentsWithRpcTransfers(List<Transfer> transfers) {
+        List<Payment> payments = PaymentsModelConverter.mapTransfers(transfers);
+        return initiateBulkPayments(payments);
+    }
+
+    public PaymentInitiationReport initiateBulkPaymentsWithRpcPayments(
+            List<se.tink.libraries.payment.rpc.Payment> rpcPayments) {
+        List<Payment> payments = PaymentsModelConverter.mapPayments(rpcPayments);
+        return initiateBulkPayments(payments);
+    }
+
+    public PaymentInitiationReport initiateBulkPayments(List<Payment> payments) {
         RuntimeBulkPaymentInitiator bulkPaymentInitiator =
                 this.runtimePaymentsApi
                         .getBulkPaymentInitiator()
@@ -61,8 +72,6 @@ public class BulkPaymentInitiation {
                                 () ->
                                         new IllegalStateException(
                                                 "Agent does not implement bulk payment initiation."));
-
-        List<Payment> payments = PaymentsModelConverter.mapTransfers(transfers);
 
         PaymentInitiationReport paymentInitiationReport = new PaymentInitiationReport(payments);
 
