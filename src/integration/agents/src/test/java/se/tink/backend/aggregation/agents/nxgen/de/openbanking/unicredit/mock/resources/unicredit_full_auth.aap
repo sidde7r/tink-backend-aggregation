@@ -70,6 +70,7 @@ Accept: application/json
 Content-Type: application/json
 X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-Address: 127.0.0.1
+PSU-ID: test_username
 X-Aggregator: Tink Testing
 
 {"scaAuthenticationData":"123456"}

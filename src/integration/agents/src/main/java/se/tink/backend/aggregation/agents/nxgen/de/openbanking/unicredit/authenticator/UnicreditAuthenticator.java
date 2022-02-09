@@ -102,7 +102,9 @@ public class UnicreditAuthenticator
                         authorizationResponse.getChosenScaMethod(),
                         authorizationResponse.getChallengeData());
         apiClient.finalizeAuthorization(
-                authorizationResponse.getLinks().getAuthoriseTransaction(), otp);
+                authorizationResponse.getLinks().getAuthoriseTransaction(),
+                credentials.getField(Key.USERNAME),
+                otp);
     }
 
     protected String collectOtp(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {

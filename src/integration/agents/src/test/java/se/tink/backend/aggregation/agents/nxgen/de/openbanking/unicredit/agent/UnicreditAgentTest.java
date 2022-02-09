@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit;
+package se.tink.backend.aggregation.agents.nxgen.de.openbanking.unicredit.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -10,18 +10,6 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.PasswordArgu
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.backend.aggregation.agents.tools.UserAvailabilityBuilder;
 
-/**
- * Remember to set proper <strong>PSU Id Type</strong> in <i>./etc/development.yml</i> file. At the
- * time of writing this document allowed values are:
- *
- * <ul>
- *   <li>HVB_ONLINEBANKING
- *   <li>UCEBANKINGGLOBAL
- * </ul>
- *
- * For more details please check documentation at <a
- * href="http://developer.unicredit.eu/">http://developer.unicredit.eu/</a>.
- */
 public class UnicreditAgentTest {
 
     private final ArgumentManager<UsernameArgumentEnum> usernameManager =
