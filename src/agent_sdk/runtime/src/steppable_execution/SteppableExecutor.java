@@ -1,5 +1,6 @@
 package se.tink.agent.runtime.steppable_execution;
 
+import com.google.common.base.Preconditions;
 import java.time.Duration;
 import java.time.Instant;
 import javax.annotation.Nullable;
@@ -19,8 +20,8 @@ public class SteppableExecutor<T, R> {
     }
 
     public SteppableExecutor(Duration maxExecutionTime, ExecutionFlow<T, R> executionFlow) {
-        this.maxExecutionTime = maxExecutionTime;
-        this.executionFlow = executionFlow;
+        this.maxExecutionTime = Preconditions.checkNotNull(maxExecutionTime);
+        this.executionFlow = Preconditions.checkNotNull(executionFlow);
     }
 
     /**
