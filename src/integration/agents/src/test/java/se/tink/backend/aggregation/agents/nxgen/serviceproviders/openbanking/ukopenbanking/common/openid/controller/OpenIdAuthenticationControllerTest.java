@@ -59,7 +59,7 @@ public class OpenIdAuthenticationControllerTest {
     private static final String DUMMY_ID_TOKEN = "dummy_id_token";
     private static final String SERVER_ERROR = "{\"error\":\"server_error\"}";
     private static final String ACCESS_DENIED =
-            "{\"error\":\"access denied\",\"error_description\":\"access denied\"}";
+            "{\"error\":\"access denied\",\"error_description\":\"access denied and some random suffix\"}";
     private static final Long DUMMY_ACCESS_EXPIRES_IN_SECONDS = 1223L;
     private static final Long DUMMY_REFRESH_EXPIRES_IN_SECONDS = 1223L;
 

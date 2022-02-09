@@ -120,7 +120,8 @@ public class UkOpenBankingAisAuthenticationController extends OpenIdAuthenticati
     }
 
     private boolean isAccessDenied(HttpResponse response) {
-        return response.getBody(OpenIdErrorResponse.class).hasError("access denied")
-                && response.getBody(OpenIdErrorResponse.class).hasErrorDescription("access denied");
+        OpenIdErrorResponse errorResponse = response.getBody(OpenIdErrorResponse.class);
+        return errorResponse.hasError("access denied")
+                && errorResponse.containsErrorDescription("access denied");
     }
 }
