@@ -42,7 +42,9 @@ public class SparebankPaymentSigner implements Signer<PaymentRequest> {
         openThirdPartyApp(
                 new URL(
                         apiClient
-                                .authorizePayment(getPaymentAuthorizeUrl(paymentId))
+                                .authorizePayment(
+                                        getPaymentAuthorizeUrl(paymentId),
+                                        strongAuthenticationState.getState())
                                 .getLinks()
                                 .getScaRedirect()
                                 .getHref()));

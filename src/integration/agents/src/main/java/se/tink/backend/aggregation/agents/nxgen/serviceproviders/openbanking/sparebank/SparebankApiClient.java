@@ -194,10 +194,16 @@ public class SparebankApiClient {
                 .get(PaymentStatusResponse.class);
     }
 
-    public PaymentStatusResponse authorizePayment(String paymentAuthorizeUrl) {
+    public PaymentStatusResponse authorizePayment(String paymentAuthorizeUrl, String state) {
+
+        String tppRedirectUrl =
+                new URL(apiConfiguration.getRedirectUrl())
+                        .queryParam(QueryKeys.STATE, state)
+                        .toString();
 
         return createRequest(new URL(apiConfiguration.getBaseUrl() + paymentAuthorizeUrl))
                 .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.AMOUNT_AS_STRING)
+                .header(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl)
                 .post(PaymentStatusResponse.class);
     }
 
