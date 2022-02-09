@@ -61,6 +61,7 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/authentication_options",
     ],
 )
 

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
@@ -33,6 +34,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
+import se.tink.libraries.authentication_options.SelectedAuthenticationOption;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 @RequiredArgsConstructor
@@ -51,6 +54,18 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
     public String init(String ssn) {
         this.ssn = ssn;
         shouldUseQRCodeOnAnotherDevice = false;
+
+        Set<SelectedAuthenticationOption> authenticationOptions =
+                componentProvider.getCredentialsRequest().getSelectedAuthenticationOptions();
+
+        if (authenticationOptions != null) {
+            for (SelectedAuthenticationOption authenticationOption : authenticationOptions) {
+                if (authenticationOption.getAuthenticationOptionDefinition()
+                        == AuthenticationOptionDefinition.SE_MOBILE_BANKID_OTHER_DEVICE) {
+                    shouldUseQRCodeOnAnotherDevice = true;
+                }
+            }
+        }
 
         try {
             AuthenticationResponse authenticationResponse =
