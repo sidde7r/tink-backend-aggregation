@@ -6,6 +6,7 @@ java_library_with_sources(
     extdeps = [
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:org_projectlombok_lombok",
+        "//src/integration/payment:rpc",
         "//src/integration/transfer:rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
     ],

@@ -33,6 +33,12 @@ public final class PaymentsModelConverter {
                 .collect(Collectors.toList());
     }
 
+    public static List<Payment> mapPayments(List<se.tink.libraries.payment.rpc.Payment> payments) {
+        return payments.stream()
+                .map(PaymentsModelConverter::mapPayment)
+                .collect(Collectors.toList());
+    }
+
     public static Payment mapTransfer(Transfer transfer) {
         AccountIdentifier destination = transfer.getDestination();
         Amount amount = transfer.getAmount();
@@ -45,6 +51,21 @@ public final class PaymentsModelConverter {
                 ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency()),
                 mapRemittanceInformation(transfer.getRemittanceInformation()),
                 mapExecutionDate(transfer.getDueDate()));
+    }
+
+    public static Payment mapPayment(se.tink.libraries.payment.rpc.Payment payment) {
+        se.tink.libraries.payment.rpc.Creditor creditor = payment.getCreditor();
+        return new PaymentImpl(
+                payment.getUniqueId(),
+                mapPaymentType(payment.getPaymentScheme()),
+                Optional.ofNullable(payment.getDebtor().getAccountIdentifier())
+                        .map(Debtor::new)
+                        .orElse(null),
+                null,
+                new Creditor(creditor.getAccountIdentifier(), creditor.getName()),
+                payment.getExactCurrencyAmount(),
+                mapRemittanceInformation(payment.getRemittanceInformation()),
+                payment.getExecutionDate());
     }
 
     private static PaymentType mapPaymentType(PaymentScheme paymentScheme) {
