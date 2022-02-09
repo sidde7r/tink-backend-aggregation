@@ -18,8 +18,8 @@ public class BulkPaymentInitiationSuccessfulTest {
     public void testAllSuccessful() {
         // Set up the agent to successfully register, sign (with PENDING status) and getStatus (with
         // INITIATED_AND_EXECUTED status).
-        BulkPaymentAgent agent =
-                new BulkPaymentAgent(
+        BulkPaymentTestAgent agent =
+                new BulkPaymentTestAgent(
                         List.of(
                                 BulkPaymentRegisterResult.builder()
                                         .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
