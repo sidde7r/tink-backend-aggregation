@@ -7,7 +7,6 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agent_sdk/compatibility_layers/aggregation_service/src/modules",
         "//src/agent_sdk/compatibility_layers/aggregation_service/test/modules",
         "//src/integration/credentials:service",
         "//src/integration/lib",
