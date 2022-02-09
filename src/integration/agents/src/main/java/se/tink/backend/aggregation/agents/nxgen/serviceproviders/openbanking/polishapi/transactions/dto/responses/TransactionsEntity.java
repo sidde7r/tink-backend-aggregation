@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
 import java.time.LocalDate;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -66,7 +67,7 @@ public class TransactionsEntity {
                 Transaction.builder()
                         .setPending(isPending(typeRequest))
                         .setAmount(setAmount())
-                        .setDate(bookingDate)
+                        .setDate(Objects.isNull(bookingDate) ? tradeDate : bookingDate)
                         .setDescription(getDescriptionForTink())
                         .setMerchantCategoryCode(mcc)
                         .setProprietaryFinancialInstitutionType(transactionCategory)
@@ -142,6 +143,12 @@ public class TransactionsEntity {
 
     @JsonIgnore
     private TransactionDates getTinkTransactionDates() {
+        if (Objects.isNull(bookingDate)) {
+            return TransactionDates.builder()
+                    .setValueDate(new AvailableDateInformation().setDate(tradeDate))
+                    .build();
+        }
+
         return TransactionDates.builder()
                 .setValueDate(new AvailableDateInformation().setDate(tradeDate))
                 .setBookingDate(new AvailableDateInformation().setDate(bookingDate))

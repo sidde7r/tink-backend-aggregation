@@ -2,28 +2,21 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import java.time.Instant;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthenticationsPatchResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdParamsResponse;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
@@ -33,43 +26,36 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializerModule;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.cryptography.hash.Hash;
-import se.tink.libraries.encoding.EncodingUtils;
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 @AgentDependencyModules(modules = NemIdIFrameControllerInitializerModule.class)
-public class NordeaNemIdAuthenticatorV2
-        implements MultiFactorAuthenticator, AutoAuthenticator, NemIdParametersFetcher {
+public class NordeaDkNemIdAuthenticator
+        implements MultiFactorAuthenticator, NemIdParametersFetcher {
 
-    private static final String INVALID_GRANT = "invalid_grant";
     private static final String NEM_ID_SCRIPT_FORMAT =
             "<script type=\"text/x-nemid\" id=\"nemid_parameters\">%s</script>";
 
     private final NordeaDkApiClient bankClient;
     private final NemIdIFrameController iFrameController;
+    private final NordeaDkAuthenticatorUtils authenticatorUtils;
 
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
 
-    public NordeaNemIdAuthenticatorV2(
+    public NordeaDkNemIdAuthenticator(
             NordeaDkApiClient bankClient,
             SessionStorage sessionStorage,
-            PersistentStorage persistentStorage,
             Catalog catalog,
             StatusUpdater statusUpdater,
             SupplementalInformationController supplementalInformationController,
             MetricContext metricContext,
             AgentTemporaryStorage agentTemporaryStorage,
-            NemIdIFrameControllerInitializer iFrameControllerInitializer) {
+            NemIdIFrameControllerInitializer iFrameControllerInitializer,
+            NordeaDkAuthenticatorUtils authenticatorUtils) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
-        this.persistentStorage = Objects.requireNonNull(persistentStorage);
         this.iFrameController =
                 iFrameControllerInitializer.initNemIdIframeController(
                         this,
@@ -79,58 +65,34 @@ public class NordeaNemIdAuthenticatorV2
                         supplementalInformationController,
                         metricContext,
                         agentTemporaryStorage);
+        this.authenticatorUtils = authenticatorUtils;
     }
 
     public void authenticate(final Credentials credentials) throws AuthenticationException {
-        if (Strings.isNullOrEmpty(credentials.getField(Field.Key.PASSWORD))
-                || Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-
-        String token = iFrameController.logInWithCredentials(credentials);
-        final String code = exchangeNemIdToken(token);
-        saveToken(exchangeOauthToken(code));
-    }
-
-    public void autoAuthenticate() {
-        try {
-            OAuth2Token token =
-                    getToken().orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
-            String refreshToken =
-                    token.getOptionalRefreshToken()
-                            .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
-            OAuth2Token newToken =
-                    bankClient
-                            .exchangeRefreshToken(refreshToken)
-                            .toOauthToken()
-                            .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
-            saveToken(newToken);
-        } catch (HttpResponseException e) {
-            String error = (String) e.getResponse().getBody(Map.class).get("error");
-            if (e.getResponse().getStatus() == 400 && INVALID_GRANT.equals(error)) {
-                // refresh token expired
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-            throw e;
-        } catch (AuthenticationException e) {
-            log.info("Refresh token missing or invalid, proceeding to manual authentication");
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
+        String nemIdToken = iFrameController.logInWithCredentials(credentials);
+        String authorizationCode = exchangeNemIdToken(nemIdToken);
+        authenticatorUtils.exchangeOauthToken(authorizationCode);
     }
 
     @Override
     public NemIdParameters getNemIdParameters() {
-        String codeVerifier = generateCodeVerifier();
-        sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
-        String state = generateState();
-        String nonce = generateNonce();
-        sessionStorage.put(StorageKeys.NONCE, nonce);
-        String referer = bankClient.initOauth(generateCodeChallenge(codeVerifier), state, nonce);
-        sessionStorage.put(StorageKeys.REFERER, referer);
+        OAuthSessionData sessionData = authenticatorUtils.prepareOAuthSessionData();
+
+        String referer =
+                bankClient.initOauthForNemId(
+                        sessionData.getCodeChallenge(),
+                        sessionData.getState(),
+                        sessionData.getNonce());
+        sessionStorage.put(NordeaDkConstants.StorageKeys.REFERER, referer);
+
         NemIdParamsResponse nemIdParamsResponse =
-                bankClient.getNemIdParams(generateCodeChallenge(codeVerifier), state, nonce);
+                bankClient.getNemIdParams(
+                        sessionData.getCodeChallenge(),
+                        sessionData.getState(),
+                        sessionData.getNonce());
         String sessionId = nemIdParamsResponse.getSessionId();
         sessionStorage.put(StorageKeys.SESSION_ID, sessionId);
+
         ObjectMapper mapper = new ObjectMapper();
         String params;
         try {
@@ -153,39 +115,6 @@ public class NordeaNemIdAuthenticatorV2
         sessionStorage.put(StorageKeys.NEMID_TOKEN, authenticationsPatchResponse.getNemIdToken());
         String code = authenticationsPatchResponse.getCode();
         return bankClient.codeExchange(code, referer).getCode();
-    }
-
-    private OAuth2Token exchangeOauthToken(String installId) throws AuthenticationException {
-        return bankClient
-                .oauthCallback(installId, sessionStorage.get(StorageKeys.CODE_VERIFIER))
-                .toOauthToken()
-                .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
-    }
-
-    private String generateCodeVerifier() {
-        return RandomUtils.generateRandomBase64UrlEncoded(86);
-    }
-
-    private String generateCodeChallenge(String codeVerifier) {
-        byte[] digest = Hash.sha256(codeVerifier);
-        return EncodingUtils.encodeAsBase64UrlSafe(digest);
-    }
-
-    private String generateNonce() {
-        return RandomUtils.generateRandomBase64UrlEncoded(26);
-    }
-
-    private String generateState() {
-        return RandomUtils.generateRandomBase64UrlEncoded(26);
-    }
-
-    private void saveToken(OAuth2Token token) {
-        this.persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
-        this.sessionStorage.put(StorageKeys.OAUTH_TOKEN, token);
-    }
-
-    private Optional<OAuth2Token> getToken() {
-        return this.persistentStorage.get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class);
     }
 
     @Override

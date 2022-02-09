@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -81,39 +82,45 @@ public class NordeaDkApiClient {
      * This method returns the String representation of the url used in this call, so it can later
      * be used as Referer header in subsequent requests.
      */
-    public String initOauth(String codeChallenge, String state, String nonce) {
+    public String initOauthForNemId(String codeChallenge, String state, String nonce) {
         logMasker.addNewSensitiveValueToMasker(codeChallenge);
-        RequestBuilder request =
-                client.request(URLs.NORDEA_AUTH_BASE_URL)
-                        .queryParam(QueryParamKeys.CLIENT_ID, QueryParamValues.CLIENT_ID)
-                        .queryParam(QueryParamKeys.CODE_CHALLENGE, codeChallenge)
-                        .queryParam(
-                                QueryParamKeys.CODE_CHALLENGE_METHOD,
-                                QueryParamValues.CODE_CHALLENGE_METHOD)
-                        .queryParam(QueryParamKeys.STATE, state)
-                        .queryParam(QueryParamKeys.REDIRECT_URI, QueryParamValues.REDIRECT_URI)
-                        .queryParam(QueryParamKeys.RESPONSE_TYPE, QueryParamValues.RESPONSE_TYPE)
-                        .queryParam(QueryParamKeys.UI_LOCALES, QueryParamValues.UI_LOCALES)
-                        .queryParam(QueryParamKeys.AV, QueryParamValues.AV)
-                        .queryParam(QueryParamKeys.DM, QueryParamValues.DM)
-                        .queryParam(QueryParamKeys.INSTALLED_APPS, QueryParamValues.INSTALLED_APPS)
-                        .queryParam(QueryParamKeys.SCOPE, QueryParamValues.SCOPE)
-                        .queryParam(QueryParamKeys.LOGIN_HINT, QueryParamValues.LOGIN_HINT)
-                        .queryParam(QueryParamKeys.APP_CHANNEL, QueryParamValues.APP_CHANNEL)
-                        .queryParam(QueryParamKeys.ADOBE_MC, QueryParamValues.ADOBE_MC)
-                        .queryParam(QueryParamKeys.NONCE, nonce)
-                        .queryParam(
-                                QueryParamKeys.CONSENT_INSIGHT, QueryParamValues.CONSENT_INSIGHT)
-                        .queryParam(
-                                QueryParamKeys.CONSENT_MARKETING,
-                                QueryParamValues.CONSENT_MARKETING);
-        String res = request.toString();
-        request.header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
+
+        URL initOauthUrl =
+                getInitOauthUrl(codeChallenge, state, nonce, QueryParamValues.NEM_ID_LOGIN_HINT);
+        String referer = initOauthUrl.toString();
+
+        client.request(initOauthUrl)
+                .header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
                 .accept(TEXT_HTML)
                 .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
                 .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
                 .get(String.class);
-        return res;
+
+        return referer;
+    }
+
+    public URL getInitOauthUrl(
+            String codeChallenge, String state, String nonce, String authMethodLoginHint) {
+        return URL.of(NordeaDkConstants.URLs.NORDEA_AUTH_BASE_URL)
+                .queryParam(QueryParamKeys.CLIENT_ID, QueryParamValues.CLIENT_ID)
+                .queryParam(QueryParamKeys.CODE_CHALLENGE, codeChallenge)
+                .queryParam(
+                        QueryParamKeys.CODE_CHALLENGE_METHOD,
+                        QueryParamValues.CODE_CHALLENGE_METHOD)
+                .queryParam(QueryParamKeys.STATE, state)
+                .queryParam(QueryParamKeys.REDIRECT_URI, QueryParamValues.REDIRECT_URI)
+                .queryParam(QueryParamKeys.RESPONSE_TYPE, QueryParamValues.RESPONSE_TYPE)
+                .queryParam(QueryParamKeys.UI_LOCALES, QueryParamValues.UI_LOCALES)
+                .queryParam(QueryParamKeys.AV, QueryParamValues.AV)
+                .queryParam(QueryParamKeys.DM, QueryParamValues.DM)
+                .queryParam(QueryParamKeys.INSTALLED_APPS, QueryParamValues.INSTALLED_APPS)
+                .queryParam(QueryParamKeys.SCOPE, QueryParamValues.SCOPE)
+                .queryParam(QueryParamKeys.LOGIN_HINT, authMethodLoginHint)
+                .queryParam(QueryParamKeys.APP_CHANNEL, QueryParamValues.APP_CHANNEL)
+                .queryParam(QueryParamKeys.ADOBE_MC, QueryParamValues.ADOBE_MC)
+                .queryParam(QueryParamKeys.NONCE, nonce)
+                .queryParam(QueryParamKeys.CONSENT_INSIGHT, QueryParamValues.CONSENT_INSIGHT)
+                .queryParam(QueryParamKeys.CONSENT_MARKETING, QueryParamValues.CONSENT_MARKETING);
     }
 
     public NemIdParamsResponse getNemIdParams(String codeChallenge, String state, String nonce) {
