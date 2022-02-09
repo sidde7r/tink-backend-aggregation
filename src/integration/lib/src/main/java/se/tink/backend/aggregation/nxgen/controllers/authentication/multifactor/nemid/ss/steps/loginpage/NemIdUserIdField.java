@@ -10,6 +10,8 @@ public class NemIdUserIdField {
 
     public static final String NAME = "nemIdUserIdField";
     private static final LocalizableKey DESCRIPTION =
+            new LocalizableKey("Please enter your NemID user ID");
+    private static final LocalizableKey HELP_TEXT =
             new LocalizableKey(
                     "Please enter the same User ID as you would enter to NemID. It’s either NemID number, CPR number or self-chosen NemID username.");
     private static final int MIN_LENGTH = 5;
@@ -24,6 +26,7 @@ public class NemIdUserIdField {
         return Field.builder()
                 .name(NAME)
                 .description(catalog.getString(DESCRIPTION))
+                .helpText(catalog.getString(HELP_TEXT))
                 .minLength(MIN_LENGTH)
                 .maxLength(MAX_LENGTH)
                 .pattern(PATTERN)

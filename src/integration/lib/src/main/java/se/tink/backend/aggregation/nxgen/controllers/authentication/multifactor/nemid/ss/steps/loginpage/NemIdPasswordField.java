@@ -10,6 +10,8 @@ public class NemIdPasswordField {
 
     public static final String NAME = "nemIdPasswordField";
     private static final LocalizableKey DESCRIPTION =
+            new LocalizableKey("Please enter your NemID password");
+    private static final LocalizableKey HELP_TEXT =
             new LocalizableKey(
                     "Please enter your password to NemID. It can be a 4 digit password or password with at least 6 alphanumeric characters. If you do not remember it, you can reset your password on NemID website.");
     private static final int MIN_LENGTH = 4;
@@ -23,6 +25,7 @@ public class NemIdPasswordField {
         return Field.builder()
                 .name(NAME)
                 .description(catalog.getString(DESCRIPTION))
+                .helpText(catalog.getString(HELP_TEXT))
                 .minLength(MIN_LENGTH)
                 .maxLength(MAX_LENGTH)
                 .pattern(PATTERN)

@@ -54,7 +54,12 @@ public class SoftwareStatementAssertion {
 
     @SneakyThrows
     public static SoftwareStatementAssertion fromJWTJson(String jwtJson) {
+        if (Strings.isNullOrEmpty(jwtJson)) {
+            throw new IllegalArgumentException("JWT is null or empty! Secrets are missing");
+        }
+
         final String[] jwtEncodedParts = jwtJson.split("\\.");
+
         if (jwtEncodedParts.length != 3) {
             throw new IllegalArgumentException("JWT is not having 3 parts");
         }
