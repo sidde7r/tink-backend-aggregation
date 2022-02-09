@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistration {
 

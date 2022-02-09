@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 import se.tink.backend.aggregation.agents.abnamro.client.exceptions.IcsException;
 import se.tink.backend.aggregation.agents.abnamro.client.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.strings.StringUtils;
 
 /** Build a user friendly error message for ICS credit cards. */

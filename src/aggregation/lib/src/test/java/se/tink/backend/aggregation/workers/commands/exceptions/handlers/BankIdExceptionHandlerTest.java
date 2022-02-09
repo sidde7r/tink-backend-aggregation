@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;

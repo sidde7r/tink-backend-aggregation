@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabi
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferConstants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.strings.StringUtils;
 
 public class SwedbankBaseConstants {

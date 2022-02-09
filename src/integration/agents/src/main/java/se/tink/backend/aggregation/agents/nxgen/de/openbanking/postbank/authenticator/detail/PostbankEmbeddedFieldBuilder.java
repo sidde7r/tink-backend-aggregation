@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.DefaultEmbeddedFieldBuilder;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class PostbankEmbeddedFieldBuilder extends DefaultEmbeddedFieldBuilder {
 

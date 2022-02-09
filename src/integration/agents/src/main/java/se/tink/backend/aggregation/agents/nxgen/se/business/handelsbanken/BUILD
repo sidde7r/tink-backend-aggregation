@@ -26,7 +26,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",

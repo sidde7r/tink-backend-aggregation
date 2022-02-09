@@ -25,7 +25,7 @@ java_library(
         "//src/libraries/cryptography",
         "//src/libraries/date",
         "//src/libraries/encoding",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_github_rholder_guava_retrying",

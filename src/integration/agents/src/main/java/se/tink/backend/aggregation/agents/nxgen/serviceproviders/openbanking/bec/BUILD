@@ -28,7 +28,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/cryptography/hash",
         "//src/libraries/date",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_http_client_google_http_client",

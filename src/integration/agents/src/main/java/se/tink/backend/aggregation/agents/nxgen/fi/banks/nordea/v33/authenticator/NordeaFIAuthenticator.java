@@ -32,8 +32,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @Slf4j
 public class NordeaFIAuthenticator implements MultiFactorAuthenticator {

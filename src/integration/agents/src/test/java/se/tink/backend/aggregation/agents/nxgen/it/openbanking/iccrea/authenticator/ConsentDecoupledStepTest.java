@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class ConsentDecoupledStepTest {
     private ConsentDecoupledStep step;

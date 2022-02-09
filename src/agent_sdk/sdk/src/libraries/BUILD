@@ -7,7 +7,7 @@ java_library_with_sources(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
     ],
     intdeps = [
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/cryptography",
         "//src/libraries/date",
         "//src/libraries/encoding",
@@ -26,7 +26,7 @@ java_library_with_sources(
         "//src/libraries/cryptography",
         "//src/libraries/date",
         "//src/libraries/encoding",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "@tink_backend//src/libraries/account_identifier",

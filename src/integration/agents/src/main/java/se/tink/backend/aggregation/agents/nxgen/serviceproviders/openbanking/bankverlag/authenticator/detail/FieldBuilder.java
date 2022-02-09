@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEnt
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @RequiredArgsConstructor
 public class FieldBuilder {

@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityErrorDetails.ProviderErrors;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
 /**

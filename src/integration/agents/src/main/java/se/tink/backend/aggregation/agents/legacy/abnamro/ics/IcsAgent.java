@@ -41,7 +41,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.user.rpc.User;
 

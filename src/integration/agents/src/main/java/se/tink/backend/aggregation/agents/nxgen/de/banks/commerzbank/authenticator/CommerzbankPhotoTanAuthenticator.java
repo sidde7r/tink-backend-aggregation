@@ -36,8 +36,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthent
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.cryptography.RSA;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor

@@ -5,7 +5,7 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//po:i18n",
+        "//po:i18n_aggregation",
     ],
     deps = [
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",

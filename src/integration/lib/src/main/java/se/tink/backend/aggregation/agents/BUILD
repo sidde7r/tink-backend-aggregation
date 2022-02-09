@@ -78,7 +78,7 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/encoding",
         "//src/libraries/giro_validation",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

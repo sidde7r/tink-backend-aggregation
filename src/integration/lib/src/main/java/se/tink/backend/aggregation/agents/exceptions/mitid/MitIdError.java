@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.mitid;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public enum MitIdError implements AgentError {
     MIT_ID_METHOD_NOT_AVAILABLE(

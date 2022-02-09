@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.PhantomJsConfig;
 import se.tink.integration.webdriver.PhantomJsInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @RequiredArgsConstructor
 public class NemIdSSIFrameModule extends AbstractModule {

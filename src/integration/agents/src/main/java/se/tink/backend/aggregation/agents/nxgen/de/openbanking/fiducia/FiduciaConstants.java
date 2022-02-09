@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import java.time.LocalDate;
 import java.util.regex.Pattern;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public final class FiduciaConstants {
 

@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.Errors;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @JsonObject
 public class ErrorResponse {

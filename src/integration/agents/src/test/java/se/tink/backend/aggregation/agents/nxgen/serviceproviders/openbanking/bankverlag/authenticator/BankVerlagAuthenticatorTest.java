@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRespo
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankVerlagAuthenticatorTest {

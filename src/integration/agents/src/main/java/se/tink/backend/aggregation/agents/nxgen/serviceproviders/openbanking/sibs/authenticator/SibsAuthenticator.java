@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.Automat
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
 

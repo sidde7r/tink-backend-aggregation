@@ -16,7 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//third_party:com_google_inject_guice",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",

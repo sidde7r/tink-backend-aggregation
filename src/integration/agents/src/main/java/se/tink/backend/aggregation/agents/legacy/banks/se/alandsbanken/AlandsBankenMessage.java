@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.se.alandsbanken;
 
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public enum AlandsBankenMessage implements LocalizableEnum {
     EXPIRED_PASSWORD("Invalid password, please contact Ålandsbanken at: 0771-415 415."),

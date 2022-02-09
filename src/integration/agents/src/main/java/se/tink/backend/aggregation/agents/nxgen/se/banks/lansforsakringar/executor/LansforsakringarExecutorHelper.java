@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.Lansfo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.executor.rpc.DirectTransferRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class LansforsakringarExecutorHelper {

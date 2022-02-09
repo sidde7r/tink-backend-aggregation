@@ -35,7 +35,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_google_inject_guice",

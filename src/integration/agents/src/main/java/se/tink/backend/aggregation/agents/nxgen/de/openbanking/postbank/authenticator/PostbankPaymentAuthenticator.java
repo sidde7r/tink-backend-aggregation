@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentAuthe
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.EmbeddedFieldBuilder;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class PostbankPaymentAuthenticator extends PostbankAuthenticationController
         implements PaymentAuthenticator {

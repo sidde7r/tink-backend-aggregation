@@ -21,7 +21,7 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/no/nextbankid",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver/service",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_inject_guice",
         "//third_party:org_mockito_mockito_core",

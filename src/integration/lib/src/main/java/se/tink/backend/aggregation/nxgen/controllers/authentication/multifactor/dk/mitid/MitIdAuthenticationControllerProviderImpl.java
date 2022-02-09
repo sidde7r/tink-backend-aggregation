@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.WebDriverServiceModule;
 import se.tink.libraries.credentials.service.UserAvailability;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class MitIdAuthenticationControllerProviderImpl
         implements MitIdAuthenticationControllerProvider {

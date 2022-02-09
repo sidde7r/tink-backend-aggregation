@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFiel
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
     private static final Logger logger =

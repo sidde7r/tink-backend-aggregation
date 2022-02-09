@@ -17,7 +17,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//third_party:com_google_inject_guice",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_iban4j_iban4j",

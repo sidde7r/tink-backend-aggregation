@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
 

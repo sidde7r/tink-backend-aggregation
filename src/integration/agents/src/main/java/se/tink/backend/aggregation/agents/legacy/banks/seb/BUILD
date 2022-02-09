@@ -28,7 +28,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/pair",
         "//src/libraries/serialization",

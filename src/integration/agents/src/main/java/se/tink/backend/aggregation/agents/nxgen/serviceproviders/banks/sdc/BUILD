@@ -32,7 +32,7 @@ java_library(
         "//src/integration/nemid",
         "//src/libraries/agent-storage",
         "//src/libraries/cryptography",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/iban",
         "//src/libraries/serialization",
         "//src/libraries/strings",

@@ -11,7 +11,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:com_google_code_gson_gson",
         "//third_party:com_google_guava_guava",

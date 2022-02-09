@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingT
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class LFUtilsTest {
     @Test

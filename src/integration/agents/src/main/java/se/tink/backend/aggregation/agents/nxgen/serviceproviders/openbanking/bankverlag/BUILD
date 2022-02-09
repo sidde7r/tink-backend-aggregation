@@ -29,7 +29,7 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_io_commons_io",

@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.xnap.commons.i18n.I18n;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @Getter
 @RequiredArgsConstructor

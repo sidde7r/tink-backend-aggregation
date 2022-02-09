@@ -21,7 +21,7 @@ import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverHelper;
 import se.tink.integration.webdriver.WebDriverWrapper;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
     private final WebDriverWrapper driver;

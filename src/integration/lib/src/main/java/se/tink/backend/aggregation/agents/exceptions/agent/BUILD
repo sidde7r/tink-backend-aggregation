@@ -4,7 +4,7 @@ java_library_with_sources(
     name = "agent",
     srcs = glob(["*.java"]),
     intdeps = [
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
     ],
     visibility = ["//visibility:public"],
 )

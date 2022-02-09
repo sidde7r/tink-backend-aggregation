@@ -15,7 +15,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.mocks.TransferMock;

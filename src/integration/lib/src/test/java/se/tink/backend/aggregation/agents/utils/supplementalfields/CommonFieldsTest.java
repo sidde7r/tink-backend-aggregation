@@ -12,9 +12,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedKey;
 
 public class CommonFieldsTest {
 

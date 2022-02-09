@@ -10,7 +10,7 @@ import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class TanAnswerProviderTest {
     private static SupplementalInformationHelper helper = mock(SupplementalInformationHelper.class);

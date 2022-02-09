@@ -31,7 +31,7 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",

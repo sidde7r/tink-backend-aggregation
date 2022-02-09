@@ -45,7 +45,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternal
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(

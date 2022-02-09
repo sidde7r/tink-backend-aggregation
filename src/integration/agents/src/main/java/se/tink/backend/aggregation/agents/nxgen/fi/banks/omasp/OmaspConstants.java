@@ -5,8 +5,8 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class OmaspConstants {
 

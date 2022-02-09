@@ -88,7 +88,7 @@ java_library(
         "//src/libraries/cache",
         "//src/libraries/connectivity_errors",
         "//src/libraries/date",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/interaction_counter",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",

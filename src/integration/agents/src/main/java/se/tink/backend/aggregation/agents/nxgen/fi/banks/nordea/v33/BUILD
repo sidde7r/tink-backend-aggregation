@@ -29,7 +29,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/cryptography/hash",
         "//src/libraries/encoding",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_google_code_findbugs_jsr305",

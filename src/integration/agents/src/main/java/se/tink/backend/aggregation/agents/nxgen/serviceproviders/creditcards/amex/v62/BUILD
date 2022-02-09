@@ -27,7 +27,7 @@ java_library(
         "//src/libraries/cryptography/hash",
         "//src/libraries/date",
         "//src/libraries/encoding",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_sun_jersey_jersey_core",

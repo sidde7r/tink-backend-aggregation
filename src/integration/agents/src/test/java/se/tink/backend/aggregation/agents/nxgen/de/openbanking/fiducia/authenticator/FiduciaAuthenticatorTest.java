@@ -44,8 +44,8 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEnt
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @RunWith(JUnitParamsRunner.class)
 public class FiduciaAuthenticatorTest {

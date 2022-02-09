@@ -62,7 +62,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.se.tink.libraries.har_logger.src.logger.HarLogCollector;

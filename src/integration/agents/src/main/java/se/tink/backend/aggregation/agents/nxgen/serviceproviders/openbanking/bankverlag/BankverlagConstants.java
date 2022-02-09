@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedKey;
 
 public final class BankverlagConstants {
 

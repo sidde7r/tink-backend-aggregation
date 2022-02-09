@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class NemIdCodeAppConstants {

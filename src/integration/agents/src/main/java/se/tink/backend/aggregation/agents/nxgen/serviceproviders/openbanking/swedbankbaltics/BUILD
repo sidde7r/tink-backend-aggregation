@@ -42,7 +42,7 @@ java_library(
         "//src/libraries/cryptography/hash",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//src/libraries/strings",

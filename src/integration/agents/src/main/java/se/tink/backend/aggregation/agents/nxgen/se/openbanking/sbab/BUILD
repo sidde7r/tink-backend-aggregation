@@ -35,7 +35,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/date",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/pair",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",

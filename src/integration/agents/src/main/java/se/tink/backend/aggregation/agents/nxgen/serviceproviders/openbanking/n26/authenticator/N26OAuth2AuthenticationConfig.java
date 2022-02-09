@@ -35,7 +35,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectUrlBuilder;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @AllArgsConstructor
 public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {

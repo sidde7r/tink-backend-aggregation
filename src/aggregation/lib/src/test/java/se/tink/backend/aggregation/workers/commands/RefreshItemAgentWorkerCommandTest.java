@@ -24,7 +24,7 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RefreshItemAgentWorkerCommandTest {

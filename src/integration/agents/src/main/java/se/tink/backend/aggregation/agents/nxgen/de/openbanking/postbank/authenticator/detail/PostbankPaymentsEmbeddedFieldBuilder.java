@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankConstants;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.SdkTemplatesEmbeddedFieldBuilder;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 // This is a separate take on building fields, for the purpose of payments only.
 // Payments CHIP_TAN needs fuller instructions, thus we decided to move it to SDK templates as soon

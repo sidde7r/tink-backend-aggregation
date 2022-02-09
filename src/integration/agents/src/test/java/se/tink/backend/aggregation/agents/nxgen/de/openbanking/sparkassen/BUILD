@@ -30,7 +30,7 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:commons_io_commons_io",
         "//third_party:lombok_libs",

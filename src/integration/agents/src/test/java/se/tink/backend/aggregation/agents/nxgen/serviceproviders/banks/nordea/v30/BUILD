@@ -10,7 +10,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//third_party:org_mockito_mockito_core",
     ],
 )

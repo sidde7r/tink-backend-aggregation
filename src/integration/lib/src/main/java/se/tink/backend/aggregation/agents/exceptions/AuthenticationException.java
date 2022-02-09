@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.exceptions;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 /**
  * What is authentication?

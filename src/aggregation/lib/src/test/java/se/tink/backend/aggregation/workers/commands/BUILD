@@ -62,7 +62,7 @@ junit_test(
         "//src/integration/user:rpc",
         "//src/libraries/account_data_cache",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/interaction_counter",
         "//src/libraries/interaction_counter/local",
         "//src/libraries/pair",

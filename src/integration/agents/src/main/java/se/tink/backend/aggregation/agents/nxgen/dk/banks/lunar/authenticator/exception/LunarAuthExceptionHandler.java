@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionE
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
 import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j

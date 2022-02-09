@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.TanBuilder;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedKey;
 
 public class DkbSupplementalDataProviderTest {
 

@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.DanskeRequestHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class DanskeBankSEApiClient extends DanskeBankApiClient {
     DanskeBankSEApiClient(

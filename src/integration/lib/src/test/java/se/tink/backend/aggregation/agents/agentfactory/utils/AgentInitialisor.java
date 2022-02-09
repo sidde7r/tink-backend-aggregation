@@ -49,7 +49,7 @@ import se.tink.backend.secretsservice.client.SecretsServiceInternalClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.UserAvailability;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.user.rpc.User;

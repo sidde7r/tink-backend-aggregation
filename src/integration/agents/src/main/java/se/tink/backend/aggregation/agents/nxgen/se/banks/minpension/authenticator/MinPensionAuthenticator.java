@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator.rpc.UserTOCResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @RequiredArgsConstructor
 public class MinPensionAuthenticator implements BankIdAuthenticator<String> {

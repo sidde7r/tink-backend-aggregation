@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.agent;
 
 import java.util.Objects;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public abstract class AgentException extends RuntimeException {
     private final LocalizableKey userMessage;

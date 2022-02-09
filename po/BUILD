@@ -73,7 +73,7 @@ i18n_java_source(
 )
 
 java_library(
-    name = "i18n",
+    name = "i18n_aggregation",
     srcs = [
         "//po:i18n_da",
         "//po:i18n_de",

@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @Ignore
 public abstract class ExceptionHandlerBaseTest {

@@ -46,7 +46,7 @@ import se.tink.libraries.cryptography.AES;
 import se.tink.libraries.cryptography.RSA;
 import se.tink.libraries.cryptography.hash.Hash;
 import se.tink.libraries.encoding.EncodingUtils;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 

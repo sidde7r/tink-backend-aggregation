@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken;
 
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class HandelsbankenSEConstants {
 

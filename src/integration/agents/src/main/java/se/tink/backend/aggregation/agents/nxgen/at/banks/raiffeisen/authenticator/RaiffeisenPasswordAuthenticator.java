@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
     private static final Logger logger =

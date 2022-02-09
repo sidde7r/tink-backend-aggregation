@@ -35,7 +35,7 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.transfer.rpc.Transfer;

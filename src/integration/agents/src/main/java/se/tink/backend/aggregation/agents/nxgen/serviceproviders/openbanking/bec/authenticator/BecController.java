@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class BecController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
     private final SupplementalInformationHelper supplementalInformationHelper;

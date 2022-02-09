@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class DemoAccountFactoryTest {
     private static final Catalog catalog = new Catalog(Locale.US);

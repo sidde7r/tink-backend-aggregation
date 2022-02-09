@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessageKeys;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class ErrorChecker {
 

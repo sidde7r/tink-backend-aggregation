@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.i18n.LocalizableParametrizedEnum;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedKey;
 
 public class KbcConstants {
 

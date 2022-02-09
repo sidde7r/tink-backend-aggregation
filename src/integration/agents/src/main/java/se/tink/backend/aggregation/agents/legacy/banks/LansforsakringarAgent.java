@@ -152,9 +152,9 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;

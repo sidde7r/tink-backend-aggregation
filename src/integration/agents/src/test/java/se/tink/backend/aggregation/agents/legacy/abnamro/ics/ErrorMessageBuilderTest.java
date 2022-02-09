@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.concurrent.ExecutionException;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.abnamro.client.exceptions.IcsException;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class ErrorMessageBuilderTest {
 

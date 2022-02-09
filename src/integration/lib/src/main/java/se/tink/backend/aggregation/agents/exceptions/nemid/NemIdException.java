@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.nemid;
 
 import se.tink.backend.aggregation.agents.exceptions.MultiFactorAuthenticationException;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class NemIdException extends MultiFactorAuthenticationException {
 

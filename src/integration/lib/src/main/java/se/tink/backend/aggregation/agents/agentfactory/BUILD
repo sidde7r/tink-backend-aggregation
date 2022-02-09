@@ -5,7 +5,7 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//po:i18n",
+        "//po:i18n_aggregation",
         "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/sbab",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/seb",

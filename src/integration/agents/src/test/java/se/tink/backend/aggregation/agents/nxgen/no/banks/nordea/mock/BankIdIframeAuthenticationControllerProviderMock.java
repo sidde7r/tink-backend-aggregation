@@ -23,7 +23,7 @@ import se.tink.integration.webdriver.service.proxy.ProxyManager;
 import se.tink.integration.webdriver.service.proxy.ProxyResponse;
 import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 import se.tink.libraries.credentials.service.UserAvailability;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 /**
  * The goal of this mock is to return {@link BankIdIframeAuthenticationController} that will not use

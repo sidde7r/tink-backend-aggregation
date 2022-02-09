@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SparebankenSorConstants {

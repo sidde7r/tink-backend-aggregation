@@ -7,8 +7,8 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.DecoupledFieldBuilder;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedKey;
 
 @RequiredArgsConstructor
 public class SparkassenDecoupledFieldBuilder implements DecoupledFieldBuilder {

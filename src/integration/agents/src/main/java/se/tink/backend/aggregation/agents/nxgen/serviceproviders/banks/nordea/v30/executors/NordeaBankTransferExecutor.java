@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaBankTransferExecutor implements BankTransferExecutor {

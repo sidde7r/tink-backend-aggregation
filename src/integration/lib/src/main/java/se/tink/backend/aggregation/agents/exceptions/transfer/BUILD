@@ -7,7 +7,7 @@ java_library_with_sources(
         "//third_party:com_google_guava_guava",
     ],
     intdeps = [
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
     ],
     visibility = ["//visibility:public"],

@@ -24,7 +24,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//src/libraries/social_security_number",
         "//src/libraries/strings",

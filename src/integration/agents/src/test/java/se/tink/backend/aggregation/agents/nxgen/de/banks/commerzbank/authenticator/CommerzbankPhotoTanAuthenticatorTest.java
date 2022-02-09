@@ -41,7 +41,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.Me
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.rpc.ResultEntity;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommerzbankPhotoTanAuthenticatorTest {

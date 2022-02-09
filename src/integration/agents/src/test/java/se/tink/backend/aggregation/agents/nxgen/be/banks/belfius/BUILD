@@ -55,7 +55,7 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/date",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
