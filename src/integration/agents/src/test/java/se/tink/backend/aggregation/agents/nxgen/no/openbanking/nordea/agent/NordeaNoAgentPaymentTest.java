@@ -1,63 +1,104 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.agent;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
-import org.junit.Ignore;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@Ignore
 public class NordeaNoAgentPaymentTest {
 
-    @Test
-    public void testPayments() throws Exception {
-        AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("no", "no-nordea-ob")
-                        .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+    private final ArgumentManager<NordeaNoAgentPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(NordeaNoAgentPaymentTest.Arg.values());
 
-        builder.build().testGenericPayment(createListMockedDomesticPayment(4));
+    enum Arg implements ArgumentManager.ArgumentManagerEnum {
+        DEBTOR_ACCOUNT,
+        CREDITOR_ACCOUNT;
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
     }
 
-    private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
-        List<Payment> listOfMockedPayments = new ArrayList<>();
+    private AgentIntegrationTest.Builder builder;
 
-        for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifierType.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.NO).toString()).when(creditor).getAccountNumber();
+    @Before
+    public void setup() {
+        creditorDebtorManager.before();
 
-            Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifierType.NO).when(debtor).getAccountIdentifierType();
-            doReturn("60301132843").when(debtor).getAccountNumber();
+        builder =
+                new AgentIntegrationTest.Builder("no", "no-nordea-ob")
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("nordea")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .dumpContentForContractFile()
+                        .expectLoggedIn(false);
+    }
 
-            ExactCurrencyAmount amount = ExactCurrencyAmount.inNOK(new Random().nextInt(50000));
-            LocalDate executionDate = LocalDate.now();
-            String currency = "NOK";
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
-            listOfMockedPayments.add(
-                    new Payment.Builder()
-                            .withCreditor(creditor)
-                            .withDebtor(debtor)
-                            .withExactCurrencyAmount(amount)
-                            .withExecutionDate(executionDate)
-                            .withCurrency(currency)
-                            .build());
-        }
+    @Test
+    public void testOneTimePayment() throws Exception {
 
-        return listOfMockedPayments;
+        builder.build()
+                .testTinkLinkPayment(createPayment().withExecutionDate(LocalDate.now()).build());
+    }
+
+    private Payment.Builder createPayment() {
+        String paymentId = preparePaymentId("Tink");
+        System.out.println("Running payment: " + paymentId);
+
+        return createRealPayment(paymentId)
+                .withPaymentScheme(PaymentScheme.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER);
+    }
+
+    private Payment.Builder createRealPayment(String paymentId) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue(paymentId);
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+
+        AccountIdentifier creditorAccountIdentifier =
+                new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+
+        AccountIdentifier debtorAccountIdentifier =
+                new IbanIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
+
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inNOK(5);
+
+        return new Payment.Builder()
+                .withPaymentServiceType(PaymentServiceType.SINGLE)
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withExactCurrencyAmount(amount)
+                .withCurrency("NOK")
+                .withUniqueId(UUID.randomUUID().toString())
+                .withRemittanceInformation(remittanceInformation);
+    }
+
+    private String preparePaymentId(String prefix) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd--HH-mm-ss");
+        String dateNow = LocalDateTime.now().format(formatter);
+        return prefix + "-" + dateNow;
     }
 }

@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.LinkEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -113,13 +114,24 @@ public abstract class NordeaBasePaymentExecutor
                 List<String> paymentIds = new ArrayList<>();
                 paymentIds.add(paymentMultiStepRequest.getPayment().getUniqueId());
                 ConfirmPaymentRequest confirmPaymentRequest =
-                        ConfirmPaymentRequest.builder().paymentIds(paymentIds).build();
+                        ConfirmPaymentRequest.builder()
+                                .paymentIds(paymentIds)
+                                .state(strongAuthenticationState.getState())
+                                .build();
 
                 ConfirmPaymentResponse confirmPaymentsResponse =
                         apiClient.confirmPayment(
                                 confirmPaymentRequest, getPaymentType(paymentMultiStepRequest));
 
-                String href = confirmPaymentsResponse.getLinks().get(0).getHref();
+                String href =
+                        confirmPaymentsResponse.getLinks().stream()
+                                .filter(link -> "signing".equals(link.getRel()))
+                                .map(LinkEntity::getHref)
+                                .findFirst()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "No payment confirmation link found"));
 
                 this.supplementalInformationHelper.openThirdPartyApp(
                         ThirdPartyAppAuthenticationPayload.of(URL.of(href)));

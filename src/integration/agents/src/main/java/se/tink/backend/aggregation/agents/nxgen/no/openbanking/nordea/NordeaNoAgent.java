@@ -3,25 +3,33 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.authenticator.NordeaNoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.executor.payment.NordeaNoPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.fetcher.creditcard.NordeaNoCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.fetcher.transactionalaccount.NordeaNoGetTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.fetcher.transactionalaccount.NordeaNoTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.payment.NordeaNoPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.NordeaBaseCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -36,13 +44,20 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER,
+        },
+        markets = {"NO"})
 public final class NordeaNoAgent extends NordeaBaseAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -60,7 +75,6 @@ public final class NordeaNoAgent extends NordeaBaseAgent
                         persistentStorage,
                         qsealcSigner,
                         strongAuthenticationState);
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
     }
@@ -114,16 +128,6 @@ public final class NordeaNoAgent extends NordeaBaseAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    @Override
-    public Optional<PaymentController> constructPaymentController() {
-        NordeaNoPaymentExecutorSelector nordeaNoPaymentExecutorSelector =
-                new NordeaNoPaymentExecutorSelector(apiClient, supplementalInformationController);
-
-        return Optional.of(
-                new PaymentController(
-                        nordeaNoPaymentExecutorSelector, nordeaNoPaymentExecutorSelector));
-    }
-
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         NordeaBaseTransactionalAccountFetcher<NordeaNoGetTransactionResponse> accountFetcher =
                 new NordeaNoTransactionalAccountFetcher<>(
@@ -153,5 +157,30 @@ public final class NordeaNoAgent extends NordeaBaseAgent
 
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+
+        NordeaNoPaymentExecutorSelector nordeaNoPaymentExecutorSelector =
+                new NordeaNoPaymentExecutorSelector(
+                        apiClient,
+                        supplementalInformationHelper,
+                        constructAuthenticator(),
+                        credentials,
+                        strongAuthenticationState);
+
+        return Optional.of(
+                new PaymentController(
+                        nordeaNoPaymentExecutorSelector, nordeaNoPaymentExecutorSelector));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts,
+                AccountIdentifierType.IBAN,
+                AccountIdentifierType.NO,
+                AccountIdentifierType.BBAN);
     }
 }
