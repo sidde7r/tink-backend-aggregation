@@ -17,6 +17,15 @@ public class BeneficiariesCache {
         this.sourceAccountCache = new HashMap<>();
     }
 
+    /**
+     * Check if the sourceAccount exists in the cache, i.e. `add(sourceAccount, ...)` has been
+     * previously invoked. It does not verify if the cache for this specific sourceAccount contain
+     * any beneficiaries though, it can be empty.
+     */
+    public boolean hasCached(AccountIdentifier sourceAccount) {
+        return this.sourceAccountCache.containsKey(sourceAccount);
+    }
+
     public boolean contains(AccountIdentifier sourceAccount, AccountIdentifier beneficiary) {
         return Optional.ofNullable(this.sourceAccountCache.getOrDefault(sourceAccount, null))
                 .map(beneficiaryCache -> beneficiaryCache.contains(beneficiary))
