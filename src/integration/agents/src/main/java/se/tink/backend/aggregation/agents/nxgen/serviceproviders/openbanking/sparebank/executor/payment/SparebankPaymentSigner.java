@@ -38,13 +38,13 @@ public class SparebankPaymentSigner implements Signer<PaymentRequest> {
 
     public void sign(PaymentRequest toSign) throws AuthenticationException {
         final String paymentId = toSign.getPayment().getUniqueId();
+        final String state = strongAuthenticationState.getState();
 
+        storage.storeState(state);
         openThirdPartyApp(
                 new URL(
                         apiClient
-                                .authorizePayment(
-                                        getPaymentAuthorizeUrl(paymentId),
-                                        strongAuthenticationState.getState())
+                                .authorizePayment(getPaymentAuthorizeUrl(paymentId))
                                 .getLinks()
                                 .getScaRedirect()
                                 .getHref()));
