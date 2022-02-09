@@ -16,7 +16,7 @@ import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.integration.webdriver.WebDriverWrapper;
 
 @AllArgsConstructor
-public class RuralviaLoginProcessor implements CallbackProcessorEmpty {
+public class LoginProcessor implements CallbackProcessorEmpty {
 
     private final WebDriverWrapper webDriver;
     private final Credentials credentials;

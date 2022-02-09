@@ -12,7 +12,7 @@ import se.tink.integration.webdriver.WebDriverWrapper;
 
 @AllArgsConstructor
 @Slf4j
-public class RuralviaOpenAuthenticationPageProcessor implements CallbackProcessorEmpty {
+public class OpenAuthenticationPageProcessor implements CallbackProcessorEmpty {
 
     private final WebDriverWrapper webDriver;
     private final String mainPageUrl;

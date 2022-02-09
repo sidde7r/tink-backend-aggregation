@@ -23,11 +23,11 @@ public class RuralviaProgressiveAuthenticator extends StatelessProgressiveAuthen
     public List<AuthenticationStep> authenticationSteps() {
         return Lists.newArrayList(
                 new AutomaticAuthenticationStep(
-                        new RuralviaOpenAuthenticationPageProcessor(
+                        new OpenAuthenticationPageProcessor(
                                 webDriver, "https://www.grupocajarural.es/es"),
                         "openLoginPage"),
                 new AutomaticAuthenticationStep(
-                        new RuralviaLoginProcessor(webDriver, credentials), "loginProcessingStep"),
+                        new LoginProcessor(webDriver, credentials), "loginProcessingStep"),
                 new AutomaticAuthenticationStep(
                         new BeforeMainPageAdvertisementPageProcessor(webDriver),
                         "beforeMainPageAdvertisementPageStep"),
