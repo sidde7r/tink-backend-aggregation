@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
@@ -49,7 +50,8 @@ public class LaCaixaApiClientTest {
                         httpClientMock,
                         mock(PersistentStorage.class),
                         DUMMY_USERNAME,
-                        mock(RandomValueGenerator.class));
+                        mock(RandomValueGenerator.class),
+                        mock(SessionStorage.class));
     }
 
     @Test
