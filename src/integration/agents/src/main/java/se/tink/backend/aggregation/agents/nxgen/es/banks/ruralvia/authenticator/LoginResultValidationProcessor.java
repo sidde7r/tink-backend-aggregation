@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ruralvia.authenticator
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -22,25 +21,12 @@ public class LoginResultValidationProcessor implements CallbackProcessorEmpty {
     @Override
     public AuthenticationStepResponse process()
             throws AuthenticationException, AuthorizationException {
-        // done on the login page so no wait is needed
-        handleCredentialsContainsIllegalCharacterFromJavaScriptAlert();
-        new PageLoadWait(webDriver).waitFor(3);
         handleCredentialsIncorrectResponse();
         if (isLoginSuccess()) {
             return AuthenticationStepResponse.executeNextStep();
         }
         log.info("Unknown login result response:" + webDriver.getPageSource());
         throw new ConnectivityException(ConnectivityErrorDetails.TinkSideErrors.UNKNOWN_ERROR);
-    }
-
-    private void handleCredentialsContainsIllegalCharacterFromJavaScriptAlert() {
-        try {
-            webDriver.switchTo().alert();
-            throw new ConnectivityException(
-                    ConnectivityErrorDetails.UserLoginErrors.STATIC_CREDENTIALS_INCORRECT);
-        } catch (NoAlertPresentException ex) {
-            // no action needed when there is no JS alert
-        }
     }
 
     private void handleCredentialsIncorrectResponse() {
