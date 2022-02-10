@@ -26,22 +26,14 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
     private static final String BANK_BASKET_REFERENCE = "bank-basket-ref";
 
     private final PaymentsTestExecutionReport report;
-
-    private final List<BulkPaymentRegisterResult> registerResults;
-    private final List<BulkPaymentSignResult> signResults;
-    private final List<BulkPaymentSignResult> statusResults;
+    private final PaymentsTestContract contract;
 
     private boolean isFirstGetStatusPoll = true;
 
     public TestAgentBulkPaymentInitiator(
-            PaymentsTestExecutionReport report,
-            List<BulkPaymentRegisterResult> registerResults,
-            List<BulkPaymentSignResult> signResults,
-            List<BulkPaymentSignResult> statusResults) {
+            PaymentsTestExecutionReport report, PaymentsTestContract contract) {
         this.report = report;
-        this.registerResults = registerResults;
-        this.signResults = signResults;
-        this.statusResults = statusResults;
+        this.contract = contract;
     }
 
     @Override
@@ -49,7 +41,8 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
 
         report.addPaymentsToRegister(payments);
 
-        ArrayList<BulkPaymentRegisterResult> results = new ArrayList<>(registerResults);
+        ArrayList<BulkPaymentRegisterResult> results =
+                new ArrayList<>(contract.getRegisterResults());
 
         // Shuffle the list to ensure that lists are not compared using `.equals()` (which
         // requires the lists to have the same order).
@@ -64,7 +57,7 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
     @Override
     public BulkPaymentSignFlow getSignFlow() {
         return BulkPaymentSignFlow.builder()
-                .startStep(new TestAgentBulkPaymentSignStep(report, signResults))
+                .startStep(new TestAgentBulkPaymentSignStep(report, contract))
                 .build();
     }
 
@@ -79,7 +72,7 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
                         .map(PaymentReference::getPayment)
                         .collect(Collectors.toList()));
 
-        List<BulkPaymentSignResult> results = new ArrayList<>(statusResults);
+        List<BulkPaymentSignResult> results = new ArrayList<>(contract.getSignStatusResults());
 
         // Shuffle the list to ensure that lists are not compared using `.equals()` (which
         // requires the lists to have the same order).
@@ -110,12 +103,12 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
 
     private static class TestAgentBulkPaymentSignStep extends BulkPaymentSignStep {
         private final PaymentsTestExecutionReport report;
-        private final List<BulkPaymentSignResult> signResults;
+        private final PaymentsTestContract contract;
 
         public TestAgentBulkPaymentSignStep(
-                PaymentsTestExecutionReport report, List<BulkPaymentSignResult> signResults) {
+                PaymentsTestExecutionReport report, PaymentsTestContract contract) {
             this.report = report;
-            this.signResults = signResults;
+            this.contract = contract;
         }
 
         @Override
@@ -133,7 +126,7 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
                             .map(PaymentReference::getPayment)
                             .collect(Collectors.toList()));
 
-            List<BulkPaymentSignResult> results = new ArrayList<>(this.signResults);
+            List<BulkPaymentSignResult> results = new ArrayList<>(contract.getSignResults());
 
             // Shuffle the list to ensure that lists are not compared using `.equals()` (which
             // requires the lists to have the same order).

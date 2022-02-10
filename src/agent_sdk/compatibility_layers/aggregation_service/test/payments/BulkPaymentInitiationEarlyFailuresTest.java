@@ -1,6 +1,5 @@
 package src.agent_sdk.compatibility_layers.aggregation_service.test.payments;
 
-import java.util.Collections;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -13,6 +12,7 @@ import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationState;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestContract;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestExecutionReport;
 
 public class BulkPaymentInitiationEarlyFailuresTest {
@@ -25,17 +25,20 @@ public class BulkPaymentInitiationEarlyFailuresTest {
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
                         executionReport,
-                        List.of(
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .error(PaymentError.AMOUNT_LARGER_THAN_BANK_LIMIT)
-                                        .build(),
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .error(PaymentError.AMOUNT_LESS_THAN_BANK_LIMIT)
-                                        .build()),
-                        Collections.emptyList(),
-                        Collections.emptyList());
+                        PaymentsTestContract.builder()
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .error(PaymentError.AMOUNT_LARGER_THAN_BANK_LIMIT)
+                                                .build())
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .error(PaymentError.AMOUNT_LESS_THAN_BANK_LIMIT)
+                                                .build())
+                                .build());
 
         List<Payment> payments =
                 List.of(
@@ -78,27 +81,34 @@ public class BulkPaymentInitiationEarlyFailuresTest {
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
                         executionReport,
-                        List.of(
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .noError()
-                                        .build(),
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .noError()
-                                        .build()),
-                        List.of(
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .error(PaymentError.AMOUNT_LARGER_THAN_BANK_LIMIT)
-                                        .noDebtor()
-                                        .build(),
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .error(PaymentError.AMOUNT_LESS_THAN_BANK_LIMIT)
-                                        .noDebtor()
-                                        .build()),
-                        Collections.emptyList());
+                        PaymentsTestContract.builder()
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .noError()
+                                                .build())
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .noError()
+                                                .build())
+                                .signResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .error(PaymentError.AMOUNT_LARGER_THAN_BANK_LIMIT)
+                                                .noDebtor()
+                                                .build())
+                                .signResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .error(PaymentError.AMOUNT_LESS_THAN_BANK_LIMIT)
+                                                .noDebtor()
+                                                .build())
+                                .build());
 
         List<Payment> payments =
                 List.of(

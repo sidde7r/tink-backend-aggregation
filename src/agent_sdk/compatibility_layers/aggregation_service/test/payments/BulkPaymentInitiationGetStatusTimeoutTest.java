@@ -13,6 +13,7 @@ import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationState;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestContract;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestExecutionReport;
 
 public class BulkPaymentInitiationGetStatusTimeoutTest {
@@ -25,23 +26,28 @@ public class BulkPaymentInitiationGetStatusTimeoutTest {
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
                         executionReport,
-                        List.of(
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .noError()
-                                        .build()),
-                        List.of(
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build()),
-                        List.of(
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build()));
+                        PaymentsTestContract.builder()
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .noError()
+                                                .build())
+                                .signResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .signStatusResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .build());
 
         List<Payment> payments = List.of(PaymentInitiationTestHelper.PAYMENT_1);
 

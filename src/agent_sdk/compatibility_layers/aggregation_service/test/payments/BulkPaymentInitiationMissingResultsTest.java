@@ -1,6 +1,5 @@
 package src.agent_sdk.compatibility_layers.aggregation_service.test.payments;
 
-import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import se.tink.agent.sdk.models.payments.PaymentStatus;
@@ -9,6 +8,7 @@ import se.tink.agent.sdk.models.payments.bulk_payment_sign_result.BulkPaymentSig
 import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestContract;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestExecutionReport;
 
 public class BulkPaymentInitiationMissingResultsTest {
@@ -21,17 +21,20 @@ public class BulkPaymentInitiationMissingResultsTest {
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
                         executionReport,
-                        List.of(
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .noError()
-                                        .build(),
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .noError()
-                                        .build()),
-                        Collections.emptyList(),
-                        Collections.emptyList());
+                        PaymentsTestContract.builder()
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .noError()
+                                                .build())
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .noError()
+                                                .build())
+                                .build());
 
         List<Payment> payments =
                 List.of(
@@ -51,31 +54,40 @@ public class BulkPaymentInitiationMissingResultsTest {
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
                         executionReport,
-                        List.of(
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .noError()
-                                        .build(),
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .noError()
-                                        .build(),
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_3_REF)
-                                        .noError()
-                                        .build()),
-                        List.of(
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build(),
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build()),
-                        Collections.emptyList());
+                        PaymentsTestContract.builder()
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .noError()
+                                                .build())
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .noError()
+                                                .build())
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_3_REF)
+                                                .noError()
+                                                .build())
+                                .signResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .signResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .build());
 
         List<Payment> payments =
                 List.of(
@@ -95,46 +107,61 @@ public class BulkPaymentInitiationMissingResultsTest {
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
                         executionReport,
-                        List.of(
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .noError()
-                                        .build(),
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .noError()
-                                        .build(),
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_3_REF)
-                                        .noError()
-                                        .build()),
-                        List.of(
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build(),
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build(),
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_3_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build()),
-                        List.of(
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .status(PaymentStatus.INITIATED_AND_EXECUTED)
-                                        .noDebtor()
-                                        .build(),
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_2_REF)
-                                        .status(PaymentStatus.INITIATED_AND_EXECUTED)
-                                        .noDebtor()
-                                        .build()));
+                        PaymentsTestContract.builder()
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .noError()
+                                                .build())
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .noError()
+                                                .build())
+                                .registerResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_3_REF)
+                                                .noError()
+                                                .build())
+                                .signResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .signResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .signResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_3_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .signStatusResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .status(PaymentStatus.INITIATED_AND_EXECUTED)
+                                                .noDebtor()
+                                                .build())
+                                .signStatusResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_2_REF)
+                                                .status(PaymentStatus.INITIATED_AND_EXECUTED)
+                                                .noDebtor()
+                                                .build())
+                                .build());
 
         List<Payment> payments =
                 List.of(
