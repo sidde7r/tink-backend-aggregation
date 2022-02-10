@@ -19,8 +19,19 @@ public class OpenIdConstants {
         public static final String OFFLINE_ACCESS = "offline_access";
     }
 
-    public static final ImmutableList<String> MANDATORY_RESPONSE_TYPES =
-            ImmutableList.<String>builder().add("code").add(CallbackParams.ID_TOKEN).build();
+    public static final ImmutableList<String> RESPONSE_TYPES_FOR_HYBRID_FLOW_WITH_ID_TOKEN =
+            ImmutableList.<String>builder()
+                    .add(CallbackParams.CODE)
+                    .add(CallbackParams.ID_TOKEN)
+                    .build();
+
+    public static final ImmutableList<String>
+            RESPONSE_TYPES_FOR_HYBRID_FLOW_WITH_ID_TOKEN_AND_TOKEN =
+                    ImmutableList.<String>builder()
+                            .add(CallbackParams.CODE)
+                            .add(CallbackParams.TOKEN)
+                            .add(CallbackParams.ID_TOKEN)
+                            .build();
 
     public static final List<SigningAlgorithm> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM =
             Arrays.asList(SigningAlgorithm.PS256, SigningAlgorithm.RS256);
@@ -52,6 +63,7 @@ public class OpenIdConstants {
     public static class CallbackParams {
         public static final String CODE = "code";
         public static final String ID_TOKEN = "id_token";
+        public static final String TOKEN = "token";
         public static final String ERROR = "error";
         public static final String ERROR_DESCRIPTION = "error_description";
     }

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.entities;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.MANDATORY_RESPONSE_TYPES;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PREFERRED_ID_TOKEN_SIGNING_ALGORITHM;
 
 import com.google.common.base.Preconditions;
@@ -124,7 +123,7 @@ public class AuthorizeRequest {
             String redirectUri =
                     Optional.ofNullable(callbackUri).filter(s -> !s.isEmpty()).orElse(redirectUrl);
 
-            String responseTypes = String.join(" ", MANDATORY_RESPONSE_TYPES);
+            String responseTypes = wellKnownConfiguration.getResponseType();
 
             AuthorizeRequestClaims authorizeRequestClaims = createAuthorizeRequestClaims();
 

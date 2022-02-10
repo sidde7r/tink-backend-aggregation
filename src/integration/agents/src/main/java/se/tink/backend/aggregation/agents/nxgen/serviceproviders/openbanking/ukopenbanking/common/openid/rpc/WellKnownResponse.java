@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.TokenEndpointAuthMethod;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -29,6 +31,9 @@ public class WellKnownResponse {
 
     private List<String> scopesSupported;
 
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    private List<String> responseTypesSupported;
+
     private Set<String> idTokenSigningAlgValuesSupported;
 
     private Set<String> tokenEndpointAuthMethodsSupported;
@@ -47,6 +52,20 @@ public class WellKnownResponse {
 
     public List<String> getScopesSupported() {
         return scopesSupported;
+    }
+
+    public String getResponseType() {
+        if (responseTypesSupported.contains(
+                parseResponseType(
+                        OpenIdConstants.RESPONSE_TYPES_FOR_HYBRID_FLOW_WITH_ID_TOKEN_AND_TOKEN))) {
+            return parseResponseType(
+                    OpenIdConstants.RESPONSE_TYPES_FOR_HYBRID_FLOW_WITH_ID_TOKEN_AND_TOKEN);
+        }
+        return parseResponseType(OpenIdConstants.RESPONSE_TYPES_FOR_HYBRID_FLOW_WITH_ID_TOKEN);
+    }
+
+    private String parseResponseType(List<String> responseTypes) {
+        return String.join(" ", responseTypes);
     }
 
     public Boolean isOfflineAccessSupported() {
