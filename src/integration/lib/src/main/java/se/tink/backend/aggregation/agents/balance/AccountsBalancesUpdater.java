@@ -70,39 +70,40 @@ public class AccountsBalancesUpdater {
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
 
-        if (ACCOUNT_TYPES_SUPPORTING_BOOKED_CALCULATIONS.contains(account.getType())) {
-
-            AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
-                    AccountsBalanceUpdaterSummary.builder()
-                            .mode(mode)
-                            .inputAccountType(account.getType())
-                            .balanceTypeToCalculate(BalanceType.BOOKED_BALANCE)
-                            .buggyBalance(account.getExactBalance().getExactValue())
-                            .granularBalances(granularBalances);
-
-            Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
-                    calculatedBookedBalanceWithSummary =
-                            bookedBalanceCalculator.calculateBookedBalance(
-                                    granularBalances, transactions);
-            summaryBuilder.balanceCalculatorSummary(calculatedBookedBalanceWithSummary.getRight());
-
-            Optional<ExactCurrencyAmount> calculatedBookedBalance =
-                    calculatedBookedBalanceWithSummary.getLeft();
-
-            if (mode == Mode.DRY_RUN) {
-                log.info(summaryBuilder.build().prettyPrint());
-                return;
-            }
-
-            calculatedBookedBalance.ifPresent(
-                    balance -> {
-                        account.setExactBalance(balance);
-                        account.setBalance(balance.getDoubleValue());
-                        summaryBuilder.calculatedBalance(balance.getExactValue());
-                    });
-
-            log(summaryBuilder);
+        if (!ACCOUNT_TYPES_SUPPORTING_BOOKED_CALCULATIONS.contains(account.getType())) {
+            return;
         }
+
+        AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
+                AccountsBalanceUpdaterSummary.builder()
+                        .mode(mode)
+                        .inputAccountType(account.getType())
+                        .balanceTypeToCalculate(BalanceType.BOOKED_BALANCE)
+                        .buggyBalance(account.getExactBalance().getExactValue())
+                        .granularBalances(granularBalances);
+
+        Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
+                calculatedBookedBalanceWithSummary =
+                        bookedBalanceCalculator.calculateBookedBalance(
+                                granularBalances, transactions);
+        summaryBuilder.balanceCalculatorSummary(calculatedBookedBalanceWithSummary.getRight());
+
+        Optional<ExactCurrencyAmount> calculatedBookedBalance =
+                calculatedBookedBalanceWithSummary.getLeft();
+
+        if (mode == Mode.DRY_RUN) {
+            log.info(summaryBuilder.build().prettyPrint());
+            return;
+        }
+
+        calculatedBookedBalance.ifPresent(
+                balance -> {
+                    account.setExactBalance(balance);
+                    account.setBalance(balance.getDoubleValue());
+                    summaryBuilder.calculatedBalance(balance.getExactValue());
+                });
+
+        log.info(summaryBuilder.build().prettyPrint());
     }
 
     private void updateAvailableBalanceByRunningCalculation(
@@ -110,39 +111,40 @@ public class AccountsBalancesUpdater {
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions) {
 
-        if (ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS.contains(account.getType())) {
-            AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
-                    AccountsBalanceUpdaterSummary.builder()
-                            .mode(mode)
-                            .inputAccountType(account.getType())
-                            .balanceTypeToCalculate(BalanceType.AVAILABLE_BALANCE)
-                            .buggyBalance(account.getAvailableBalance().getExactValue())
-                            .granularBalances(granularBalances);
-
-            Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
-                    calculatedAvailableBalanceWithSummary =
-                            availableBalanceCalculator.calculateAvailableBalance(
-                                    granularBalances, transactions);
-
-            Optional<ExactCurrencyAmount> calculatedAvailableBalance =
-                    calculatedAvailableBalanceWithSummary.getLeft();
-
-            summaryBuilder.balanceCalculatorSummary(
-                    calculatedAvailableBalanceWithSummary.getRight());
-
-            if (mode == Mode.DRY_RUN) {
-                log.info(summaryBuilder.build().prettyPrint());
-                return;
-            }
-
-            calculatedAvailableBalance.ifPresent(
-                    balance -> {
-                        account.setAvailableBalance(balance);
-                        summaryBuilder.calculatedBalance(balance.getExactValue());
-                    });
-
-            log.info(summaryBuilder.build().prettyPrint());
+        if (!ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS.contains(account.getType())) {
+            return;
         }
+
+        AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
+                AccountsBalanceUpdaterSummary.builder()
+                        .mode(mode)
+                        .inputAccountType(account.getType())
+                        .balanceTypeToCalculate(BalanceType.AVAILABLE_BALANCE)
+                        .buggyBalance(account.getAvailableBalance().getExactValue())
+                        .granularBalances(granularBalances);
+
+        Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
+                calculatedAvailableBalanceWithSummary =
+                        availableBalanceCalculator.calculateAvailableBalance(
+                                granularBalances, transactions);
+
+        Optional<ExactCurrencyAmount> calculatedAvailableBalance =
+                calculatedAvailableBalanceWithSummary.getLeft();
+
+        summaryBuilder.balanceCalculatorSummary(calculatedAvailableBalanceWithSummary.getRight());
+
+        if (mode == Mode.DRY_RUN) {
+            log.info(summaryBuilder.build().prettyPrint());
+            return;
+        }
+
+        calculatedAvailableBalance.ifPresent(
+                balance -> {
+                    account.setAvailableBalance(balance);
+                    summaryBuilder.calculatedBalance(balance.getExactValue());
+                });
+
+        log.info(summaryBuilder.build().prettyPrint());
     }
 
 }
