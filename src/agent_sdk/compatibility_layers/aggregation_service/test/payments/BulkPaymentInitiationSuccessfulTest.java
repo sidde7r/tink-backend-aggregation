@@ -12,6 +12,7 @@ import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationState;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestExecutionReport;
 
 public class BulkPaymentInitiationSuccessfulTest {
 
@@ -19,8 +20,10 @@ public class BulkPaymentInitiationSuccessfulTest {
     public void testAllSuccessful() {
         // Set up the agent to successfully register, sign (with PENDING status) and getStatus (with
         // INITIATED_AND_EXECUTED status).
+        PaymentsTestExecutionReport executionReport = new PaymentsTestExecutionReport();
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
+                        executionReport,
                         List.of(
                                 BulkPaymentRegisterResult.builder()
                                         .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
@@ -79,12 +82,15 @@ public class BulkPaymentInitiationSuccessfulTest {
         // Assert that the agent processed the expected payments at every step.
         MatcherAssert.assertThat(
                 payments,
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToRegister().toArray()));
+                Matchers.containsInAnyOrder(
+                        executionReport.getPaymentsAskedToRegister().toArray()));
         MatcherAssert.assertThat(
-                payments, Matchers.containsInAnyOrder(agent.getPaymentsAskedToSign().toArray()));
+                payments,
+                Matchers.containsInAnyOrder(executionReport.getPaymentsAskedToSign().toArray()));
         MatcherAssert.assertThat(
                 new HashSet<>(payments),
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToGetStatus().toArray()));
+                Matchers.containsInAnyOrder(
+                        executionReport.getPaymentsAskedToGetSignStatus().toArray()));
 
         // Assert that the final report contain the expected final statuses and/or errors.
         List<PaymentInitiationState> expectedFinalPaymentStates =

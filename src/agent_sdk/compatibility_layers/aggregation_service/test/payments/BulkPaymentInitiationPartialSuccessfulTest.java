@@ -13,6 +13,7 @@ import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationState;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestExecutionReport;
 
 public class BulkPaymentInitiationPartialSuccessfulTest {
 
@@ -25,8 +26,10 @@ public class BulkPaymentInitiationPartialSuccessfulTest {
         //
         // We expect that each of the above-mentioned steps will have processed fewer and fewer
         // payments, due to earlier steps failing a payment.
+        PaymentsTestExecutionReport executionReport = new PaymentsTestExecutionReport();
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
+                        executionReport,
                         List.of(
                                 BulkPaymentRegisterResult.builder()
                                         .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
@@ -85,18 +88,20 @@ public class BulkPaymentInitiationPartialSuccessfulTest {
         // Assert that the agent processed the expected payments at every step.
         MatcherAssert.assertThat(
                 payments,
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToRegister().toArray()));
+                Matchers.containsInAnyOrder(
+                        executionReport.getPaymentsAskedToRegister().toArray()));
         MatcherAssert.assertThat(
                 List.of(
                         PaymentInitiationTestHelper.PAYMENT_2,
                         PaymentInitiationTestHelper.PAYMENT_3,
                         PaymentInitiationTestHelper.PAYMENT_4),
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToSign().toArray()));
+                Matchers.containsInAnyOrder(executionReport.getPaymentsAskedToSign().toArray()));
         MatcherAssert.assertThat(
                 Set.of(
                         PaymentInitiationTestHelper.PAYMENT_3,
                         PaymentInitiationTestHelper.PAYMENT_4),
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToGetStatus().toArray()));
+                Matchers.containsInAnyOrder(
+                        executionReport.getPaymentsAskedToGetSignStatus().toArray()));
 
         // Assert that the final report contain the expected final statuses and/or errors.
         List<PaymentInitiationState> expectedFinalPaymentStates =

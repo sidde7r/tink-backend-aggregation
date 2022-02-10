@@ -13,6 +13,7 @@ import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationState;
 import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestExecutionReport;
 
 public class BulkPaymentInitiationEarlyFailuresTest {
 
@@ -20,8 +21,10 @@ public class BulkPaymentInitiationEarlyFailuresTest {
     public void testEarlyFailureOnRegister() {
         // Set up the agent to fail all payments on register.
         // The process should not continue to sign.
+        PaymentsTestExecutionReport executionReport = new PaymentsTestExecutionReport();
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
+                        executionReport,
                         List.of(
                                 BulkPaymentRegisterResult.builder()
                                         .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
@@ -45,9 +48,10 @@ public class BulkPaymentInitiationEarlyFailuresTest {
         // Assert that the agent processed the expected payments at every step.
         MatcherAssert.assertThat(
                 payments,
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToRegister().toArray()));
-        Assert.assertTrue(agent.getPaymentsAskedToSign().isEmpty());
-        Assert.assertTrue(agent.getPaymentsAskedToGetStatus().isEmpty());
+                Matchers.containsInAnyOrder(
+                        executionReport.getPaymentsAskedToRegister().toArray()));
+        Assert.assertTrue(executionReport.getPaymentsAskedToSign().isEmpty());
+        Assert.assertTrue(executionReport.getPaymentsAskedToGetSignStatus().isEmpty());
 
         // Assert that the final report contain the expected final statuses and/or errors.
         List<PaymentInitiationState> expectedFinalPaymentStates =
@@ -70,8 +74,10 @@ public class BulkPaymentInitiationEarlyFailuresTest {
     public void testEarlyFailureOnSign() {
         // Set up the agent to fail all payments on sign.
         // The process should not continue to getStatus.
+        PaymentsTestExecutionReport executionReport = new PaymentsTestExecutionReport();
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
+                        executionReport,
                         List.of(
                                 BulkPaymentRegisterResult.builder()
                                         .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
@@ -105,10 +111,12 @@ public class BulkPaymentInitiationEarlyFailuresTest {
         // Assert that the agent processed the expected payments at every step.
         MatcherAssert.assertThat(
                 payments,
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToRegister().toArray()));
+                Matchers.containsInAnyOrder(
+                        executionReport.getPaymentsAskedToRegister().toArray()));
         MatcherAssert.assertThat(
-                payments, Matchers.containsInAnyOrder(agent.getPaymentsAskedToSign().toArray()));
-        Assert.assertTrue(agent.getPaymentsAskedToGetStatus().isEmpty());
+                payments,
+                Matchers.containsInAnyOrder(executionReport.getPaymentsAskedToSign().toArray()));
+        Assert.assertTrue(executionReport.getPaymentsAskedToGetSignStatus().isEmpty());
 
         // Assert that the final report contain the expected final statuses and/or errors.
         List<PaymentInitiationState> expectedFinalPaymentStates =

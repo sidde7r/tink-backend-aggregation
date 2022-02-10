@@ -2,9 +2,7 @@ package src.agent_sdk.compatibility_layers.aggregation_service.test.payments.tes
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -35,40 +33,23 @@ public class BulkPaymentTestAgent implements InitiateBulkPaymentGeneric {
     private final List<BulkPaymentSignResult> signResults;
     private final List<BulkPaymentSignResult> statusResults;
 
-    private final List<Payment> paymentsAskedToRegister = new ArrayList<>();
-    private final List<Payment> paymentsAskedToSign = new ArrayList<>();
-    private final Set<Payment> paymentsAskedToGetStatus = new HashSet<>();
+    private final PaymentsTestExecutionReport report;
 
     public BulkPaymentTestAgent(
+            PaymentsTestExecutionReport report,
             List<BulkPaymentRegisterResult> registerResults,
             List<BulkPaymentSignResult> signResults,
             List<BulkPaymentSignResult> statusResults) {
+        this.report = report;
         this.registerResults = registerResults;
         this.signResults = signResults;
         this.statusResults = statusResults;
     }
 
-    public List<Payment> getPaymentsAskedToRegister() {
-        return paymentsAskedToRegister;
-    }
-
-    public List<Payment> getPaymentsAskedToSign() {
-        return paymentsAskedToSign;
-    }
-
-    public Set<Payment> getPaymentsAskedToGetStatus() {
-        return paymentsAskedToGetStatus;
-    }
-
     @Override
     public GenericBulkPaymentInitiator bulkPaymentInitiator() {
         return new TestAgentBulkPaymentInitiator(
-                this.registerResults,
-                this.signResults,
-                this.statusResults,
-                this.paymentsAskedToRegister,
-                this.paymentsAskedToSign,
-                this.paymentsAskedToGetStatus);
+                this.report, this.registerResults, this.signResults, this.statusResults);
     }
 
     private static class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiator {
@@ -76,31 +57,25 @@ public class BulkPaymentTestAgent implements InitiateBulkPaymentGeneric {
         private final List<BulkPaymentSignResult> signResults;
         private final List<BulkPaymentSignResult> statusResults;
 
-        private final List<Payment> paymentsAskedToRegister;
-        private final List<Payment> paymentsAskedToSign;
-        private final Set<Payment> paymentsAskedToGetStatus;
+        private final PaymentsTestExecutionReport report;
 
         private boolean isFirstGetStatusPoll = true;
 
         public TestAgentBulkPaymentInitiator(
+                PaymentsTestExecutionReport report,
                 List<BulkPaymentRegisterResult> registerResults,
                 List<BulkPaymentSignResult> signResults,
-                List<BulkPaymentSignResult> statusResults,
-                List<Payment> paymentsAskedToRegister,
-                List<Payment> paymentsAskedToSign,
-                Set<Payment> paymentsAskedToGetStatus) {
+                List<BulkPaymentSignResult> statusResults) {
+            this.report = report;
             this.registerResults = registerResults;
             this.signResults = signResults;
             this.statusResults = statusResults;
-            this.paymentsAskedToRegister = paymentsAskedToRegister;
-            this.paymentsAskedToSign = paymentsAskedToSign;
-            this.paymentsAskedToGetStatus = paymentsAskedToGetStatus;
         }
 
         @Override
         public BulkPaymentRegisterBasketResult registerPayments(List<Payment> payments) {
 
-            paymentsAskedToRegister.addAll(payments);
+            report.addPaymentsToRegister(payments);
 
             ArrayList<BulkPaymentRegisterResult> results = new ArrayList<>(registerResults);
 
@@ -117,7 +92,7 @@ public class BulkPaymentTestAgent implements InitiateBulkPaymentGeneric {
         @Override
         public BulkPaymentSignFlow getSignFlow() {
             return BulkPaymentSignFlow.builder()
-                    .startStep(new SuccessfulSignStep(signResults, paymentsAskedToSign))
+                    .startStep(new SuccessfulSignStep(report, signResults))
                     .build();
         }
 
@@ -127,7 +102,7 @@ public class BulkPaymentTestAgent implements InitiateBulkPaymentGeneric {
             // step.
             Assert.assertEquals(BANK_BASKET_REFERENCE, basket.getBankBasketReference());
 
-            paymentsAskedToGetStatus.addAll(
+            report.addPaymentsToGetSignStatus(
                     basket.getPaymentReferences().stream()
                             .map(PaymentReference::getPayment)
                             .collect(Collectors.toList()));
@@ -165,13 +140,13 @@ public class BulkPaymentTestAgent implements InitiateBulkPaymentGeneric {
     }
 
     private static class SuccessfulSignStep extends BulkPaymentSignStep {
+        private final PaymentsTestExecutionReport report;
         private final List<BulkPaymentSignResult> signResults;
-        private final List<Payment> paymentsAskedToSign;
 
         public SuccessfulSignStep(
-                List<BulkPaymentSignResult> signResults, List<Payment> paymentsAskedToSign) {
+                PaymentsTestExecutionReport report, List<BulkPaymentSignResult> signResults) {
+            this.report = report;
             this.signResults = signResults;
-            this.paymentsAskedToSign = paymentsAskedToSign;
         }
 
         @Override
@@ -184,7 +159,7 @@ public class BulkPaymentTestAgent implements InitiateBulkPaymentGeneric {
             // step.
             Assert.assertEquals(BANK_BASKET_REFERENCE, basket.getBankBasketReference());
 
-            paymentsAskedToSign.addAll(
+            report.addPaymentsToSign(
                     basket.getPaymentReferences().stream()
                             .map(PaymentReference::getPayment)
                             .collect(Collectors.toList()));
