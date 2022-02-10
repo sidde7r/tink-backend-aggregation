@@ -66,8 +66,8 @@ Content-Type: application/json
   "debtor": {
     "account": {
       "currency": "NOK",
-      "value": "NO1284766456533",
-      "_type": "IBAN"
+      "value": "84766456533",
+      "_type": "BBAN_NO"
     }
   },
   "requested_execution_date": "2022-02-04"
@@ -90,8 +90,8 @@ Content-Type: application/json
     "entry_date_time": "2022-02-04T13:06:51.986257Z",
     "debtor": {
       "account": {
-        "value": "NO1284766456533",
-        "_type": "IBAN",
+        "value": "84766456533",
+        "_type": "BBAN_NO",
         "currency": "NOK"
       }
     },
@@ -155,8 +155,8 @@ Content-Type: application/json
         "entry_date_time": "2022-02-04T13:06:51.986257Z",
         "debtor": {
           "account": {
-            "value": "NO1284766456533",
-            "_type": "IBAN",
+            "value": "84766456533",
+            "_type": "BBAN_NO",
             "currency": "NOK"
           }
         },
@@ -205,8 +205,8 @@ Content-Type: application/json
         "entry_date_time": "2022-02-09T11:02:48.912597Z",
         "debtor": {
             "account": {
-                "value": "NO1284766456533",
-                "_type": "IBAN",
+                "value": "84766456533",
+                "_type": "BBAN_NO",
                 "currency": "NOK"
             }
         },

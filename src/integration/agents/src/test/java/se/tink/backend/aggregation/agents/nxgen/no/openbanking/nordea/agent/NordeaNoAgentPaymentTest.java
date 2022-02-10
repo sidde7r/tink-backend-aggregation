@@ -10,7 +10,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -77,11 +77,11 @@ public class NordeaNoAgentPaymentTest {
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
         AccountIdentifier creditorAccountIdentifier =
-                new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
+                new BbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
 
         AccountIdentifier debtorAccountIdentifier =
-                new IbanIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
+                new BbanIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inNOK(5);

@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.mock.modul
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -111,7 +112,7 @@ public class NordeaNoPaymentWireMockTest {
         // Ibans are randomly generated. It is needed to use properly formulated for sake of
         // checking verifiers in the code.
         AccountIdentifier creditorAccountIdentifier = new IbanIdentifier("NO5657553677653");
-        AccountIdentifier debtorAccountIdentifier = new IbanIdentifier("NO1284766456533");
+        AccountIdentifier debtorAccountIdentifier = new BbanIdentifier("84766456533");
 
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
         Debtor debtor = new Debtor(debtorAccountIdentifier);
