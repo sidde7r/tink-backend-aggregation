@@ -6,8 +6,8 @@ import se.tink.agent.sdk.payments.features.bulk.InitiateBulkPaymentGeneric;
 
 @Ignore
 // This is an agent implementation to test bulk payment initiation. The behaviour of the process is
-// controlled via the constructor arguments, it's possible to query which payments have been
-// processed via the getter methods.
+// controlled via the PaymentsTestContract, it's possible to query which payments have been
+// processed via the PaymentsTestExecutionReport.
 public class BulkPaymentTestAgent implements InitiateBulkPaymentGeneric {
     private final PaymentsTestExecutionReport report;
     private final PaymentsTestContract contract;
