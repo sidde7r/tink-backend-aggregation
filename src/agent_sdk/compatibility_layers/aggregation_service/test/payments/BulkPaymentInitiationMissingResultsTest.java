@@ -8,6 +8,7 @@ import se.tink.agent.sdk.models.payments.bulk_payment_register_result.BulkPaymen
 import se.tink.agent.sdk.models.payments.bulk_payment_sign_result.BulkPaymentSignResult;
 import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
 
 public class BulkPaymentInitiationMissingResultsTest {
     @Test(expected = PaymentInitiationReport.InconsistentPaymentStateException.class)

@@ -1,4 +1,4 @@
-package src.agent_sdk.compatibility_layers.aggregation_service.test.payments;
+package src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent;
 
 import java.util.ArrayList;
 import java.util.Collections;

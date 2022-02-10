@@ -11,6 +11,7 @@ import se.tink.agent.sdk.models.payments.bulk_payment_sign_result.BulkPaymentSig
 import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationState;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
 
 public class BulkPaymentInitiationSuccessfulTest {
 
