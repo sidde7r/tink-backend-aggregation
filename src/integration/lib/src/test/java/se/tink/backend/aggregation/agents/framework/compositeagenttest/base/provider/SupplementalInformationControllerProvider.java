@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.framework.compositeagenttest.base.pro
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import java.util.Map;
+import javax.annotation.Nullable;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.SupplementalInformationCallbackData;
@@ -20,7 +21,7 @@ public final class SupplementalInformationControllerProvider
     public SupplementalInformationControllerProvider(
             AgentContext context,
             Credentials credential,
-            @SupplementalInformationCallbackData Map<String, String> callbackData) {
+            @Nullable @SupplementalInformationCallbackData Map<String, String> callbackData) {
         this.context = context;
         this.credential = credential;
         this.callbackData = callbackData;
