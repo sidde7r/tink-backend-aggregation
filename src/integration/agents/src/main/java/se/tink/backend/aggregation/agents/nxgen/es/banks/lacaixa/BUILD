@@ -48,5 +48,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
     ],
 )

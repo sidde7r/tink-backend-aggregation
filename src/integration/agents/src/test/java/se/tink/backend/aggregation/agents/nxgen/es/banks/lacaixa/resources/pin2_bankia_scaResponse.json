@@ -1,0 +1,20 @@
+{
+    "tipoValidador": "PIN2_BANKIA",
+    "autorizacionSCA": false,
+    "pin2": null,
+    "tarjetaCoordenadas": null,
+    "teleID": null,
+    "caixaPIN": null,
+    "visaCodeSure": null,
+    "pinParcialMultiple": null,
+    "sms": null,
+    "clv": null,
+    "motp": null,
+    "sinAutorizacion": null,
+    "fir": null,
+    "pin1SCA": null,
+    "pin2Bankia": {
+        "iteraciones": 4,
+        "semilla": "DBF737067A5702A3"
+    }
+}

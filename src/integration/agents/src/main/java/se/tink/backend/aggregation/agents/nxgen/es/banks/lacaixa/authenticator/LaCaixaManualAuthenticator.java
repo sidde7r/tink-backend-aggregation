@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClien
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.CaixaPayloadValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.StepIdentifiers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.TemporaryStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.entities.PinScaEntity;
@@ -32,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResultResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.step.BankiaSignatureStep;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.step.CodeCardStep;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -66,6 +68,7 @@ public class LaCaixaManualAuthenticator {
     private final AuthenticationStep codeCardStep;
     private final AuthenticationStep appStep;
     private final AuthenticationStep finalizeStep;
+    private final AuthenticationStep bankiaSignatureStep;
 
     public LaCaixaManualAuthenticator(
             LaCaixaApiClient apiClient,
@@ -74,29 +77,33 @@ public class LaCaixaManualAuthenticator {
             SupplementalInformationFormer supplementalInformationFormer,
             Catalog catalog,
             Credentials credentials,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            SupplementalInformationHelper supplementalInformationHelper,
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.logMasker = logMasker;
-        this.authStorage = new SessionStorage();
+        this.authStorage = sessionStorage;
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
 
         otpStep = new OtpStep(this::processOtp, supplementalInformationFormer);
-        appStep = new AutomaticAuthenticationStep(this::handleAppSca, "caixabankSign");
+        appStep = new AutomaticAuthenticationStep(this::handleAppSca, StepIdentifiers.APP_SIGN);
         finalizeStep =
-                new AutomaticAuthenticationStep(this::finalizeEnrolment, "finalizeEnrolment");
+                new AutomaticAuthenticationStep(
+                        this::finalizeEnrolment, StepIdentifiers.FINALIZE_ENROLMENT);
         codeCardStep = new CodeCardStep(catalog, authStorage);
+        bankiaSignatureStep = new BankiaSignatureStep(catalog, authStorage, apiClient);
     }
 
     public List<AuthenticationStep> getAuthenticationSteps() {
         return ImmutableList.of(
                 new UsernamePasswordAuthenticationStep(this::login),
-                new AutomaticAuthenticationStep(this::initiateEnrolment, "initiateEnrolment"),
+                new AutomaticAuthenticationStep(
+                        this::initiateEnrolment, StepIdentifiers.INITIALIZE_ENROLMENT),
                 appStep,
                 codeCardStep,
-                finalizeStep,
                 otpStep,
+                bankiaSignatureStep,
                 finalizeStep);
     }
 
@@ -183,7 +190,9 @@ public class LaCaixaManualAuthenticator {
                 return handlePasswordSca(response.getPin1Sca());
             case AuthenticationParams.SCA_TYPE_PIN_BANKIA:
                 // Password again
-                return handlePasswordSca(response.getPin2ScaBankia());
+                authStorage.put(TemporaryStorage.PIN_BANKIA, response.getPin2ScaBankia());
+                return AuthenticationStepResponse.executeStepWithId(
+                        BankiaSignatureStep.class.getName());
             case AuthenticationParams.SCA_TYPE_SMS:
                 // SCA with OTP SMS
                 authStorage.put(TemporaryStorage.SCA_SMS, response.getSms());
@@ -227,7 +236,7 @@ public class LaCaixaManualAuthenticator {
         final String code =
                 LaCaixaPasswordHash.hash(smsData.getSeed(), smsData.getIterations(), otp);
         authStorage.put(TemporaryStorage.ENROLMENT_CODE, code);
-        return AuthenticationStepResponse.executeNextStep();
+        return AuthenticationStepResponse.executeStepWithId(StepIdentifiers.FINALIZE_ENROLMENT);
     }
 
     private AuthenticationStepResponse finalizeEnrolment() {

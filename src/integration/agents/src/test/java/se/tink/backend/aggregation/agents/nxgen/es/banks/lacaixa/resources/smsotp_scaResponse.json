@@ -1,0 +1,23 @@
+{
+    "tipoValidador": "OTPSMS",
+    "digitos": "6",
+    "autorizacionSCA": false,
+    "pin2": null,
+    "tarjetaCoordenadas": null,
+    "teleID": null,
+    "caixaPIN": null,
+    "visaCodeSure": null,
+    "pinParcialMultiple": null,
+    "sms": {
+        "iteraciones": 3,
+        "semilla": "8FC5E365925D9F60",
+        "longitudEncriptOtp": "48",
+        "movil": "+34 6*****357"
+    },
+    "clv": null,
+    "motp": null,
+    "sinAutorizacion": null,
+    "fir": null,
+    "pin1SCA": null,
+    "pin2Bankia": null
+}

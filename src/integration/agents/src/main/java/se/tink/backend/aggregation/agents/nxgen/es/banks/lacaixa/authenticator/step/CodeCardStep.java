@@ -43,7 +43,7 @@ public class CodeCardStep implements AuthenticationStep {
                 LaCaixaPasswordHash.hash(
                         codeCard.getSeed(), codeCard.getIterations(), keyCardValue);
         authStorage.put(TemporaryStorage.ENROLMENT_CODE, enrolmentCode);
-        return AuthenticationStepResponse.executeNextStep();
+        return AuthenticationStepResponse.executeStepWithId("finalizeEnrolment");
     }
 
     private Field getKeyCardIndexField(CodeCardEntity codeCard) {

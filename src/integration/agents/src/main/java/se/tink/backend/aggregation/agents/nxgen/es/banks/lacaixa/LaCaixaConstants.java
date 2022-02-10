@@ -189,6 +189,7 @@ public final class LaCaixaConstants {
         public static final String SCA_SMS = "scaSms";
         public static final String CODE_CARD = "codeCard";
         public static final String ENROLMENT_CODE = "enrolmentCode";
+        public static final String PIN_BANKIA = "pinBankia";
     }
 
     public static class PermStorage {
@@ -249,5 +250,15 @@ public final class LaCaixaConstants {
     public static final class HeaderKeys {
         public static final String USER_AGENT = "User-Agent";
         public static final String X_REQUEST_ID = "X-Request-Id";
+    }
+
+    public static final class SupplementalInformationKeys {
+        public static final String BANKIA_SIGNATURE = "bankiaSig";
+    }
+
+    public static final class StepIdentifiers {
+        public static final String INITIALIZE_ENROLMENT = "initiateEnrolment";
+        public static final String FINALIZE_ENROLMENT = "finalizeEnrolment";
+        public static final String APP_SIGN = "caixabankSign";
     }
 }

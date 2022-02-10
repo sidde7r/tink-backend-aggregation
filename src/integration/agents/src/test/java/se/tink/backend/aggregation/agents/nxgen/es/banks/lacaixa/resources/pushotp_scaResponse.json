@@ -1,0 +1,19 @@
+{
+    "tipoValidador": "MOTP",
+    "autorizacionSCA": false,
+    "pin2": null,
+    "tarjetaCoordenadas": null,
+    "teleID": null,
+    "caixaPIN": null,
+    "visaCodeSure": null,
+    "pinParcialMultiple": null,
+    "sms": null,
+    "clv": null,
+    "motp": {
+        "periodicidadVerificacion": "5000"
+    },
+    "sinAutorizacion": null,
+    "fir": null,
+    "pin1SCA": null,
+    "pin2Bankia": null
+}
