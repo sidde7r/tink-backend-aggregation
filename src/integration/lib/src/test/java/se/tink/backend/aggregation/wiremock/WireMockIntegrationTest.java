@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.wiremock;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
@@ -34,5 +35,17 @@ public class WireMockIntegrationTest {
 
     protected String getOrigin() {
         return PROTOCOL_AND_HOST + ":" + wireMock.port();
+    }
+
+    protected void stubAllCssRequestsWithEmptyResponse() {
+        WireMock.stubFor(
+                WireMock.get(WireMock.urlMatching(".+\\.css.*"))
+                        .willReturn(WireMock.aResponse().withBody("")));
+    }
+
+    protected void stubAllJavaScriptRequestsWithEmptyResponse() {
+        WireMock.stubFor(
+                WireMock.get(WireMock.urlMatching(".+\\.js.*"))
+                        .willReturn(WireMock.aResponse().withBody("")));
     }
 }

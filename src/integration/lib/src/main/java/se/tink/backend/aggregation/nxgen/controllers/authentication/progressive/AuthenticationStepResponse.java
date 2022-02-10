@@ -54,4 +54,10 @@ public class AuthenticationStepResponse {
     public boolean isAuthenticationFinished() {
         return authenticationFinished;
     }
+
+    public boolean isExecuteNextStepInRow() {
+        return nextStepId == null
+                && !authenticationFinished
+                && supplementInformationRequester == null;
+    }
 }

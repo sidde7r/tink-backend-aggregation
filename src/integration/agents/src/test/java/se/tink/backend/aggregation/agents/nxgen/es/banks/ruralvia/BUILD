@@ -2,15 +2,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "ruralvia_unitTests",
-    srcs = [
-        "authenticator/RuralviaAuthenticatorTest.java",
-        "fetcher/RuralviaUtilsTest.java",
-        "fetcher/creditcard/RuralviaCreditCardFetcherTest.java",
-        "fetcher/identitydata/RuralviaIdentityDataFetcherTest.java",
-        "fetcher/loan/RuralviaLoanFetcherTest.java",
-        "fetcher/transactionalaccount/RuralviaTransactionalAccountFetcherTest.java",
-        "rpc/GlobalPositionResponseTest.java",
-    ],
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["RulaviaAgentTest.java"],
+    ),
     data = [
         "//:agent_test_data",
         "//data:agent_unit_tests",
@@ -18,10 +13,6 @@ junit_test(
         "//data:provider_configurations",
         "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/ruralvia/resources",
-    ],
-    tags = [
-        "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -37,17 +28,21 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/wiremock",
         "//src/integration/models",
         "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//src/tink_backend_libs:har_logger",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:commons_io_commons_io",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
         "//third_party/browserup_proxy_core",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
     ],
 )
 
