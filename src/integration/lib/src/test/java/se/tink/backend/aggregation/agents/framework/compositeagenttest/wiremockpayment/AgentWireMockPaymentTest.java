@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.L
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.BulkPaymentRequestModule;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.BulkTransferRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.TransferRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.VerdictModule;
@@ -95,8 +94,7 @@ public final class AgentWireMockPaymentTest {
                                 prepareUserAvailability()),
                         new PaymentRequestModule(payment),
                         new TransferRequestModule(transfer),
-                        new BulkPaymentRequestModule(bulkPayment),
-                        new BulkTransferRequestModule(bulkTransfer),
+                        new BulkPaymentRequestModule(bulkPayment, bulkTransfer),
                         new VerdictModule(),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of(
