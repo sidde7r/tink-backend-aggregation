@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common;
 
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -23,8 +23,7 @@ public class ClydesdaleGroupAuthorisationFilter extends Filter {
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
         if (is403(response) && hasErrorCodeForbidden(response)) {
-            throw AuthorizationError.UNAUTHORIZED.exception(
-                    "Authorization Error, received status " + response.getStatus());
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
         return response;
     }
