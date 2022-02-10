@@ -56,12 +56,9 @@ public class SebKortSanitizeUniqueIdentifierMgration extends AgentVersionMigrati
     @Override
     public boolean shouldChangeRequest(CredentialsRequest request) {
         String agentName = request.getProvider().getClassName();
-        if (agentName.endsWith(OLD_SEBKORT_AGENT)
+        return (agentName.endsWith(OLD_SEBKORT_AGENT)
                 || NEW_SEBKORT_AGENT_CLASSES.stream()
-                        .anyMatch(newAgent -> agentName.endsWith(newAgent))) {
-            return true;
-        }
-        return false;
+                        .anyMatch(newAgent -> agentName.endsWith(newAgent)));
     }
 
     @Override
