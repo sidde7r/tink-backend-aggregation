@@ -28,6 +28,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.balance.AccountsBalancesUpdater.Mode;
 import se.tink.backend.aggregation.agents.balance.calculators.AvailableBalanceCalculator;
 import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculatorSummary;
 import se.tink.backend.aggregation.agents.balance.calculators.BookedBalanceCalculator;
@@ -47,8 +48,8 @@ public class AccountsBalancesUpdaterTest {
     public void setUp() throws Exception {
         listOfAccountData = getTestListOfAccountData();
         accountsBalancesUpdater =
-                AccountsBalancesUpdater.createBalanceUpdater(
-                        bookedBalanceCalculator, availableBalanceCalculator);
+                new AccountsBalancesUpdater(
+                        bookedBalanceCalculator, availableBalanceCalculator, Mode.UPDATING);
 
         when(account.getGranularAccountBalances()).thenReturn(Maps.newHashMap());
         when(bookedBalanceCalculator.calculateBookedBalance(anyMap(), anyList()))
@@ -131,8 +132,8 @@ public class AccountsBalancesUpdaterTest {
     public void shouldNotUpdateAnyBalancesByRunningCalculationIfDryRunEnabled() {
         // given
         accountsBalancesUpdater =
-                AccountsBalancesUpdater.createDryRunBalanceUpdater(
-                        bookedBalanceCalculator, availableBalanceCalculator);
+                new AccountsBalancesUpdater(
+                        bookedBalanceCalculator, availableBalanceCalculator, Mode.DRY_RUN);
         when(account.getType()).thenReturn(AccountTypes.CHECKING);
 
         // when

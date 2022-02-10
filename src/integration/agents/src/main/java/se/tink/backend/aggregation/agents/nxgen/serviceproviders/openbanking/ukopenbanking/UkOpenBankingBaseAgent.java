@@ -161,8 +161,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.pisRequestFilter = pisRequestFilter;
         this.componentProvider = componentProvider;
         this.accountsBalancesUpdater =
-                AccountsBalancesUpdater.createBalanceUpdater(
-                        new UkObBookedBalanceCalculator(), new UkObAvailableBalanceCalculator());
+                new AccountsBalancesUpdater(
+                        new UkObBookedBalanceCalculator(),
+                        new UkObAvailableBalanceCalculator(),
+                        AccountsBalancesUpdater.Mode.UPDATING);
 
         configureMdcPropagation();
     }

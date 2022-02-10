@@ -30,30 +30,20 @@ public class AccountsBalancesUpdater {
 
     private final BookedBalanceCalculator bookedBalanceCalculator;
     private final AvailableBalanceCalculator availableBalanceCalculator;
+    private final Mode mode;
 
-    private final boolean dryRun;
+    public enum Mode {
+        DRY_RUN,
+        UPDATING
+    }
 
-    private AccountsBalancesUpdater(
+    public AccountsBalancesUpdater(
             BookedBalanceCalculator bookedBalanceCalculator,
             AvailableBalanceCalculator availableBalanceCalculator,
-            boolean dryRun) {
+            Mode mode) {
         this.bookedBalanceCalculator = Objects.requireNonNull(bookedBalanceCalculator);
         this.availableBalanceCalculator = Objects.requireNonNull(availableBalanceCalculator);
-        this.dryRun = dryRun;
-    }
-
-    public static AccountsBalancesUpdater createDryRunBalanceUpdater(
-            BookedBalanceCalculator bookedBalanceCalculator,
-            AvailableBalanceCalculator availableBalanceCalculator) {
-        return new AccountsBalancesUpdater(
-                bookedBalanceCalculator, availableBalanceCalculator, true);
-    }
-
-    public static AccountsBalancesUpdater createBalanceUpdater(
-            BookedBalanceCalculator bookedBalanceCalculator,
-            AvailableBalanceCalculator availableBalanceCalculator) {
-        return new AccountsBalancesUpdater(
-                bookedBalanceCalculator, availableBalanceCalculator, false);
+        this.mode = mode;
     }
 
     public void updateAccountsBalancesByRunningCalculations(List<AccountData> accountsData) {
@@ -84,7 +74,7 @@ public class AccountsBalancesUpdater {
 
             AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
                     AccountsBalanceUpdaterSummary.builder()
-                            .dryRun(dryRun)
+                            .mode(mode)
                             .inputAccountType(account.getType())
                             .balanceTypeToCalculate(BalanceType.BOOKED_BALANCE)
                             .buggyBalance(account.getExactBalance().getExactValue())
@@ -99,7 +89,7 @@ public class AccountsBalancesUpdater {
             Optional<ExactCurrencyAmount> calculatedBookedBalance =
                     calculatedBookedBalanceWithSummary.getLeft();
 
-            if (dryRun) {
+            if (mode == Mode.DRY_RUN) {
                 log.info(summaryBuilder.build().prettyPrint());
                 return;
             }
@@ -111,7 +101,7 @@ public class AccountsBalancesUpdater {
                         summaryBuilder.calculatedBalance(balance.getExactValue());
                     });
 
-            log.info(summaryBuilder.build().prettyPrint());
+            log(summaryBuilder);
         }
     }
 
@@ -123,7 +113,7 @@ public class AccountsBalancesUpdater {
         if (ACCOUNT_TYPES_SUPPORTING_AVAILABLE_CALCULATIONS.contains(account.getType())) {
             AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
                     AccountsBalanceUpdaterSummary.builder()
-                            .dryRun(dryRun)
+                            .mode(mode)
                             .inputAccountType(account.getType())
                             .balanceTypeToCalculate(BalanceType.AVAILABLE_BALANCE)
                             .buggyBalance(account.getAvailableBalance().getExactValue())
@@ -140,7 +130,7 @@ public class AccountsBalancesUpdater {
             summaryBuilder.balanceCalculatorSummary(
                     calculatedAvailableBalanceWithSummary.getRight());
 
-            if (dryRun) {
+            if (mode == Mode.DRY_RUN) {
                 log.info(summaryBuilder.build().prettyPrint());
                 return;
             }
@@ -154,4 +144,5 @@ public class AccountsBalancesUpdater {
             log.info(summaryBuilder.build().prettyPrint());
         }
     }
+
 }

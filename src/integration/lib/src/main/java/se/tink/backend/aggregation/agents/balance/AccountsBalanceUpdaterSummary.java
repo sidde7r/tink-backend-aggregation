@@ -18,6 +18,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.BalanceType;
+import se.tink.backend.aggregation.agents.balance.AccountsBalancesUpdater.Mode;
 import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculatorSummary;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -34,7 +35,7 @@ public class AccountsBalanceUpdaterSummary {
                     .registerTypeAdapter(Pair.class, new PairDeserializer())
                     .create();
 
-    private final boolean dryRun;
+    private final Mode mode;
 
     private final AccountTypes inputAccountType;
     private final BalanceType balanceTypeToCalculate;
