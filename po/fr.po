@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-11-15 10:43+0000\n"
-"PO-Revision-Date: 2021-11-15 10:43+0000\n"
+"POT-Creation-Date: 2022-02-10 16:25+0000\n"
+"PO-Revision-Date: 2022-02-10 16:25+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -1523,3 +1523,6 @@ msgstr "Entreprise"
 
 msgid "Which account segment do you want to aggregate?"
 msgstr "Quel type de compte souhaitez-vous agréger?"
+
+msgid "Funds availability is not confirmed by the bank."
+msgstr "La disponibilité des fonds n'est pas confirmée par la banque."
