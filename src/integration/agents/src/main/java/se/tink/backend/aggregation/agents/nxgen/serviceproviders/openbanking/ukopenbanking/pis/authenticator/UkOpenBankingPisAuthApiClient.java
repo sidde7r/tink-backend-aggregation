@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -93,10 +92,6 @@ public class UkOpenBankingPisAuthApiClient extends OpenIdApiClient {
         paymentStorage.storePreferredSigningAlgorithm(getPreferredAlgorithm(wellKnownResponse));
 
         return wellKnownResponse;
-    }
-
-    OAuth2Token requestClientCredentials() {
-        return super.requestClientCredentials(ClientMode.PAYMENTS);
     }
 
     private SigningAlgorithm getPreferredAlgorithm(WellKnownResponse wellKnownResponse) {
