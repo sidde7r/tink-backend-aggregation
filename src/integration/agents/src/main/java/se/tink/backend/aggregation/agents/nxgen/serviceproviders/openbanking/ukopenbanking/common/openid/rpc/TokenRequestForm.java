@@ -69,7 +69,7 @@ public class TokenRequestForm extends AbstractForm {
                         .withSigner(signer, signingAlg)
                         .withAudience(audience)
                         .build();
-        log.info("[TokenRequestForm] client_assertion: ", clientAssertion);
+        log.info("[TokenRequestForm] client_assertion: {}", clientAssertion);
 
         this.withClientId(clientInfo.getClientId());
         this.put("client_assertion_type", CLIENT_ASSERTION_TYPE);
