@@ -1,6 +1,7 @@
 build_flags:
   --test_output=streamed
   --build_manual_tests
+  --config=jdk11
 
 directories:
   .
@@ -14,7 +15,7 @@ targets:
   -//deb:all
   -//third_party:all
 
-java_language_level: 8
+java_language_level: 11
 
 import_run_configurations:
   tink_ide_settings/run/Minikube-Server__Aggregation.xml
