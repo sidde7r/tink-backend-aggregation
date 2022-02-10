@@ -75,6 +75,8 @@ java_library(
         "@aggregation//:com_google_errorprone_error_prone_annotations",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_nimbusds_nimbus_jose_jwt",
+        "@aggregation//:org_apache_httpcomponents_httpclient",
+        "@aggregation//:org_apache_httpcomponents_httpcore",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@maven//:io_prometheus_simpleclient",
