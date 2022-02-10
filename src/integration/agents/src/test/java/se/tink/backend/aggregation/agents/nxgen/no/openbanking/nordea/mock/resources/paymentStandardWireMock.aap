@@ -66,8 +66,8 @@ Content-Type: application/json
   "debtor": {
     "account": {
       "currency": "NOK",
-      "value": "NO1284766456533",
-      "_type": "IBAN"
+      "value": "84766456533",
+      "_type": "BBAN_NO"
     }
   },
   "requested_execution_date": "2022-02-04"
