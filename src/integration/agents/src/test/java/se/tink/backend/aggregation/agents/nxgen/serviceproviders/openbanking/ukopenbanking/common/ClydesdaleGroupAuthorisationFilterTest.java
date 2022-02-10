@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.UkObErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
@@ -46,8 +46,7 @@ public class ClydesdaleGroupAuthorisationFilterTest {
 
         // then
         Assertions.assertThatCode(() -> errorHandlerFilter.handle(null))
-                .isInstanceOf(AuthorizationException.class)
-                .hasMessage("Authorization Error, received status 403");
+                .isInstanceOf(BankServiceException.class);
     }
 
     @Test
