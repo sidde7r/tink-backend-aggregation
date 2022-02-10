@@ -22,11 +22,11 @@ import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.base_step.StepResponse;
 import se.tink.agent.sdk.steppable_execution.execution_flow.ExecutionFlow;
 
-public class RuntimeAuthenticator {
+public class RuntimeAuthenticationApi {
     private final AgentInstance agentInstance;
     private final AuthenticationFlows authenticationFlows;
 
-    public RuntimeAuthenticator(AgentInstance agentInstance) throws AuthenticatorNotFoundException {
+    public RuntimeAuthenticationApi(AgentInstance agentInstance) throws AuthenticatorNotFoundException {
         this.agentInstance = agentInstance;
 
         Utilities utilities = agentInstance.getUtilities();
