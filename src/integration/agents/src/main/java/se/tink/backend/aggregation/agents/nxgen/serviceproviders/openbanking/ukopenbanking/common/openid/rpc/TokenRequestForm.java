@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.CLIENT_ASSERTION_TYPE;
 
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.ClientAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
+@Slf4j
 public class TokenRequestForm extends AbstractForm {
 
     public TokenRequestForm withGrantType(String grantType) {
@@ -67,6 +69,7 @@ public class TokenRequestForm extends AbstractForm {
                         .withSigner(signer, signingAlg)
                         .withAudience(audience)
                         .build();
+        log.info("[TokenRequestForm] client_assertion: ", clientAssertion);
 
         this.withClientId(clientInfo.getClientId());
         this.put("client_assertion_type", CLIENT_ASSERTION_TYPE);
