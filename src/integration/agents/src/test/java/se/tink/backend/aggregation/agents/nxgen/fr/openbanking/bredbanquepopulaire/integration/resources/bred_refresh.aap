@@ -83,64 +83,10 @@ digest: ***
 
 -----------------------------------------------------------------------------------
 REQUEST 3
-GET https://api.bred.fr/psd2-aisp/v1/accounts
-
------------------------------------------------------------------------------------
-RESPONSE 3
-200
-Content-Type: application/hal+json;charset=utf-8
-Expires: 0
-User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
-Accept-Encoding: gzip,deflate
-breadcrumbId: ***
-Ocp-Apim-Subscription-Key: ***
-digest: ***
-
-{
-  "accounts": [
-    {
-      "resourceId": "00000000000000EUR000000000",
-      "bicFi": "BREDFRPPXXX",
-      "accountId": {
-        "iban": "DUMMY_IBAN"
-      },
-      "name": "NAME",
-      "usage": "PRIV",
-      "cashAccountType": "CACC",
-      "currency": "EUR",
-      "balances": [
-        {
-          "name": "Solde comptable au 21/01/2022",
-          "balanceAmount": {
-            "currency": "EUR",
-            "amount": "-20.23"
-          },
-          "balanceType": "CLBD"
-        }
-      ],
-      "_links": {
-        "balances": {
-          "href": "v1/accounts/00000000000000EUR000000000/balances"
-        },
-        "transactions": {
-          "href": "v1/accounts/00000000000000EUR000000000/transactions"
-        }
-      }
-    }
-  ],
-  "_links": {
-    "self": {
-      "href": "v1/accounts"
-    }
-  }
-}
-
------------------------------------------------------------------------------------
-REQUEST 4
 GET https://api.bred.fr/psd2-aisp/v1/accounts/00000000000000EUR000000000/transactions
 
 -----------------------------------------------------------------------------------
-RESPONSE 4
+RESPONSE 3
 200
 Content-Type: application/hal+json;charset=utf-8
 Expires: 0
@@ -230,11 +176,11 @@ Transfer-Encoding: chunked
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 5
+REQUEST 4
 GET https://api.bred.fr/psd2-aisp/v1/accounts/00000000000000EUR000000000/transactions?page=1
 
 -----------------------------------------------------------------------------------
-RESPONSE 5
+RESPONSE 4
 200
 Content-Type: application/hal+json;charset=utf-8
 Expires: 0
@@ -325,11 +271,11 @@ Transfer-Encoding: chunked
 }
 
 -----------------------------------------------------------------------------------
-REQUEST 6
+REQUEST 5
 GET https://api.bred.fr/psd2-aisp/v1/end-user-identity
 
 -----------------------------------------------------------------------------------
-RESPONSE 6
+RESPONSE 5
 200
 Content-Type: application/hal+json;charset=utf-8
 Expires: 0
