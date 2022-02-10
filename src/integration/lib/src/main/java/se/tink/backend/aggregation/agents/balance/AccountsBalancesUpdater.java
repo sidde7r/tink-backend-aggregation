@@ -92,7 +92,7 @@ public class AccountsBalancesUpdater {
                 calculatedBookedBalanceWithSummary.getLeft();
 
         if (mode == Mode.DRY_RUN) {
-            log.info(summaryBuilder.build().prettyPrint());
+            logSummary(summaryBuilder);
             return;
         }
 
@@ -103,7 +103,7 @@ public class AccountsBalancesUpdater {
                     summaryBuilder.calculatedBalance(balance.getExactValue());
                 });
 
-        log.info(summaryBuilder.build().prettyPrint());
+        logSummary(summaryBuilder);
     }
 
     private void updateAvailableBalanceByRunningCalculation(
@@ -134,7 +134,7 @@ public class AccountsBalancesUpdater {
         summaryBuilder.balanceCalculatorSummary(calculatedAvailableBalanceWithSummary.getRight());
 
         if (mode == Mode.DRY_RUN) {
-            log.info(summaryBuilder.build().prettyPrint());
+            logSummary(summaryBuilder);
             return;
         }
 
@@ -144,7 +144,10 @@ public class AccountsBalancesUpdater {
                     summaryBuilder.calculatedBalance(balance.getExactValue());
                 });
 
-        log.info(summaryBuilder.build().prettyPrint());
+        logSummary(summaryBuilder);
     }
 
+    private void logSummary(AccountsBalanceUpdaterSummaryBuilder summaryBuilder) {
+        log.info(summaryBuilder.build().prettyPrint());
+    }
 }
