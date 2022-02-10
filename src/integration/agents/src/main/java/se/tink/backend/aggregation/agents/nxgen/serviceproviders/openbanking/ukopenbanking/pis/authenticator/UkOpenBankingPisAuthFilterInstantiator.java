@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Errors;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.AuthTokenCategory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.UkPisAuthToken;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
@@ -43,7 +44,8 @@ public class UkOpenBankingPisAuthFilterInstantiator {
     }
 
     private UkPisAuthToken retrieveClientToken() {
-        final OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials();
+        final OAuth2Token clientOAuth2Token =
+                apiClient.requestClientCredentials(ClientMode.PAYMENTS);
 
         authenticationValidator.validateClientToken(clientOAuth2Token);
 

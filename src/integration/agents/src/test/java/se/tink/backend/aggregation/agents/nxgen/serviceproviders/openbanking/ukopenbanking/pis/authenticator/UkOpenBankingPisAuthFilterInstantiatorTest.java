@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.AuthTokenCategory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.UkPisAuthToken;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
@@ -45,14 +46,14 @@ public class UkOpenBankingPisAuthFilterInstantiatorTest {
     public void shouldInstantiateAuthFilterWithClientToken() throws PaymentException {
         // given
         final OAuth2Token oAuth2Token = createToken();
-        when(apiClientMock.requestClientCredentials()).thenReturn(oAuth2Token);
+        when(apiClientMock.requestClientCredentials(ClientMode.PAYMENTS)).thenReturn(oAuth2Token);
         when(paymentStorageMock.hasToken()).thenReturn(Boolean.FALSE);
 
         // when
         authFilterInstantiator.instantiateAuthFilterWithClientToken();
 
         // then
-        verify(apiClientMock).requestClientCredentials();
+        verify(apiClientMock).requestClientCredentials(ClientMode.PAYMENTS);
         verify(paymentStorageMock, never()).getToken();
 
         final UkPisAuthToken expectedToken = createClientAuthToken(oAuth2Token);
@@ -65,7 +66,7 @@ public class UkOpenBankingPisAuthFilterInstantiatorTest {
         HttpResponse response = mock(HttpResponse.class);
         when(response.getBody(String.class)).thenReturn("invalid_grant");
 
-        when(apiClientMock.requestClientCredentials())
+        when(apiClientMock.requestClientCredentials(ClientMode.PAYMENTS))
                 .thenThrow(new HttpResponseException(null, response));
 
         // when
@@ -84,7 +85,7 @@ public class UkOpenBankingPisAuthFilterInstantiatorTest {
         HttpResponse response = mock(HttpResponse.class);
         when(response.getBody(String.class)).thenReturn("Internal Server Error");
 
-        when(apiClientMock.requestClientCredentials())
+        when(apiClientMock.requestClientCredentials(ClientMode.PAYMENTS))
                 .thenThrow(new HttpResponseException(null, response));
 
         // when
@@ -113,7 +114,7 @@ public class UkOpenBankingPisAuthFilterInstantiatorTest {
         authFilterInstantiator.instantiateAuthFilterWithClientToken();
 
         // then
-        verify(apiClientMock, never()).requestClientCredentials();
+        verify(apiClientMock, never()).requestClientCredentials(ClientMode.PAYMENTS);
         verify(paymentStorageMock).getToken();
         verify(paymentStorageMock, never()).storeToken(any());
     }
@@ -131,13 +132,14 @@ public class UkOpenBankingPisAuthFilterInstantiatorTest {
         when(paymentStorageMock.getToken()).thenReturn(clientToken);
 
         final OAuth2Token newOAuth2Token = createToken();
-        when(apiClientMock.requestClientCredentials()).thenReturn(newOAuth2Token);
+        when(apiClientMock.requestClientCredentials(ClientMode.PAYMENTS))
+                .thenReturn(newOAuth2Token);
 
         // when
         authFilterInstantiator.instantiateAuthFilterWithClientToken();
 
         // then
-        verify(apiClientMock).requestClientCredentials();
+        verify(apiClientMock).requestClientCredentials(ClientMode.PAYMENTS);
         verify(paymentStorageMock).getToken();
 
         final UkPisAuthToken expectedToken = createClientAuthToken(newOAuth2Token);
