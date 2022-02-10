@@ -60,6 +60,7 @@ public class AccountEntity {
                 return new PlusGiroIdentifier(value);
 
             case NO:
+            case BBAN:
                 return new NorwegianIdentifier(value);
 
             case DK:

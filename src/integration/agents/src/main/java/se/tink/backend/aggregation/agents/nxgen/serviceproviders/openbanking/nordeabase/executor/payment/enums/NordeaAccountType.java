@@ -24,10 +24,10 @@ public enum NordeaAccountType {
 
     static {
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.IBAN, IBAN);
+        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.BBAN, BBAN_NO);
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.SE, BBAN_SE);
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.SE_BG, BGNR);
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.SE_PG, PGNR);
-        tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.NO, BBAN_NO);
         tinkToNordeaAccountTypeBiMapper.put(AccountIdentifierType.DK, BBAN_DK);
     }
 
