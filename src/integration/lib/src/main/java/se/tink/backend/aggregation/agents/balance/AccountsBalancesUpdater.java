@@ -127,11 +127,10 @@ public class AccountsBalancesUpdater {
                 calculatedAvailableBalanceWithSummary =
                         availableBalanceCalculator.calculateAvailableBalance(
                                 granularBalances, transactions);
+        summaryBuilder.balanceCalculatorSummary(calculatedAvailableBalanceWithSummary.getRight());
 
         Optional<ExactCurrencyAmount> calculatedAvailableBalance =
                 calculatedAvailableBalanceWithSummary.getLeft();
-
-        summaryBuilder.balanceCalculatorSummary(calculatedAvailableBalanceWithSummary.getRight());
 
         if (mode == Mode.DRY_RUN) {
             logSummary(summaryBuilder);
