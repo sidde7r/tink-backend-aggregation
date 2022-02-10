@@ -14,7 +14,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class ChosenTanMediumProviderTest {
     private static SupplementalInformationHelper helper = mock(SupplementalInformationHelper.class);

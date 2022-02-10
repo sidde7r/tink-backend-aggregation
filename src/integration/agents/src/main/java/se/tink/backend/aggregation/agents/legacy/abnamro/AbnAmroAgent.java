@@ -54,7 +54,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.phonenumbers.InvalidPhoneNumberException;
 import se.tink.libraries.phonenumbers.utils.PhoneNumberUtils;
 import se.tink.libraries.user.rpc.User;

@@ -31,7 +31,7 @@ junit_test(
         "//src/integration/transfer:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/date",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_sun_jersey_jersey_core",

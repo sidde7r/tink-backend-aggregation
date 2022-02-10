@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecStorage;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.DanishFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.retrypolicy.RetryCallback;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;

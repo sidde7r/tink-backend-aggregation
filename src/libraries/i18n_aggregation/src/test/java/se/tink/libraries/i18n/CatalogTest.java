@@ -1,4 +1,4 @@
-package se.tink.libraries.i18n;
+package se.tink.libraries.i18n_aggregation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;

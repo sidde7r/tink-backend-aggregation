@@ -9,7 +9,7 @@ java_library_with_sources(
         "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
     ],
     intdeps = [
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "@tink_backend//src/libraries/account_identifier",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",

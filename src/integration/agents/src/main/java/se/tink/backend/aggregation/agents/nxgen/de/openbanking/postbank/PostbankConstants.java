@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
 
 import java.util.regex.Pattern;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedKey;
 
 public final class PostbankConstants {
 

@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEnt
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.cardreader.CardReaderTemplate;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.cardreader.dto.CardReaderData;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.commons.dto.CommonInput;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class GermanFields {
 

@@ -5,7 +5,7 @@ def i18n_java_source(name, lang, visibility = None):
     where Bazel expected it to reside. msgfmt is quite picky about how to generate
     these files so this is a bit more complicated that one would like."""
 
-    cls = "se.tink.libraries.i18n.Messages"
+    cls = "se.tink.libraries.i18n_aggregation.Messages"
     path = cls.replace(".", "/")
     native.genrule(
         name = name,

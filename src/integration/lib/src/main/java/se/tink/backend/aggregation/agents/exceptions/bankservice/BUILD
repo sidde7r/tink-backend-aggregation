@@ -5,7 +5,7 @@ java_library_with_sources(
     srcs = glob(["*.java"]),
     intdeps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
     ],
     visibility = ["//visibility:public"],
 )

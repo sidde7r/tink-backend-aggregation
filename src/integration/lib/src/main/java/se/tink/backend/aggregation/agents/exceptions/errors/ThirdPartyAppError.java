@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.exceptions.errors;
 
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public enum ThirdPartyAppError implements AgentError {
     CANCELLED(new LocalizableKey("Authentication was cancelled. Please try again.")),

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.exceptions.errors;
 
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public enum LoginError implements AgentError {
     NOT_CUSTOMER(new LocalizableKey("You don't have any commitments in the selected bank.")),

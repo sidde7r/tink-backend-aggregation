@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.legacy.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.legacy.banks.seb.SEBAgentUtils.AbroadTransactionParser;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class SEBAgentUtilsTest {
 

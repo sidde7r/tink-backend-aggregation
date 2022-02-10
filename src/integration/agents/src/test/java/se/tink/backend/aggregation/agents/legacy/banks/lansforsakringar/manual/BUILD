@@ -22,7 +22,7 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:mocks",
         "//src/integration/transfer:rpc",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/social_security_number/src/test/java/se/tink/libraries/social/security/ssn",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_assertj_assertj_core",

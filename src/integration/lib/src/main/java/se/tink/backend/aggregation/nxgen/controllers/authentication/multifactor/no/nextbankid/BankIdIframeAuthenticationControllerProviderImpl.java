@@ -9,7 +9,7 @@ import se.tink.integration.webdriver.service.WebDriverService;
 import se.tink.integration.webdriver.service.WebDriverServiceModule;
 import se.tink.integration.webdriver.service.proxy.ProxySaveResponseFilter;
 import se.tink.libraries.credentials.service.UserAvailability;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class BankIdIframeAuthenticationControllerProviderImpl
         implements BankIdIframeAuthenticationControllerProvider {

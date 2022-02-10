@@ -1,4 +1,4 @@
-package se.tink.libraries.i18n;
+package se.tink.libraries.i18n_aggregation;
 
 import com.google.common.collect.Maps;
 import java.text.MessageFormat;
@@ -14,7 +14,8 @@ public class Catalog {
     private static final Object catalogsLock = new Object();
     private static final Logger log = LoggerFactory.getLogger(Catalog.class);
 
-    private static final String I18N_MESSAGES_BUNDLE = "se.tink.libraries.i18n.Messages";
+    private static final String I18N_MESSAGES_BUNDLE =
+            "se.tink.libraries.i18n_aggregation.Messages";
     private static final Locale BASE_LOCALE = getLocale("en_US");
 
     public static String format(String message, Object... params) {
@@ -84,7 +85,7 @@ public class Catalog {
     }
 
     public String getString(LocalizableParametrizedKey localizableParametrizedKey) {
-        return Catalog.format(
+        return format(
                 getString(localizableParametrizedKey.get()),
                 localizableParametrizedKey.getParameters());
     }

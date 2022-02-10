@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.exceptions.errors;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public enum ThirdPartyError implements AgentError {
     INCORRECT_SECRETS(

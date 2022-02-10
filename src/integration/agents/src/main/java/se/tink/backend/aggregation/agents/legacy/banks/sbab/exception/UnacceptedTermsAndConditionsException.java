@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.sbab.exception;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class UnacceptedTermsAndConditionsException extends AuthorizationException {
     private static LocalizableKey USER_MESSAGE =

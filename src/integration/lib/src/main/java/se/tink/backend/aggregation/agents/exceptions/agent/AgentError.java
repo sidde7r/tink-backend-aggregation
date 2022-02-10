@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.exceptions.agent;
 
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public interface AgentError extends AgentBaseError {
     @Override

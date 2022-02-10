@@ -45,8 +45,8 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.NoRedirectStrategy;
 import se.tink.backend.aggregation.agents.utils.jersey.filter.JerseyTimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)

@@ -21,9 +21,9 @@ import org.junit.runner.RunWith;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.OtpFormat;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedKey;
 
 @RunWith(JUnitParamsRunner.class)
 public class GermanFieldsTest {

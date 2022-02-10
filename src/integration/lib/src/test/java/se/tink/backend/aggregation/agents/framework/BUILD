@@ -7,7 +7,7 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//po:i18n",
+        "//po:i18n_aggregation",
     ],
     deps = [
         "//src/integration/amount",

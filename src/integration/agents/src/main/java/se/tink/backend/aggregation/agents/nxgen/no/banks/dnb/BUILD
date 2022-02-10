@@ -25,7 +25,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/models",
         "//src/libraries/date",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",

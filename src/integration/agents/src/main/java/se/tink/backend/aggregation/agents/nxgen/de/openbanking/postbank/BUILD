@@ -23,7 +23,7 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/libraries/agent-storage",
         "//src/libraries/cryptography/parser",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:com_google_inject_guice",
         "//third_party:com_nimbusds_nimbus_jose_jwt",

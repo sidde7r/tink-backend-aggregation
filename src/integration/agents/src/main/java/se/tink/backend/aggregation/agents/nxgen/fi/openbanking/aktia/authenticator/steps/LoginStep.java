@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticat
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @RequiredArgsConstructor
 public class LoginStep implements AuthenticationStep {

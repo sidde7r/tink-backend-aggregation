@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEnt
 import se.tink.backend.aggregation.agents.utils.supplementalfields.de.DecoupledFieldBuilder;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.decoupled.DecoupledTemplate;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.sdktemplates.decoupled.dto.DecoupledData;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @RequiredArgsConstructor
 // This version is the future standard version, using SDK Templates.

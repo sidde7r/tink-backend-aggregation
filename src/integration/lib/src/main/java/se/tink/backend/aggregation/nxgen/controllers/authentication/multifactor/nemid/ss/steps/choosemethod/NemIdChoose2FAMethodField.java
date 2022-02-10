@@ -8,8 +8,8 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class NemIdChoose2FAMethodField {

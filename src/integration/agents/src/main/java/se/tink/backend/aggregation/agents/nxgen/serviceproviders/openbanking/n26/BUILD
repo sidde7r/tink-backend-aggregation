@@ -43,7 +43,7 @@ java_library(
         "//src/integration/payment:enums",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_inject_guice",

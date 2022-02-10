@@ -6,7 +6,7 @@ import lombok.With;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorType;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public final class ConnectivityException extends RuntimeException {
 

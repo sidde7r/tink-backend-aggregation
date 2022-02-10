@@ -11,7 +11,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//po:i18n",
+        "//po:i18n_aggregation",
     ],
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
@@ -42,7 +42,7 @@ java_library(
         "//src/libraries/cache",
         "//src/libraries/connectivity_errors",
         "//src/libraries/giro_validation",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/interaction_counter",
         "//src/libraries/serialization",
         "//src/tink_backend_libs:har_logger",

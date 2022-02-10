@@ -13,7 +13,7 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @RunWith(JUnitParamsRunner.class)
 public class TinkSideErrorDefaultMessageMapperTest {

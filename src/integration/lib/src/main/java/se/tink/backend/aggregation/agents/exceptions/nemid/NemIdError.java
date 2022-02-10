@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.nemid;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public enum NemIdError implements AgentError {
     TIMEOUT(new LocalizableKey("Authenticating with NemID Code App timed out. Please try again.")),

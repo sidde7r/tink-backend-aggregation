@@ -58,7 +58,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/transfer",
         "//src/libraries/agent-storage",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
     ],
 )
 
@@ -146,7 +146,7 @@ junit_test(
         "//src/libraries/date",
         "//src/libraries/encoding",
         "//src/libraries/giro_validation",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/masker",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",

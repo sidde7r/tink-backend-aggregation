@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.utils.supplementalfields;
 
 import se.tink.backend.agents.rpc.Field;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class DanishFields {
 

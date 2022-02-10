@@ -42,8 +42,8 @@ import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import src.libraries.interaction_counter.InteractionCounter;
 

@@ -40,7 +40,7 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/cryptography",
         "//src/libraries/encoding",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/retrypolicy",
         "//src/libraries/serialization",
         "//third_party:com_auth0_java_jwt",

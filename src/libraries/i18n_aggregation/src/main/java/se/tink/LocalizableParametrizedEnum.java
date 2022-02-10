@@ -1,4 +1,4 @@
-package se.tink.libraries.i18n;
+package se.tink.libraries.i18n_aggregation;
 
 /**
  * Used for having localized enum collections. This is sometimes needed when not having the catalog

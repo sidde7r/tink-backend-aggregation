@@ -4,7 +4,7 @@ junit_test(
     name = "operation",
     srcs = glob(["*.java"]),
     runtime_deps = [
-        "//po:i18n",
+        "//po:i18n_aggregation",
     ],
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",

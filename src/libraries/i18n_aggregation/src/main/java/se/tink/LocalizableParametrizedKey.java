@@ -1,4 +1,4 @@
-package se.tink.libraries.i18n;
+package se.tink.libraries.i18n_aggregation;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;

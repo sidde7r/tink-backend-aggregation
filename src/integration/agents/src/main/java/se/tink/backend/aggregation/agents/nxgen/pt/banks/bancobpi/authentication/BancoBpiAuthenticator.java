@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.PinCode
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
 

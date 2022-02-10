@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.exceptions.errors;
 
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public enum BankIdError implements AgentError {
     CANCELLED(new LocalizableKey("You cancelled the BankID process. Please try again.")),

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ChallengeDat
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 // Similar to DefaultEmbeddedFieldBuilder, this is a helper base class for encapsulating creating
 // Fields for embedded supplemental info exchange.

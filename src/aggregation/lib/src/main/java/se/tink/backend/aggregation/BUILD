@@ -12,7 +12,7 @@ java_library(
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//po:i18n",
+        "//po:i18n_aggregation",
         # Agent runtime deps have been moved to //se/tink/backend/aggregation/agents/agentfactory
     ],
 )

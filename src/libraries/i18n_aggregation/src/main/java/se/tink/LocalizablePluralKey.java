@@ -1,8 +1,7 @@
-package se.tink.libraries.i18n;
+package se.tink.libraries.i18n_aggregation;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import lombok.EqualsAndHashCode;
 
 /**
  * Used for localizing static strings. This is sometimes needed when not having the catalog instance
@@ -13,20 +12,22 @@ import lombok.EqualsAndHashCode;
  *
  * <p>… catalog.getString(MY_TRANSLATED); (additionally with parameters if parametrized)
  */
-@EqualsAndHashCode
-public class LocalizableKey {
-    private final String key;
+public class LocalizablePluralKey {
+    private final String singular;
+    private final String plural;
 
-    public LocalizableKey(String key) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(key));
-        this.key = key;
+    public LocalizablePluralKey(String singular, String plural) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(singular));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(plural));
+        this.singular = singular;
+        this.plural = plural;
     }
 
-    public String get() {
-        return key;
+    public String getSingular() {
+        return singular;
     }
 
-    public static LocalizableKey of(String key) {
-        return new LocalizableKey(key);
+    public String getPlural() {
+        return plural;
     }
 }

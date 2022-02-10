@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.bankservice;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public enum BankServiceError implements AgentError {
     NO_BANK_SERVICE(new LocalizableKey("The bank service is offline; please try again later.")),

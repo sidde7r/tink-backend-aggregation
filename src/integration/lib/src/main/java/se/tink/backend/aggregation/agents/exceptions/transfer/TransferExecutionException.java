@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.exceptions.transfer;
 
 import com.google.common.base.Preconditions;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.i18n.LocalizableParametrizedEnum;
-import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableParametrizedKey;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 /**

@@ -63,9 +63,9 @@ import se.tink.integration.webdriver.ChromeDriverConfig;
 import se.tink.integration.webdriver.ChromeDriverInitializer;
 import se.tink.integration.webdriver.WebDriverWrapper;
 import se.tink.libraries.cryptography.hash.Hash;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableEnum;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableEnum;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j

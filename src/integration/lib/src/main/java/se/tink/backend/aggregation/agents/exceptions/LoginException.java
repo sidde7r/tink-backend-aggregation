@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions;
 
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class LoginException extends AuthenticationException {
 

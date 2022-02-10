@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticato
 import se.tink.backend.aggregation.agents.nxgen.it.banks.bancoposta.authenticator.step.SyncWalletStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 @RequiredArgsConstructor
 public class BancoPostaAuthenticator extends StatelessProgressiveAuthenticator {

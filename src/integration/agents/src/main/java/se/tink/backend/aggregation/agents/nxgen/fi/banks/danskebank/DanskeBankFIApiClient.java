@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank.rpc.FetchHou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class DanskeBankFIApiClient extends DanskeBankApiClient {
     DanskeBankFIApiClient(

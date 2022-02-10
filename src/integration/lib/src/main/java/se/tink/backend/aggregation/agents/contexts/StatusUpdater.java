@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.contexts;
 
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public interface StatusUpdater {
     void updateStatus(CredentialsStatus status);

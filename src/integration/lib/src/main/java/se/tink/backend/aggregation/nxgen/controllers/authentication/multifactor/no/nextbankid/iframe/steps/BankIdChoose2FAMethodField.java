@@ -8,8 +8,8 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.Catalog;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 class BankIdChoose2FAMethodField {

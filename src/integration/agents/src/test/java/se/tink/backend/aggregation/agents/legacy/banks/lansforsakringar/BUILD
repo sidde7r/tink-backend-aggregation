@@ -8,7 +8,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/lansforsakringar",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/models",
-        "//src/libraries/i18n",
+        "//src/libraries/i18n_aggregation",
         "//src/libraries/serialization",
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_httpcomponents_httpclient",

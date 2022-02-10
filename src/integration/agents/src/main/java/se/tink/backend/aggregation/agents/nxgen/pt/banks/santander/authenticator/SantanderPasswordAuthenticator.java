@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.client.Santan
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.santander.fetcher.Fields.Session;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n_aggregation.LocalizableKey;
 
 public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
 

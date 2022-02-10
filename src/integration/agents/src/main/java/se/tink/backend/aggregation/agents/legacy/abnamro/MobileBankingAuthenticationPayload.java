@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 
 public class MobileBankingAuthenticationPayload {
     public static final int MOBILE_BANKING_APP_VERSION_CODE = 10050000; // Mobile Banking 10.5

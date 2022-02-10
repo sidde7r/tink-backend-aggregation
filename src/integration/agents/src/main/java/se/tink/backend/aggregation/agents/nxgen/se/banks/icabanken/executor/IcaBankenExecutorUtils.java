@@ -24,7 +24,7 @@ import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n_aggregation.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
