@@ -43,3 +43,11 @@ junit_test(
         "@tink_backend//src/libraries/unleash",
     ],
 )
+
+codeowners(
+    name = "owners",
+    teams = [
+        "@tink-ab/aggregation-fluffy-maintainer",
+    ],
+    visibility = ["//:__pkg__"],
+)
