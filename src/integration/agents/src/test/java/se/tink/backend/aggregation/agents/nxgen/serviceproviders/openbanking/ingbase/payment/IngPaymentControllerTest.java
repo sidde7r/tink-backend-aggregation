@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,10 +11,12 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentTestFixtures.getAgentPisCapability;
 import static se.tink.libraries.payments.common.model.PaymentScheme.SEPA_CREDIT_TRANSFER;
 import static se.tink.libraries.payments.common.model.PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -31,10 +34,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import se.tink.agent.sdk.utils.signer.qsealc.QsealcSigner;
 import se.tink.agent.sdk.utils.signer.signature.Signature;
+import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngApiInputData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngUserAuthenticationData;
@@ -97,17 +102,20 @@ public class IngPaymentControllerTest {
     private IngPaymentExecutor paymentExecutor;
     private SessionStorage sessionStorage;
     private PersistentStorage persistentStorage;
+    private IngPaymentMapper paymentMapper;
 
     @Mock private AgentComponentProvider agentComponentProvider;
     @Mock private Filter callFilter;
     @Mock private HttpResponse response;
     @Mock private MarketConfiguration marketConfiguration;
+    @Mock private IngPaymentAuthenticator paymentAuthenticator;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         setUpStorage();
         configureBasicMocks();
+        paymentMapper = new IngPaymentMapper(new BasePaymentMapper());
         paymentExecutor = createIngPaymentExecutor(createIngPaymentApiClient(), false);
         paymentController = new PaymentController(paymentExecutor, paymentExecutor);
     }
@@ -248,8 +256,14 @@ public class IngPaymentControllerTest {
     }
 
     @Test
-    public void shouldThrowWhenInstantPaymentSchemaIsNotSupported() {
+    @Parameters(method = "ingAgentsParams")
+    public void shouldThrowWhenInstantPaymentSchemaIsNotSupported(
+            Class<? extends IngBaseAgent> ingAgentClass) {
         // given
+        paymentExecutor = createPaymentExecutorWithAnnotationsFromClass(ingAgentClass);
+        paymentController = new PaymentController(paymentExecutor, paymentExecutor);
+
+        // and
         PaymentRequest paymentRequest =
                 new PaymentRequest(createPayment(SEPA_INSTANT_CREDIT_TRANSFER));
 
@@ -258,6 +272,37 @@ public class IngPaymentControllerTest {
 
         // and
         then(response).shouldHaveNoInteractions();
+    }
+
+    @SuppressWarnings("unused")
+    private Object[] ingAgentsParams() {
+        return new Object[][] {
+            {se.tink.backend.aggregation.agents.nxgen.at.openbanking.ing.IngAgent.class},
+            {se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngAgent.class},
+            {se.tink.backend.aggregation.agents.nxgen.de.openbanking.ing.IngAgent.class},
+            {se.tink.backend.aggregation.agents.nxgen.es.openbanking.ing.IngAgent.class},
+            {se.tink.backend.aggregation.agents.nxgen.it.openbanking.ing.IngAgent.class},
+            {se.tink.backend.aggregation.agents.nxgen.fr.openbanking.ing.IngAgent.class},
+        };
+    }
+
+    @Test
+    public void shouldNotThrowWhenInstantPaymentSchemaIsSupported() {
+        // given
+        paymentExecutor =
+                createPaymentExecutorWithAnnotationsFromClass(
+                        se.tink.backend.aggregation.agents.nxgen.nl.openbanking.ing.IngAgent.class);
+        paymentController = new PaymentController(paymentExecutor, paymentExecutor);
+
+        // and
+        prepareCreatePaymentTestSetupAndResponseData();
+
+        // and
+        PaymentRequest paymentRequest =
+                new PaymentRequest(createPayment(SEPA_INSTANT_CREDIT_TRANSFER));
+
+        // expect
+        assertThatCode(() -> paymentController.create(paymentRequest)).doesNotThrowAnyException();
     }
 
     @Ignore("Requires MINI-1708")
@@ -487,12 +532,28 @@ public class IngPaymentControllerTest {
 
     private IngPaymentExecutor createIngPaymentExecutor(
             IngPaymentApiClient ingPaymentApiClient, boolean instantSepaIsSupported) {
+        Annotation[] agentAnnotations = new Annotation[1];
+        if (instantSepaIsSupported) {
+            agentAnnotations[0] = getAgentPisCapability(PisCapability.SEPA_INSTANT_CREDIT_TRANSFER);
+        } else {
+            agentAnnotations[0] = getAgentPisCapability(PisCapability.SEPA_CREDIT_TRANSFER);
+        }
         return new IngPaymentExecutor(
                 sessionStorage,
                 ingPaymentApiClient,
-                mock(IngPaymentAuthenticator.class),
-                new IngPaymentMapper(new BasePaymentMapper()),
-                instantSepaIsSupported);
+                paymentAuthenticator,
+                paymentMapper,
+                agentAnnotations);
+    }
+
+    private IngPaymentExecutor createPaymentExecutorWithAnnotationsFromClass(
+            Class<? extends IngBaseAgent> ingAgentClass) {
+        return new IngPaymentExecutor(
+                sessionStorage,
+                createIngPaymentApiClient(),
+                paymentAuthenticator,
+                paymentMapper,
+                ingAgentClass.getAnnotations());
     }
 
     private void setUpStorage() {

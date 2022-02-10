@@ -8,7 +8,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentTestFixtures.getAgentPisCapability;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -67,13 +70,7 @@ public class IngPaymentExecutorTest {
         mocksInOrder =
                 inOrder(sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
 
-        paymentExecutor =
-                new IngPaymentExecutor(
-                        sessionStorage,
-                        paymentApiClient,
-                        paymentAuthenticator,
-                        paymentMapper,
-                        true);
+        paymentExecutor = createIngPaymentExecutor(true);
     }
 
     @SneakyThrows
@@ -327,13 +324,7 @@ public class IngPaymentExecutorTest {
     @Test
     public void shouldThrowPaymentValidationExceptionWhenInstantPaymentSchemaIsNotSupported() {
         // given
-        paymentExecutor =
-                new IngPaymentExecutor(
-                        sessionStorage,
-                        paymentApiClient,
-                        paymentAuthenticator,
-                        paymentMapper,
-                        false);
+        paymentExecutor = createIngPaymentExecutor(false);
 
         // and
         Payment payment =
@@ -349,6 +340,21 @@ public class IngPaymentExecutorTest {
         assertThat(throwable)
                 .isInstanceOf(PaymentValidationException.class)
                 .hasMessage("Instant payment is not supported");
+    }
+
+    private IngPaymentExecutor createIngPaymentExecutor(boolean instantSepaIsSupported) {
+        Annotation[] agentAnnotations = new Annotation[1];
+        if (instantSepaIsSupported) {
+            agentAnnotations[0] = getAgentPisCapability(PisCapability.SEPA_INSTANT_CREDIT_TRANSFER);
+        } else {
+            agentAnnotations[0] = getAgentPisCapability(PisCapability.SEPA_CREDIT_TRANSFER);
+        }
+        return new IngPaymentExecutor(
+                sessionStorage,
+                paymentApiClient,
+                paymentAuthenticator,
+                paymentMapper,
+                agentAnnotations);
     }
 
     @Getter

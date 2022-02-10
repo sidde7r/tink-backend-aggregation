@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableSet;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -21,8 +20,6 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
-import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
@@ -200,7 +197,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         paymentApiClient,
                         paymentAuthenticator,
                         paymentMapper,
-                        isInstantSepaSupported());
+                        this.getClass().getAnnotations());
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
@@ -284,13 +281,5 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(
                 accounts, AccountIdentifierType.IBAN);
-    }
-
-    private boolean isInstantSepaSupported() {
-        return Arrays.stream(this.getClass().getAnnotations())
-                .filter(annotation -> AgentPisCapability.class.equals(annotation.annotationType()))
-                .map(AgentPisCapability.class::cast)
-                .flatMap(agentPisCapability -> Arrays.stream(agentPisCapability.capabilities()))
-                .anyMatch(PisCapability.SEPA_INSTANT_CREDIT_TRANSFER::equals);
     }
 }

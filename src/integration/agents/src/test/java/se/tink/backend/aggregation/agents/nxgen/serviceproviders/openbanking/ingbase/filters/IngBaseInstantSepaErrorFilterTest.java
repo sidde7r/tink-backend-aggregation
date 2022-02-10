@@ -48,11 +48,7 @@ public class IngBaseInstantSepaErrorFilterTest {
     public void shouldThrowOnInstantSepaNotPossibleError(int status) throws IOException {
         // given
         given(httpResponse.getStatus()).willReturn(status);
-        given(httpResponse.getBody(String.class))
-                .willReturn(
-                        FileUtils.readFileToString(
-                                Paths.get(RESOURCE_PATH, "sepa_instant_not_possible.json").toFile(),
-                                StandardCharsets.UTF_8));
+        given(httpResponse.getBody(String.class)).willReturn(sepaInstantPaymentIsNotPossible());
 
         // expect
         assertThatThrownBy(() -> ingBaseInstantSepaErrorFilter.handle(httpRequest))
@@ -85,5 +81,11 @@ public class IngBaseInstantSepaErrorFilterTest {
             {503, TEST_WRONG_ERROR_MESSAGE},
             {503, TEST_WRONG_ERROR_MESSAGE},
         };
+    }
+
+    private String sepaInstantPaymentIsNotPossible() throws IOException {
+        return FileUtils.readFileToString(
+                Paths.get(RESOURCE_PATH, "sepa_instant_not_possible.json").toFile(),
+                StandardCharsets.UTF_8);
     }
 }

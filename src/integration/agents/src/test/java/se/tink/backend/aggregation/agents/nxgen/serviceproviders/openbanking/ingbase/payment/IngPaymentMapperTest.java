@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static se.tink.libraries.payments.common.model.PaymentScheme.SEPA_CREDIT_TRANSFER;
+import static se.tink.libraries.payments.common.model.PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.DayOfWeek;
@@ -52,19 +54,9 @@ public class IngPaymentMapperTest {
         // given
         String debtorIban = randomIban(CountryCode.FR);
         String creditorIban = randomIban(CountryCode.FR);
-
         Payment payment =
-                new Payment.Builder()
-                        .withDebtor(new Debtor(new IbanIdentifier(debtorIban)))
-                        .withCreditor(
-                                new Creditor(new IbanIdentifier(creditorIban), "Payment Creditor"))
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
-                        .withCurrency("EUR")
-                        .withRemittanceInformation(
-                                unstructuredRemittanceInformation("ReferenceToCreditor"))
-                        .withPaymentScheme(paymentScheme)
-                        .withExecutionDate(LocalDate.of(2019, 4, 5))
-                        .build();
+                buildTestPayment(
+                        paymentScheme, new Debtor(new IbanIdentifier(debtorIban)), creditorIban);
 
         // when
         IngCreatePaymentRequest result = paymentMapper.toIngCreatePaymentRequest(payment);
@@ -73,24 +65,47 @@ public class IngPaymentMapperTest {
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(
-                        IngCreatePaymentRequest.builder()
-                                .debtorAccount(new AccountEntity(debtorIban))
-                                .creditorAccount(new AccountEntity(creditorIban))
-                                .instructedAmount(new AmountEntity("1.0", "EUR"))
-                                .creditorName("Payment Creditor")
-                                .remittanceInformationUnstructured("ReferenceToCreditor")
-                                .requestedExecutionDate(executionDate)
-                                .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
-                                .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
-                                .localInstrumentCode(localInstrumentCode)
-                                .build());
+                        buildTestCreatePaymentRequest(
+                                localInstrumentCode,
+                                executionDate,
+                                new AccountEntity(debtorIban),
+                                creditorIban));
     }
 
     @SuppressWarnings("unused")
     private static Object[] parametersForShouldMapTinkPaymentRequestToCreatePaymentRequest() {
         return new Object[][] {
-            {PaymentScheme.SEPA_CREDIT_TRANSFER, null, LocalDate.of(2019, 4, 5)},
-            {PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, "INST", null},
+            {SEPA_CREDIT_TRANSFER, null, LocalDate.of(2019, 4, 5)},
+            {SEPA_INSTANT_CREDIT_TRANSFER, "INST", null},
+        };
+    }
+
+    @SneakyThrows
+    @Test
+    @Parameters
+    public void shouldCreatePaymentRequestWithOrWithoutDebtor(
+            Debtor debtor, AccountEntity debtorAccount) {
+        // given
+        String creditorIban = randomIban(CountryCode.FR);
+
+        Payment payment = buildTestPayment(SEPA_INSTANT_CREDIT_TRANSFER, debtor, creditorIban);
+
+        // when
+        IngCreatePaymentRequest result = paymentMapper.toIngCreatePaymentRequest(payment);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(
+                        buildTestCreatePaymentRequest("INST", null, debtorAccount, creditorIban));
+    }
+
+    @SuppressWarnings("unused")
+    private static Object[] parametersForShouldCreatePaymentRequestWithOrWithoutDebtor() {
+        String debtorIban = randomIban(CountryCode.NL);
+        return new Object[][] {
+            {new Debtor(new IbanIdentifier(debtorIban)), new AccountEntity(debtorIban)},
+            {null, null},
         };
     }
 
@@ -255,7 +270,7 @@ public class IngPaymentMapperTest {
                         .withFrequency(Frequency.DAILY)
                         //
                         .withExecutionDate(LocalDate.of(2020, 1, 1))
-                        .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                        .withPaymentScheme(SEPA_CREDIT_TRANSFER)
                         .build();
 
         // when
@@ -356,5 +371,36 @@ public class IngPaymentMapperTest {
         }
 
         return params.toArray();
+    }
+
+    private Payment buildTestPayment(
+            PaymentScheme paymentScheme, Debtor debtor, String creditorIban) {
+        return new Payment.Builder()
+                .withDebtor(debtor)
+                .withCreditor(new Creditor(new IbanIdentifier(creditorIban), "Payment Creditor"))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
+                .withCurrency("EUR")
+                .withRemittanceInformation(unstructuredRemittanceInformation("ReferenceToCreditor"))
+                .withPaymentScheme(paymentScheme)
+                .withExecutionDate(LocalDate.of(2019, 4, 5))
+                .build();
+    }
+
+    private IngCreatePaymentRequest buildTestCreatePaymentRequest(
+            String localInstrumentCode,
+            LocalDate executionDate,
+            AccountEntity debtorAccount,
+            String creditorIban) {
+        return IngCreatePaymentRequest.builder()
+                .debtorAccount(debtorAccount)
+                .creditorAccount(new AccountEntity(creditorIban))
+                .instructedAmount(new AmountEntity("1.0", "EUR"))
+                .creditorName("Payment Creditor")
+                .remittanceInformationUnstructured("ReferenceToCreditor")
+                .requestedExecutionDate(executionDate)
+                .chargeBearer(IngBaseConstants.PaymentRequest.SLEV)
+                .serviceLevelCode(IngBaseConstants.PaymentRequest.SEPA)
+                .localInstrumentCode(localInstrumentCode)
+                .build();
     }
 }
