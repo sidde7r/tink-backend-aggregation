@@ -4,6 +4,9 @@ junit_test(
     name = "payments",
     srcs = glob(["**/*.java"]),
     data = [],
+    plugins = [
+        "//src/agent_sdk:lombok_plugin",
+    ],
     resources = [],
     deps = [
         "//src/agent_sdk/compatibility_layers/aggregation_service/src/payments",
@@ -18,5 +21,6 @@ junit_test(
         "@aggregation//:org_hamcrest_hamcrest_core",
         "@aggregation//:org_hamcrest_hamcrest_library",
         "@aggregation//:org_mockito_mockito_core",
+        "@aggregation//:org_projectlombok_lombok",
     ],
 )
