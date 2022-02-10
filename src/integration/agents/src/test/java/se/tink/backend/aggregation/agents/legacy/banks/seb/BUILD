@@ -6,6 +6,9 @@ junit_test(
     data = [
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//po:i18n_aggregation",
+    ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/seb",
         "//src/integration/amount",
