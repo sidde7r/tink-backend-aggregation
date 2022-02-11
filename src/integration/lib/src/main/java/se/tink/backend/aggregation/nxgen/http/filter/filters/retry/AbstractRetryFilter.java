@@ -53,7 +53,7 @@ public abstract class AbstractRetryFilter extends Filter {
             try {
                 HttpResponse httpResponse = nextFilter(httpRequest);
                 if (shouldRetry(httpResponse) && !isLastAttempt(retryCount)) {
-                    log.warn(
+                    log.info(
                             "[{}] Filter received retryable response, retrying [{}/{}]",
                             getClassName(),
                             retryCount + 1,
@@ -69,7 +69,7 @@ public abstract class AbstractRetryFilter extends Filter {
                 return httpResponse;
             } catch (RuntimeException e) {
                 if (shouldRetry(e) && !isLastAttempt(retryCount)) {
-                    log.warn(
+                    log.info(
                             "[{}] Filter caught retryable exception, retrying [{}/{}]",
                             getClassName(),
                             retryCount + 1,
