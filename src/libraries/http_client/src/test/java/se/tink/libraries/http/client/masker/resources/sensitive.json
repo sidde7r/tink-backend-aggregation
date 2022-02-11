@@ -120,5 +120,14 @@
     "CREDITCARD_ACCOUNTS"
   ],
   "refreshId": "11255dd2e1f34184811e60b9e6e998b7",
-  "forceAuthenticate": false
+  "forceAuthenticate": false,
+  "selectedAuthenticationOptions": [
+    {
+      "authenticationOptionsGroup": "SE_MOBILE_BANKID_DEVICE_CHOICE",
+      "authenticationOptionDefinition": "SE_MOBILE_BANKID_SAME_DEVICE",
+      "fields": {
+        "key": "sensitive"
+      }
+    }
+  ]
 }
