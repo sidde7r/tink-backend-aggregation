@@ -7,8 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentTestFixtures.getAgentPisCapability;
@@ -25,7 +23,6 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -248,11 +245,9 @@ public class IngPaymentControllerTest {
         bankRespondsWithGivenStatusAndInstantSepaNotPossible(statusCode);
 
         // expect
-        assertInstantPaymentNotSupportedErrorThrown(() -> paymentController.create(paymentRequest));
-
-        // and
-        then(response).should(atLeastOnce()).getStatus();
-        then(response).should(atLeastOnce()).getBody(String.class);
+        assertThatThrownBy(() -> paymentController.create(paymentRequest))
+                .isInstanceOf(PaymentValidationException.class)
+                .hasMessage("Instant payment is not possible");
     }
 
     @Test
@@ -268,10 +263,9 @@ public class IngPaymentControllerTest {
                 new PaymentRequest(createPayment(SEPA_INSTANT_CREDIT_TRANSFER));
 
         // expect
-        assertInstantPaymentNotSupportedErrorThrown(() -> paymentController.create(paymentRequest));
-
-        // and
-        then(response).shouldHaveNoInteractions();
+        assertThatThrownBy(() -> paymentController.create(paymentRequest))
+                .isInstanceOf(PaymentValidationException.class)
+                .hasMessage("Instant payment is not supported");
     }
 
     @SuppressWarnings("unused")
@@ -455,12 +449,6 @@ public class IngPaymentControllerTest {
 
     private static <T> T deserializeFromFile(String filePath, Class<T> clazz) {
         return SerializationUtils.deserializeFromString(Paths.get(filePath).toFile(), clazz);
-    }
-
-    private void assertInstantPaymentNotSupportedErrorThrown(ThrowingCallable throwingCallable) {
-        assertThatThrownBy(throwingCallable)
-                .isInstanceOf(PaymentValidationException.class)
-                .hasMessage("Instant payment is not supported");
     }
 
     private TinkHttpClient createTinkHttpClient() {

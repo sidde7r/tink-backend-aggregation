@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
-final class IngBaseInstantSepaErrorFilter extends Filter {
+final class IngBaseInstantSepaNotPossibleErrorFilter extends Filter {
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
@@ -19,7 +19,7 @@ final class IngBaseInstantSepaErrorFilter extends Filter {
                 && Optional.ofNullable(response.getBody(String.class))
                         .map(body -> body.toLowerCase().contains("instant payment is not possible"))
                         .orElse(false)) {
-            throw new PaymentValidationException("Instant payment is not supported");
+            throw new PaymentValidationException("Instant payment is not possible");
         }
         return response;
     }

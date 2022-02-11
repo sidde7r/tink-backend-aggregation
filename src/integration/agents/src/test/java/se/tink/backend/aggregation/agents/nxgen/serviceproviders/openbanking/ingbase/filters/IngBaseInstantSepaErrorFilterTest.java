@@ -27,7 +27,7 @@ public class IngBaseInstantSepaErrorFilterTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ingbase/resources";
     private static final String TEST_WRONG_ERROR_MESSAGE = "instant payment is possible";
 
-    private IngBaseInstantSepaErrorFilter ingBaseInstantSepaErrorFilter;
+    private IngBaseInstantSepaNotPossibleErrorFilter ingBaseInstantSepaErrorFilter;
 
     @Mock private HttpRequest httpRequest;
 
@@ -38,7 +38,7 @@ public class IngBaseInstantSepaErrorFilterTest {
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        ingBaseInstantSepaErrorFilter = new IngBaseInstantSepaErrorFilter();
+        ingBaseInstantSepaErrorFilter = new IngBaseInstantSepaNotPossibleErrorFilter();
         ingBaseInstantSepaErrorFilter.setNext(mockNextFilter);
         given(mockNextFilter.handle(httpRequest)).willReturn(httpResponse);
     }
@@ -53,7 +53,7 @@ public class IngBaseInstantSepaErrorFilterTest {
         // expect
         assertThatThrownBy(() -> ingBaseInstantSepaErrorFilter.handle(httpRequest))
                 .isInstanceOf(PaymentValidationException.class)
-                .hasMessage("Instant payment is not supported");
+                .hasMessage("Instant payment is not possible");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class IngBaseInstantSepaErrorFilterTest {
             {422, ""},
             {500, "{}"},
             {501, TEST_WRONG_ERROR_MESSAGE},
-            {503, TEST_WRONG_ERROR_MESSAGE},
+            {502, TEST_WRONG_ERROR_MESSAGE},
             {503, TEST_WRONG_ERROR_MESSAGE},
         };
     }

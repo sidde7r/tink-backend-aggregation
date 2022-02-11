@@ -73,7 +73,6 @@ public class IngPaymentExecutorTest {
         paymentExecutor = createIngPaymentExecutor(true);
     }
 
-    @SneakyThrows
     @Test
     @Parameters(method = "oneTimePaymentsWithAllPossibleResponseStatuses")
     public void createOneTimePaymentShouldCallApiClientAndReturnPaymentResponse(

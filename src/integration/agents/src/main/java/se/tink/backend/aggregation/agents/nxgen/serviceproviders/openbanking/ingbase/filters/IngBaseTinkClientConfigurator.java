@@ -11,7 +11,7 @@ public final class IngBaseTinkClientConfigurator {
 
     public void configureClient(TinkHttpClient client, int maxRetries, int retrySleepMilliseconds) {
         client.addFilter(new BankServiceInternalErrorFilter());
-        client.addFilter(new IngBaseInstantSepaErrorFilter());
+        client.addFilter(new IngBaseInstantSepaNotPossibleErrorFilter());
         client.addFilter(new IngRetryFilter(maxRetries, retrySleepMilliseconds));
         client.addFilter(new TimeoutFilter());
         client.addFilter(new ConnectionTimeoutRetryFilter(maxRetries, retrySleepMilliseconds));
