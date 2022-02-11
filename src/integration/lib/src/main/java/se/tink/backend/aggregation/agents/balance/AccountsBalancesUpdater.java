@@ -61,7 +61,7 @@ public class AccountsBalancesUpdater {
                     });
 
         } catch (Exception e) {
-            log.warn("[BALANCE UPDATER] Something went wrong", e);
+            log.warn("[BALANCE UPDATER] This should be fixed.", e);
         }
     }
 
