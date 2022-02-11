@@ -63,7 +63,7 @@ public class GlobalPositionResponseTest {
 
         return AccountEntity.builder()
                 .accountNumber("ES5000818447506159992545")
-                .accountAlias("C/C PARTICULARES")
+                .accountAlias("LIBRETAS AHORRO PARTICULARES")
                 .currency("EUR")
                 .balance("100,00")
                 .build();

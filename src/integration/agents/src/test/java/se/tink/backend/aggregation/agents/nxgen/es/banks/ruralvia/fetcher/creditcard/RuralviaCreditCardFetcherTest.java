@@ -111,7 +111,7 @@ public class RuralviaCreditCardFetcherTest {
                                 Files.readAllBytes(
                                         Paths.get(
                                                 TEST_DATA_PATH,
-                                                "responseWHenClickCreditCardsMovementsANdHasTwoCards.html"))));
+                                                "responseWhenClickCreditCardsMovementsAndHasTwoCards.html"))));
         when(apiClient.navigateToCreditCardTransactionsByDates(any(), any()))
                 .thenReturn(
                         new String(
