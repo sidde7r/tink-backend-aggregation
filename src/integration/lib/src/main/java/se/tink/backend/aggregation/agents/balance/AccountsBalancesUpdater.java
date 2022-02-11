@@ -77,6 +77,7 @@ public class AccountsBalancesUpdater {
         AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
                 AccountsBalanceUpdaterSummary.builder()
                         .mode(mode)
+                        .accountNumber(account.getAccountNumber())
                         .inputAccountType(account.getType())
                         .balanceTypeToCalculate(BalanceType.BOOKED_BALANCE)
                         .buggyBalance(account.getExactBalance().getExactValue())
@@ -118,6 +119,7 @@ public class AccountsBalancesUpdater {
         AccountsBalanceUpdaterSummaryBuilder summaryBuilder =
                 AccountsBalanceUpdaterSummary.builder()
                         .mode(mode)
+                        .accountNumber(account.getAccountNumber())
                         .inputAccountType(account.getType())
                         .balanceTypeToCalculate(BalanceType.AVAILABLE_BALANCE)
                         .buggyBalance(account.getAvailableBalance().getExactValue())

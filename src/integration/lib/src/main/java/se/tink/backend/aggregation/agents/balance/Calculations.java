@@ -37,10 +37,11 @@ public class Calculations {
                         PENDING_TRANSACTIONS_FOUND_MSG + pendingTransactions.size());
 
                 ExactCurrencyAmount sum = sum(pendingTransactions, currencyCode);
-                calculationSummary.addStepDescription(TRANSACTIONS_SUM_MSG + sum);
+                calculationSummary.addStepDescription(TRANSACTIONS_SUM_MSG + sum.getExactValue());
 
                 ExactCurrencyAmount result = inputBalance.subtract(sum);
-                calculationSummary.addStepDescription(CALCULATION_RESULT_MSG + result);
+                calculationSummary.addStepDescription(
+                        CALCULATION_RESULT_MSG + result.getExactValue());
 
                 return Pair.of(Optional.ofNullable(result), calculationSummary);
             };
@@ -69,10 +70,11 @@ public class Calculations {
                                 + filteredTransactions.size());
 
                 ExactCurrencyAmount sum = sum(filteredTransactions, currencyCode);
-                calculationSummary.addStepDescription(TRANSACTIONS_SUM_MSG + sum);
+                calculationSummary.addStepDescription(TRANSACTIONS_SUM_MSG + sum.getExactValue());
 
                 ExactCurrencyAmount result = inputBalance.subtract(sum);
-                calculationSummary.addStepDescription(CALCULATION_RESULT_MSG + result);
+                calculationSummary.addStepDescription(
+                        CALCULATION_RESULT_MSG + result.getExactValue());
 
                 return Pair.of(Optional.ofNullable(result), calculationSummary);
             };
@@ -100,10 +102,11 @@ public class Calculations {
                                 + filteredTransactions.size());
 
                 ExactCurrencyAmount sum = sum(filteredTransactions, currencyCode);
-                calculationSummary.addStepDescription(TRANSACTIONS_SUM_MSG + sum);
+                calculationSummary.addStepDescription(TRANSACTIONS_SUM_MSG + sum.getExactValue());
 
                 ExactCurrencyAmount result = inputBalance.add(sum);
-                calculationSummary.addStepDescription(CALCULATION_RESULT_MSG + result);
+                calculationSummary.addStepDescription(
+                        CALCULATION_RESULT_MSG + result.getExactValue());
 
                 return Pair.of(Optional.ofNullable(result), calculationSummary);
             };
@@ -131,10 +134,11 @@ public class Calculations {
                                 + filteredTransactions.size());
 
                 ExactCurrencyAmount sum = sum(filteredTransactions, currencyCode);
-                calculationSummary.addStepDescription(TRANSACTIONS_SUM_MSG + sum);
+                calculationSummary.addStepDescription(TRANSACTIONS_SUM_MSG + sum.getExactValue());
 
                 ExactCurrencyAmount result = inputBalance.add(sum);
-                calculationSummary.addStepDescription(CALCULATION_RESULT_MSG + result);
+                calculationSummary.addStepDescription(
+                        CALCULATION_RESULT_MSG + result.getExactValue());
 
                 return Pair.of(Optional.ofNullable(result), calculationSummary);
             };

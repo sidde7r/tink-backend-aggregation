@@ -21,6 +21,7 @@ import se.tink.backend.agents.rpc.BalanceType;
 import se.tink.backend.aggregation.agents.balance.AccountsBalancesUpdater.Mode;
 import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculatorSummary;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.masker.StringMasker;
 
 @Slf4j
 @Builder
@@ -37,6 +38,7 @@ public class AccountsBalanceUpdaterSummary {
 
     private final Mode mode;
 
+    private final String accountNumber;
     private final AccountTypes inputAccountType;
     private final BalanceType balanceTypeToCalculate;
 
@@ -65,6 +67,14 @@ public class AccountsBalanceUpdaterSummary {
         @Override
         public JsonElement serialize(Pair pair, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(pair.toString());
+        }
+    }
+
+    public static class AccountsBalanceUpdaterSummaryBuilder {
+
+        public AccountsBalanceUpdaterSummaryBuilder accountNumber(String accountNumber) {
+            this.accountNumber = StringMasker.starMaskBeginningOfString(accountNumber);
+            return this;
         }
     }
 }
