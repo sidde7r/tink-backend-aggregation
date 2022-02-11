@@ -57,6 +57,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.OAuth2TokenSessionH
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public abstract class PolishApiAgent extends NextGenerationAgent
@@ -81,6 +82,10 @@ public abstract class PolishApiAgent extends NextGenerationAgent
     public PolishApiAgent(
             AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         this.agentComponentProvider = agentComponentProvider;
         this.apiConfiguration = getApiConfiguration();
         this.accountsApiUrlFactory = getAccountApiUrlFactory();
