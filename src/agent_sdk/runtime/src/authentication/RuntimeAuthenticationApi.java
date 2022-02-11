@@ -1,8 +1,7 @@
 package se.tink.agent.runtime.authentication;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import se.tink.agent.runtime.authentication.processes.AuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.berlingroup.BerlinGroupAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.generic.GenericAuthenticationProcess;
@@ -13,122 +12,64 @@ import se.tink.agent.runtime.authentication.processes.swedish_mobile_bankid.Swed
 import se.tink.agent.runtime.authentication.processes.thirdparty_app.ThirdPartyAppAuthenticationProcess;
 import se.tink.agent.runtime.authentication.processes.username_password.UsernameAndPasswordAuthenticationProcess;
 import se.tink.agent.runtime.instance.AgentInstance;
-import se.tink.agent.sdk.authentication.consent.ConsentLifetime;
-import se.tink.agent.sdk.authentication.consent.ConsentStatus;
+import se.tink.agent.sdk.authentication.steppable_execution.ExistingConsentFlow;
+import se.tink.agent.sdk.authentication.steppable_execution.NewConsentFlow;
 import se.tink.agent.sdk.environment.Operation;
 import se.tink.agent.sdk.environment.Utilities;
-import se.tink.agent.sdk.steppable_execution.base_step.BaseStep;
-import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
-import se.tink.agent.sdk.steppable_execution.base_step.StepResponse;
-import se.tink.agent.sdk.steppable_execution.execution_flow.ExecutionFlow;
 
 public class RuntimeAuthenticationApi {
     private final AgentInstance agentInstance;
-    private final AuthenticationFlows authenticationFlows;
+    private final List<AuthenticationProcess<?>> predefinedAuthenticationProcesses;
 
-    public RuntimeAuthenticationApi(AgentInstance agentInstance) throws AuthenticatorNotFoundException {
+    public RuntimeAuthenticationApi(AgentInstance agentInstance) {
         this.agentInstance = agentInstance;
 
         Utilities utilities = agentInstance.getUtilities();
         Operation operation = agentInstance.getOperation();
 
-        this.authenticationFlows =
-                Stream.of(
-                                getFlows(new GenericAuthenticationProcess()),
-                                getFlows(
-                                        new Oauth2AuthenticationProcess(
-                                                utilities.getRandomGenerator())),
-                                getFlows(
-                                        new Oauth2DecoupledAppAuthenticationProcess(
-                                                utilities.getSleeper())),
-                                getFlows(
-                                        new ThirdPartyAppAuthenticationProcess(
-                                                utilities.getSleeper())),
-                                getFlows(
-                                        new SwedishMobileBankIdAuthenticationProcess(
-                                                utilities.getSleeper())),
-                                getFlows(
-                                        new UsernameAndPasswordAuthenticationProcess(
-                                                operation.getStaticBankCredentials())),
-                                getFlows(
-                                        new Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess(
-                                                utilities.getSleeper())),
-                                getFlows(
-                                        new BerlinGroupAuthenticationProcess(
-                                                utilities.getTimeGenerator(),
-                                                utilities.getRandomGenerator())))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .findFirst()
-                        .orElseThrow(AuthenticatorNotFoundException::new);
+        predefinedAuthenticationProcesses =
+                List.of(
+                        new GenericAuthenticationProcess(),
+                        new Oauth2AuthenticationProcess(utilities.getRandomGenerator()),
+                        new Oauth2DecoupledAppAuthenticationProcess(utilities.getSleeper()),
+                        new ThirdPartyAppAuthenticationProcess(utilities.getSleeper()),
+                        new SwedishMobileBankIdAuthenticationProcess(utilities.getSleeper()),
+                        new UsernameAndPasswordAuthenticationProcess(
+                                operation.getStaticBankCredentials()),
+                        new Oauth2DecoupledSwedishMobileBankIdAuthenticationProcess(
+                                utilities.getSleeper()),
+                        new BerlinGroupAuthenticationProcess(
+                                utilities.getTimeGenerator(), utilities.getRandomGenerator()));
     }
 
-    public StepResponse<ConsentLifetime> executeNewConsentStep(
-            @Nullable String stepId, StepRequest<Void> request)
-            throws AuthenticationStepNotFoundException {
-
-        ExecutionFlow<Void, ConsentLifetime> newConsentFlow =
-                this.authenticationFlows.getNewConsentFlow();
-
-        BaseStep<Void, ConsentLifetime> newConsentStep =
-                newConsentFlow
-                        .getStep(stepId)
-                        .orElseThrow(AuthenticationStepNotFoundException::new);
-
-        return newConsentStep.executeInternal(request);
+    public NewConsentFlow getNewConsentFlow() throws AuthenticatorNotFoundException {
+        return predefinedAuthenticationProcesses.stream()
+                .map(this::getNewConsentFlow)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst()
+                .orElseThrow(AuthenticatorNotFoundException::new);
     }
 
-    public StepResponse<ConsentStatus> executeUseExistingConsentStep(
-            @Nullable String stepId, StepRequest<Void> request)
-            throws AuthenticationStepNotFoundException {
-
-        ExecutionFlow<Void, ConsentStatus> useExistingConsentFlow =
-                this.authenticationFlows.getUseExistingConsentFlow();
-
-        BaseStep<Void, ConsentStatus> useExistingConsentStep =
-                useExistingConsentFlow
-                        .getStep(stepId)
-                        .orElseThrow(AuthenticationStepNotFoundException::new);
-
-        return useExistingConsentStep.executeInternal(request);
+    public ExistingConsentFlow getExistingConsentFlow() throws AuthenticatorNotFoundException {
+        return predefinedAuthenticationProcesses.stream()
+                .map(this::getExistingConsentFlow)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst()
+                .orElseThrow(AuthenticatorNotFoundException::new);
     }
 
-    private <T> Optional<AuthenticationFlows> getFlows(AuthenticationProcess<T> authProcess) {
+    private <T> Optional<ExistingConsentFlow> getExistingConsentFlow(
+            AuthenticationProcess<T> authProcess) {
         return authProcess
                 .tryInstantiateAuthenticator(this.agentInstance)
-                .map(
-                        agentAuthenticator -> {
-                            ExecutionFlow<Void, ConsentLifetime> newConsentFlow =
-                                    authProcess.getNewConsentFlow(agentAuthenticator);
-
-                            ExecutionFlow<Void, ConsentStatus> useExistingConsentFlow =
-                                    authProcess.getUseExistingConsentFlow(agentAuthenticator);
-
-                            return new AuthenticationFlows(newConsentFlow, useExistingConsentFlow);
-                        });
+                .map(authProcess::getUseExistingConsentFlow);
     }
 
-    private static class AuthenticationFlows {
-        private final ExecutionFlow<Void, ConsentLifetime> newConsentFlow;
-        private final ExecutionFlow<Void, ConsentStatus> useExistingConsentFlow;
-
-        public AuthenticationFlows(
-                ExecutionFlow<Void, ConsentLifetime> newConsentFlow,
-                ExecutionFlow<Void, ConsentStatus> useExistingConsentFlow) {
-            this.newConsentFlow = newConsentFlow;
-            this.useExistingConsentFlow = useExistingConsentFlow;
-        }
-
-        public ExecutionFlow<Void, ConsentLifetime> getNewConsentFlow() {
-            return newConsentFlow;
-        }
-
-        public ExecutionFlow<Void, ConsentStatus> getUseExistingConsentFlow() {
-            return useExistingConsentFlow;
-        }
+    private <T> Optional<NewConsentFlow> getNewConsentFlow(AuthenticationProcess<T> authProcess) {
+        return authProcess
+                .tryInstantiateAuthenticator(this.agentInstance)
+                .map(authProcess::getNewConsentFlow);
     }
-
-    public static class AuthenticatorNotFoundException extends Exception {}
-
-    public static class AuthenticationStepNotFoundException extends Exception {}
 }
