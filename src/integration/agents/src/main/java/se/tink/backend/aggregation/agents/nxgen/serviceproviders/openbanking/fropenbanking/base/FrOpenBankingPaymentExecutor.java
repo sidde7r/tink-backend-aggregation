@@ -203,7 +203,7 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
             getPaymentResponse = paymentResponseRetryer.call(() -> apiClient.getPayment(paymentId));
 
         } catch (ExecutionException | RetryException e) {
-            log.warn("Payment failed, couldn't fetch payment status");
+            log.warn("Payment failed, couldn't fetch payment status", e);
             throw new PaymentRejectedException(
                     "Payment failed, couldn't fetch payment status",
                     InternalStatus.PAYMENT_REJECTED_BY_BANK_NO_DESCRIPTION);
