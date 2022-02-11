@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.events.guice.EventsModule;
 import se.tink.libraries.events.guice.configuration.EventSubmitterConfiguration;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.AgentSdkModule;
 
 public final class AgentPackageModuleFactory implements AgentModuleFactory {
 
@@ -55,6 +56,7 @@ public final class AgentPackageModuleFactory implements AgentModuleFactory {
                                                 .getEventProducerServiceConfiguration())))
                 .add(new AgentRequestScopeModule(request, context, configuration))
                 .addAll(agentDependencyModuleLoader.getModulesFromAnnotation(agentClass))
+                .add(new AgentSdkModule())
                 .build();
     }
 }
