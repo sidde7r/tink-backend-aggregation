@@ -106,6 +106,7 @@ public class AccountsBalancesUpdaterTest {
     public void shouldUpdateOnlyBookedBalanceByRunningCalculation() {
         // given
         when(account.getType()).thenReturn(AccountTypes.CREDIT_CARD);
+        when(account.getExactBalance()).thenReturn(ExactCurrencyAmount.inEUR(50));
 
         // when
         accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(listOfAccountData);
@@ -119,6 +120,8 @@ public class AccountsBalancesUpdaterTest {
     public void shouldUpdateBothBookedAndAvailableBalanceByRunningCalculation() {
         // given
         when(account.getType()).thenReturn(AccountTypes.CHECKING);
+        when(account.getExactBalance()).thenReturn(ExactCurrencyAmount.inEUR(50));
+        when(account.getAvailableBalance()).thenReturn(ExactCurrencyAmount.inEUR(50));
 
         // when
         accountsBalancesUpdater.updateAccountsBalancesByRunningCalculations(listOfAccountData);
