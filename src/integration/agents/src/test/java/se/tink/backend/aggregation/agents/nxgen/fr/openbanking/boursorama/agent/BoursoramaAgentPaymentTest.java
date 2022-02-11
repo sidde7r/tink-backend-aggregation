@@ -64,7 +64,7 @@ public class BoursoramaAgentPaymentTest {
                         creditorDebtorManager.get(BoursoramaAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
 
         return new Payment.Builder()
-                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withCreditor(new Creditor(creditorAccountIdentifier, "Tink Test"))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
                 .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
                 .withCurrency("EUR")
