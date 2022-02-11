@@ -629,6 +629,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         try {
             login(agent, credentialsRequest);
+            saveCredentials(agent);
             refresh(agent);
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
