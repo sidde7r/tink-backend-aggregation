@@ -24,7 +24,8 @@ public class SensitiveDataMasker {
                     "accounts..identifiers",
                     "accounts..bankId",
                     "credentials.fields",
-                    "signableOperation.signableObject");
+                    "signableOperation.signableObject",
+                    "selectedAuthenticationOptions..fields");
 
     public static String mask(String json) {
         if (Strings.isNullOrEmpty(json)) {
