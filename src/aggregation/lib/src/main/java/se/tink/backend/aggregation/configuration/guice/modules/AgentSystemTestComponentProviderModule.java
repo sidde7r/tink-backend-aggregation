@@ -22,9 +22,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclien
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.raw_data_events.decision_strategy.AllowAlwaysRawBankDataEventCreationTriggerStrategy;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.ProviderProviderModule;
-import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.StaticBankCredentialsProviderModule;
-import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.UserProviderModule;
 
 public class AgentSystemTestComponentProviderModule extends AbstractModule {
 
@@ -55,9 +52,6 @@ public class AgentSystemTestComponentProviderModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new UserProviderModule());
-        install(new StaticBankCredentialsProviderModule());
-        install(new ProviderProviderModule());
         bind(TinkHttpClientProvider.class).toInstance(wireMockTinkHttpClientProvider);
         bind(MockServerUrlProvider.class).toInstance(wireMockServerUrlProvider);
         bind(AgentContextProvider.class).to(AgentContextProviderImpl.class);

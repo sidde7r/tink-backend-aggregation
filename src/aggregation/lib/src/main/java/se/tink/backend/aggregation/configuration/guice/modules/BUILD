@@ -9,7 +9,7 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agent_sdk/compatibility_layers/aggregation_service/src/modules",
+        "//src/agent_sdk/compatibility_layers/aggregation_service/test/modules",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/fake",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/iface",
