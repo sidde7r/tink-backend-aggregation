@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.validator.CreatePaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor
 public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient {
@@ -36,7 +35,9 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
         return client.request(Urls.CREATE_PAYMENT)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .post(CreatePaymentResponse.class, SerializationUtils.serializeToString(request));
+                .post(
+                        CreatePaymentResponse.class,
+                        BoursoramaPaymentRequestConverter.convert(request));
     }
 
     @Override
