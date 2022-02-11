@@ -31,6 +31,10 @@ public final class SwedbankConstants {
 
         public static final URL AUTHORIZATION_DECOUPLED =
                 new URL(BASE.concat(Endpoints.AUTHORIZATION_DECOUPLED));
+        public static final URL AUTHORIZATION_DECOUPLED_AUTHORIZE_ID =
+                AUTHORIZATION_DECOUPLED.concat(Endpoints.AUTHORIZE_ID);
+        public static final URL AUTHORIZATION_QR_IMAGE =
+                new URL(BASE.concat(Endpoints.AUTHORIZATION_QR_IMAGE));
         public static final URL TOKEN = new URL(BASE.concat(Endpoints.TOKEN));
         public static final URL ACCOUNTS = new URL(BASE.concat(Endpoints.ACCOUNTS));
         public static final URL ACCOUNT_BALANCES = new URL(BASE.concat(Endpoints.ACCOUNT_BALANCES));
@@ -48,6 +52,8 @@ public final class SwedbankConstants {
 
     public static class Endpoints {
         public static final String AUTHORIZATION_DECOUPLED = "/psd2/v4/authorize-decoupled";
+        public static final String AUTHORIZE_ID = "/authorize/{authorize-id}";
+        public static final String AUTHORIZATION_QR_IMAGE = "/psd2/authorize-image/{authorize-id}";
         public static final String TOKEN = "/psd2/token";
         public static final String ACCOUNTS = "/v4/accounts";
         public static final String ACCOUNT_BALANCES = "/v4/accounts/{account-id}/balances";
@@ -68,6 +74,7 @@ public final class SwedbankConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String PAYMENT_TYPE = "paymentType";
         public static final String PAYMENT_ID = "paymentId";
+        public static final String AUTHORIZE_ID = "authorize-id";
     }
 
     public static class StorageKeys {
@@ -122,6 +129,7 @@ public final class SwedbankConstants {
         public static final String TPP_SIGNATURE_CERTIFICATE = "tpp-signature-certificate";
         public static final String DATE = "date";
         public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
+        public static final String QR_CODE_REQUIRED = "Qr-Code-Required";
     }
 
     public static class HeaderValues {

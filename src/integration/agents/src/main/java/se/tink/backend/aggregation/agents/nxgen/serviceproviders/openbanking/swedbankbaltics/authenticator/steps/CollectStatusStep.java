@@ -83,7 +83,7 @@ public class CollectStatusStep implements AuthenticationStep {
 
     private AuthenticationStatusResponse collectAuthStatus(String userId, String collectAuthUri) {
         try {
-            return apiClient.collectAuthStatus(userId, collectAuthUri);
+            return apiClient.collectBalticAuthStatus(userId, collectAuthUri);
         } catch (HttpResponseException e) {
             log.error(
                     "Can not collect status. Status code {}, body {}",

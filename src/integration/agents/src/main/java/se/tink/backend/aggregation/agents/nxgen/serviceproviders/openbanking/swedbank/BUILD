@@ -32,6 +32,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/accountidentifier",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/qrcode",
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
@@ -60,6 +61,7 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@tink_backend//src/libraries/account_identifier",
+        "@tink_backend//src/libraries/authentication_options",
     ],
 )
 

@@ -14,5 +14,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//third_party:com_google_inject_guice",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/authentication_options",
     ],
 )

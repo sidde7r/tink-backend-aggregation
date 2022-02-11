@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
@@ -33,6 +34,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
+import se.tink.libraries.authentication_options.SelectedAuthenticationOption;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 @RequiredArgsConstructor
@@ -45,18 +48,40 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
     private String ssn;
     private String autoStartToken;
     private OAuth2Token accessToken;
+    boolean shouldUseQRCodeOnAnotherDevice;
 
     @Override
     public String init(String ssn) {
         this.ssn = ssn;
+        shouldUseQRCodeOnAnotherDevice = false;
+
+        Set<SelectedAuthenticationOption> authenticationOptions =
+                componentProvider.getCredentialsRequest().getSelectedAuthenticationOptions();
+
+        if (authenticationOptions != null) {
+            for (SelectedAuthenticationOption authenticationOption : authenticationOptions) {
+                if (authenticationOption.getAuthenticationOptionDefinition()
+                        == AuthenticationOptionDefinition.SE_MOBILE_BANKID_OTHER_DEVICE) {
+                    shouldUseQRCodeOnAnotherDevice = true;
+                }
+            }
+        }
+
         try {
-            AuthenticationResponse authenticationResponse = apiClient.authenticateDecoupled(ssn);
-            this.autoStartToken =
-                    Optional.ofNullable(authenticationResponse.getChallengeData())
-                            .map(ChallengeDataEntity::getAutoStartToken)
-                            // Missing AST: Known defect on Swedbank side
-                            .orElseThrow(BankIdError.UNKNOWN::exception);
-            return authenticationResponse.getCollectAuthUri();
+            AuthenticationResponse authenticationResponse =
+                    apiClient.authenticateDecoupled(ssn, shouldUseQRCodeOnAnotherDevice);
+
+            if (shouldUseQRCodeOnAnotherDevice) {
+                this.autoStartToken =
+                        apiClient.fetchQRCodeImage(authenticationResponse.getAuthorizeId());
+            } else {
+                this.autoStartToken =
+                        Optional.ofNullable(authenticationResponse.getChallengeData())
+                                .map(ChallengeDataEntity::getAutoStartToken)
+                                // Missing AST: Known defect on Swedbank side
+                                .orElseThrow(BankIdError.UNKNOWN::exception);
+            }
+            return authenticationResponse.getAuthorizeId();
         } catch (HttpResponseException e) {
             handleBankIdError(e.getResponse().getBody(GenericResponse.class));
             throw e;
@@ -64,15 +89,15 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
     }
 
     @Override
-    public BankIdStatus collect(String collectAuthUri) throws AuthenticationException {
+    public BankIdStatus collect(String authorizeId) throws AuthenticationException {
         AuthenticationStatusResponse authenticationStatusResponse;
 
         try {
-            authenticationStatusResponse = apiClient.collectAuthStatus(ssn, collectAuthUri);
+            authenticationStatusResponse = apiClient.collectAuthStatus(ssn, authorizeId);
         } catch (HttpResponseException e) {
             GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
             if (errorResponse.isMissingBankId()) {
-                authenticationStatusResponse = handleMultipleEngagements(collectAuthUri);
+                authenticationStatusResponse = handleMultipleEngagements(authorizeId);
             } else {
                 handleBankIdError(errorResponse);
                 throw e;
@@ -86,6 +111,10 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         switch (Strings.nullToEmpty(authenticationStatusResponse.getScaStatus()).toLowerCase()) {
             case AuthStatus.RECEIVED:
             case AuthStatus.STARTED:
+                if (shouldUseQRCodeOnAnotherDevice) {
+                    this.autoStartToken = apiClient.fetchQRCodeImage(authorizeId);
+                }
+                return BankIdStatus.WAITING;
             case AuthStatus.EMPTY:
                 return BankIdStatus.WAITING;
             case AuthStatus.FINALIZED:

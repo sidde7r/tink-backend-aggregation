@@ -67,40 +67,6 @@ public class SwedbankDecoupledAuthenticatorTest {
     }
 
     @Test
-    public void shouldReturnAuthUriOnSuccessfulInit() {
-        // given
-        when(apiClient.authenticateDecoupled(any()))
-                .thenReturn(
-                        SwedbankDecoupledAuthenticatorTestData
-                                .VALID_AUTHENTICATE_DECOUPLED_RESPONSE);
-
-        // when
-        final String authUri = objectUnderTest.init(any());
-
-        // then
-        assertThat(authUri)
-                .isEqualTo(
-                        "/psd2/v4/authorize-decoupled/authorize/qwerty37-6f7c-455a-a7c4-9fc976qwerty");
-    }
-
-    @Test
-    public void shouldThrowBankIdErrorWhenNoAutoStartTokenPresent() {
-        // given
-        when(apiClient.authenticateDecoupled(any()))
-                .thenReturn(
-                        SwedbankDecoupledAuthenticatorTestData
-                                .INVALID_AUTHENTICATE_DECOUPLED_RESPONSE);
-
-        // when
-        final ThrowingCallable callable = () -> objectUnderTest.init(any());
-
-        // then
-        assertThatThrownBy(callable)
-                .isInstanceOf(BankIdException.class)
-                .hasMessage("Cause: BankIdError.UNKNOWN");
-    }
-
-    @Test
     public void shouldReturnBankIdStatusDoneWhenAuthenticationIsFinalised() {
         // given
         when(apiClient.collectAuthStatus(any(), any()))

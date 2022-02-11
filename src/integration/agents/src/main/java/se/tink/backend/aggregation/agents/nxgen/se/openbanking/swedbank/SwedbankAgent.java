@@ -10,6 +10,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.libraries.authentication_options.AuthenticationOption;
+import se.tink.libraries.authentication_options.AuthenticationOption.AuthenticationOptions;
+import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({
@@ -25,6 +28,12 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
             PisCapability.PIS_FUTURE_DATE
         },
         markets = {"SE"})
+@AuthenticationOptions({
+    @AuthenticationOption(
+            definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE,
+            overallDefault = true),
+    @AuthenticationOption(definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_OTHER_DEVICE)
+})
 public class SwedbankAgent extends SwedbankBaseAgent {
 
     @Inject

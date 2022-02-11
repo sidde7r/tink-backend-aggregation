@@ -53,7 +53,7 @@ public class CollectStatusStepTest {
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
 
         when(stepDataStorage.getAuthUrl()).thenReturn(SwedbankBalticsHelper.DUMMY_URI);
-        when(apiClient.collectAuthStatus(anyString(), anyString()))
+        when(apiClient.collectBalticAuthStatus(anyString(), anyString()))
                 .thenReturn(authenticationStatusResponse);
 
         when(authenticationStatusResponse.loginCanceled()).thenReturn(false);
@@ -84,7 +84,7 @@ public class CollectStatusStepTest {
         when(httpResponse.getStatus()).thenReturn(500);
         when(httpResponse.getBody(String.class)).thenReturn(SwedbankBalticsHelper.DUMMY_STRING);
 
-        doThrow(e).when(apiClient).collectAuthStatus(anyString(), anyString());
+        doThrow(e).when(apiClient).collectBalticAuthStatus(anyString(), anyString());
 
         // when
         final Throwable thrown =
@@ -104,7 +104,7 @@ public class CollectStatusStepTest {
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
 
         when(stepDataStorage.getAuthUrl()).thenReturn(SwedbankBalticsHelper.DUMMY_URI);
-        when(apiClient.collectAuthStatus(anyString(), anyString()))
+        when(apiClient.collectBalticAuthStatus(anyString(), anyString()))
                 .thenReturn(authenticationStatusResponse);
 
         when(authenticationStatusResponse.loginCanceled()).thenReturn(false);
@@ -128,7 +128,7 @@ public class CollectStatusStepTest {
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
 
         when(stepDataStorage.getAuthUrl()).thenReturn(SwedbankBalticsHelper.DUMMY_URI);
-        when(apiClient.collectAuthStatus(anyString(), anyString()))
+        when(apiClient.collectBalticAuthStatus(anyString(), anyString()))
                 .thenReturn(authenticationStatusResponse);
 
         when(authenticationStatusResponse.loginCanceled()).thenReturn(false);
@@ -153,7 +153,7 @@ public class CollectStatusStepTest {
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
 
         when(stepDataStorage.getAuthUrl()).thenReturn(SwedbankBalticsHelper.DUMMY_URI);
-        when(apiClient.collectAuthStatus(anyString(), anyString()))
+        when(apiClient.collectBalticAuthStatus(anyString(), anyString()))
                 .thenReturn(authenticationStatusResponse);
 
         when(authenticationStatusResponse.loginCanceled()).thenReturn(false);
@@ -177,7 +177,7 @@ public class CollectStatusStepTest {
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
 
         when(stepDataStorage.getAuthUrl()).thenReturn(SwedbankBalticsHelper.DUMMY_URI);
-        when(apiClient.collectAuthStatus(anyString(), anyString()))
+        when(apiClient.collectBalticAuthStatus(anyString(), anyString()))
                 .thenReturn(authenticationStatusResponse);
 
         when(authenticationStatusResponse.loginCanceled()).thenReturn(true);
