@@ -7,7 +7,8 @@ import se.tink.libraries.account.AccountIdentifier;
 
 public class ExampleBeneficiariesFetcher implements BeneficiariesFetcher {
     @Override
-    public List<Beneficiary> fetchPaymentBeneficiariesFor(AccountIdentifier accountIdentifier) {
+    public List<Beneficiary> fetchPaymentBeneficiariesFor(
+            AccountIdentifier debtorAccountIdentifier) {
         return null;
     }
 }

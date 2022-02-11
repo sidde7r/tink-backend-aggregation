@@ -9,7 +9,7 @@ import se.tink.libraries.account.AccountIdentifier;
 public class ExampleBeneficiaryRegistrator implements GenericBeneficiaryRegistrator {
     @Override
     public BeneficiaryRegisterResult registerBeneficiary(
-            AccountIdentifier accountIdentifier, Beneficiary beneficiary) {
+            AccountIdentifier debtorAccountIdentifier, Beneficiary beneficiary) {
         return null;
     }
 
