@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-09 13:49+0100\n"
+"POT-Creation-Date: 2022-02-10 17:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2120,4 +2120,13 @@ msgid "Please enter your NemID password"
 msgstr ""
 
 msgid "Please enter your NemID user ID"
+msgstr ""
+
+msgid "Enter your Bankia digital signature"
+msgstr ""
+
+msgid "Bankia digital signature"
+msgstr ""
+
+msgid "The Bankia signature you entered is not valid"
 msgstr ""

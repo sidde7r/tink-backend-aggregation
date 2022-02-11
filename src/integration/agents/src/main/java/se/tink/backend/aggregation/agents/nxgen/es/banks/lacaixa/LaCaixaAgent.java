@@ -46,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.DefaultCookieAwareResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.http.proxy.ProxyProfile;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, MORTGAGE_AGGREGATION})
 public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
@@ -67,7 +66,7 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
     @Inject
     public LaCaixaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        configureHttpClient(client, componentProvider.getProxyProfiles().getMarketProxyProfile());
+        configureHttpClient(client);
         apiClient =
                 new LaCaixaApiClient(
                         client,
@@ -103,12 +102,13 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
                         supplementalInformationFormer,
                         catalog,
                         credentials,
-                        supplementalInformationHelper);
+                        supplementalInformationHelper,
+                        sessionStorage);
 
         return new LaCaixaMultifactorAuthenticatorController(laCaixaManualAuthenticator);
     }
 
-    private void configureHttpClient(TinkHttpClient client, ProxyProfile proxyProfile) {
+    private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new TimeoutFilter());
         client.addFilter(
                 new LaCaixaRetryFilter(
@@ -118,7 +118,6 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
         client.setResponseStatusHandler(
                 new DefaultCookieAwareResponseStatusHandler(sessionStorage));
         client.setCookieSpec(CookieSpecs.STANDARD);
-        client.setProxyProfile(proxyProfile);
     }
 
     @Override
