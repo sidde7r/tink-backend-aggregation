@@ -52,13 +52,13 @@ public class RandomGeneratorImpl implements RandomGenerator {
 
     @Override
     public int randomNumberInRange(int minimum, int maximum) {
-        Preconditions.checkArgument(minimum >= maximum, "Maximum must be greater than minimum");
+        Preconditions.checkArgument(minimum < maximum, "Maximum must be greater than minimum");
         return random.nextInt((maximum - minimum) + 1) + minimum;
     }
 
     @Override
     public double randomDoubleInRange(double minimum, double maximum) {
-        Preconditions.checkArgument(minimum >= maximum, "Maximum must be greater than minimum");
+        Preconditions.checkArgument(minimum < maximum, "Maximum must be greater than minimum");
         return random.nextDouble() * (maximum - minimum) + minimum;
     }
 
