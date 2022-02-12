@@ -46,7 +46,7 @@ X-Aggregator: Tink Testing
                 ]
             },
             "instructedAmount": {
-                "amount": 1.0,
+                "amount": 1.23,
                 "currency": "EUR"
             }
         }
@@ -102,11 +102,13 @@ Content-Type: application/json
         },
         "creditTransferTransaction": [
             {
-                "remittanceInformation": [
-                    "Message"
-                ],
+                "remittanceInformation": {
+                    "unstructured": [
+                        "Message"
+                    ]
+                },
                 "instructedAmount": {
-                    "amount": "1.0",
+                    "amount": 1.23,
                     "currency": "EUR"
                 }
             }

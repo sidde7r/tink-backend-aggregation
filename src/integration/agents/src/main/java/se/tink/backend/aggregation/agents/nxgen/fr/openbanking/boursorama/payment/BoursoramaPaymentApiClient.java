@@ -9,6 +9,7 @@ import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.dto.BoursoramaGetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
@@ -35,9 +36,7 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
         return client.request(Urls.CREATE_PAYMENT)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .post(
-                        CreatePaymentResponse.class,
-                        BoursoramaPaymentRequestConverter.convert(request));
+                .post(CreatePaymentResponse.class, BoursoramaPaymentDtoConverter.convert(request));
     }
 
     @Override
@@ -62,9 +61,12 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
 
     @Override
     public GetPaymentResponse getPayment(String paymentId) {
-        return client.request(Urls.GET_PAYMENT.parameter("paymentId", paymentId))
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .get(GetPaymentResponse.class);
+        final BoursoramaGetPaymentResponse response =
+                client.request(Urls.GET_PAYMENT.parameter("paymentId", paymentId))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .get(BoursoramaGetPaymentResponse.class);
+
+        return BoursoramaPaymentDtoConverter.convert(response);
     }
 }
