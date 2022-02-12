@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink;
 
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
@@ -28,7 +27,6 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
     private final CreditCardRefreshController creditCardRefreshController;
     private final LogMasker logMasker;
     private final SystemUpdater systemUpdater;
-    private final Credentials credentials;
     private final LocalDateTimeSource localDateTimeSource;
 
     public SamlinkAgent(
@@ -44,7 +42,6 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.creditCardRefreshController = getCreditCardRefreshController();
         this.systemUpdater = componentProvider.getSystemUpdater();
-        this.credentials = componentProvider.getCredentialsRequest().getCredentials();
     }
 
     @Override
@@ -63,7 +60,6 @@ public class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConf
                 agentConfiguration,
                 logMasker,
                 systemUpdater,
-                credentials,
                 componentProvider);
     }
 
