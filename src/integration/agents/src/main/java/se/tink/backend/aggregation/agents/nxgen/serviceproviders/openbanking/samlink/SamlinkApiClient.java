@@ -82,7 +82,6 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
             final SamlinkAgentsConfiguration agentConfiguration,
             final LogMasker logMasker,
             final SystemUpdater systemUpdater,
-            final Credentials credentials,
             final AgentComponentProvider componentProvider) {
         super(
                 client,
@@ -98,8 +97,8 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
         this.qsealcSigner = qsealcSigner;
         this.organizationIdentifier = getOrganizationIdentifier();
         this.systemUpdater = systemUpdater;
-        this.credentials = credentials;
         this.componentProvider = componentProvider;
+        this.credentials = componentProvider.getCredentialsRequest().getCredentials();
         client.addFilter(new SamlinkSessionErrorFilter());
     }
 
