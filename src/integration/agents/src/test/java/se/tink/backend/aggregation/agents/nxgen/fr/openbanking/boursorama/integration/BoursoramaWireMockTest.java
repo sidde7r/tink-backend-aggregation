@@ -51,7 +51,9 @@ public class BoursoramaWireMockTest {
                         .withHttpDebugTrace()
                         .withPayment(
                                 createRealDomesticPayment(
-                                        PaymentScheme.SEPA_CREDIT_TRANSFER, TWO_DAYS_AFTER_TODAY))
+                                        PaymentScheme.SEPA_CREDIT_TRANSFER,
+                                        TWO_DAYS_AFTER_TODAY,
+                                        1.23))
                         .withAgentModule(new BoursoramaWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
@@ -75,7 +77,7 @@ public class BoursoramaWireMockTest {
                         .withHttpDebugTrace()
                         .withPayment(
                                 createRealDomesticPayment(
-                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, TODAY))
+                                        PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, TODAY, 1.0))
                         .withAgentModule(new BoursoramaWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
@@ -102,7 +104,8 @@ public class BoursoramaWireMockTest {
                         .withPayment(
                                 createRealDomesticPayment(
                                         PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER,
-                                        LocalDate.parse(executionDate)))
+                                        LocalDate.parse(executionDate),
+                                        1.0))
                         .withAgentModule(new BoursoramaWireMockTestModule())
                         .buildWithLogin(PaymentCommand.class);
 
@@ -142,7 +145,7 @@ public class BoursoramaWireMockTest {
     }
 
     private Payment createRealDomesticPayment(
-            PaymentScheme paymentScheme, LocalDate executionDate) {
+            PaymentScheme paymentScheme, LocalDate executionDate, double amount) {
         AccountIdentifier creditorAccountIdentifier =
                 AccountIdentifier.create(AccountIdentifierType.IBAN, "FR1420041010050500013M02606");
 
@@ -152,7 +155,7 @@ public class BoursoramaWireMockTest {
         return new Payment.Builder()
                 .withCreditor(new Creditor(creditorAccountIdentifier, "Creditor Name"))
                 .withDebtor(new Debtor(debtorAccountIdentifier))
-                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(amount))
                 .withCurrency("EUR")
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(

@@ -2,16 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payme
 
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
 @JsonObject
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class BoursoramaRemittanceInformation {
 
-    private final List<String> unstructured;
+    private List<String> unstructured;
 
     public static BoursoramaRemittanceInformation of(List<String> remittanceInformation) {
         return new BoursoramaRemittanceInformation(remittanceInformation);

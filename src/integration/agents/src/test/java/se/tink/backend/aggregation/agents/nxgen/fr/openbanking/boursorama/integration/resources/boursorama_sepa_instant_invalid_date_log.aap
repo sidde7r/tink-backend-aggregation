@@ -103,11 +103,13 @@ Content-Type: application/json
         },
         "creditTransferTransaction": [
             {
-                "remittanceInformation": [
-                    "Message"
-                ],
+                "remittanceInformation": {
+                    "unstructured": [
+                        "Message"
+                    ]
+                },
                 "instructedAmount": {
-                    "amount": "1.0",
+                    "amount": 1.0,
                     "currency": "EUR"
                 }
             }
