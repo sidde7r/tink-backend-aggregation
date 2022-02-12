@@ -1,0 +1,80 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1a
+POST https://sp-psdapi.samlink.fi/psd2/v1/consents
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+Content-Type: application/json
+
+{
+  "access": {
+    "accounts": [],
+    "transactions": [],
+    "balances": []
+  },
+  "recurringIndicator": true,
+  "validUntil": "1993-03-10",
+  "frequencyPerDay": 4,
+  "combinedServiceIndicator": false
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 1a
+201
+Content-Type: application/json
+Location: https://sp-psdapi.samlink.fi:8445/v1/consents/**HASHED:PG**
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Length: 277
+
+{
+  "consentStatus": "received",
+  "consentId": "**HASHED:PG**",
+  "_links": {
+    "scaOAuth": "https://authservice.samlink.fi/.wellknown/sp/oauth-authorization-server",
+    "self": "/psd2/v1/consents/**HASHED:PG**",
+    "status": "/psd2/v1/consents/**HASHED:PG**/status"
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2a
+POST https://authservice.samlink.fi/sp/oauthproxy/token
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Content-Type: application/x-www-form-urlencoded
+
+-----------------------------------------------------------------------------------
+RESPONSE 2a
+200
+Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'; object-src 'self';frame-src 'self'
+X-Frame-Options: DENY
+Content-Type: application/json;charset=utf-8
+Content-Length: 163
+
+{
+  "access_token": "**HASHED:BC**",
+  "token_type": "Bearer",
+  "expires_in": 123,
+  "tokenType": "Bearer",
+  "expiresIn": 123,
+  "accessToken": "**HASHED:BC**"
+}
+
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://sp-psdapi.samlink.fi/psd2/v1/accounts
+PSU-IP-Address: 0.0.0.0
+TPP-Redirect-Uri: https://api.tink.com/api/v1/credentials/third-party/callback
+Signature: keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac,CA=CN=MULTICERT Trust Services Certification Authority 005, OU=Certification Authority, O=MULTICERT - Serviços de Certificação Electrónica S.A., C=PT",algorithm="rsa-sha256",headers="Digest X-Request-ID TPP-Redirect-URI",signature="RkFLRV9TSUdOQVRVUkUK"
+
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+401
+Date: Mon, 17 Jan 2022 08:31:02 GMT
+Date: Mon, 17 Jan 2022 08:31:02 GMT
+Content-Type: application/json;charset=utf-8
+
+Content-Length: 41
+
+{"message":"No API key found in request"}
