@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Assert;
-import org.junit.Ignore;
 import se.tink.agent.sdk.models.payments.BulkPaymentSigningBasket;
 import se.tink.agent.sdk.models.payments.PaymentStatus;
 import se.tink.agent.sdk.models.payments.bulk_payment_register_basket_result.BulkPaymentRegisterBasketResult;
@@ -21,7 +20,6 @@ import se.tink.agent.sdk.payments.bulk.steppable_execution.BulkPaymentSignStep;
 import se.tink.agent.sdk.steppable_execution.base_step.StepRequest;
 import se.tink.agent.sdk.steppable_execution.interactive_step.response.InteractiveStepResponse;
 
-@Ignore
 public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiator {
     private static final String BANK_BASKET_REFERENCE = "bank-basket-ref";
 
