@@ -2,7 +2,7 @@ load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 
 junit_test(
     name = "payments",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(["*.java"]),
     data = [],
     plugins = [
         "//src/agent_sdk:lombok_plugin",
@@ -10,6 +10,7 @@ junit_test(
     resources = [],
     deps = [
         "//src/agent_sdk/compatibility_layers/aggregation_service/src/payments",
+        "//src/agent_sdk/compatibility_layers/aggregation_service/test/payments/test_agent",
         "//src/agent_sdk/runtime/src/environment",
         "//src/agent_sdk/runtime/src/instance",
         "//src/agent_sdk/runtime/src/models/payments",
