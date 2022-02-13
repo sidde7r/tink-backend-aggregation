@@ -53,60 +53,60 @@ public class BulkPaymentInitiationSuccessfulTest {
                                 .signBeneficiaryResult(
                                         PaymentInitiationTestHelper.PAYMENT_3_BENEFICIARY,
                                         BeneficiaryState.successful())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)
                                                 .noError()
                                                 .build())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_2_REF)
                                                 .noError()
                                                 .build())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_3_REF)
                                                 .noError()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)
                                                 .status(PaymentStatus.PENDING)
                                                 .noDebtor()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_2_REF)
                                                 .status(PaymentStatus.PENDING)
                                                 .noDebtor()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_3_REF)
                                                 .status(PaymentStatus.PENDING)
                                                 .noDebtor()
                                                 .build())
-                                .signStatusResult(
+                                .paymentSignStatusResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)
                                                 .status(PaymentStatus.INITIATED_AND_EXECUTED)
                                                 .noDebtor()
                                                 .build())
-                                .signStatusResult(
+                                .paymentSignStatusResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_2_REF)
                                                 .status(PaymentStatus.INITIATED_AND_EXECUTED)
                                                 .noDebtor()
                                                 .build())
-                                .signStatusResult(
+                                .paymentSignStatusResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_3_REF)

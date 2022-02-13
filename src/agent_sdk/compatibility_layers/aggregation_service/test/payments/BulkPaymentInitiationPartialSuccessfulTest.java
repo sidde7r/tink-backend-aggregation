@@ -90,31 +90,31 @@ public class BulkPaymentInitiationPartialSuccessfulTest {
                                 .signBeneficiaryResult(
                                         PaymentInitiationTestHelper.PAYMENT_6_BENEFICIARY,
                                         BeneficiaryState.successful())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_3_REF)
                                                 .error(PaymentError.AMOUNT_LARGER_THAN_BANK_LIMIT)
                                                 .build())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_4_REF)
                                                 .noError()
                                                 .build())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_5_REF)
                                                 .noError()
                                                 .build())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_6_REF)
                                                 .noError()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_4_REF)
@@ -123,21 +123,21 @@ public class BulkPaymentInitiationPartialSuccessfulTest {
                                                                 .DEBTOR_ACCOUNT_NOT_PAYMENT_ACCOUNT)
                                                 .noDebtor()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_5_REF)
                                                 .status(PaymentStatus.PENDING)
                                                 .noDebtor()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_6_REF)
                                                 .status(PaymentStatus.PENDING)
                                                 .noDebtor()
                                                 .build())
-                                .signStatusResult(
+                                .paymentSignStatusResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_5_REF)
@@ -146,7 +146,7 @@ public class BulkPaymentInitiationPartialSuccessfulTest {
                                                                 .PERMISSIONS_NO_PAYMENT_PERMISSION)
                                                 .noDebtor()
                                                 .build())
-                                .signStatusResult(
+                                .paymentSignStatusResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_6_REF)

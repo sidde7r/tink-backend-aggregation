@@ -27,20 +27,20 @@ public class BulkPaymentInitiationGetStatusTimeoutTest {
                 new BulkPaymentTestAgent(
                         executionReport,
                         PaymentsTestContract.builder()
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)
                                                 .noError()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)
                                                 .status(PaymentStatus.PENDING)
                                                 .noDebtor()
                                                 .build())
-                                .signStatusResult(
+                                .paymentSignStatusResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)

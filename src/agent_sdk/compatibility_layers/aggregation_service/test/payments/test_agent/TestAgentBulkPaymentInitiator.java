@@ -40,7 +40,7 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
         report.addPaymentsToRegister(payments);
 
         ArrayList<BulkPaymentRegisterResult> results =
-                new ArrayList<>(contract.getRegisterResults());
+                new ArrayList<>(contract.getRegisterPaymentResults());
 
         // Shuffle the list to ensure that lists are not compared using `.equals()` (which
         // requires the lists to have the same order).
@@ -70,7 +70,8 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
                         .map(PaymentReference::getPayment)
                         .collect(Collectors.toList()));
 
-        List<BulkPaymentSignResult> results = new ArrayList<>(contract.getSignStatusResults());
+        List<BulkPaymentSignResult> results =
+                new ArrayList<>(contract.getPaymentSignStatusResults());
 
         // Shuffle the list to ensure that lists are not compared using `.equals()` (which
         // requires the lists to have the same order).
@@ -124,7 +125,7 @@ public class TestAgentBulkPaymentInitiator implements GenericBulkPaymentInitiato
                             .map(PaymentReference::getPayment)
                             .collect(Collectors.toList()));
 
-            List<BulkPaymentSignResult> results = new ArrayList<>(contract.getSignResults());
+            List<BulkPaymentSignResult> results = new ArrayList<>(contract.getSignPaymentResults());
 
             // Shuffle the list to ensure that lists are not compared using `.equals()` (which
             // requires the lists to have the same order).

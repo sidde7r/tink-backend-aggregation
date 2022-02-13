@@ -16,9 +16,9 @@ import se.tink.libraries.account.AccountIdentifier;
 @Builder
 @Getter
 public class PaymentsTestContract {
-    @Singular private final List<BulkPaymentRegisterResult> registerResults;
-    @Singular private final List<BulkPaymentSignResult> signResults;
-    @Singular private final List<BulkPaymentSignResult> signStatusResults;
+    @Singular private final List<BulkPaymentRegisterResult> registerPaymentResults;
+    @Singular private final List<BulkPaymentSignResult> signPaymentResults;
+    @Singular private final List<BulkPaymentSignResult> paymentSignStatusResults;
     @Singular private final Map<AccountIdentifier, List<Beneficiary>> fetchBeneficiaryResults;
 
     @Singular

@@ -178,13 +178,13 @@ public class BulkPaymentInitiationEarlyFailuresTest {
                                         List.of(
                                                 PaymentInitiationTestHelper.BENEFICIARY_ALICE,
                                                 PaymentInitiationTestHelper.BENEFICIARY_BOB))
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)
                                                 .error(PaymentError.AMOUNT_LARGER_THAN_BANK_LIMIT)
                                                 .build())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_2_REF)
@@ -245,26 +245,26 @@ public class BulkPaymentInitiationEarlyFailuresTest {
                                         List.of(
                                                 PaymentInitiationTestHelper.BENEFICIARY_ALICE,
                                                 PaymentInitiationTestHelper.BENEFICIARY_BOB))
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)
                                                 .noError()
                                                 .build())
-                                .registerResult(
+                                .registerPaymentResult(
                                         BulkPaymentRegisterResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_2_REF)
                                                 .noError()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_1_REF)
                                                 .error(PaymentError.AMOUNT_LARGER_THAN_BANK_LIMIT)
                                                 .noDebtor()
                                                 .build())
-                                .signResult(
+                                .signPaymentResult(
                                         BulkPaymentSignResult.builder()
                                                 .reference(
                                                         PaymentInitiationTestHelper.PAYMENT_2_REF)
