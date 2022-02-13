@@ -28,4 +28,6 @@ public class PaymentsTestContract {
     @Singular
     private final Map<Pair<AccountIdentifier, Beneficiary>, BeneficiaryState>
             signBeneficiaryResults;
+
+    @Builder.Default private final boolean successfullyDeleteUnsignedPayments = true;
 }
