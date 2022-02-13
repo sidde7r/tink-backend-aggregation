@@ -19,6 +19,7 @@ junit_test(
         "//src/agent_sdk/sdk/src/steppable_execution",
         "//src/agent_sdk/sdk/src/storage",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
+        "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_hamcrest_hamcrest_core",
         "@aggregation//:org_hamcrest_hamcrest_library",
         "@aggregation//:org_mockito_mockito_core",
