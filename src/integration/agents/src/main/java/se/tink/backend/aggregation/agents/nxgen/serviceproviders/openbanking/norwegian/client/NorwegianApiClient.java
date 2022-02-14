@@ -204,6 +204,7 @@ public class NorwegianApiClient {
                         .header(
                                 HeaderKeys.CONSENT_ID,
                                 persistentStorage.get(StorageKeys.CONSENT_ID))
+                        .header(HeaderKeys.TPP_CLIENT_ID, norwegianConfiguration.getClientId())
                         .accept(MediaType.APPLICATION_JSON);
         return addMandatoryHeaders(request);
     }
