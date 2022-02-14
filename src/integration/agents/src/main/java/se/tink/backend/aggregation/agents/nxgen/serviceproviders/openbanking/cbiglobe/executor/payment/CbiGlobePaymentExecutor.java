@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @RequiredArgsConstructor
@@ -52,22 +53,38 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+
+        // only here for debugging
+        logPaymentGeneralInfo(payment);
+
         CreatePaymentRequest createPaymentRequest =
-                PaymentServiceType.PERIODIC.equals(
-                                paymentRequest.getPayment().getPaymentServiceType())
-                        ? paymentRequestBuilder.getCreateRecurringPaymentRequest(
-                                paymentRequest.getPayment())
-                        : paymentRequestBuilder.getCreatePaymentRequest(
-                                paymentRequest.getPayment());
+                PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())
+                        ? paymentRequestBuilder.getCreateRecurringPaymentRequest(payment)
+                        : paymentRequestBuilder.getCreatePaymentRequest(payment);
 
         CreatePaymentResponse createPaymentResponse =
-                paymentApiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
+                paymentApiClient.createPayment(createPaymentRequest, payment);
 
         // In default flow, redirect, this doesn't do much.
         // But it is useful for iccrea extension into decoupled flow.
         prepareAuthorization(createPaymentResponse);
 
-        return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
+        return createPaymentResponse.toTinkPaymentResponse(payment);
+    }
+
+    private void logPaymentGeneralInfo(Payment payment) {
+        String payScheme =
+                payment.getPaymentScheme() != null ? payment.getPaymentScheme().name() : "NULL";
+        String payServiceType =
+                payment.getPaymentServiceType() != null
+                        ? payment.getPaymentServiceType().name()
+                        : "NULL";
+        log.info(
+                "CBI debug - payment scheme is "
+                        + payScheme
+                        + " and payment serivce type is "
+                        + payServiceType);
     }
 
     protected void prepareAuthorization(CreatePaymentResponse createPaymentResponse) {
