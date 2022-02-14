@@ -4,6 +4,11 @@ java_library(
     name = "tools",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/jwt",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/jwt/kid",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/jwt/signer",
+    ],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",

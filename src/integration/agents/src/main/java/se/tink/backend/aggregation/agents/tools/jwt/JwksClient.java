@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt;
+package se.tink.backend.aggregation.agents.tools.jwt;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import java.text.ParseException;

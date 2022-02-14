@@ -32,9 +32,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.p
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.creditcard.OpBankCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount.OpBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.filter.OpBankServiceUnavailableFilter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKeyIdProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
+import se.tink.backend.aggregation.agents.tools.jwt.JwksClient;
+import se.tink.backend.aggregation.agents.tools.jwt.kid.JwksKeyIdProvider;
+import se.tink.backend.aggregation.agents.tools.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;

@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer;
+package se.tink.backend.aggregation.agents.tools.jwt.signer;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.agents.tools.jwt.kid.KeyIdProvider;
 
 @RequiredArgsConstructor
 public class EidasProxyJwtSigner implements JwtSigner {

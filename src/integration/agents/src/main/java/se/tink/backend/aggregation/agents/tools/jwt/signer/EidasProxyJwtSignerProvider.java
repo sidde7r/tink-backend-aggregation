@@ -1,14 +1,14 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer;
+package se.tink.backend.aggregation.agents.tools.jwt.signer;
 
 import java.security.cert.X509Certificate;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKeyIdProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.agents.tools.jwt.JwksClient;
+import se.tink.backend.aggregation.agents.tools.jwt.kid.JwksKeyIdProvider;
+import se.tink.backend.aggregation.agents.tools.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;

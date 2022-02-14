@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
+import se.tink.backend.aggregation.agents.tools.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
