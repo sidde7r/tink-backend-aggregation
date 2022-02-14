@@ -18,12 +18,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
@@ -95,6 +97,8 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.BulkPaymentInitiation;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
 
@@ -224,7 +228,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
     }
 
-    private Agent createAgent(CredentialsRequest credentialsRequest) {
+    private AgentInstance createAgentSdkInstance(CredentialsRequest credentialsRequest) {
         try {
             ManagedTppSecretsServiceInternalClient tppSecretsServiceInternalClient =
                     new TppSecretsServiceInternalClientImpl(
@@ -263,10 +267,19 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     Guice.createInjector(new AgentIntegrationTestModule(configuration));
             final AgentFactory factory = injector.getInstance(AgentFactory.class);
 
-            return factory.create(credentialsRequest, context);
+            return factory.createAgentSdkInstance(credentialsRequest, context);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private Agent getAgent(AgentInstance agentInstance) {
+        return agentInstance
+                .instanceOf(Agent.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Agent instance did not contain an instance of type Agent.class."));
     }
 
     private boolean isLoggedIn(Agent agent) throws Exception {
@@ -625,7 +638,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             login(agent, credentialsRequest);
@@ -676,11 +689,60 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return testRefresh("");
     }
 
+    public void testBulkTransfer(Transfer... transfers) throws Exception {
+        initiateBulkPayment(
+                bulkPaymentInitiation ->
+                        bulkPaymentInitiation.initiateBulkPaymentsWithRpcTransfers(
+                                Arrays.asList(transfers)));
+    }
+
+    public void testBulkPayment(Payment... payments) throws Exception {
+        initiateBulkPayment(
+                bulkPaymentInitiation ->
+                        bulkPaymentInitiation.initiateBulkPaymentsWithRpcPayments(
+                                Arrays.asList(payments)));
+    }
+
+    private void initiateBulkPayment(
+            Function<BulkPaymentInitiation, PaymentInitiationReport> function) throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+
+        AgentInstance agentInstance = createAgentSdkInstance(credentialsRequest);
+        Agent agent = getAgent(agentInstance);
+
+        try {
+            login(agent, credentialsRequest);
+
+            if (!agentInstance.supportsBulkPaymentInitiation()) {
+                throw new Exception("Not supported");
+            }
+
+            BulkPaymentInitiation bulkPaymentInitiation =
+                    new BulkPaymentInitiation(supplementalInformationController, agentInstance);
+
+            PaymentInitiationReport paymentInitiationReport = function.apply(bulkPaymentInitiation);
+            log.info("Final payment states: {}", paymentInitiationReport.getFinalPaymentStates());
+
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            context.printHar();
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
     public void testBankTransfer(Transfer transfer) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
         try {
             login(agent, credentialsRequest);
             doBankTransfer(agent, transfer);
@@ -701,7 +763,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
         try {
             // login(agent, credentialsRequest);
             doBankTransfer(agent, transfer);
@@ -722,7 +784,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             login(agent, credentialsRequest);
@@ -766,7 +828,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             login(agent, credentialsRequest);
@@ -794,7 +856,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             if (agent instanceof TypedPaymentControllerable) {
@@ -837,7 +899,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
         try {
             login(agent, credentialsRequest);
             if (agent instanceof CreateBeneficiaryControllerable) {
@@ -935,7 +997,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             // todo: Look into this, currently authentication is done in
@@ -962,7 +1024,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     public void testGenericPaymentUKOB(Payment payment) throws Exception {
         initiateCredentials();
         readConfigurationFile();
-        Agent agent = createAgent(createRefreshInformationRequest());
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         doGenericPaymentBankTransferUKOB(agent, payment);
 
