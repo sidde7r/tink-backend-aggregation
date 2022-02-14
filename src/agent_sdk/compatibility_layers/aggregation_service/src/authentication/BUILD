@@ -20,4 +20,7 @@ java_library_with_sources(
         "//src/agent_sdk:lombok_plugin",
     ],
     visibility = ["//visibility:public"],
+    exports = [
+        "//src/agent_sdk/sdk/src/authentication/consent",
+    ],
 )
