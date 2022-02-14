@@ -1,5 +1,3 @@
-# Description on how events are counted in this approach is available on the Confluence page:
-# https://tinkab.atlassian.net/wiki/spaces/INT/pages/6036291705/
 kind: RuleGroup
 apiVersion: monitoring.tink.se/v1
 metadata:
@@ -8,14 +6,18 @@ metadata:
 spec:
   interval: 2m30s
   rules:
-    - record: internal:sum:all_logins_by_outcome_action_pl:delta1h
+    - record: internal:sum:all_logins_by_type_outcome_pl:delta1h
       expr: |
-        sum by (className, action, outcome) (
-          (floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h]))
-           and
-           (tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"} offset 1h
-            unless tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}))
-          or (1 + floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h]) / 360))
+        sum by (className, login_type, outcome) (
+          label_replace(
+            label_replace(
+                (floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h]))
+                 and
+                 (tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"} offset 1h
+                  unless tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}))
+                or (1 + floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="PL", provider_type!="test"}[1h]) / 360)),
+              "login_type", "manual", "action", "login-manual"),
+            "login_type", "auto", "action", "login-auto|login-cron")
         ) > 0
 
     - record: internal:sum:all_refreshes_by_type_outcome_pl:delta1h

@@ -18,14 +18,23 @@ spec:
 
     # Query selector 'tink_agent_login_total{...}' can be cached in a recording rule to avoid repetition,
     # but this effectively caches most of the metric which is very ineffective disk storage-wise
-    - record: internal:sum:all_logins_by_outcome_action_dk:delta1h
+
+    # Additional label `login_type` is computed to differentiate between manual and auto logins
+    # more easily in alerting rules. Note that this is different from on-demand vs background refreshes,
+    # but this differentiation makes more sense with regard to what's happening under the hood
+    # during authentication
+    - record: internal:sum:all_logins_by_type_outcome_dk:delta1h
       expr: |
-        sum by (className, action, outcome) (
-          (floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h]))
-           and
-           (tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"} offset 1h
-            unless tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}))
-          or (1 + floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h]) / 360))
+        sum by (className, login_type, outcome) (
+          label_replace(
+            label_replace(
+                (floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h]))
+                 and
+                 (tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"} offset 1h
+                  unless tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}))
+                or (1 + floor(increase(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h])) - floor(count_over_time(tink_agent_login_total{action=~"login-cron|login-auto|login-manual", market="DK", provider_type!="test"}[1h]) / 360)),
+              "login_type", "manual", "action", "login-manual"),
+            "login_type", "auto", "action", "login-auto|login-cron")
         ) > 0
 
     - record: internal:sum:all_refreshes_by_type_outcome_dk:delta1h

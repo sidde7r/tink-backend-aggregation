@@ -6,13 +6,13 @@ metadata:
 spec:
   interval: 5m
   rules:
-    - record: sum:failed_refreshes_per_type_pl:delta1h
-      expr: sum by (className, type) (internal:sum:all_refreshes_by_type_outcome_pl:delta1h{outcome=~"partially_completed|failed.*"})
-    - record: sum:not_unavailable_refreshes_per_type_pl:delta1h
-      expr: sum by (className, type) (internal:sum:all_refreshes_by_type_outcome_pl:delta1h{outcome!="unavailable"})
+    - record: sum:unsuccessful_refreshes_by_type_pl:delta1h
+      expr: sum by (className, type) (internal:sum:all_refreshes_by_type_outcome_pl:delta1h{outcome!="completed"})
+    - record: sum:refreshes_by_type_pl:delta1h
+      expr: sum by (className, type) (internal:sum:all_refreshes_by_type_outcome_pl:delta1h)
 
     - alert: RefreshFailureRateAbove20%PL
-      expr: 0.2 <= sum:failed_refreshes_per_type_pl:delta1h / (sum:not_unavailable_refreshes_per_type_pl:delta1h >= 3) < 0.75
+      expr: 0.2 <= sum:unsuccessful_refreshes_by_type_pl:delta1h / (sum:refreshes_by_type_pl:delta1h >= 3) < 0.75
       for: 10m
       labels:
         priority: P3
@@ -25,7 +25,7 @@ spec:
         tags: <{ $labels.className }>
 
     - alert: RefreshFailureRateAbove75%PL
-      expr: sum:failed_refreshes_per_type_pl:delta1h / (sum:not_unavailable_refreshes_per_type_pl:delta1h >= 3) >= 0.75
+      expr: sum:unsuccessful_refreshes_by_type_pl:delta1h / (sum:refreshes_by_type_pl:delta1h >= 3) >= 0.75
       for: 10m
       labels:
         priority: P1
@@ -37,13 +37,13 @@ spec:
         summary: <{ $value | humanizePercentage }> refresh failure rate of <{ $labels.type }> by <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
-    - record: sum:failed_on_demand_logins_pl:delta1h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{action=~"login-manual|login-auto", outcome=~"failed.*"})
-    - record: sum:not_cancelled_or_unavailable_on_demand_logins_pl:delta1h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{action=~"login-manual|login-auto", outcome!~"unavailable|cancelled.*"})
+    - record: sum:failed_logins_by_type_pl:delta1h
+      expr: sum by (className, login_type) (internal:sum:all_logins_by_type_outcome_pl:delta1h{outcome=~"failed.*"})
+    - record: sum:non_auth_error_logins_by_type_pl:delta1h
+      expr: sum by (className, login_type) (internal:sum:all_logins_by_type_outcome_pl:delta1h{outcome!~"cancelled.*"})
 
-    - alert: OnDemandLoginFailureRateAbove20%PL
-      expr: 0.2 <= sum:failed_on_demand_logins_pl:delta1h / (sum:not_cancelled_or_unavailable_on_demand_logins_pl:delta1h >= 3) < 0.75
+    - alert: LoginFailureRateAbove20%PL
+      expr: 0.2 <= sum:failed_logins_by_type_pl:delta1h / (sum:non_auth_error_logins_by_type_pl:delta1h >= 3) < 0.75
       for: 10m
       labels:
         priority: P3
@@ -52,11 +52,11 @@ spec:
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-        summary: <{ $value | humanizePercentage }> on-demand login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
+        summary: <{ $value | humanizePercentage }> $labels.login_type login failure rate, excluding authentication errors) for <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
-    - alert: OnDemandLoginFailureRateAbove75%PL
-      expr: sum:failed_on_demand_logins_pl:delta1h / (sum:not_cancelled_or_unavailable_on_demand_logins_pl:delta1h >= 3) >= 0.75
+    - alert: LoginFailureRateAbove75%PL
+      expr: 0.2 <= sum:failed_logins_by_type_pl:delta1h / (sum:non_auth_error_logins_by_type_pl:delta1h >= 3) >= 0.75
       for: 10m
       labels:
         priority: P1
@@ -65,16 +65,14 @@ spec:
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-        summary: <{ $value | humanizePercentage }> on-demand login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
+        summary: <{ $value | humanizePercentage }> $labels.login_type login failure rate (excluding authentication errors) for <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
-    - record: sum:failed_background_logins:delta1h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{action="login-cron", outcome=~"failed.*"})
-    - record: sum:not_cancelled_or_unavailable_background_logins_pl:delta1h
-      expr: sum by (className) (internal:sum:all_logins_by_outcome_action_pl:delta1h{action="login-cron", outcome!~"unavailable|cancelled.*"})
-
-    - alert: BackgroundLoginFailureRateAbove50%PL
-      expr: sum:failed_background_logins:delta1h / (sum:not_cancelled_or_unavailable_background_logins_pl:delta1h >= 3) >= 0.5
+    - alert: BankSideErrorLoginRateAbove75%PL
+      expr: |
+        sum by (className) (internal:sum:all_logins_by_type_outcome_pl:delta1h{outcome="unavailable"}) 
+        / 
+        (sum by (className) (internal:sum:all_logins_by_type_outcome_pl:delta1h{outcome!~"cancelled.*"}) >= 3) >= 0.3
       for: 10m
       labels:
         priority: P1
@@ -83,5 +81,5 @@ spec:
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-        summary: <{ $value | humanizePercentage }> background login failure rate (excluding bank-side errors and cancellations) for <{ $labels.className }> over the last hour.
+        summary: <{ $value | humanizePercentage }> bank-side login failure rate (excluding authentication errors) for <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
