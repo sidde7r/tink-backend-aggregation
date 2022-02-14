@@ -55,7 +55,7 @@ public class BoursoramaWireMockTest {
                                         TWO_DAYS_AFTER_TODAY,
                                         1.23))
                         .withAgentModule(new BoursoramaWireMockTestModule())
-                        .buildWithLogin(PaymentCommand.class);
+                        .buildWithoutLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
     }
@@ -79,7 +79,7 @@ public class BoursoramaWireMockTest {
                                 createRealDomesticPayment(
                                         PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER, TODAY, 1.0))
                         .withAgentModule(new BoursoramaWireMockTestModule())
-                        .buildWithLogin(PaymentCommand.class);
+                        .buildWithoutLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
     }
@@ -107,7 +107,7 @@ public class BoursoramaWireMockTest {
                                         LocalDate.parse(executionDate),
                                         1.0))
                         .withAgentModule(new BoursoramaWireMockTestModule())
-                        .buildWithLogin(PaymentCommand.class);
+                        .buildWithoutLogin(PaymentCommand.class);
 
         Throwable exception = catchThrowable(agentWireMockPaymentTest::executePayment);
 
