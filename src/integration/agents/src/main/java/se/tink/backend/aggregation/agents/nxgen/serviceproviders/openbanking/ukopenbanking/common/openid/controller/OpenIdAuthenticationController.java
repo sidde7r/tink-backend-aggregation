@@ -34,6 +34,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBa
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n_aggregation.LocalizableKey;
 import se.tink.libraries.retrypolicy.RetryExecutor;
@@ -143,21 +145,38 @@ public class OpenIdAuthenticationController
                             + "validation - no token provided");
         }
 
-        OAuth2Token oAuth2Token = retryExecutor.execute(() -> apiClient.exchangeAccessCode(code));
+        try {
+            OAuth2Token oAuth2Token =
+                    retryExecutor.execute(() -> apiClient.exchangeAccessCode(code));
 
-        log.info(
-                "[OpenIdAuthenticationController] OAuth2 token received from bank: {}",
-                oAuth2Token.toMaskedString(logMasker));
+            log.info(
+                    "[OpenIdAuthenticationController] OAuth2 token received from bank: {}",
+                    oAuth2Token.toMaskedString(logMasker));
 
-        authenticationValidator.validateRefreshableAccessToken(oAuth2Token);
+            authenticationValidator.validateRefreshableAccessToken(oAuth2Token);
 
-        credentials.setSessionExpiryDate(
-                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                        oAuth2Token, DEFAULT_TOKEN_LIFETIME, DEFAULT_TOKEN_LIFETIME_UNIT));
+            credentials.setSessionExpiryDate(
+                    OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                            oAuth2Token, DEFAULT_TOKEN_LIFETIME, DEFAULT_TOKEN_LIFETIME_UNIT));
 
-        authenticationDataStorage.saveStrongAuthenticationTime();
-        authenticationDataStorage.saveAccessToken(oAuth2Token);
-        apiClient.instantiateAisAuthFilter(oAuth2Token);
+            authenticationDataStorage.saveStrongAuthenticationTime();
+            authenticationDataStorage.saveAccessToken(oAuth2Token);
+            apiClient.instantiateAisAuthFilter(oAuth2Token);
+
+        } catch (HttpResponseException e) {
+            log.error(
+                    "[{}] Exchange of access code failed: {}",
+                    OpenIdAuthenticationController.class.getSimpleName(),
+                    e.getResponse().getBody(String.class));
+            throw SessionError.SESSION_EXPIRED.exception();
+
+        } catch (HttpClientException e) {
+            log.error(
+                    "[{}] Failure of processing the HTTP request or response: {}",
+                    OpenIdAuthenticationController.class.getSimpleName(),
+                    e.getMessage());
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }

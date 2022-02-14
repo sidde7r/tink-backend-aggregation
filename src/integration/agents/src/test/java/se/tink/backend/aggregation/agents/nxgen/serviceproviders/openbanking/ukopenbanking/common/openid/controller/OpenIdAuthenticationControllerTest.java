@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
@@ -285,6 +286,62 @@ public class OpenIdAuthenticationControllerTest {
                         BankServiceException.class,
                         e -> assertThat(e.getError()).isEqualTo(BankServiceError.BANK_SIDE_FAILURE))
                 .hasMessage("Description of some other server error");
+    }
+
+    @Test
+    public void
+            shouldThrowSessionExpiredExceptionWhenHttpResponseExceptionOccursDuringExchangingAccessCode() {
+        // given
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn("randomSupplementalKey");
+        openIdAuthenticationController = initOpenIdAuthenticationController();
+        Map<String, String> callbackData = ImmutableMap.of(CallbackParams.CODE, "dummyCode");
+
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        anyString(), anyLong(), any()))
+                .thenReturn(Optional.of(callbackData));
+
+        HttpResponseException httpResponseException = mock(HttpResponseException.class);
+        when(apiClient.exchangeAccessCode(anyString())).thenThrow(httpResponseException);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponseException.getResponse()).thenReturn(httpResponse);
+        when(httpResponse.getBody(String.class)).thenReturn("Sample response body");
+
+        // when
+        Throwable throwable =
+                catchThrowable(() -> openIdAuthenticationController.collect("randomString"));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOfSatisfying(
+                        SessionException.class,
+                        e -> assertThat(e.getError()).isEqualTo(SessionError.SESSION_EXPIRED));
+    }
+
+    @Test
+    public void
+            shouldThrowSessionExpiredExceptionWhenHttpClientExceptionOccursDuringExchangingAccessCode() {
+        // given
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn("randomSupplementalKey");
+        openIdAuthenticationController = initOpenIdAuthenticationController();
+        Map<String, String> callbackData = ImmutableMap.of(CallbackParams.CODE, "dummyCode");
+
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        anyString(), anyLong(), any()))
+                .thenReturn(Optional.of(callbackData));
+
+        HttpClientException httpClientException = mock(HttpClientException.class);
+        when(apiClient.exchangeAccessCode(anyString())).thenThrow(httpClientException);
+        when(httpClientException.getMessage()).thenReturn("Sample http client exception");
+
+        // when
+        Throwable throwable =
+                catchThrowable(() -> openIdAuthenticationController.collect("randomString"));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOfSatisfying(
+                        SessionException.class,
+                        e -> assertThat(e.getError()).isEqualTo(SessionError.SESSION_EXPIRED));
     }
 
     @Test
