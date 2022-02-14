@@ -125,6 +125,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagUpdate;
     private Boolean dumpContentForContractFile;
 
+    // An existing consent can only be used if `loadCredentialsBefore` is true and it successfully
+    // loads the credentials. Otherwise we must always issue a new consent.
+    private boolean issueNewConsentDuringAuthentication = true;
+
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
@@ -183,6 +187,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
                     // Replace the log masker with one that includes the newly loaded credentials
                     this.context.setLogMasker(new FakeLogMasker());
+
+                    // We should not issue a new consent during authentication. Use the consent that
+                    // we loaded from the test server.
+                    this.issueNewConsentDuringAuthentication = false;
                 });
 
         return optionalCredential.isPresent();
@@ -213,7 +221,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         .create(requestFlagCreate)
                         .update(requestFlagUpdate)
                         .userAvailability(userAvailability)
-                        .forceAuthenticate(false)
+                        .forceAuthenticate(issueNewConsentDuringAuthentication)
                         .build();
         refreshInformationRequest.setItemsToRefresh(refreshableItems);
         refreshInformationRequest.setCallbackUri(redirectUrl);
