@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
@@ -28,6 +29,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class AccountEntity {
 
     private String bban;

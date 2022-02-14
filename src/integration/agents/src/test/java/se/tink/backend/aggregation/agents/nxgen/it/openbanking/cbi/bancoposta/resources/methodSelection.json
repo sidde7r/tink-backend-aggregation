@@ -1,0 +1,28 @@
+{
+    "_links": {
+        "selectAuthenticationMethod": {
+            "href": "/consents/1234509876"
+        },
+        "self": {
+            "href": "/consents/1234509876"
+        }
+    },
+    "consentId": "1234509876",
+    "consentStatus": "received",
+    "scaMethods": [
+        {
+            "authenticationMethodId": "First",
+            "authenticationType": "SMS_OTP",
+            "authenticationVersion": "1.11",
+            "explanation": "Autenticazione tramite SMS numero sicuro",
+            "name": "SMS numero sicuro"
+        },
+        {
+            "authenticationMethodId": "Second",
+            "authenticationType": "PUSH_OTP",
+            "authenticationVersion": "1.11",
+            "explanation": "Autenticazione tramite App Bancoposta",
+            "name": "APP BancoPosta"
+        }
+    ]
+}

@@ -5,9 +5,9 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.SA
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio.client.BPSondrioHttpClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeHttpClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
@@ -19,15 +19,15 @@ public final class BPSondrioAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient() {
-        return new BPSondrioApiClient(
+    protected CbiGlobeHttpClient buildHttpClient() {
+        return new BPSondrioHttpClient(
                 client,
-                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                getProviderConfiguration(),
-                psuIpAddress,
                 randomValueGenerator,
                 localDateTimeSource,
-                urlProvider);
+                providerConfiguration,
+                strongAuthenticationState,
+                getAgentConfiguration().getRedirectUrl(),
+                psuIpAddress);
     }
 
     @Override

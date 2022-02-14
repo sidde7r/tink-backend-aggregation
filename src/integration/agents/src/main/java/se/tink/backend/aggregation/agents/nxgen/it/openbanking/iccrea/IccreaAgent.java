@@ -9,17 +9,17 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.ConsentProcessor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.IccreaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.UserInteractions;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.payment.IccreaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorageProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentRequestBuilder;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
 
@@ -43,54 +43,35 @@ public final class IccreaAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected CbiGlobeApiClient getApiClient() {
-        return new IccreaApiClient(
-                client,
-                new CbiStorageProvider(persistentStorage, sessionStorage, temporaryStorage),
-                getProviderConfiguration(),
-                psuIpAddress,
-                randomValueGenerator,
-                localDateTimeSource,
-                urlProvider);
-    }
-
-    @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
-        if (authenticator == null) {
-            ConsentManager consentManager =
-                    new ConsentManager(apiClient, userState, localDateTimeSource, urlProvider);
-
-            authenticator =
-                    new IccreaAuthenticator(
-                            apiClient,
-                            strongAuthenticationState,
-                            userState,
-                            consentManager,
-                            getAgentConfiguration().getProviderSpecificConfiguration(),
-                            new ConsentProcessor(
-                                    consentManager,
-                                    new UserInteractions(
-                                            supplementalInformationController, catalog),
-                                    urlProvider));
-        }
-
-        return authenticator;
+    protected Authenticator constructAuthenticator() {
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new IccreaAuthenticator(
+                        authApiClient,
+                        fetcherApiClient,
+                        storage,
+                        localDateTimeSource,
+                        credentials,
+                        new UserInteractions(supplementalInformationController, catalog),
+                        urlProvider),
+                new CbiGlobeAutoAuthenticator(authApiClient, storage));
     }
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
         CbiGlobePaymentExecutor paymentExecutor =
                 new IccreaPaymentExecutor(
-                        apiClient,
-                        supplementalInformationHelper,
-                        sessionStorage,
-                        strongAuthenticationState,
-                        provider,
+                        new CbiGlobePaymentApiClient(
+                                cbiGlobeHttpClient, urlProvider, providerConfiguration),
+                        supplementalInformationController,
+                        storage,
+                        new CbiGlobePaymentRequestBuilder(),
+                        authApiClient,
                         new UserInteractions(supplementalInformationController, catalog),
-                        new ConsentManager(apiClient, userState, localDateTimeSource, urlProvider),
-                        urlProvider);
+                        urlProvider,
+                        credentials);
         return Optional.of(
-                new PaymentController(
-                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
+                new PaymentController(paymentExecutor, new PaymentControllerExceptionMapper()));
     }
 }

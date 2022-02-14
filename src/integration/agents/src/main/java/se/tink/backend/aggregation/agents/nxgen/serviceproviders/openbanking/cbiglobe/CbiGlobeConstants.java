@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -12,15 +11,11 @@ public final class CbiGlobeConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String BALANCE_NOT_FOUND = "Balance cannot be found.";
+        public static final String BALANCE_NOT_FOUND = "Balance could not be found.";
         public static final String MAPPING =
                 "Cannot map payment status: %s to Tink payment status.";
         public static final String RESOURCE_UNKNOWN =
                 "The addressed resource is unknown relative to the TPP";
-        public static final String CBI_BAD_GATEWAY = "Controllo titolarita' conto fallito";
         public static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
     }
 
@@ -28,20 +23,9 @@ public final class CbiGlobeConstants {
         public static final String BASE_URL = "https://cbiglobeopenbankingapigateway.nexi.it";
     }
 
-    public static class StorageKeys {
-        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
-        public static final String CONSENT_ID = "consent-id";
-        public static final String ALL_PSD2_SUPPORTED = "all-psd2-supported";
-        public static final String SCA_URL = "sca_url";
-        public static final String ACCOUNTS = "accounts";
-        public static final String LINK = "link";
-        public static final String PAYMENT_PRODUCT = "payment-product";
-    }
-
     public static class QueryKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String STATE = "state";
-        public static final String CODE = "code";
         public static final String BOOKING_STATUS = "booking_status";
         public static final String DATE_FROM = "date_from";
         public static final String DATE_TO = "date_to";
@@ -72,57 +56,26 @@ public final class CbiGlobeConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
         public static final String OPERATION_NAME = "operation-name";
-        public static final String CODE = "code";
     }
 
     public static class HeaderValues {
         public static final String UPDATE_PSU_DATA = "updatePsuData";
-        public static final String CODE = "code";
     }
 
     public static class FormValues {
-
         public static final String TRANSACTION_TYPE = "remote_transaction";
-        public static final String ALL_ACCOUNTS = "allAccounts";
-        public static final String TRUE = "true";
-        public static final String FREQUENCY_PER_DAY_ONE = "1";
-        public static final String FALSE = "false";
-        public static final String FREQUENCY_PER_DAY = "4";
-        public static final int CONSENT_VALID_PERIOD_DAYS = 89;
     }
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
-        public static final String PAYMENT_ID = "payment-id";
     }
 
-    public static class PathParameterKeys {
-        public static final String PAYMENT_PRODUCT = "payment-product";
-        public static final String PAYMENT_SERVICE = "payment-service";
-    }
-
-    public static class PathParameterValues {
-        public static final String PAYMENT_SERVICE_PAYMENTS = "payments";
-        public static final String PAYMENT_SERVICE_PERIODIC_PAYMENTS = "periodic-payments";
-    }
-
-    public static class PSUAuthenticationStatus {
+    public static class PisStatus {
         public static final String AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
-        public static final String IDENTIFICATION_REQUIRED = "IDENTIFICATION_REQUIRED";
-        public static final String AUTHENTICATION_REQUIRED = "AUTHENTICATION_REQUIRED";
         public static final String AUTHENTICATED = "AUTHENTICATED";
         public static final String VERIFIED = "VERIFIED";
         public static final String FAILED = "FAILED";
-    }
-
-    public static class PaymentStep {
-        public static final String IN_PROGRESS = "IN_PROGRESS";
-    }
-
-    public static class PaymentProduct {
-        public static final String SEPA_CREDIT_TRANSFERS = "sepa-credit-transfers";
-        public static final String INSTANT_SEPA_CREDIT_TRANSFERS = "instant-sepa-credit-transfers";
     }
 
     public static class HttpClient {
@@ -141,7 +94,7 @@ public final class CbiGlobeConstants {
         CONSENT_CREATE,
         CONSENT_UPDATE,
         CONSENT_DETAILS,
-        CONSENT_PSU_CREDENTIALS_UPDATE,
+        PSU_CREDENTIALS_UPDATE,
         PAYMENT_CREATE,
         PAYMENT_GET,
         PAYMENT_STATUS_GET,

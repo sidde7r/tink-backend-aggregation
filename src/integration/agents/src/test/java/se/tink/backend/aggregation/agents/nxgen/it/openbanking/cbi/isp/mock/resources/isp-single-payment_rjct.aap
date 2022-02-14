@@ -1,0 +1,113 @@
+
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic bnVsbDpudWxs
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Date: Tue, 06 Jul 2021 11:00:17 GMT
+Date: Tue, 06 Jul 2021 11:00:17 GMT
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+Server:
+Content-Length: 129
+
+{
+  "access_token":"004980f6-2826-49e8-9fe3-8a5e145f64d7",
+  "token_type":"Bearer",
+  "expires_in":3600,
+  "scope":"production"
+}
+
+REQUEST 2
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers
+Content-Type: application/json
+Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 03069
+date: Thu, 09 Apr 1992 10:00:00 UTC
+aspsp-product-code: ALLPRODUCTS
+tpp-redirect-preferred: true
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
+tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=failure
+psu-ip-address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{
+  "debtorAccount": {
+    "iban": "IT29D0300203280625969137225"
+  },
+  "instructedAmount": {
+    "currency": "EUR",
+    "amount": "1.0"
+  },
+  "creditorAccount": {
+    "iban": "IT45H0300203280271332616346"
+  },
+  "creditorName": "Creditor Name",
+  "transactionType": "remote_transaction",
+  "remittanceInformationUnstructured": "remittance information to creditor"
+}
+
+RESPONSE 2
+201
+Date: Thu, 22 Jul 2021 13:01:54 GMT
+Date: Thu, 22 Jul 2021 13:01:53 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 446891e1-aec8-465f-a6a5-f340b6033e4a
+Location: ***
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 703
+
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "761f03d6-bd32-4c13-84b2-0e48f8c4a288",
+  "_links": {
+    "self": {
+      "href": "/payments/sepa-credit-transfers/761f03d6-bd32-4c13-84b2-0e48f8c4a288"
+    },
+    "updatePsuAuthenticationRedirect": {
+      "href": "https://www.intesasanpaolo.com/openbanking/login/#/?paymentId=761f03d6-bd32-4c13-84b2-0e48f8c4a288&tppAuthenticationRedirectUri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D**HASHED:KN**%26code%3Dcode&tppName=POSTEPAY+S.P.A.&aspspCode=03069&aspspProductCode=ALLPRODUCTS&tppRegistrationNumber=PSDIT-BI-06874351007&hash=6WfctRB8UWI%2B7b4KwTeT3DMaGw%2BNCOuRmFbiBwnIlvsgnjsQiAm5%2Fqywz6kv0j5Wqak7lzULkJ3PBTklxvmYdA%3D%3D"
+    }
+  }
+}
+
+REQUEST 3
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/761f03d6-bd32-4c13-84b2-0e48f8c4a288/status
+Content-Type: application/json
+Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 03069
+date: Thu, 09 Apr 1992 10:00:00 UTC
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Thu, 22 Jul 2021 13:02:07 GMT
+Date: Thu, 22 Jul 2021 13:02:07 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 3faa2351-6b06-4456-987d-f5c0777af248
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=315**HASHED:iz**0; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 79
+
+{
+  "transactionStatus": "RJCT",
+  "psuAuthenticationStatus": "AUTHENTICATED"
+}

@@ -1,14 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment;
 
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.agent.sdk.operation.Provider;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -16,281 +12,167 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.PisStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobePaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.errorhandle.ErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreateRecurringPaymentRequest;
-import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.enums.AccountIdentifierType;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.pair.Pair;
-import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.enums.PaymentType;
-import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.rpc.ExecutionRule;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @RequiredArgsConstructor
-public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+@Slf4j
+public class CbiGlobePaymentExecutor implements PaymentExecutor {
 
-    protected final CbiGlobeApiClient apiClient;
-    private List<PaymentResponse> paymentResponses = new ArrayList<>();
-    private final SupplementalInformationHelper supplementalInformationHelper;
-    protected final SessionStorage sessionStorage;
-    private final StrongAuthenticationState strongAuthenticationState;
-    private final Provider provider;
+    // We poll for the "9 minutes". Since this will not count the redirect waits, most of this time
+    // will be probably spent between redirects/after last redirect, as it should.
+    private static final int SECONDS_SLEEP_BETWEEN_CALLS = 3;
+    private static final int MAX_POLL_ATTEMPTS = 9 * 60 / SECONDS_SLEEP_BETWEEN_CALLS;
 
-    private static final Logger logger = LoggerFactory.getLogger(CbiGlobePaymentExecutor.class);
+    protected final CbiGlobePaymentApiClient paymentApiClient;
+    private final SupplementalInformationController supplementalInformationController;
+    private final CbiStorage storage;
+    private final CbiGlobePaymentRequestBuilder paymentRequestBuilder;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        fetchToken();
-
-        sessionStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
-
         CreatePaymentRequest createPaymentRequest =
                 PaymentServiceType.PERIODIC.equals(
                                 paymentRequest.getPayment().getPaymentServiceType())
-                        ? getCreateRecurringPaymentRequest(paymentRequest.getPayment())
-                        : getCreatePaymentRequest(paymentRequest.getPayment());
+                        ? paymentRequestBuilder.getCreateRecurringPaymentRequest(
+                                paymentRequest.getPayment())
+                        : paymentRequestBuilder.getCreatePaymentRequest(
+                                paymentRequest.getPayment());
 
         CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
-        authorizePayment(createPaymentResponse);
+                paymentApiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
+
+        // In default flow, redirect, this doesn't do much.
+        // But it is useful for iccrea extension into decoupled flow.
+        prepareAuthorization(createPaymentResponse);
+
         return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
-    protected void authorizePayment(CreatePaymentResponse createPaymentResponse) {
-        sessionStorage.put(
-                StorageKeys.LINK,
+    protected void prepareAuthorization(CreatePaymentResponse createPaymentResponse) {
+        storage.saveScaLinkForPayments(
                 createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
     }
 
-    private CreatePaymentRequest getCreatePaymentRequest(Payment payment) {
-        return CreatePaymentRequest.builder()
-                .debtorAccount(
-                        getAccountEntity(
-                                payment.getDebtor()
-                                        .getAccountIdentifier(IbanIdentifier.class)
-                                        .getIban()))
-                .instructedAmount(getInstructedAmountEntity(payment))
-                .creditorAccount(
-                        getAccountEntity(
-                                payment.getCreditor()
-                                        .getAccountIdentifier(IbanIdentifier.class)
-                                        .getIban()))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getRemittanceInformation(payment).getValue())
-                .transactionType(FormValues.TRANSACTION_TYPE)
-                .build();
-    }
+    // PIS flow in CBI works (by default) as follows:
+    // - we receive a redirect url in CreatePaymentResponse
+    // - we use this redirect to 'authenticate'
+    // - after that is done, we will be able to get second redirect url by fetching payment status
+    // - this is not always preset right off the bat, we might need to wait few seconds
+    // - we then use that second redirect url to 'authorize' the payment
+    // - then we poll for status till it is successful, or some time elapses
 
-    private CreatePaymentRequest getCreateRecurringPaymentRequest(Payment payment) {
-
-        return CreateRecurringPaymentRequest.builder()
-                .debtorAccount(
-                        getAccountEntity(
-                                payment.getDebtor()
-                                        .getAccountIdentifier(IbanIdentifier.class)
-                                        .getIban()))
-                .instructedAmount(getInstructedAmountEntity(payment))
-                .creditorAccount(
-                        getAccountEntity(
-                                payment.getCreditor()
-                                        .getAccountIdentifier(IbanIdentifier.class)
-                                        .getIban()))
-                .creditorName(payment.getCreditor().getName())
-                .remittanceInformationUnstructured(getRemittanceInformation(payment).getValue())
-                .transactionType(FormValues.TRANSACTION_TYPE)
-                .frequency(payment.getFrequency().toString())
-                .startDate(payment.getStartDate().toString())
-                // optional attributes
-                .endDate(payment.getEndDate() != null ? payment.getEndDate().toString() : null)
-                .executionRule(
-                        payment.getExecutionRule() != null
-                                ? mapExecutionRule(payment.getExecutionRule())
-                                : null)
-                .dayOfExecution(getDayOfExecution(payment))
-                .build();
-    }
-
-    private String mapExecutionRule(ExecutionRule rule) {
-        // Bank API has a typo, we need to have a typo as well.
-        if (rule == ExecutionRule.PRECEDING) {
-            return "preceeding";
-        } else {
-            return rule.toString();
-        }
-    }
-
-    private RemittanceInformation getRemittanceInformation(Payment payment) {
-        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-        return remittanceInformation;
-    }
-
-    private InstructedAmountEntity getInstructedAmountEntity(Payment payment) {
-        return new InstructedAmountEntity(
-                payment.getExactCurrencyAmount().getCurrencyCode(),
-                String.valueOf(payment.getExactCurrencyAmount().getDoubleValue()));
-    }
-
-    private AccountEntity getAccountEntity(String accountNumber) {
-        return new AccountEntity(accountNumber);
-    }
-
-    private String getDayOfExecution(Payment payment) {
-        switch (payment.getFrequency()) {
-            case WEEKLY:
-                return String.valueOf(payment.getDayOfWeek().getValue());
-            case MONTHLY:
-                return payment.getDayOfMonth() != null
-                        ? payment.getDayOfMonth().toString()
-                        : null; // Credem hates this parameter
-            default:
-                throw new IllegalArgumentException(
-                        "Frequency is not supported: " + payment.getFrequency());
-        }
-    }
-
-    private void fetchToken() {
-        try {
-            if (!apiClient.isTokenValid()) {
-                apiClient.getAndSaveToken();
-            }
-        } catch (IllegalStateException e) {
-            String message = e.getMessage();
-            if (message.contains(MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name())) {
-                apiClient.getAndSaveToken();
-            } else {
-                throw e;
-            }
-        }
-    }
-
+    // We implement this behaviour by calling payment status repeatedly in a time limited loop,
+    // and based on the status, url presence, etc, we know where we are.
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        return apiClient
-                .getPayment(paymentRequest.getPayment())
-                .toTinkPaymentResponse(paymentRequest.getPayment());
-    }
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentRequest) {
+        for (int i = 0; i < MAX_POLL_ATTEMPTS; i++) {
+            performRedirectIfNeeded();
 
-    @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+            CreatePaymentResponse paymentStatusResponse =
+                    fetchPaymentStatusOrThrowException(paymentRequest);
 
-        PaymentMultiStepResponse paymentMultiStepResponse;
-        CreatePaymentResponse createPaymentResponse = fetchPaymentStatus(paymentMultiStepRequest);
-        CbiGlobePaymentStatus cbiGlobePaymentStatus =
-                CbiGlobePaymentStatus.fromString(createPaymentResponse.getTransactionStatus());
-        String scaStatus = createPaymentResponse.getScaStatus();
-        String psuAuthenticationStatus = createPaymentResponse.getPsuAuthenticationStatus();
+            boolean isSuccess = false;
 
-        switch (cbiGlobePaymentStatus) {
-                // After signing PIS
-            case ACCP:
-            case ACSC:
-            case ACSP:
-            case ACTC:
-            case ACWC:
-            case ACWP:
-                paymentMultiStepResponse =
-                        handleSignedPayment(paymentMultiStepRequest, createPaymentResponse);
-                break;
-                // Before signing PIS
-            case RCVD:
-            case PDNG:
-                paymentMultiStepResponse =
-                        handleUnsignedPayment(paymentMultiStepRequest, createPaymentResponse);
-                break;
-            case RJCT: // cancelled case
-                return handleReject(scaStatus, psuAuthenticationStatus);
-            default:
-                logger.error(
-                        "Payment failed. Invalid Payment status returned by CBI Globe cbiGlobePaymentStatus={}",
-                        cbiGlobePaymentStatus);
-                throw new PaymentException("Payment failed");
-        }
-
-        // Note: this method should never return null, If this scenario happen then
-        // CBI Globe might have changed Payment Status Codes
-        return paymentMultiStepResponse;
-    }
-
-    private CreatePaymentResponse fetchPaymentStatus(
-            PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
-        CreatePaymentResponse createPaymentResponse;
-        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
-        // We observed that in case of sepa payments fetching payment status for the 1st time
-        // doesn't give us redirectUrl, so we need to repeat this operation. There is no clear
-        // explanation from CBI. It usually doesn't happen for instant payments
-        if (redirectUrl == null) {
-            logger.info("No redirect, fetching payment status to get redirect link");
-            createPaymentResponse = fetchPaymentStatusOrThrowException(paymentMultiStepRequest);
-        } else {
-            logger.info("Redirect present, fetching payment status depending on supplementalInfo");
-            Map<String, String> supplementalInfo = fetchSupplementalInfo(redirectUrl);
-            if (QueryValues.SUCCESS.equals(supplementalInfo.get(QueryKeys.RESULT))) {
-                createPaymentResponse = fetchPaymentStatusOrThrowException(paymentMultiStepRequest);
-            } else {
-                throw new PaymentAuthorizationException();
+            CbiGlobePaymentStatus cbiGlobePaymentStatus =
+                    CbiGlobePaymentStatus.fromString(paymentStatusResponse.getTransactionStatus());
+            switch (cbiGlobePaymentStatus) {
+                case ACCP:
+                case ACSC:
+                case ACSP:
+                case ACTC:
+                case ACWC:
+                case ACWP:
+                    // For most banks, successes can only appear alongside one of these statuses.
+                    isSuccess = checkIfPaymentIsSuccesful(paymentStatusResponse);
+                    break;
+                case RCVD:
+                case PDNG:
+                    // For just one bank (so far), it is possible that RCVD is treated as success,
+                    // due to the way they operate.
+                    // Thus we need a way of signaling the success & returning proper response after
+                    // the switch.
+                    isSuccess =
+                            checkIfPaymentInIntermediateStatusIsSuccessful(paymentStatusResponse);
+                    break;
+                case RJCT:
+                    // Finished, but not nicely
+                    handleReject(paymentStatusResponse);
+                    break;
+                default:
+                    // Totally unexpected, should never happen.
+                    log.error(
+                            "Payment failed. Invalid Payment status returned by CBI Globe cbiGlobePaymentStatus={}",
+                            cbiGlobePaymentStatus);
+                    throw new PaymentException("Payment failed");
             }
+
+            if (isSuccess) {
+                return buildSuccessfulPaymentResponse(paymentRequest, paymentStatusResponse);
+            } else {
+                extractRedirectUrlFromIntermediateResponseIfPresent(paymentStatusResponse);
+            }
+
+            // Sleep for a bit before next call, to not spam the API too much.
+            Uninterruptibles.sleepUninterruptibly(SECONDS_SLEEP_BETWEEN_CALLS, TimeUnit.SECONDS);
         }
-        return createPaymentResponse;
+
+        log.warn("9 minutes (not couting redirects) of polling elapsed! Marking as AuthTimeOut");
+        throw new PaymentAuthorizationTimeOutException();
     }
 
-    protected Map<String, String> fetchSupplementalInfo(String redirectUrl) {
-        if (redirectUrl != null) {
-            openThirdPartyApp(new URL(redirectUrl));
-            // after redirect is done remove old redirect link from session, because
-            // if 5xx received from CBI Globe bank status polling then old redirect link is not
-            // removed from session and TL again redirect to bank.
-            sessionStorage.put(StorageKeys.LINK, null);
-            return waitForSupplementalInformation();
-        } else {
+    protected void performRedirectIfNeeded() {
+        if (storage.getScaLinkForPayments() == null) {
+            // No redirect url in storage, nothing to do!
+            return;
+        }
+
+        // Send the user away, wait for him to return, or quit if he leaves
+        Map<String, String> supplementalInfo =
+                supplementalInformationController
+                        .openThirdPartyAppSync(
+                                ThirdPartyAppAuthenticationPayload.of(
+                                        new URL(storage.getScaLinkForPayments())))
+                        .orElseThrow(PaymentAuthorizationTimeOutException::new);
+
+        // Clear storage to avoid multiple redirects to the same url
+        storage.clearScaLinkForPayments();
+
+        // Check what came back.
+        // If we received a callback frmk Not-OK url, then it is definitely a failure.
+        if (!QueryValues.SUCCESS.equals(supplementalInfo.get(QueryKeys.RESULT))) {
             throw new PaymentAuthorizationException();
         }
     }
 
     private CreatePaymentResponse fetchPaymentStatusOrThrowException(
-            PaymentMultiStepRequest paymentMultiStepRequest) {
-        CreatePaymentResponse createPaymentResponse;
+            PaymentMultiStepRequest paymentRequest) {
         try {
-            createPaymentResponse =
-                    apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
+            return paymentApiClient.getPaymentStatus(paymentRequest.getPayment());
         } catch (HttpResponseException httpResponseException) {
+            // This errors indicate that payment no longer exists - usually user clicked cancel on
+            // redirect site
             ErrorResponse errorResponse =
                     ErrorResponse.createFrom(httpResponseException.getResponse());
             if (errorResponse != null
@@ -298,159 +180,84 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                                     "Operation not allowed: authentication required.")
                             || errorResponse.tppMessagesContainsError(
                                     "GENERIC_ERROR", "Unknown Payment Identifier"))) {
+                log.warn("Payment could not be found when asking for status!");
                 throw new PaymentAuthorizationCancelledByUserException();
             } else {
                 throw httpResponseException;
             }
         }
-        return createPaymentResponse;
     }
 
-    private PaymentMultiStepResponse handleReject(String scaStatus, String psuAuthenticationStatus)
-            throws PaymentAuthenticationException, PaymentRejectedException {
-        if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_FAILED.equalsIgnoreCase(
-                psuAuthenticationStatus)) {
-            logger.error(
+    protected boolean checkIfPaymentIsSuccesful(CreatePaymentResponse paymentStatusResponse) {
+        String scaStatus = paymentStatusResponse.getScaStatus();
+        String psuAuthenticationStatus = paymentStatusResponse.getPsuAuthenticationStatus();
+
+        // Throw best matching exception fast if definitely failure:
+        if (PisStatus.FAILED.equalsIgnoreCase(scaStatus)) {
+            throw logAndPrepareException(paymentStatusResponse);
+        }
+
+        return PisStatus.AUTHENTICATED.equalsIgnoreCase(psuAuthenticationStatus)
+                && PisStatus.VERIFIED.equalsIgnoreCase(scaStatus);
+    }
+
+    private PaymentCancelledException logAndPrepareException(
+            CreatePaymentResponse paymentStatusResponse) {
+        log.error(
+                "Payment cancelled by user: psuAuthenticationStatus={} , scaStatus={}",
+                paymentStatusResponse.getPsuAuthenticationStatus(),
+                paymentStatusResponse.getScaStatus());
+        return new PaymentCancelledException();
+    }
+
+    private void extractRedirectUrlFromIntermediateResponseIfPresent(
+            CreatePaymentResponse paymentStatusResponse) {
+        // Status was not judged to be the final one, so we look for subsequent redirect urls
+        String redirectURL = null;
+        if (paymentStatusResponse.getLinks() != null) {
+            if (paymentStatusResponse.getLinks().getScaRedirect() != null) {
+                redirectURL = paymentStatusResponse.getLinks().getScaRedirect().getHref();
+            } else if (paymentStatusResponse.getLinks().getUpdatePsuAuthenticationRedirect()
+                    != null) {
+                redirectURL =
+                        paymentStatusResponse
+                                .getLinks()
+                                .getUpdatePsuAuthenticationRedirect()
+                                .getHref();
+            }
+        }
+        storage.saveScaLinkForPayments(redirectURL);
+    }
+
+    protected boolean checkIfPaymentInIntermediateStatusIsSuccessful(
+            CreatePaymentResponse paymentStatusResponse) {
+        // This method only exist to let BPM have special logic for peculiar bank behaviour
+        return false;
+    }
+
+    private void handleReject(CreatePaymentResponse createPaymentResponse) {
+        String psuAuthenticationStatus = createPaymentResponse.getPsuAuthenticationStatus();
+
+        if (PisStatus.AUTHENTICATION_FAILED.equalsIgnoreCase(psuAuthenticationStatus)) {
+            log.error(
                     "PSU Authentication failed, psuAuthenticationStatus={}",
                     psuAuthenticationStatus);
             throw new PaymentAuthenticationException(
                     "Payment authentication failed.", new PaymentRejectedException());
         } else {
-            logger.error(
+            log.error(
                     "Payment rejected by ASPSP: psuAuthenticationStatus={} , scaStatus={}",
                     psuAuthenticationStatus,
-                    scaStatus);
+                    createPaymentResponse.getScaStatus());
             throw new PaymentRejectedException();
         }
     }
 
-    private PaymentMultiStepResponse handleUnsignedPayment(
-            PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse)
-            throws PaymentException {
-
-        return createPaymentResponse.getLinks() == null
-                ? handleEmptyLinksInResponse(paymentMultiStepRequest, createPaymentResponse)
-                : handleRedirectURLs(paymentMultiStepRequest, createPaymentResponse);
-    }
-
-    private PaymentMultiStepResponse handleEmptyLinksInResponse(
-            PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse)
-            throws PaymentException {
-        sessionStorage.put(StorageKeys.LINK, null);
-        // As for BPM payment is parked for 30 min at bank in RCVD state we need special handling.
-        // Ref: https://tinkab.atlassian.net/browse/PAY2-734
-        if (isBPMProvider()) {
-            return handleSignedPayment(paymentMultiStepRequest, createPaymentResponse);
-        } else
-            return new PaymentMultiStepResponse(
-                    createPaymentResponse.toTinkPaymentResponse(
-                            paymentMultiStepRequest.getPayment()),
-                    CbiGlobeConstants.PaymentStep.IN_PROGRESS);
-    }
-
-    private PaymentMultiStepResponse handleRedirectURLs(
-            PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse) {
-        String psuAuthenticationStatus = createPaymentResponse.getPsuAuthenticationStatus();
-        if (CbiGlobeConstants.PSUAuthenticationStatus.IDENTIFICATION_REQUIRED.equalsIgnoreCase(
-                        psuAuthenticationStatus)
-                || CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_REQUIRED
-                        .equalsIgnoreCase(psuAuthenticationStatus)) {
-            sessionStorage.put(
-                    StorageKeys.LINK,
-                    createPaymentResponse
-                            .getLinks()
-                            .getUpdatePsuAuthenticationRedirect()
-                            .getHref());
-
-        } else if (createPaymentResponse.getLinks().getScaRedirect() != null) {
-            sessionStorage.put(
-                    StorageKeys.LINK, createPaymentResponse.getLinks().getScaRedirect().getHref());
-        } else if (createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect() != null) {
-            sessionStorage.put(
-                    StorageKeys.LINK,
-                    createPaymentResponse
-                            .getLinks()
-                            .getUpdatePsuAuthenticationRedirect()
-                            .getHref());
-        }
+    protected PaymentMultiStepResponse buildSuccessfulPaymentResponse(
+            PaymentMultiStepRequest paymentRequest, CreatePaymentResponse paymentStatusResponse) {
         return new PaymentMultiStepResponse(
-                createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
-                CbiGlobeConstants.PaymentStep.IN_PROGRESS);
-    }
-
-    private PaymentMultiStepResponse handleSignedPayment(
-            PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse)
-            throws PaymentException {
-
-        if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATED.equalsIgnoreCase(
-                        createPaymentResponse.getPsuAuthenticationStatus())
-                && CbiGlobeConstants.PSUAuthenticationStatus.VERIFIED.equalsIgnoreCase(
-                        createPaymentResponse.getScaStatus())) {
-            return getSuccessfulPaymentMultiStepResponse(
-                    paymentMultiStepRequest, createPaymentResponse);
-        } else if (CbiGlobeConstants.PSUAuthenticationStatus.FAILED.equalsIgnoreCase(
-                createPaymentResponse.getScaStatus())) {
-            return logAndThrowPaymentCancelledException(createPaymentResponse);
-        } else {
-            return handleIntermediatePaymentStates(paymentMultiStepRequest, createPaymentResponse);
-        }
-    }
-
-    private PaymentMultiStepResponse getSuccessfulPaymentMultiStepResponse(
-            PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse) {
-        if (isBPMProvider()) {
-            paymentMultiStepRequest.getPayment().setStatus(PaymentStatus.SIGNED);
-        }
-        return new PaymentMultiStepResponse(
-                createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
+                paymentStatusResponse.toTinkPaymentResponse(paymentRequest.getPayment()),
                 AuthenticationStepConstants.STEP_FINALIZE);
-    }
-
-    private PaymentMultiStepResponse logAndThrowPaymentCancelledException(
-            CreatePaymentResponse createPaymentResponse) throws PaymentCancelledException {
-        logger.error(
-                "Payment cancelled by user: psuAuthenticationStatus={} , scaStatus={}",
-                createPaymentResponse.getPsuAuthenticationStatus(),
-                createPaymentResponse.getScaStatus());
-        throw new PaymentCancelledException();
-    }
-
-    private PaymentMultiStepResponse handleIntermediatePaymentStates(
-            PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse) {
-
-        String redirectURL = null;
-        if (createPaymentResponse.getLinks() != null) {
-            if (createPaymentResponse.getLinks().getScaRedirect() != null) {
-                redirectURL = createPaymentResponse.getLinks().getScaRedirect().getHref();
-
-            } else if (createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect()
-                    != null) {
-                redirectURL =
-                        createPaymentResponse
-                                .getLinks()
-                                .getUpdatePsuAuthenticationRedirect()
-                                .getHref();
-            }
-
-            // redirect URl from Bank should be null for intermediate states, If
-            // not null then it may be bug on CBI globe
-            if (redirectURL != null) {
-                logger.warn("IntermediatePaymentStates redirectURl was NOT null, check logs");
-            }
-        }
-        sessionStorage.put(
-                StorageKeys.LINK,
-                redirectURL); // redirectURL should be set to null to avoid multiple redirect to
-
-        return new PaymentMultiStepResponse(
-                createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
-                CbiGlobeConstants.PaymentStep.IN_PROGRESS);
     }
 
     @Override
@@ -465,56 +272,4 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         throw new NotImplementedException(
                 "cancel not yet implemented for " + this.getClass().getName());
     }
-
-    @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        // Not implemented on banks side
-        return new PaymentListResponse(paymentResponses);
-    }
-
-    private void openThirdPartyApp(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = getAppPayload(authorizeUrl);
-        Preconditions.checkNotNull(payload);
-        this.supplementalInformationHelper.openThirdPartyApp(payload);
-    }
-
-    private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
-    }
-
-    private Map<String, String> waitForSupplementalInformation() {
-        return this.supplementalInformationHelper
-                .waitForSupplementalInformation(
-                        strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES)
-                .orElseThrow(PaymentAuthorizationTimeOutException::new);
-    }
-
-    protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
-        Pair<AccountIdentifierType, AccountIdentifierType> accountIdentifiersKey =
-                paymentRequest.getPayment().getCreditorAndDebtorAccountType();
-
-        return accountIdentifiersToPaymentTypeMapper
-                .translate(accountIdentifiersKey)
-                .orElseThrow(
-                        () ->
-                                new NotImplementedException(
-                                        "No PaymentType found for your AccountIdentifiers pair "
-                                                + accountIdentifiersKey));
-    }
-
-    private boolean isBPMProvider() {
-        return "it-bpm-oauth2".equalsIgnoreCase(provider.getName());
-    }
-
-    private static final GenericTypeMapper<
-                    PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
-            accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper
-                            .<PaymentType, Pair<AccountIdentifierType, AccountIdentifierType>>
-                                    genericBuilder()
-                            .put(
-                                    PaymentType.SEPA,
-                                    new Pair<>(
-                                            AccountIdentifierType.IBAN, AccountIdentifierType.IBAN))
-                            .build();
 }

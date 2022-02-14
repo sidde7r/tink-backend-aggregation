@@ -1,76 +1,60 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta.authenticator;
 
-import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountFetchingStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyAppAuthenticationStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyFinishAuthenticationStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessType;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiAccountFetchingStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiConsentCreationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiConsentRedirectAuthorizationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiFinishAuthenticationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CbiConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeFetcherApiClient;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 
-public class BancoPostaAuthenticator extends CbiGlobeAuthenticator {
+public class BancoPostaAuthenticator implements TypedAuthenticator {
+
+    private final CbiConsentCreationStep consentCreationStep;
+    private final BancoPostaScaMethodSelectionStep scaMethodSelectionStep;
+    private final CbiConsentRedirectAuthorizationStep redirectAuthorizationStep;
+    private final CbiFinishAuthenticationStep finishAuthenticationStep;
+    private final CbiAccountFetchingStep accountFetchingStep;
 
     public BancoPostaAuthenticator(
-            CbiGlobeApiClient apiClient,
-            StrongAuthenticationState strongAuthenticationState,
-            CbiUserState userState,
-            ConsentManager consentManager,
-            CbiGlobeConfiguration configuration) {
-        super(apiClient, strongAuthenticationState, userState, consentManager, configuration);
+            CbiGlobeAuthApiClient authApiClient,
+            CbiGlobeFetcherApiClient fetcherApiClient,
+            CbiStorage storage,
+            LocalDateTimeSource localDateTimeSource,
+            SupplementalInformationController supplementalInformationController,
+            Credentials credentials,
+            CbiUrlProvider urlProvider) {
+        consentCreationStep =
+                new CbiConsentCreationStep(authApiClient, localDateTimeSource, storage);
+        scaMethodSelectionStep =
+                new BancoPostaScaMethodSelectionStep(
+                        authApiClient, urlProvider.getUpdateConsentsRawUrl());
+        redirectAuthorizationStep =
+                new CbiConsentRedirectAuthorizationStep(
+                        supplementalInformationController, authApiClient, storage);
+        finishAuthenticationStep =
+                new CbiFinishAuthenticationStep(authApiClient, credentials, storage);
+        accountFetchingStep = new CbiAccountFetchingStep(fetcherApiClient, storage);
     }
 
     @Override
-    protected List<AuthenticationStep> getManualAuthenticationSteps() {
-        if (manualAuthenticationSteps.isEmpty()) {
-            buildManualAuthenticationSteps();
-        }
-
-        return manualAuthenticationSteps;
+    public void authenticate(Credentials credentials) {
+        CbiConsentResponse consentResponse = consentCreationStep.createConsentAndSaveId();
+        consentResponse = scaMethodSelectionStep.pickScaMethod(consentResponse);
+        redirectAuthorizationStep.authorizeConsent(consentResponse);
+        finishAuthenticationStep.storeConsentValidUntilDateInCredentials();
+        accountFetchingStep.fetchAndSaveAccounts();
     }
 
-    protected void buildManualAuthenticationSteps() {
-        manualAuthenticationSteps.add(
-                new CreateAllPsd2ConsentScaAuthenticationStep(
-                        consentManager,
-                        strongAuthenticationState,
-                        userState,
-                        AccessType.ALL_ACCOUNTS_WITH_OWNER_NAME));
-
-        manualAuthenticationSteps.add(
-                new CreateAllPsd2ConsentScaAuthenticationStep(
-                        consentManager,
-                        strongAuthenticationState,
-                        userState,
-                        AccessType.ALL_ACCOUNTS));
-
-        manualAuthenticationSteps.add(
-                new CreateAccountsConsentScaAuthenticationStep(
-                        consentManager, strongAuthenticationState, userState));
-
-        manualAuthenticationSteps.add(
-                new CbiThirdPartyAppAuthenticationStep(
-                        userState, ConsentType.ACCOUNT, consentManager, strongAuthenticationState));
-
-        manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
-
-        manualAuthenticationSteps.add(
-                new CreateTransactionsConsentScaAuthenticationStep(
-                        consentManager, strongAuthenticationState, userState));
-
-        manualAuthenticationSteps.add(
-                new CbiThirdPartyAppAuthenticationStep(
-                        userState,
-                        ConsentType.BALANCE_TRANSACTION,
-                        consentManager,
-                        strongAuthenticationState));
-
-        manualAuthenticationSteps.add(
-                new CbiThirdPartyFinishAuthenticationStep(consentManager, userState));
+    @Override
+    public CredentialsTypes getType() {
+        return CredentialsTypes.THIRD_PARTY_APP;
     }
 }

@@ -79,6 +79,7 @@ public class FinTechSystemsPaymentExecutor implements PaymentExecutor {
     private void handleRedirect(URL wizardUrl) {
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(wizardUrl));
+
         supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }

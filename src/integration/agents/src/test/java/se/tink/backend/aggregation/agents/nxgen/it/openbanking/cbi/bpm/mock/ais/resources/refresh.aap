@@ -1,0 +1,112 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/**HASHED:IU**/balances
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 05034
+date: Thu, 09 Apr 1992 10:00:00 UTC
+consent-id: test_consent_id
+psu-ip-address: 127.0.0.1
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 01 Feb 2022 07:30:14 GMT
+Date: Tue, 01 Feb 2022 07:30:15 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "account": {
+    "iban": "**HASHED:L7**",
+    "currency": "EUR"
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "2.25"
+      },
+      "balanceType": "interimAvailable"
+    },
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "2.25"
+      },
+      "balanceType": "authorised"
+    }
+  ]
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.4.0/accounts/**HASHED:IU**/transactions?booking_status=both&date_from=1992-01-11&date_to=1992-04-10&offset=1&limit=900
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 05034
+date: Thu, 09 Apr 1992 10:00:00 UTC
+consent-id: test_consent_id
+psu-ip-address: 127.0.0.1
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+200
+Date: Tue, 01 Feb 2022 07:30:15 GMT
+Date: Tue, 01 Feb 2022 07:30:16 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+cpaas-total-pages: 1
+x-request-id: 00000000-0000-4000-0000-000000000000
+cpaas-total-elements: 2
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "MBWT00406815",
+        "bookingDate": "2022-01-31",
+        "valueDate": "2022-01-31",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "3300.0"
+        },
+        "remittanceInformationUnstructured": "djfhgsdfbkghskjdfhgkjshdfkjgh",
+        "_links": {
+          "transactionDetails": {
+            "href": "/accounts/**HASHED:IU**/transactions/MBWT00406815"
+          }
+        }
+      },
+      {
+        "transactionId": "MBYT00634113",
+        "bookingDate": "2022-01-31",
+        "valueDate": "2022-01-31",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-3300.0"
+        },
+        "remittanceInformationUnstructured": "drftgyuhijokgjs bdfjsdfmsd",
+        "_links": {
+          "transactionDetails": {
+            "href": "/accounts/**HASHED:IU**/transactions/MBYT00634113"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "/accounts/**HASHED:IU**"
+      }
+    }
+  }
+}

@@ -1,0 +1,151 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic bnVsbDpudWxs
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Tue, 06 Jul 2021 11:00:17 GMT
+Date: Tue, 06 Jul 2021 11:00:17 GMT
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+Server:
+Content-Length: 129
+
+{
+  "access_token":"004980f6-2826-49e8-9fe3-8a5e145f64d7",
+  "token_type":"Bearer",
+  "expires_in":3600,
+  "scope":"production"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://tppinterface.intesasanpaolo.com/platform/enabler/psd2orchestrator/pis/2.3.2/payments/instant-sepa-credit-transfers
+Content-Type: application/json
+Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 03069
+date: Thu, 09 Apr 1992 10:00:00 UTC
+aspsp-product-code: ALLPRODUCTS
+tpp-redirect-preferred: true
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
+tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=failure
+psu-ip-address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{
+  "debtorAccount": {
+    "iban": "IT29D0300203280625969137225"
+  },
+  "instructedAmount": {
+    "currency": "EUR",
+    "amount": "1.0"
+  },
+  "creditorAccount": {
+    "iban": "IT45H0300203280271332616346"
+  },
+  "creditorName": "Creditor Name",
+  "transactionType": "remote_transaction",
+  "remittanceInformationUnstructured": "remittance information to creditor"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2 SET CREATE_PAYMENT
+201
+Date: Fri, 31 Dec 2021 09:25:01 GMT
+Date: Fri, 31 Dec 2021 09:25:01 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: b206e876-cde5-4c06-b7b8-12e7885b05f7
+Location: https://tppinterface.intesasanpaolo.com/payments/instant-sepa-credit-transfers/9c4e04fe-20ec-46c0-9a3e-7aa430faf932
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 703
+
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "9c4e04fe-20ec-46c0-9a3e-7aa430faf932",
+  "_links": {
+    "self": {
+      "href": "/payments/instant-sepa-credit-transfers/9c4e04fe-20ec-46c0-9a3e-7aa430faf932"
+    },
+    "updatePsuAuthenticationRedirect": {
+      "href": "https://www.intesasanpaolo.com/openbanking/login/#/?paymentId\u003d9c4e04fe-20ec-46c0-9a3e-7aa430faf932\u0026tppAuthenticationRedirectUri\u003dhttps%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D**HASHED:P1**%26result%3D**HASHED:ru**\u0026tppName\u003d**HASHED:iM**+AB\u0026aspspCode\u003d**HASHED:rg**\u0026aspspProductCode\u003d**HASHED:rP**\u0026tppRegistrationNumber\u003dPSDSE-FINA-44059\u0026hash\u003d%2FsOA6Zo2qhwup37iT%2BLUEx0DJBmuMmEYZNLE8WiQv6VIVAlEwj89ymhwUdIn44S3bz75DCJ20tEguKuZNGAvxg%3D%3D"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3 MATCH CREATE_PAYMENT
+GET https://tppinterface.intesasanpaolo.com/platform/enabler/psd2orchestrator/pis/2.3.2/payments/instant-sepa-credit-transfers/9c4e04fe-20ec-46c0-9a3e-7aa430faf932/status
+Content-Type: application/json
+Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 03069
+date: Thu, 09 Apr 1992 10:00:00 UTC
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET AUTHENTICATE_PAYMENT
+200
+Date: Fri, 31 Dec 2021 09:25:21 GMT
+Date: Fri, 31 Dec 2021 09:25:20 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: ***
+x-request-id: b16de64f-5435-4cd6-aeb9-ffd6fa6061bf
+psu-id: ***
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 2443
+
+{
+  "transactionStatus": "RCVD",
+  "scaStatus": "INITIATED",
+  "_links": {
+    "scaRedirect": {
+      "href": "https://www.intesasanpaolo.com/openbanking/login/#/sca?paymentId\u003d9c4e04fe-20ec-46c0-9a3e-7aa430faf932\u0026paymentProduct\u003dinstant-sepa-credit-transfers\u0026tppInfo\u003deyJ0cHBOYW1lIjoiVGluayBBQiIsImFzcHNwQ29kZSI6Ij**HASHED:LE**wicHN1SWQiOiI0NDU5OTAxNCIsInBzdUlkU0NBIjoiUkVUQTQ0NTk5MDE0IiwiYW1tb3VudCI6IjEwMC42MCIsImN1cnJlbmN5IjoiRVVSIiwiY3JlZGl0b3JOYW1lIjoiUGF5T3AiLCJ0cHBOb2tSZWRpcmVjdFVyaSI6Imh0dHBzOi8vYXBpLnRpbmsuY29tL2FwaS92MS9jcmVkZW50aWFscy90aGlyZC1wYXJ0eS9jYWxsYmFjaz9zdGF0ZT0**HASHED:Ka**QmcmVzdWx0PWZhaWx1cmUiLCJjb21taXNzaW9ucyI6IjAuNjAiLCJuZXRBbW91bnQiOiIxMDAuMDAiLCJjcmVkaXRvckliYW4iOiJHQjA0Q0xKVTA0MTMwNzI5OTAyODk3IiwicGF5bWVudFByb2R1Y3QiOm51bGwsIm9wUmljb3JyZW50ZSI6Im**HASHED:1F**wicGF5bWVudERlc2NyaXB0aW9uIjoiQm9uaWZpY28gRXVyb3BlbyBVbmljbyAoU0NUKSBJc3RhbnRhbmVvIn0\u003d\u0026sessionID\u003d82d97924-366c-4a45-a756-7f9827a57f85\u0026sessionData\u003deyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.ew0KICAgICJzZXNzaW9uIjogew0KICAgICAgICAic2Vzc2lvbklEIjoiODJkOTc5MjQtMzY2Yy00YTQ1LWE3NTYtN2Y5ODI3YTU3Zjg1IiwNCiAgICAgICAgImV4cCI6MTY0MDk0MzAxNQ0KICAgIH0sDQogICAgInJlcXVlc3RfY29uc2VudCI6IHsNCiAgICAgICAgImNsaWVudF9uYW1lIjoiVGluayBBQiIsDQogICAgICAgICJzY29wZV92ZXJpZmllZCI6IlBJUzo5YzRlMDRmZS0yMGVjLTQ2YzAtOWEzZS03YWE0MzBmYWY5MzIiDQogICAgfSwNCiAgICAicmVxdWVzdF9wYXJhbWV0ZXJzIjogew0KICAgICAgICAiYXNwc3BfY29kZSI6Ij**HASHED:LE**wNCiAgICAgICAgInRwcF9yZWdpc3RyYXRpb25fbnVtYmVyIjoiUFNEU0UtRklOQS00NDA1OSIsDQogICAgICAgICJ0cHBfcmVkaXJlY3RfdXJpIjoiaHR0cHM6Ly9hcGkudGluay5jb20vYXBpL3YxL2NyZWRlbnR**HASHED:EL**RoaXJkLXBhcnR5L2NhbGxiYWNrP3N0YXRlPT**HASHED:9J**ZyZXN1bHQ9**HASHED:jp**IsDQogICAgICAgICJ0cHBfbm9rX3JlZGlyZWN0X3VyaSI6Imh0dHBzOi8vYXBpLnRpbmsuY29tL2FwaS92MS9jcmVkZW50aWFscy90aGlyZC1wYXJ0eS9jYWxsYmFjaz9zdGF0ZT0**HASHED:Ka**QmcmVzdWx0PWZhaWx1cmUiLA0KICAgICAgICAicGF5bWVudF9wcm9kdWN0IjogImluc3RhbnQtc2VwYS1jcmVkaXQtdHJhbnNmZXJzIiwNCiAgICAgICAgInBheW1lbnRfYW1vdW50IjogIjEwMC42MCIsDQogICAgICAgICJwYXltZW50X2N1cnJlbmN5IjogIkVVUiIsDQogICAgICAgICJwYXltZW50X2NyZWRpdG9yX25hbWUiOiAiUGF5T3AiLA0KICAgICAgICAicGF5bWVudF9jb21taXNzaW9ucyI6ICIwLjYwIiwNCiAgICAgICAgInBheW1lbnRfY3JlZGl0b3JfaWJhbiI6ICJHQjA0Q0xKVTA0MTMwNzI5OTAyODk3IiwNCiAgICAgICAgInBheW1lbnRfcmVjdXJyaW5nIjogIm**HASHED:1F**0KICAgIH0NCn0.OlK44HObkYRQxFnz4-Yn3lyEqAo7kCH5U-MXt11VNMA"
+    }
+  },
+  "transactionFees": {
+    "currency": "EUR",
+    "amount": "0.60"
+  },
+  "psuAuthenticationStatus": "AUTHENTICATED"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH AUTHENTICATE_PAYMENT
+GET https://tppinterface.intesasanpaolo.com/platform/enabler/psd2orchestrator/pis/2.3.2/payments/instant-sepa-credit-transfers/9c4e04fe-20ec-46c0-9a3e-7aa430faf932/status
+Content-Type: application/json
+Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 03069
+date: Thu, 09 Apr 1992 10:00:00 UTC
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Fri, 31 Dec 2021 09:26:16 GMT
+Date: Fri, 31 Dec 2021 09:26:16 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: ***
+x-request-id: 012e99db-7d05-4baf-8613-45927a309b44
+psu-id: ***
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 106
+
+{
+  "transactionStatus": "ACSC",
+  "scaStatus": "VERIFIED",
+  "psuAuthenticationStatus": "AUTHENTICATED"
+}

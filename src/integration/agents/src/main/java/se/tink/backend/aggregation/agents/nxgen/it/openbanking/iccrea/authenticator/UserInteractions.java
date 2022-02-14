@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n_aggregation.Catalog;
@@ -17,12 +17,13 @@ public class UserInteractions {
     private static final LocalizableKey INSTRUCTIONS =
             new LocalizableKey("Please open the bank application and confirm the order.");
 
-    private static final long PROMPT_WAIT_FOR_MINUTES = 2;
-
-    void displayPromptAndWaitForAcceptance() {
+    public void displayPromptAndWaitForAcceptance() {
         Field field = CommonFields.Instruction.build(catalog.getString(INSTRUCTIONS));
-        String mfaId = supplementalInformationController.askSupplementalInformationAsync(field);
-        supplementalInformationController.waitForSupplementalInformation(
-                mfaId, PROMPT_WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+        try {
+            supplementalInformationController.askSupplementalInformationSync(field);
+        } catch (SupplementalInfoException exception) {
+            // We do not care about this exception, since we will double check the consent status
+            // even if no supplemental info comes back from end user
+        }
     }
 }

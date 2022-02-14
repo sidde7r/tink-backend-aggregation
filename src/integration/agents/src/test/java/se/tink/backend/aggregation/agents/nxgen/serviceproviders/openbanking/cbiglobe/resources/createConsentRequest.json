@@ -1,0 +1,9 @@
+{
+    "access": {
+        "allPsd2": "allAccountsWithOwnerName"
+    },
+    "combinedServiceIndicator": false,
+    "frequencyPerDay": 4,
+    "recurringIndicator": true,
+    "validUntil": "1992-07-08"
+}

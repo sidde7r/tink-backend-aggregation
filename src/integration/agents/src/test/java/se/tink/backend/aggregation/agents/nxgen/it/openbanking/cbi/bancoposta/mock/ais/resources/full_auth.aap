@@ -1,0 +1,224 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic ZHVtbXlDbGllbnRJZDpkdW1teUNsaWVudFNlY3JldA==
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+  "access_token":"dummyAccessToken",
+  "token_type":"Bearer",
+  "expires_in":300,
+  "scope":"production"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 07601
+date: Thu, 09 Apr 1992 10:00:00 UTC
+aspsp-product-code: BANCOPOSTA
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
+tpp-nok-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=failure
+
+{
+  "access": {
+    "allPsd2": "allAccountsWithOwnerName"
+  },
+  "combinedServiceIndicator": false,
+  "frequencyPerDay": 4,
+  "recurringIndicator": true,
+  "validUntil": "1992-07-08"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+Date: Mon, 31 Jan 2022 17:10:50 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: REDIRECT
+x-request-id: 00000000-0000-4000-0000-000000000000
+Location: https://cbiglobeopenbankingapigateway.nexi.it/consents/test_consent_id
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "consentStatus": "received",
+  "consentId": "test_consent_id",
+  "scaMethods": [
+    {
+      "authenticationMethodId": "2",
+      "authenticationType": "SMS_OTP",
+      "name": "SMS numero sicuro",
+      "explanation": "Autenticazione tramite SMS numero sicuro",
+      "authenticationVersion": "1.11"
+    },
+    {
+      "authenticationMethodId": "1",
+      "authenticationType": "PUSH_OTP",
+      "name": "APP BancoPosta",
+      "explanation": "Autenticazione tramite App Bancoposta",
+      "authenticationVersion": "1.11"
+    }
+  ],
+  "_links": {
+    "selectAuthenticationMethod": {
+      "href": "/consents/test_consent_id"
+    },
+    "self": {
+      "href": "/consents/test_consent_id"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+PUT https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/test_consent_id
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 07601
+date: Thu, 09 Apr 1992 10:00:00 UTC
+operation-name: updatePsuData
+
+{
+  "authenticationMethodId": "2"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+200
+Date: Mon, 31 Jan 2022 17:10:51 GMT
+Date: Mon, 31 Jan 2022 17:10:51 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: REDIRECT
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "_links": {
+    "scaRedirect": {
+      "href": "https://example.com/testRedirectUrl"
+    },
+    "self": {
+      "href": "/consents/test_consent_id"
+    }
+  },
+  "consentStatus": "received"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/test_consent_id/status
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 07601
+date: Thu, 09 Apr 1992 10:00:00 UTC
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Mon, 31 Jan 2022 17:11:49 GMT
+Date: Mon, 31 Jan 2022 17:11:48 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "consentStatus": "valid"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 5
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/consents/test_consent_id
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 07601
+date: Thu, 09 Apr 1992 10:00:00 UTC
+
+-----------------------------------------------------------------------------------
+RESPONSE 5
+200
+Date: Mon, 31 Jan 2022 17:11:50 GMT
+Date: Mon, 31 Jan 2022 17:11:50 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "access": {
+    "allPsd2": "allAccountsWithOwnerName"
+  },
+  "recurringIndicator": "true",
+  "validUntil": "2022-04-30T23:59:59Z",
+  "frequencyPerDay": "4",
+  "lastActionDate": "2022-01-31",
+  "consentStatus": "valid",
+  "scaStatus": "VERIFIED"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 6
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/3.0.0/accounts
+Content-Type: application/json
+Authorization: Bearer dummyAccessToken
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 07601
+date: Thu, 09 Apr 1992 10:00:00 UTC
+consent-id: test_consent_id
+psu-ip-address: 127.0.0.1
+
+-----------------------------------------------------------------------------------
+RESPONSE 6
+200
+Date: Mon, 31 Jan 2022 17:11:50 GMT
+Date: Mon, 31 Jan 2022 17:11:50 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "accounts": [
+    {
+      "iban": "IT53O**HASHED:Sq**01600001018856136",
+      "currency": "EUR",
+      "resourceId": "**HASHED:J1**",
+      "product": "Conto Corrente BancoPosta",
+      "usage": "PRIV",
+      "ownerName": "**HASHED:TJ**",
+      "_links": {
+        "account": {
+          "href": "/accounts/**HASHED:J1**"
+        },
+        "balances": {
+          "href": "/accounts/**HASHED:J1**/balances"
+        },
+        "transactions": {
+          "href": "/accounts/**HASHED:J1**/transactions"
+        }
+      }
+    }
+  ]
+}

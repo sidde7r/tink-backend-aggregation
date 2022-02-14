@@ -1,0 +1,201 @@
+
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Date: Tue, 06 Jul 2021 10:15:52 GMT
+Date: Tue, 06 Jul 2021 10:15:53 GMT
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+Server:
+Content-Length: 129
+
+{
+  "access_token":"5c60b1f2-0492-474c-843d-a6182b9e24a3",
+  "token_type":"Bearer",
+  "expires_in":3600,
+  "scope":"production"
+}
+
+REQUEST 2
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers
+Content-Type: application/json
+aspsp-code: 05387
+aspsp-product-code: SMART
+Authorization: Bearer 5c60b1f2-0492-474c-843d-a6182b9e24a3
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Thu, 09 Apr 1992 10:00:00 UTC
+tpp-redirect-preferred: true
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
+tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=failure
+psu-ip-address: 127.0.0.1
+X-Aggregator: Tink Testing
+
+{
+  "debtorAccount": {
+    "iban": "IT29D0300203280625969137225"
+  },
+  "instructedAmount": {
+    "currency": "EUR",
+    "amount": "1.0"
+  },
+  "creditorAccount": {
+    "iban": "IT45H0300203280271332616346"
+  },
+  "creditorName": "Creditor Name",
+  "transactionType": "remote_transaction",
+  "remittanceInformationUnstructured": "Bper",
+  "startDate": "2020-10-15",
+  "endDate": "2020-12-15",
+  "frequency": "Monthly",
+  "executionRule": "following",
+  "dayOfExecution": "20"
+}
+
+RESPONSE 2
+201
+Date: Tue, 06 Jul 2021 10:15:53 GMT
+Date: Tue, 06 Jul 2021 10:15:53 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 29023d34-3025-4200-aa61-98c82ee0ae20
+Location: ***
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 713
+
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "bc524607-42a3-414a-beba-6530ba434833",
+  "_links": {
+    "self": {
+      "href": "/periodic-payments/sepa-credit-transfers/bc524607-42a3-414a-beba-6530ba434833"
+    },
+    "updatePsuAuthenticationRedirect": {
+      "href": "https://homebanking.bpergroup.net/bper-nfe-openbanking/content/static/index.html?paymentId=bc524607-42a3-414a-beba-6530ba434833&tppAuthenticationRedirectUri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback%3Fstate%3Df9330c62-a499-4edc-ae3d-9a4d4bb2feed%26code%3Dcode&tppName=Tink+AB&aspspCode=05387&aspspProductCode=SMART&tppRegistrationNumber=PSDSE-FINA-44059&hash=XH%2FWporEvvUPYpIk7JgkIKfEOrjLBuHscnFbuQ4QudEYPMXOU9afE%2FFVv9e1HkBAms0JjfNGX3TyvPBGhxBy%2BA%3D%3D"
+    }
+  }
+}
+
+REQUEST 3
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers/bc524607-42a3-414a-beba-6530ba434833/status
+Content-Type: application/json
+Authorization: Bearer 5c60b1f2-0492-474c-843d-a6182b9e24a3
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Thu, 09 Apr 1992 10:00:00 UTC
+aspsp-code: 05387
+X-Aggregator: Tink Testing
+
+RESPONSE 3 SET AUTH_NEEDED
+400
+Date: Tue, 06 Jul 2021 10:16:45 GMT
+Date: Tue, 06 Jul 2021 10:16:45 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 76a562e4-820e-4197-aa1a-413daea9ca95
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 205
+
+{
+  "errorManagement": {
+    "errorCode": "PSD2_01.000.A0040",
+    "errorDescription": "Operation not allowed: authentication required."
+  },
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "GENERIC_ERROR",
+      "text": "Generic error"
+    }
+  ]
+}
+
+REQUEST 4 MATCH AUTH_NEEDED
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers/bc524607-42a3-414a-beba-6530ba434833/status
+Content-Type: application/json
+Authorization: Bearer 5c60b1f2-0492-474c-843d-a6182b9e24a3
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Thu, 09 Apr 1992 10:00:00 UTC
+aspsp-code: 05387
+X-Aggregator: Tink Testing
+
+RESPONSE 4 SET AUTH_OBTAINED
+200
+Date: Tue, 06 Jul 2021 10:16:57 GMT
+Date: Tue, 06 Jul 2021 10:16:57 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: ***
+x-request-id: 76a562e4-820e-4197-aa1a-413daea9ca95
+psu-id: ***
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 477
+
+{
+  "transactionStatus": "RCVD",
+  "scaStatus": "INITIATED",
+  "_links": {
+    "scaRedirect": {
+      "href": "https://homebanking.bpergroup.net/bper-nfe-openbanking/content/static/index.html?tipo_operazione=PAGAMENTO_BONIFICO_PERIODICO&tpp_name=Tink+AB&tpp_registration_code=PSDSE-FINA-44059&id_operazione=bc524607-42a3-414a-beba-6530ba434833&canale=HOME_BANKING_TERZE_PARTI&banca=05387&psu_id=98513018"
+    }
+  },
+  "transactionFees": {
+    "currency": "EUR",
+    "amount": "0.500"
+  },
+  "psuAuthenticationStatus": "AUTHENTICATED"
+}
+
+REQUEST 5 MATCH AUTH_OBTAINED
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers/bc524607-42a3-414a-beba-6530ba434833/status
+Content-Type: application/json
+Authorization: Bearer 5c60b1f2-0492-474c-843d-a6182b9e24a3
+x-request-id: 00000000-0000-4000-0000-000000000000
+date: Thu, 09 Apr 1992 10:00:00 UTC
+aspsp-code: 05387
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Tue, 06 Jul 2021 10:18:16 GMT
+Date: Tue, 06 Jul 2021 10:18:17 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: ***
+x-request-id: 1fc65e63-dc13-4c64-a6cd-a0e7837af073
+psu-id: ***
+Cache-Control: no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Server:
+Content-Length: 106
+
+{
+  "transactionStatus": "ACSP",
+  "scaStatus": "VERIFIED",
+  "psuAuthenticationStatus": "AUTHENTICATED"
+}

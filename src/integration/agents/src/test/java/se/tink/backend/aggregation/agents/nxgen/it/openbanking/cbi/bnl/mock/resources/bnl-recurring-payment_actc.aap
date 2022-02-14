@@ -1,0 +1,146 @@
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization : Basic bnVsbDpudWxs
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Wed, 18 Aug 2021 11:09:16 GMT
+Date: Wed, 18 Aug 2021 11:09:16 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 129
+
+{
+  "access_token":"5554abd8-39d2-4b68-9d81-c311307b67f1",
+  "token_type":"Bearer",
+  "expires_in":3600,
+  "scope":"production"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers
+Content-Type: application/json
+Authorization : Bearer 5554abd8-39d2-4b68-9d81-c311307b67f1
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 01005
+date: Thu, 09 Apr 1992 10:00:00 UTC
+aspsp-product-code: ALLPRODUCTS
+tpp-redirect-preferred: true
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
+tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=failure
+psu-ip-address: 127.0.0.1
+
+{
+  "debtorAccount": {
+    "iban": "IT53X0300203280882749129712"
+  },
+  "instructedAmount": {
+    "currency": "EUR",
+    "amount": "1.0"
+  },
+  "creditorAccount": {
+    "iban": "IT52X0300203280728575573739"
+  },
+  "creditorName": "Creditor Name",
+  "transactionType": "remote_transaction",
+  "remittanceInformationUnstructured": "remittance information to creditor",
+  "startDate": "2021-08-30",
+  "endDate": "2021-10-30",
+  "frequency": "Monthly",
+  "executionRule": "following",
+  "dayOfExecution": "30"
+}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Date: Wed, 18 Aug 2021 11:09:17 GMT
+Date: Wed, 18 Aug 2021 11:09:16 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 00000000-0000-4000-0000-000000000000
+Location: ***
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 676
+
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "ec1de0af-7346-4360-84fc-0e37e81de286",
+  "_links": {
+    "self": {
+      "href": "/periodic-payments/sepa-credit-transfers/ec1de0af-7346-4360-84fc-0e37e81de286"
+    },
+    "updatePsuAuthenticationRedirect": {
+      "href": "https://accountx2ca.bnl.it/sca/#/?paymentId\u003dec1de0af-7346-4360-84fc-0e37e81de286\u0026tppAuthenticationRedirectUri\u003dhttps%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback%3Fstate%3Da442c1ec-81e3-4a8c-91b7-5a3010a1feed%26code%3Dcode\u0026tppName\u003dTink+AB\u0026aspspCode\u003d01005\u0026aspspProductCode\u003dcontocorrente\u0026tppRegistrationNumber\u003dPSDSE-FINA-44059\u0026hash\u003dsCXHVrpTPBuf9HqB0%2FDkKGEb3owoeq0I8hx3NFvM9ndSCYXXEOuK0SOPZ4bz1iFz2%2F7QqMlNq5%2BV%2Fg4BObew7w%3D%3D"
+    }
+  }
+}
+
+
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers/ec1de0af-7346-4360-84fc-0e37e81de286/status
+Content-Type: application/json
+Authorization : Bearer 5554abd8-39d2-4b68-9d81-c311307b67f1
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 01005
+date: Thu, 09 Apr 1992 10:00:00 UTC
+
+-----------------------------------------------------------------------------------
+RESPONSE 3 SET STATE1
+200
+Date: Wed, 18 Aug 2021 11:10:36 GMT
+Date: Wed, 18 Aug 2021 11:10:36 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: ***
+x-request-id: 00000000-0000-4000-0000-000000000000
+psu-id-type: PRIV
+psu-id: ***
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "transactionStatus": "RCVD",
+  "scaStatus": "INITIATED",
+  "psuAuthenticationStatus": "AUTHENTICATED",
+  "_links": {
+    "scaRedirect": {
+      "href":"https://accountx2ca.bnl.it/sca/#/?correlationId\u003dMTI5NDg4MzItM2UyYS0zYzg1LWE5ZTUtYTEzYWJiOTk2ODFj\u0026aspspCode\u003d01005"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 4 MATCH STATE1
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/sepa-credit-transfers/ec1de0af-7346-4360-84fc-0e37e81de286/status
+Content-Type: application/json
+Authorization : Bearer 5554abd8-39d2-4b68-9d81-c311307b67f1
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 01005
+date: Thu, 09 Apr 1992 10:00:00 UTC
+
+-----------------------------------------------------------------------------------
+RESPONSE 4
+200
+Date: Wed, 18 Aug 2021 11:11:32 GMT
+Date: Wed, 18 Aug 2021 11:11:33 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+aspsp-sca-approach: ***
+x-request-id: 00000000-0000-4000-0000-000000000000
+psu-id-type: PRIV
+psu-id: ***
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+
+{
+  "transactionStatus": "ACTC",
+  "scaStatus": "VERIFIED",
+  "psuAuthenticationStatus": "AUTHENTICATED"
+}

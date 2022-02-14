@@ -1,0 +1,102 @@
+
+-----------------------------------------------------------------------------------
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic bnVsbDpudWxs
+X-Aggregator: Tink Testing
+
+-----------------------------------------------------------------------------------
+RESPONSE 1
+200
+Date: Wed, 01 Dec 2021 08:14:14 GMT
+Date: Wed, 01 Dec 2021 08:14:14 GMT
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+Server:
+Content-Length: 129
+
+{
+  "access_token":"004980f6-2826-49e8-9fe3-8a5e145f64d7",
+  "token_type":"Bearer",
+  "expires_in":3600,
+  "scope":"production"
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 2
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers
+Content-Type: application/json
+Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 01030
+date: Thu, 09 Apr 1992 10:00:00 UTC
+aspsp-product-code: retail
+tpp-redirect-preferred: true
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=success
+tpp-nok-redirect-uri:  https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&result=failure
+psu-ip-address: 127.0.0.1
+
+{"debtorAccount":{"iban":"IT29D0300203280625969137225"},"instructedAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"IT45H0300203280271332616346"},"creditorName":"Creditor Name","transactionType":"remote_transaction","remittanceInformationUnstructured":"remittance information to creditor"}
+
+-----------------------------------------------------------------------------------
+RESPONSE 2
+201
+Date: Wed, 01 Dec 2021 08:14:15 GMT
+Date: Wed, 01 Dec 2021 08:14:15 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: a71da7d2-a5ae-4d2e-b6a9-ef71f8fb9e3a
+Location: https://openbanking.mps.it/payments/sepa-credit-transfers/e02671ea-19f9-4311-a856-2e6b0161d6e8
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 691
+
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "e02671ea-19f9-4311-a856-2e6b0161d6e8",
+  "_links": {
+    "self": {
+      "href": "/payments/sepa-credit-transfers/e02671ea-19f9-4311-a856-2e6b0161d6e8"
+    },
+    "updatePsuAuthenticationRedirect": {
+      "href": "https://iba2a.mps.it/pri/login/home_mobile.jsp?paymentId\u003de02671ea-19f9-4311-a856-2e6b0161d6e8\u0026tppAuthenticationRedirectUri\u003dhttps%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback%3Fstate%3D**HASHED:RY**%26code%3Dcode\u0026tppName\u003dPOSTEPAY+S.P.A.\u0026aspspCode\u003d01030\u0026aspspProductCode\u003dretail\u0026tppRegistrationNumber\u003dPSDIT-BI-06874351007\u0026hash\u003d7I4%2BNe%2BDFGN0XZQTCMeekm3AsYlE30em5fW3toR0gZhMR7cLx7Rbab1ifJOnRPOvrIfdDCFXx1dzohcAw1oK8Q%3D%3D"
+    }
+  }
+}
+
+-----------------------------------------------------------------------------------
+REQUEST 3
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/e02671ea-19f9-4311-a856-2e6b0161d6e8/status
+Content-Type: application/json
+Authorization: Bearer 004980f6-2826-49e8-9fe3-8a5e145f64d7
+x-request-id: 00000000-0000-4000-0000-000000000000
+aspsp-code: 01030
+date: Thu, 09 Apr 1992 10:00:00 UTC
+
+-----------------------------------------------------------------------------------
+RESPONSE 3
+403
+Date: Wed, 01 Dec 2021 08:23:16 GMT
+Date: Wed, 01 Dec 2021 08:23:16 GMT
+X-Frame-Options: SAMEORIGIN
+X-Frame-Options: SAMEORIGIN
+x-request-id: 2ff399a8-533b-41aa-b2a3-31841cce6118
+X-Content-Type-Options: nosniff
+Content-Type: application/json
+Content-Length: 222
+
+{
+  "errorManagement": {
+    "errorCode": "PSD2_00.188.A0005",
+    "errorDescription": "ASPSP provided error. Reference to the TPP-messages"
+  },
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "GENERIC_ERROR",
+      "text": "Unknown Payment Identifier"
+    }
+  ]
+}

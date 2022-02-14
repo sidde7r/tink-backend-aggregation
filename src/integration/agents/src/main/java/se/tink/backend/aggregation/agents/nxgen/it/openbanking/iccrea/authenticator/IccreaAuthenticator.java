@@ -1,42 +1,62 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
-import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountFetchingStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyFinishAuthenticationStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiUrlProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiAccountFetchingStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiConsentCreationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiFinishAuthenticationStep;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CbiConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeAuthApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.client.CbiGlobeFetcherApiClient;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 
-public class IccreaAuthenticator extends CbiGlobeAuthenticator {
+public class IccreaAuthenticator implements TypedAuthenticator {
 
-    private final ConsentProcessor consentProcessor;
+    private final CbiConsentCreationStep consentCreationStep;
+    private final IccreaScaMethodSelectionStep scaMethodSelectionStep;
+    private final IccreaCredentialsAuthenticationStep credentialsAuthenticationStep;
+    private final IccreaConsentAuthorizationStep consentAuthorizationStep;
+    private final CbiFinishAuthenticationStep finishAuthenticationStep;
+    private final CbiAccountFetchingStep accountFetchingStep;
 
     public IccreaAuthenticator(
-            CbiGlobeApiClient apiClient,
-            StrongAuthenticationState strongAuthenticationState,
-            CbiUserState userState,
-            ConsentManager consentManager,
-            CbiGlobeConfiguration configuration,
-            ConsentProcessor consentProcessor) {
-        super(apiClient, strongAuthenticationState, userState, consentManager, configuration);
-        this.consentProcessor = consentProcessor;
+            CbiGlobeAuthApiClient authApiClient,
+            CbiGlobeFetcherApiClient fetcherApiClient,
+            CbiStorage storage,
+            LocalDateTimeSource localDateTimeSource,
+            Credentials credentials,
+            UserInteractions userInteractions,
+            CbiUrlProvider urlProvider) {
+        consentCreationStep =
+                new CbiConsentCreationStep(authApiClient, localDateTimeSource, storage);
+        scaMethodSelectionStep =
+                new IccreaScaMethodSelectionStep(
+                        authApiClient, urlProvider.getUpdateConsentsRawUrl());
+        credentialsAuthenticationStep =
+                new IccreaCredentialsAuthenticationStep(
+                        authApiClient, credentials, urlProvider.getUpdateConsentsRawUrl());
+        consentAuthorizationStep =
+                new IccreaConsentAuthorizationStep(authApiClient, userInteractions, storage);
+        finishAuthenticationStep =
+                new CbiFinishAuthenticationStep(authApiClient, credentials, storage);
+        accountFetchingStep = new CbiAccountFetchingStep(fetcherApiClient, storage);
     }
 
     @Override
-    protected List<AuthenticationStep> getManualAuthenticationSteps() {
-        if (manualAuthenticationSteps.isEmpty()) {
-            manualAuthenticationSteps.add(
-                    new ConsentDecoupledStep(
-                            consentProcessor, consentManager, strongAuthenticationState));
-            manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
-            manualAuthenticationSteps.add(
-                    new CbiThirdPartyFinishAuthenticationStep(consentManager, userState));
-        }
+    public void authenticate(Credentials credentials) {
+        CbiConsentResponse consentResponse = consentCreationStep.createConsentAndSaveId();
+        consentResponse = scaMethodSelectionStep.pickScaMethod(consentResponse);
+        credentialsAuthenticationStep.authenticate(consentResponse, CbiConsentResponse.class);
+        consentAuthorizationStep.authorizeConsent();
+        finishAuthenticationStep.storeConsentValidUntilDateInCredentials();
+        accountFetchingStep.fetchAndSaveAccounts();
+    }
 
-        return manualAuthenticationSteps;
+    @Override
+    public CredentialsTypes getType() {
+        return CredentialsTypes.PASSWORD;
     }
 }

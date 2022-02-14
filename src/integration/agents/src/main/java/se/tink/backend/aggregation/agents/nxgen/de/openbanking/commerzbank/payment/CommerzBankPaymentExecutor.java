@@ -122,7 +122,7 @@ public class CommerzBankPaymentExecutor implements PaymentExecutor {
                     retryer.call(
                             () ->
                                     apiClient
-                                            .fetchPaymentStatus(paymentRequest)
+                                            .fetchPaymentStatus(paymentRequest.getPayment())
                                             .toTinkPayment(
                                                     paymentRequest.getPayment(),
                                                     paymentStatusMapper)

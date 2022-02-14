@@ -20,7 +20,7 @@ public class ConsentStatus {
     private static final String EXPIRED = "expired";
     private static final String TERMINATED_BY_TPP = "terminatedByTpp";
 
-    private String value;
+    protected String value;
 
     @JsonValue
     public String getValue() {
@@ -55,8 +55,12 @@ public class ConsentStatus {
         return is(TERMINATED_BY_TPP);
     }
 
-    private boolean is(String other) {
+    protected boolean is(String other) {
         return value != null && value.equalsIgnoreCase(other);
+    }
+
+    public boolean isFinal() {
+        return isRejected() || isValid() || isRevokedByPsu() || isExpired() || isTerminatedByTpp();
     }
 
     @Override
