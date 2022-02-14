@@ -71,6 +71,7 @@ public class SwedbankSEConstants {
 
     public static class HeaderKeys {
         public static final String X_CLIENT = "X-Client";
+        public static final String X_FORWARDED_FOR = "X-Forwarded-For";
         public static final String ADRUM = "ADRUM";
         public static final String ADRUM_1 = "ADRUM_1";
     }
