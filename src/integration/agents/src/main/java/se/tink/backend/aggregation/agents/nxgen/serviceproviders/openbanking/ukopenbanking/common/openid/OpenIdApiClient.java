@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.Scopes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
@@ -51,8 +50,6 @@ public class OpenIdApiClient {
     @Getter @Setter private OpenIdAuthenticatedHttpFilter aisAuthFilter;
 
     @Getter private OpenIdAuthenticatedHttpFilter pisAuthFilter;
-
-    private ErrorEntity errorEntity;
 
     public OpenIdApiClient(
             TinkHttpClient httpClient,
@@ -153,14 +150,6 @@ public class OpenIdApiClient {
     public void instantiatePisAuthFilter(OAuth2Token token) {
         log.debug("Instantiating the Pis Auth Filter.");
         pisAuthFilter = new OpenIdAuthenticatedHttpFilter(token, randomValueGenerator);
-    }
-
-    public void storeOpenIdError(ErrorEntity error) {
-        errorEntity = error;
-    }
-
-    public Optional<ErrorEntity> getErrorEntity() {
-        return Optional.ofNullable(errorEntity);
     }
 
     public Optional<Map<String, PublicKey>> getJwkPublicKeys() {

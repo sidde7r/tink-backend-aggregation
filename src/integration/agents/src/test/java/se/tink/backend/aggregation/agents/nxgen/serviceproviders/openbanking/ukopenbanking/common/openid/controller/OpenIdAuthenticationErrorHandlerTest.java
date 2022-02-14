@@ -2,10 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -29,7 +26,6 @@ import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -40,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 @RunWith(JUnitParamsRunner.class)
 public class OpenIdAuthenticationErrorHandlerTest {
 
-    private OpenIdApiClient openIdApiClient;
     private OpenIdAuthenticationErrorHandler errorHandler;
     private ListAppender<ILoggingEvent> listAppender;
 
@@ -51,9 +46,10 @@ public class OpenIdAuthenticationErrorHandlerTest {
         listAppender.start();
         log.addAppender(listAppender);
         PersistentStorage persistentStorage = mock(PersistentStorage.class);
-        openIdApiClient = mock(OpenIdApiClient.class);
         ConsentDataStorage consentDataStorage = new ConsentDataStorage(persistentStorage);
-        errorHandler = new OpenIdAuthenticationErrorHandler(consentDataStorage, openIdApiClient);
+        errorHandler =
+                new OpenIdAuthenticationErrorHandler(
+                        consentDataStorage, mock(OpenIdApiClient.class));
     }
 
     @Test
@@ -81,7 +77,6 @@ public class OpenIdAuthenticationErrorHandlerTest {
                 .isInstanceOfSatisfying(
                         LoginException.class,
                         e -> assertThat(e.getError()).isEqualTo(LoginError.INCORRECT_CREDENTIALS));
-        verify(openIdApiClient, times(1)).storeOpenIdError(any(ErrorEntity.class));
     }
 
     public Object[] parametersForShouldThrowIncorrectCredentialsException() {

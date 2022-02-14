@@ -13,7 +13,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -54,9 +53,6 @@ final class OpenIdAuthenticationErrorHandler implements ErrorHandler {
 
         if (errorType.equalsIgnoreCase(ACCESS_DENIED)
                 || errorType.equalsIgnoreCase(LOGIN_REQUIRED)) {
-            // Store error information to make it possible for agent to determine cause and
-            // give end user a proper error message.
-            openIdApiClient.storeOpenIdError(ErrorEntity.create(errorType, errorDescription));
             throw LoginError.INCORRECT_CREDENTIALS.exception();
 
         } else if (errorType.equalsIgnoreCase(SERVER_ERROR)) {
