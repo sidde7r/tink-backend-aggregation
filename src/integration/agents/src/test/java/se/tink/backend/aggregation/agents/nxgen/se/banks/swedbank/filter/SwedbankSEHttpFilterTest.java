@@ -27,7 +27,7 @@ public class SwedbankSEHttpFilterTest {
 
     @Before
     public void setup() {
-        swedbankSeHttpFilter = new SwedbankSeHttpFilter("UserAgent");
+        swedbankSeHttpFilter = new SwedbankSeHttpFilter("UserAgent", "1.2.3.4");
         nextFilter = mock(Filter.class);
         swedbankSeHttpFilter.setNext(nextFilter);
     }
