@@ -45,6 +45,9 @@ public class SparebankenSorCreditCardTransactionFetcher implements TransactionFe
             return Collections.emptyList();
         }
 
+        // Removes transactions that are missing executed amount
+        transactions.removeIf(t -> t.getAmounts().isExecutedEntityNull());
+
         return transactions.stream()
                 .map(CardTranscationEntity::toTinkCardTransaction)
                 .collect(Collectors.toList());

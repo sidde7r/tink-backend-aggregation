@@ -109,6 +109,13 @@ public class AccountEntity {
             currency = "NOK";
         }
 
+        if (accountBalance.isAvailableBalanceNull()) {
+            return BalanceModule.builder()
+                    .withBalance(
+                            ExactCurrencyAmount.of(accountBalance.getAccountingBalance(), currency))
+                    .build();
+        }
+
         return BalanceModule.builder()
                 .withBalance(
                         ExactCurrencyAmount.of(accountBalance.getAccountingBalance(), currency))
