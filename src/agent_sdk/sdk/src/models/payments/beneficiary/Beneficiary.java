@@ -1,8 +1,10 @@
 package se.tink.agent.sdk.models.payments.beneficiary;
 
+import lombok.EqualsAndHashCode;
 import se.tink.agent.sdk.models.payments.beneficiary.builder.BeneficiaryBuildName;
 import se.tink.libraries.account.AccountIdentifier;
 
+@EqualsAndHashCode
 public class Beneficiary {
     private final String name;
     private final AccountIdentifier accountIdentifier;

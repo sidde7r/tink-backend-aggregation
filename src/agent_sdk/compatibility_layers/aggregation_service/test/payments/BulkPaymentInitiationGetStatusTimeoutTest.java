@@ -12,6 +12,9 @@ import se.tink.agent.sdk.models.payments.bulk_payment_sign_result.BulkPaymentSig
 import se.tink.agent.sdk.models.payments.payment.Payment;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationState;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.BulkPaymentTestAgent;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestContract;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.payments.test_agent.PaymentsTestExecutionReport;
 
 public class BulkPaymentInitiationGetStatusTimeoutTest {
     @Test
@@ -19,25 +22,32 @@ public class BulkPaymentInitiationGetStatusTimeoutTest {
         // Set up the agent to successfully register and sign the payment but to always return
         // PENDING when polling for status. The payment initiation will be constructed with a very
         // short polling timeout. We expect the final state of the payment to be PENDING.
+        PaymentsTestExecutionReport executionReport = new PaymentsTestExecutionReport();
         BulkPaymentTestAgent agent =
                 new BulkPaymentTestAgent(
-                        List.of(
-                                BulkPaymentRegisterResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .noError()
-                                        .build()),
-                        List.of(
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build()),
-                        List.of(
-                                BulkPaymentSignResult.builder()
-                                        .reference(PaymentInitiationTestHelper.PAYMENT_1_REF)
-                                        .status(PaymentStatus.PENDING)
-                                        .noDebtor()
-                                        .build()));
+                        executionReport,
+                        PaymentsTestContract.builder()
+                                .registerPaymentResult(
+                                        BulkPaymentRegisterResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .noError()
+                                                .build())
+                                .signPaymentResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .paymentSignStatusResult(
+                                        BulkPaymentSignResult.builder()
+                                                .reference(
+                                                        PaymentInitiationTestHelper.PAYMENT_1_REF)
+                                                .status(PaymentStatus.PENDING)
+                                                .noDebtor()
+                                                .build())
+                                .build());
 
         List<Payment> payments = List.of(PaymentInitiationTestHelper.PAYMENT_1);
 
@@ -48,12 +58,15 @@ public class BulkPaymentInitiationGetStatusTimeoutTest {
         // Assert that the agent processed the expected payments at every step.
         MatcherAssert.assertThat(
                 payments,
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToRegister().toArray()));
+                Matchers.containsInAnyOrder(
+                        executionReport.getPaymentsAskedToRegister().toArray()));
         MatcherAssert.assertThat(
-                payments, Matchers.containsInAnyOrder(agent.getPaymentsAskedToSign().toArray()));
+                payments,
+                Matchers.containsInAnyOrder(executionReport.getPaymentsAskedToSign().toArray()));
         MatcherAssert.assertThat(
                 new HashSet<>(payments),
-                Matchers.containsInAnyOrder(agent.getPaymentsAskedToGetStatus().toArray()));
+                Matchers.containsInAnyOrder(
+                        executionReport.getPaymentsAskedToGetSignStatus().toArray()));
 
         // Assert that the final report contain the expected final statuses and/or errors.
         List<PaymentInitiationState> expectedFinalPaymentStates =

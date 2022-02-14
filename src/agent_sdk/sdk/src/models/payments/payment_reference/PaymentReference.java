@@ -2,6 +2,7 @@ package se.tink.agent.sdk.models.payments.payment_reference;
 
 import java.util.Optional;
 import javax.annotation.Nullable;
+import lombok.EqualsAndHashCode;
 import se.tink.agent.sdk.models.payments.payment.Payment;
 import se.tink.agent.sdk.models.payments.payment_reference.builder.PaymentReferenceBuildPayment;
 import se.tink.agent.sdk.storage.SerializableReference;
@@ -10,6 +11,7 @@ import se.tink.agent.sdk.storage.SerializableReference;
  * A data structure that bridge Tink's version of a Payment and the bank. The `bankReference` is
  * optional.
  */
+@EqualsAndHashCode
 public class PaymentReference {
     private final Payment payment;
     @Nullable private final SerializableReference bankReference;

@@ -77,7 +77,7 @@ public class BulkPaymentInitiation {
 
         boolean allUnsignedPaymentsWereDeleted = deleteUnsignedPayments();
         if (!allUnsignedPaymentsWereDeleted) {
-            throw new IllegalStateException("Failed to delete existing unsigned payments.");
+            throw new FailedToDeleteUnsignedPaymentsException();
         }
 
         List<PaymentInitiationState> beneficiaryRegistrationStates =
@@ -173,5 +173,11 @@ public class BulkPaymentInitiation {
         }
 
         return unsignedPaymentsDeleter.deleteUnsignedPayments(unsignedPayments);
+    }
+
+    public static class FailedToDeleteUnsignedPaymentsException extends RuntimeException {
+        public FailedToDeleteUnsignedPaymentsException() {
+            super("Failed to delete existing unsigned payments.");
+        }
     }
 }

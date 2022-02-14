@@ -6,11 +6,18 @@ import lombok.AllArgsConstructor;
 import se.tink.agent.sdk.models.payments.BeneficiaryReference;
 import se.tink.agent.sdk.models.payments.beneficiary.Beneficiary;
 import se.tink.agent.sdk.storage.Reference;
+import se.tink.libraries.account.AccountIdentifier;
 
 @AllArgsConstructor
 public class BeneficiaryReferenceImpl implements BeneficiaryReference {
+    private final AccountIdentifier debtorAccountIdentifier;
     private final Beneficiary beneficiary;
     @Nullable private final Reference bankReference;
+
+    @Override
+    public AccountIdentifier getDebtorAccountIdentifier() {
+        return this.debtorAccountIdentifier;
+    }
 
     @Override
     public Beneficiary getBeneficiary() {
@@ -21,7 +28,7 @@ public class BeneficiaryReferenceImpl implements BeneficiaryReference {
     @Override
     public <T> T getBankReference(Class<T> referenceType) {
         return Optional.ofNullable(this.bankReference)
-                .flatMap(x -> x.tryGet(referenceType))
+                .flatMap(reference -> reference.tryGet(referenceType))
                 .orElse(null);
     }
 }

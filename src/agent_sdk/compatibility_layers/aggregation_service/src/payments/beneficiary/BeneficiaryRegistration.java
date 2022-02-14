@@ -159,7 +159,9 @@ public class BeneficiaryRegistration {
 
         BeneficiaryReference beneficiaryReference =
                 new BeneficiaryReferenceImpl(
-                        beneficiary, registerResult.getBankReference().orElse(null));
+                        debtorAccountIdentifier,
+                        beneficiary,
+                        registerResult.getBankReference().orElse(null));
 
         BeneficiaryState beneficiaryState =
                 this.steppableExecutor.execute(
