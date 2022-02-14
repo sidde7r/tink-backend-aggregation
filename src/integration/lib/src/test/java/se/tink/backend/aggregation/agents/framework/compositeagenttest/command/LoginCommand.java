@@ -23,7 +23,7 @@ public final class LoginCommand implements CompositeAgentTestCommand {
     private final SupplementalInformationController supplementalInformationController;
 
     @Inject
-    private LoginCommand(
+    public LoginCommand(
             AgentInstance agentInstance,
             CredentialsRequest credentialsRequest,
             SupplementalInformationController supplementalInformationController) {
