@@ -24,6 +24,7 @@ import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.agent.runtime.instance.AgentInstance;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
@@ -224,7 +225,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
     }
 
-    private Agent createAgent(CredentialsRequest credentialsRequest) {
+    private AgentInstance createAgentSdkInstance(CredentialsRequest credentialsRequest) {
         try {
             ManagedTppSecretsServiceInternalClient tppSecretsServiceInternalClient =
                     new TppSecretsServiceInternalClientImpl(
@@ -263,10 +264,19 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     Guice.createInjector(new AgentIntegrationTestModule(configuration));
             final AgentFactory factory = injector.getInstance(AgentFactory.class);
 
-            return factory.create(credentialsRequest, context);
+            return factory.createAgentSdkInstance(credentialsRequest, context);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private Agent getAgent(AgentInstance agentInstance) {
+        return agentInstance
+                .instanceOf(Agent.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Agent instance did not contain an instance of type Agent.class."));
     }
 
     private boolean isLoggedIn(Agent agent) throws Exception {
@@ -625,7 +635,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             login(agent, credentialsRequest);
@@ -680,7 +690,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
         try {
             login(agent, credentialsRequest);
             doBankTransfer(agent, transfer);
@@ -701,7 +711,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
         try {
             // login(agent, credentialsRequest);
             doBankTransfer(agent, transfer);
@@ -722,7 +732,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             login(agent, credentialsRequest);
@@ -766,7 +776,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             login(agent, credentialsRequest);
@@ -794,7 +804,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             if (agent instanceof TypedPaymentControllerable) {
@@ -837,7 +847,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
         try {
             login(agent, credentialsRequest);
             if (agent instanceof CreateBeneficiaryControllerable) {
@@ -935,7 +945,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = createAgent(credentialsRequest);
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         try {
             // todo: Look into this, currently authentication is done in
@@ -962,7 +972,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     public void testGenericPaymentUKOB(Payment payment) throws Exception {
         initiateCredentials();
         readConfigurationFile();
-        Agent agent = createAgent(createRefreshInformationRequest());
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
 
         doGenericPaymentBankTransferUKOB(agent, payment);
 
