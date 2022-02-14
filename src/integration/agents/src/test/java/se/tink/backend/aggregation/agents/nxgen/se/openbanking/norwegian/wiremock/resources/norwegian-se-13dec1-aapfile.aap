@@ -74,7 +74,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 3
@@ -115,7 +115,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 4
@@ -168,7 +168,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 6
@@ -226,7 +226,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 7
@@ -1158,7 +1158,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 8
@@ -2030,7 +2030,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 9
@@ -2054,7 +2054,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 26
@@ -2078,7 +2078,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 27
@@ -2102,7 +2102,7 @@ PSU-IP-Port: 0000
 PSU-User-Agent: Tink
 Region-ID: SE
 PSU-Device-ID: Tink
-signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent",signature="RkFLRV9TSUdOQVRVUkUK"
+signature: keyId="2a43f51b5f4dfd50a048c3ca9ba0d29015c5aa3b",algorithm="rsa-sha256",headers="(request-target) date request-id host psu-device-id psu-id psu-ip-address psu-ip-port psu-user-agent tpp-client-id",signature="RkFLRV9TSUdOQVRVUkUK"
 
 -----------------------------------------------------------------------------------
 RESPONSE 28
