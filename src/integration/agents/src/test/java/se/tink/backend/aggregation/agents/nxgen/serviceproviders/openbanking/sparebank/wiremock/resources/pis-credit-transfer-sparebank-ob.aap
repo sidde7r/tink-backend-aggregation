@@ -56,18 +56,7 @@ Content-Type: application/json
 
 {"paymentId":"enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","transactionStatus":"RCVD","_links":{"self":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","verbs":["GET","DELETE"]},"status":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status","verbs":["GET"]},"startAuthorisation":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/authorisations","verbs":["POST"]}}}
 
-REQUEST 6 MATCH STATUS_1
-GET https://psd2.sr-bank.no/api/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4
-accept: application/json
-
-RESPONSE 6 SET STATUS_2
-200
-Date: Wed, 19 Jan 2022 12:53:07 GMT
-Content-Type: application/json
-
-{"instructedAmount":{"amount":"2.00","currency":"NOK"},"creditorName":"Vegard","creditorAccount":{"bban":"88888888888","currency":"NOK"},"creditorAddress":{"country":"NO"},"debtorAccount":{"bban":"33333333333","currency":"NOK"},"remittanceInformationUnstructured":"PIS Wiremock Test","paymentId":"enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","requestedExecutionDate":"2022-01-19","_links":{"self":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4","verbs":["GET","DELETE"]},"status":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status","verbs":["GET"]},"startAuthorisation":{"href":"/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/authorisations","verbs":["POST"]}}}
-
-REQUEST 7 MATCH STATUS_2
+REQUEST 7 MATCH STATUS_1
 GET https://psd2.sr-bank.no/api/v1/payments/norwegian-domestic-credit-transfers/enc!!Udi4TNWHndLbrPRFIIAsON1i24ezT2IL9VGjsZwKH_q9xBI-IQ2IV_SEvSDaQfF4/status
 accept: application/json
 
