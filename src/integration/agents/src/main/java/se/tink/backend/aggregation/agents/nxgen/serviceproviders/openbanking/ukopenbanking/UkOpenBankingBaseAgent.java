@@ -566,7 +566,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                     componentProvider.getCredentialsRequest().getCredentials().getId();
 
             Toggle toggle =
-                    Toggle.of("uk-balance-calculators")
+                    Toggle.of("cmd-chain-balance-calculators")
                             .unleashContextWrapper(
                                     UnleashContextWrapper.builder()
                                             .credentialsId(credentialsId)
