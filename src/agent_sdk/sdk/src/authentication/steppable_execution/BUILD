@@ -7,5 +7,5 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/steppable_execution",
         "//src/agent_sdk/sdk/src/authentication/consent",
     ],
-    visibility = ["//src/agent_sdk/sdk:__subpackages__"],
+    visibility = ["//src/agent_sdk:__subpackages__"],
 )

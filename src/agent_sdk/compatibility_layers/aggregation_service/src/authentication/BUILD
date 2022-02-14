@@ -10,6 +10,8 @@ java_library_with_sources(
     ],
     intdeps = [
         "//src/agent_sdk/runtime/src/instance",
+        "//src/agent_sdk/sdk/src/authentication/consent",
+        "//src/agent_sdk/sdk/src/authentication/steppable_execution",
         "//src/agent_sdk/runtime/src/authentication",
         "//src/agent_sdk/sdk/src/utils",
         "//src/agent_sdk/compatibility_layers/aggregation_service/src/steppable_execution",
