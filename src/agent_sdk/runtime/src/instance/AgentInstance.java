@@ -2,6 +2,15 @@ package se.tink.agent.runtime.instance;
 
 import com.google.common.base.Preconditions;
 import java.util.Optional;
+import java.util.stream.Stream;
+import se.tink.agent.sdk.authentication.features.AuthenticateBerlinGroup;
+import se.tink.agent.sdk.authentication.features.AuthenticateGeneric;
+import se.tink.agent.sdk.authentication.features.AuthenticateOauth2;
+import se.tink.agent.sdk.authentication.features.AuthenticateOauth2DecoupledApp;
+import se.tink.agent.sdk.authentication.features.AuthenticateOauth2DecoupledSwedishMobileBankId;
+import se.tink.agent.sdk.authentication.features.AuthenticateSwedishMobileBankId;
+import se.tink.agent.sdk.authentication.features.AuthenticateThirdPartyApp;
+import se.tink.agent.sdk.authentication.features.AuthenticateUsernameAndPassword;
 import se.tink.agent.sdk.environment.Operation;
 import se.tink.agent.sdk.environment.Utilities;
 import se.tink.agent.sdk.payments.features.bulk.InitiateBulkPaymentGeneric;
@@ -45,6 +54,19 @@ public class AgentInstance {
 
     public boolean supportsBulkPaymentInitiation() {
         return isInstanceOf(InitiateBulkPaymentGeneric.class);
+    }
+
+    public boolean supportsAuthentication() {
+        return Stream.of(
+                        AuthenticateBerlinGroup.class,
+                        AuthenticateGeneric.class,
+                        AuthenticateOauth2.class,
+                        AuthenticateOauth2DecoupledApp.class,
+                        AuthenticateOauth2DecoupledSwedishMobileBankId.class,
+                        AuthenticateSwedishMobileBankId.class,
+                        AuthenticateThirdPartyApp.class,
+                        AuthenticateUsernameAndPassword.class)
+                .anyMatch(this::isInstanceOf);
     }
 
     public static AgentInstance createFromInstance(
