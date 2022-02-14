@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Strings;
@@ -96,6 +97,8 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.BulkPaymentInitiation;
+import src.agent_sdk.compatibility_layers.aggregation_service.src.payments.report.PaymentInitiationReport;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
 
@@ -684,6 +687,55 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     public NewAgentTestContext testRefresh() throws Exception {
         return testRefresh("");
+    }
+
+    public void testBulkTransfer(Transfer... transfers) throws Exception {
+        initiateBulkPayment(
+                bulkPaymentInitiation ->
+                        bulkPaymentInitiation.initiateBulkPaymentsWithRpcTransfers(
+                                Arrays.asList(transfers)));
+    }
+
+    public void testBulkPayment(Payment... payments) throws Exception {
+        initiateBulkPayment(
+                bulkPaymentInitiation ->
+                        bulkPaymentInitiation.initiateBulkPaymentsWithRpcPayments(
+                                Arrays.asList(payments)));
+    }
+
+    private void initiateBulkPayment(
+            Function<BulkPaymentInitiation, PaymentInitiationReport> function) throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+
+        AgentInstance agentInstance = createAgentSdkInstance(credentialsRequest);
+        Agent agent = getAgent(agentInstance);
+
+        try {
+            login(agent, credentialsRequest);
+
+            if (!agentInstance.supportsBulkPaymentInitiation()) {
+                throw new Exception("Not supported");
+            }
+
+            BulkPaymentInitiation bulkPaymentInitiation =
+                    new BulkPaymentInitiation(supplementalInformationController, agentInstance);
+
+            PaymentInitiationReport paymentInitiationReport = function.apply(bulkPaymentInitiation);
+            log.info("Final payment states: {}", paymentInitiationReport.getFinalPaymentStates());
+
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            context.printHar();
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
     }
 
     public void testBankTransfer(Transfer transfer) throws Exception {

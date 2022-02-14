@@ -10,6 +10,7 @@ java_library(
         "//po:i18n_aggregation",
     ],
     deps = [
+        "//src/agent_sdk/compatibility_layers/aggregation_service/src/payments",
         "//src/agent_sdk/runtime/src/instance",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
