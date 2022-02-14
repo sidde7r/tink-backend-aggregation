@@ -193,7 +193,11 @@ public abstract class IngBaseAgent extends NextGenerationAgent
 
         IngPaymentExecutor paymentExecutor =
                 new IngPaymentExecutor(
-                        sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
+                        sessionStorage,
+                        paymentApiClient,
+                        paymentAuthenticator,
+                        paymentMapper,
+                        this.getClass().getAnnotations());
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.module.AgentRequestScopeModule;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import src.agent_sdk.compatibility_layers.aggregation_service.test.modules.AgentSdkTestModule;
 
 public final class AgentSystemTestModuleFactory implements AgentModuleFactory {
 
@@ -65,6 +66,7 @@ public final class AgentSystemTestModuleFactory implements AgentModuleFactory {
                 new AgentSystemTestComponentProviderModule(
                         request, context, agentConfiguration, fakeBankSocket),
                 new AgentRequestScopeModule(request, context, agentConfiguration),
+                new AgentSdkTestModule(),
                 wireMockConfiguration.getAgentModule());
     }
 }

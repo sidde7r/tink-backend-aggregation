@@ -10,12 +10,13 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.ConnectionTim
 public final class IngBaseTinkClientConfigurator {
 
     public void configureClient(TinkHttpClient client, int maxRetries, int retrySleepMilliseconds) {
+        client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(new IngBaseInstantSepaNotPossibleErrorFilter());
         client.addFilter(new IngRetryFilter(maxRetries, retrySleepMilliseconds));
         client.addFilter(new TimeoutFilter());
         client.addFilter(new ConnectionTimeoutRetryFilter(maxRetries, retrySleepMilliseconds));
         client.addFilter(new TerminatedHandshakeRetryFilter(maxRetries, retrySleepMilliseconds));
         client.addFilter(new IngBaseSignatureInvalidFilter());
-        client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new IngBaseGatewayTimeoutFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }

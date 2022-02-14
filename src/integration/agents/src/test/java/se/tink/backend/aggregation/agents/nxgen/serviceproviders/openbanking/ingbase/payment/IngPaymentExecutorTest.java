@@ -8,7 +8,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentTestFixtures.getAgentPisCapability;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -67,15 +70,12 @@ public class IngPaymentExecutorTest {
         mocksInOrder =
                 inOrder(sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
 
-        paymentExecutor =
-                new IngPaymentExecutor(
-                        sessionStorage, paymentApiClient, paymentAuthenticator, paymentMapper);
+        paymentExecutor = createIngPaymentExecutor(true);
     }
 
-    @SneakyThrows
     @Test
-    @Parameters(method = "regularPaymentsWithAllPossibleResponseStatuses")
-    public void createRegularPaymentShouldCallApiClientAndReturnPaymentResponse(
+    @Parameters(method = "oneTimePaymentsWithAllPossibleResponseStatuses")
+    public void createOneTimePaymentShouldCallApiClientAndReturnPaymentResponse(
             Payment payment, PaymentStatus resultPaymentStatus) {
         // given
         String authUrl = "http://something.com/redirect/XX";
@@ -112,13 +112,16 @@ public class IngPaymentExecutorTest {
     }
 
     @SuppressWarnings("unused")
-    private static Object[] regularPaymentsWithAllPossibleResponseStatuses() {
-        List<Payment> regularPayments =
-                asList(emptyPayment(), emptyPayment(PaymentServiceType.SINGLE));
+    private static Object[] oneTimePaymentsWithAllPossibleResponseStatuses() {
+        List<Payment> oneTimePayments =
+                asList(
+                        emptyPayment(PaymentScheme.SEPA_CREDIT_TRANSFER),
+                        emptyPayment(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER),
+                        emptyPayment(PaymentServiceType.SINGLE));
         PaymentStatus[] paymentStatuses = PaymentStatus.values();
 
         List<Object[]> params = new ArrayList<>();
-        for (Payment payment : regularPayments) {
+        for (Payment payment : oneTimePayments) {
             for (PaymentStatus paymentStatus : paymentStatuses) {
                 params.add(new Object[] {payment, paymentStatus});
             }
@@ -318,8 +321,11 @@ public class IngPaymentExecutorTest {
     }
 
     @Test
-    public void shouldThrowPaymentValidationExceptionIfPaymentSchemaIsInstant() {
+    public void shouldThrowPaymentValidationExceptionWhenInstantPaymentSchemaIsNotSupported() {
         // given
+        paymentExecutor = createIngPaymentExecutor(false);
+
+        // and
         Payment payment =
                 new Payment.Builder()
                         .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
@@ -335,6 +341,21 @@ public class IngPaymentExecutorTest {
                 .hasMessage("Instant payment is not supported");
     }
 
+    private IngPaymentExecutor createIngPaymentExecutor(boolean instantSepaIsSupported) {
+        Annotation[] agentAnnotations = new Annotation[1];
+        if (instantSepaIsSupported) {
+            agentAnnotations[0] = getAgentPisCapability(PisCapability.SEPA_INSTANT_CREDIT_TRANSFER);
+        } else {
+            agentAnnotations[0] = getAgentPisCapability(PisCapability.SEPA_CREDIT_TRANSFER);
+        }
+        return new IngPaymentExecutor(
+                sessionStorage,
+                paymentApiClient,
+                paymentAuthenticator,
+                paymentMapper,
+                agentAnnotations);
+    }
+
     @Getter
     @Builder
     private static class SignTestParams {
@@ -347,8 +368,8 @@ public class IngPaymentExecutorTest {
         }
     }
 
-    private static Payment emptyPayment() {
-        return new Payment.Builder().build();
+    private static Payment emptyPayment(PaymentScheme paymentScheme) {
+        return new Payment.Builder().withPaymentScheme(paymentScheme).build();
     }
 
     @SuppressWarnings("SameParameterValue")

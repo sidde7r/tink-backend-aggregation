@@ -7,6 +7,7 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agent_sdk/compatibility_layers/aggregation_service/src/modules",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/impl",

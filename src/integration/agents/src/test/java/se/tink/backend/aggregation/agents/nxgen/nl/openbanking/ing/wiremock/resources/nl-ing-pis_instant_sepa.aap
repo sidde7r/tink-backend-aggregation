@@ -1,0 +1,98 @@
+REQUEST 1
+POST https://api.ing.com/oauth2/token
+Accept: application/json
+Digest: SHA-256=w0mymuL8aCrbJmmabs1pytZhon8lQucTuJMUtuKr+uw=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+Authorization: Signature keyId="SN=7d4fbf3a6e44f720662dcfce2b6958ac",algorithm="rsa-sha256",headers="(request-target) date digest x-ing-reqid",signature="RkFLRV9TSUdOQVRVUkUK"
+Content-Type: application/x-www-form-urlencoded
+TPP-Signature-Certificate: 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
+
+grant_type=client_credentials
+
+RESPONSE 1
+200
+Date: Fri, 10 Apr 1992 00:00:01 GMT
+Date: Fri, 10 Apr 1992 00:00:02 GMT
+Content-Type: application/json
+X-Frame-Options: deny
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=31622400; includeSubDomains
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-ING-Response-ID: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: default-src 'self'; prefetch-src 'none'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; connect-src 'self'; style-src 'self' 'unsafe-inline' data:; img-src https: data:; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'
+Content-Length: 3587
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access_token":"TEST_ACCESS_TOKEN","expires_in":905,"scope":"payment-accounts:orders:create granting","token_type":"Bearer","keys":[{"kty":"RSA","n":"abc123","e":"AQAB","use":"sig","alg":"RS256","x5t":"123abc"}],"client_id":"TEST_CLIENT_ID"}
+
+REQUEST 2
+POST https://api.ing.com/v1/payments/sepa-credit-transfers
+Accept: application/json
+Digest: SHA-256=zufTYI4oewLzetxU2DbuGI1ALDmW6RgqSw0GrKzAQi0=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="TEST_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer TEST_ACCESS_TOKEN
+Content-Type: application/json
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+psu-ip-address: 127.0.0.1
+
+{"debtorAccount":{"iban":"NL21INGB0987654321"},"creditorAccount":{"iban":"NL98INGB1234567890"},"instructedAmount":{"amount":"1.01","currency":"EUR"},"creditorName":"Payment Creditor","remittanceInformationUnstructured":"test value","chargeBearer":"SLEV","serviceLevelCode":"SEPA","localInstrumentCode":"INST"}
+
+RESPONSE 2
+201
+Date: Fri, 10 Apr 1992 00:00:01 GMT
+Date: Fri, 10 Apr 1992 00:00:02 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="some signature"
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+ASPSP-SCA-Approach: REDIRECT
+Location: https://api.ing.com/v1/payments/sepa-credit-transfers/00000000-0000-4000-0000-000000000000
+Content-Security-Policy: default-src 'self'; prefetch-src 'none'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; connect-src 'self'; style-src 'self' 'unsafe-inline' data:; img-src https: data:; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'
+Strict-Transport-Security: max-age=31622400; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+X-XSS-Protection: 1; mode=block
+Content-Length: 502
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactionStatus":"RCVD","paymentId":"00000000-0000-4000-0000-000000000000","_links":{"scaRedirect":"https://myaccount.ing.com/payment-initiation/00000000-0000-4000-0000-000000000000/XX","self":"https://api.ing.com/v1/payments/sepa-credit-transfers/00000000-0000-4000-0000-000000000000","status":"https://api.ing.com/v1/payments/sepa-credit-transfers/00000000-0000-4000-0000-000000000000/status","delete":"https://api.ing.com/v1/payments/sepa-credit-transfers/00000000-0000-4000-0000-000000000000"}}
+
+REQUEST 3
+GET https://api.ing.com/v1/payments/sepa-credit-transfers/00000000-0000-4000-0000-000000000000/status
+Accept: application/json
+Digest: SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+Date: Fri, 10 Apr 1992 00:00:00 GMT
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="TEST_CLIENT_ID",algorithm="rsa-sha256",headers="(request-target) date digest x-request-id",signature="RkFLRV9TSUdOQVRVUkUK"
+Authorization: Bearer TEST_ACCESS_TOKEN
+Content-Type: application/json
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000
+psu-ip-address: 127.0.0.1
+
+RESPONSE 3
+200
+Date: Fri, 10 Apr 1992 00:00:01 GMT
+Date: Fri, 10 Apr 1992 00:00:02 GMT
+Content-Type: application/json
+X-ING-ReqID: 00000000-0000-4000-0000-000000000000
+X-ING-Response-ID: 00000000-0000-4000-0000-000000000000
+Signature: keyId="prod.response.apiingcom",algorithm="rsa-sha256",headers="X-ING-ReqID X-ING-Response-ID",signature="some other signature"
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Content-Security-Policy: default-src 'self'; prefetch-src 'none'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; connect-src 'self'; style-src 'self' 'unsafe-inline' data:; img-src https: data:; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'
+Strict-Transport-Security: max-age=31622400; includeSubDomains
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+X-XSS-Protection: 1; mode=block
+Content-Length: 28
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactionStatus":"ACSC"}

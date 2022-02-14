@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment;
 
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
+import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -38,6 +43,7 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private final IngPaymentApiClient paymentApiClient;
     private final IngPaymentAuthenticator paymentAuthenticator;
     private final IngPaymentMapper paymentMapper;
+    private final Annotation[] agentAnnotations;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentRejectedException {
@@ -55,14 +61,23 @@ public class IngPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     private IngCreatePaymentRequest createPaymentRequest(Payment payment)
             throws PaymentRejectedException {
-        // Temporary solution to be fixed in NZG-1112
-        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()) {
+        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()
+                && !isInstantSepaSupported()) {
             throw new PaymentValidationException("Instant payment is not supported");
         }
         if (PaymentServiceType.PERIODIC.equals(payment.getPaymentServiceType())) {
             return paymentMapper.toIngCreateRecurringPaymentRequest(payment);
         }
         return paymentMapper.toIngCreatePaymentRequest(payment);
+    }
+
+    private boolean isInstantSepaSupported() {
+        return Arrays.stream(agentAnnotations)
+                .filter(Objects::nonNull)
+                .filter(annotation -> AgentPisCapability.class.equals(annotation.annotationType()))
+                .map(AgentPisCapability.class::cast)
+                .flatMap(agentPisCapability -> Arrays.stream(agentPisCapability.capabilities()))
+                .anyMatch(PisCapability.SEPA_INSTANT_CREDIT_TRANSFER::equals);
     }
 
     private void savePaymentAuthorizationUrl(IngCreatePaymentResponse createPaymentResponse) {

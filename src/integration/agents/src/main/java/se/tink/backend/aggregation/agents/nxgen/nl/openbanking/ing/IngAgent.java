@@ -19,7 +19,11 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
-        capabilities = {PisCapability.SEPA_CREDIT_TRANSFER, PisCapability.PIS_FUTURE_DATE})
+        capabilities = {
+            PisCapability.SEPA_CREDIT_TRANSFER,
+            PisCapability.SEPA_INSTANT_CREDIT_TRANSFER,
+            PisCapability.PIS_FUTURE_DATE
+        })
 public final class IngAgent extends IngBaseAgent {
 
     public static final Pattern HOLDER_NAME_SPLITTER =

@@ -29,6 +29,7 @@ public class RateLimitedExecutorService implements Managed {
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final double MULTIPLIER = 1.25;
+    private static final double SIBS_PERMITS_PER_SECOND = 0.01;
 
     private static final ImmutableMap<String, Double> PROVIDERS_WITH_OVERRIDDEN_RATE_LIMITER =
             ImmutableMap.<String, Double>builder()
@@ -149,35 +150,59 @@ public class RateLimitedExecutorService implements Managed {
                             0.003 * MULTIPLIER)
                     .put("nxgen.fi.openbanking.nordea.NordeaFiAgent", 0.001 * MULTIPLIER)
                     .put("nxgen.fi.openbanking.spankki.SPankkiAgent", 0.003 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.activobank.ActivoBankAgent", 0.015 * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.activobank.ActivoBankAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
                     .put(
                             "nxgen.pt.openbanking.atlanticoeuropa.AtlanticoEuropaAgent",
-                            0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.bancobpi.BancoBpiAgent", 0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.bancoctt.BancoCttAgent", 0.015 * MULTIPLIER)
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.bancobpi.BancoBpiAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.bancoctt.BancoCttAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
                     .put(
                             "nxgen.pt.openbanking.bancomontepio.BancoMontepioAgent",
-                            0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.bankinter.BankinterAgent", 0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.big.BigAgent", 0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.bpg.BpgAgent", 0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.caixa.CaixaRedirectAgent", 0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.caixacrl.CaixaCrlAgent", 0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.cemah.CemahAgent", 0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.cofidis.CofidisAgent", 0.015 * MULTIPLIER)
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.bankinter.BankinterAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.big.BigAgent", SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put("nxgen.pt.openbanking.bpg.BpgAgent", SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.caixa.CaixaRedirectAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.caixacrl.CaixaCrlAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.cemah.CemahAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.cofidis.CofidisAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
                     .put(
                             "nxgen.pt.openbanking.creditoagricola.CreditoAgricolaAgent",
-                            0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.eurobic.EurobicAgent", 0.015 * MULTIPLIER)
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.eurobic.EurobicAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
                     .put(
                             "nxgen.pt.openbanking.millenniumbcp.MillenniumBcpAgent",
-                            0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.novobanco.NovoBancoAgent", 0.015 * MULTIPLIER)
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.novobanco.NovoBancoAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
                     .put(
                             "nxgen.pt.openbanking.novobancoacores.NovoBancoAcoresAgent",
-                            0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.santander.SantanderAgent", 0.015 * MULTIPLIER)
-                    .put("nxgen.pt.openbanking.unicre.UnicreAgent", 0.015 * MULTIPLIER)
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.santander.SantanderAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
+                    .put(
+                            "nxgen.pt.openbanking.unicre.UnicreAgent",
+                            SIBS_PERMITS_PER_SECOND * MULTIPLIER)
                     .put("nxgen.fr.openbanking.bpcegroup.BpceGroupAgent", 0.06 * MULTIPLIER)
                     .put("nxgen.fr.openbanking.boursorama.BoursoramaAgent", 0.06 * MULTIPLIER)
                     .put(

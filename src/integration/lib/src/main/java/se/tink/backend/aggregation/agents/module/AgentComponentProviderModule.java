@@ -27,9 +27,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclien
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.unleashclient.UnleashClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.storage.AgentTemporaryStorage;
 import se.tink.libraries.unleash.provider.UnleashClientProvider;
-import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.ProviderProviderModule;
-import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.StaticBankCredentialsProviderModule;
-import src.agent_sdk.compatibility_layers.aggregation_service.src.modules.UserProviderModule;
 
 /** Module containing basic dependencies for running agent in production environment. */
 @RequiredArgsConstructor
@@ -39,9 +36,6 @@ public final class AgentComponentProviderModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new UserProviderModule());
-        install(new StaticBankCredentialsProviderModule());
-        install(new ProviderProviderModule());
         bind(TinkHttpClientProvider.class).to(NextGenTinkHttpClientProvider.class);
         bind(MockServerUrlProvider.class).to(EmptyMockServerUrlProvider.class);
         bind(SupplementalInformationProvider.class).to(SupplementalInformationProviderImpl.class);

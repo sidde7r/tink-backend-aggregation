@@ -15,8 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngCreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.rpc.IngPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.enums.PaymentService;
-import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -30,6 +30,7 @@ public class IngPaymentApiClient extends IngBaseApiClient {
 
     private final StrongAuthenticationState strongAuthenticationState;
     private final String psuIpAddress;
+    private final RandomValueGenerator randomValueGenerator;
 
     public IngPaymentApiClient(
             TinkHttpClient client,
@@ -49,6 +50,7 @@ public class IngPaymentApiClient extends IngBaseApiClient {
                 agentComponentProvider);
         this.strongAuthenticationState = ingApiInputData.getStrongAuthenticationState();
         this.psuIpAddress = ingApiInputData.getUserAuthenticationData().getPsuIdAddress();
+        this.randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
     }
 
     public IngCreatePaymentResponse createPayment(
@@ -131,7 +133,7 @@ public class IngPaymentApiClient extends IngBaseApiClient {
 
     private RequestBuilder buildRequestWithPaymentSignature(
             URL reqPath, String httpMethod, String payload) {
-        String reqId = Psd2Headers.getRequestId();
+        String reqId = randomValueGenerator.getUUID().toString();
         String date = getFormattedDate();
         String digest = generateDigest(payload);
 
