@@ -31,6 +31,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/masker",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/contractproducer",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/command",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/context",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/dao",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/modules/production",
