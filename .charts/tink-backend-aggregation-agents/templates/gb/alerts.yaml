@@ -196,22 +196,3 @@ spec:
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
         summary: Bank-side or user login error failure rate over the last hour is <{ $value | humanizePercentage }> for <{ $labels.className }>
         tags: <{ $labels.className }>
-
-    # Duplicate Alert from Payments
-    - alert: TransferSuccessRateLowForGreatBritain
-      expr: |
-        # Successful/Cancelled transfer outcomes below 50%
-        (sum by(className) (increase(tink_agent_transfer_total{ market="GB", provider_type!="test", outcome=~"completed|cancelled"}[30m]))
-          / sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[30m]))) < 0.5
-        # # At least this many attempts
-        and sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[30m])) > 5
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P3
-        who: connectivity-fluffy
-      annotations:
-        description: <{{ .Values.kibanaClassPaymentLinkAbs90m }} |Kibana>
-          <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-        summary: Transfer completion rate is below 50% actual % is <{ $value }> for <{ $labels.className }> the last 30m. More than 5 attempts.
-        tags: <{ $labels.className }> , *#payments*

@@ -1,0 +1,88 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-payment-gb
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Payment failed alerts
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: gb_payment_failed_rate_over_80%
+    expr: 0.8 <= GB:agent_transfer:className:failed:delta1h / (GB:agent_transfer:className:all_payments:delta1h > 5)
+    for: 10m
+    labels:
+      severity: urgent
+      priority: P1
+      who: connectivity-fluffy
+    annotations:
+      description: Failed outcome is when agent threw generic payment exception or any unhandled exception, etc
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 10 min.
+        <{{ .Values.kibanaClassPaymentLinkAbs90m }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: <{ $labels.className }>
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Bank side errors alerts
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: gb_payment_unavailable_rate_over_80%
+    expr: 0.8 < GB:agent_transfer:className:unavailable:delta1h / (GB:agent_transfer:className:all_payments:delta1h > 5)
+    for: 20m
+    labels:
+      severity: urgent
+      priority: P2
+      who: connectivity-fluffy
+    annotations:
+      description: Unavailable outcome is when agent throws BankServiceException
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassPaymentLinkAbs90m }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: <{ $labels.className }>
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Authentication errors and cancelled payments alerts
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: gb_payment_cancelled_rate_over_80%
+    expr: 0.8 < GB:agent_transfer:className:cancelled:delta1h / (GB:agent_transfer:className:all_payments:delta1h > 8)
+    for: 20m
+    labels:
+      severity: ping
+      priority: P4
+      who: connectivity-fluffy
+    annotations:
+      description: Cancelled outcome is when auth fails, or payment doesn't pass validation
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 8 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassPaymentLinkAbs90m }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: <{ $labels.className }>
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Rejected by bank payments alerts
+  #-------------------------------------------------------------------------------------------------------------------
+  - alert: gb_payment_rejected_rate_over_80%
+    expr: 0.8 < GB:agent_transfer:className:rejected:delta1h / (GB:agent_transfer:className:all_payments:delta1h > 5)
+    for: 20m
+    labels:
+      severity: ping
+      priority: P3
+      who: connectivity-fluffy
+    annotations:
+      description: Rejected outcome is when bank rejects the payment.
+      summary: |
+        Error rate: <{ $value | humanizePercentage }>
+        Class: <{ $labels.className }>
+        Checking last hour, with at least 5 attempts, active for at least 20 min.
+        <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
+        <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
+      tags: <{ $labels.className }>

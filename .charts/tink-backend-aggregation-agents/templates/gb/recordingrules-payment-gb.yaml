@@ -1,0 +1,38 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: recordingrules-payment-gb
+  namespace: agents
+spec:
+  interval: 2m30s
+  rules:
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Ugly rule to be used by every other recording rule. It combines everything that other rules below look for.
+  # The calculations here are based on research and work described here: https://tinkab.atlassian.net/wiki/spaces/INT/pages/6036291705/
+  # This does what sum+increase should be doing on its own.
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: GB:agent_transfer:className_outcome:delta1h
+    expr: sum by(className, outcome) (
+        (floor(increase({{ .Values.deQueryPaymentAll }}[1h])) and ({{ .Values.deQueryPaymentAll }} offset 1h unless {{ .Values.deQueryPaymentAll }}))
+        or 
+        (1 + floor(increase({{ .Values.deQueryPaymentAll }}[1h])) - floor(count_over_time({{ .Values.deQueryPaymentAll }}[1h]) / 360))
+      )
+
+  #-------------------------------------------------------------------------------------------------------------------
+  # Payment recording rules
+  #-------------------------------------------------------------------------------------------------------------------
+  - record: GB:agent_transfer:className:all_payments:delta1h
+    expr: sum by(className) (GB:agent_transfer:className_outcome:delta1h)
+
+  - record: GB:agent_transfer:className:failed:delta1h
+    expr: sum by(className) (GB:agent_transfer:className_outcome:delta1h{ outcome="failed"})
+
+  - record: GB:agent_transfer:className:rejected:delta1h
+    expr: sum by(className) (GB:agent_transfer:className_outcome:delta1h{ outcome="rejected"})
+
+  - record: GB:agent_transfer:className:unavailable:delta1h
+    expr: sum by(className) (GB:agent_transfer:className_outcome:delta1h{ outcome="unavailable"})
+
+  - record: GB:agent_transfer:className:cancelled:delta1h
+    expr: sum by(className) (GB:agent_transfer:className_outcome:delta1h{ outcome="cancelled"})
