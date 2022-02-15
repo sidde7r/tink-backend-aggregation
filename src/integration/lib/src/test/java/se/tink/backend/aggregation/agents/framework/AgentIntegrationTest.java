@@ -35,9 +35,8 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.contractproducer.ContractProducer;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.context.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
 import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
@@ -48,7 +47,6 @@ import se.tink.backend.aggregation.agents.payments.PaymentControllerable;
 import se.tink.backend.aggregation.agents.payments.TransferExecutor;
 import se.tink.backend.aggregation.agents.payments.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.payments.TypedPaymentControllerable;
-import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.summary.refresh.RefreshSummary;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
@@ -58,7 +56,6 @@ import se.tink.backend.aggregation.eidasidentity.CertificateIdProvider;
 import se.tink.backend.aggregation.eidasidentity.UnleashCertificateIdProvider;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
@@ -125,6 +122,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagUpdate;
     private Boolean dumpContentForContractFile;
 
+    // An existing consent can only be used if `loadCredentialsBefore` is true and it successfully
+    // loads the credentials. Otherwise we must always issue a new consent.
+    private boolean issueNewConsentDuringAuthentication = true;
+
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
@@ -183,6 +184,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
                     // Replace the log masker with one that includes the newly loaded credentials
                     this.context.setLogMasker(new FakeLogMasker());
+
+                    // We should not issue a new consent during authentication. Use the consent that
+                    // we loaded from the test server.
+                    this.issueNewConsentDuringAuthentication = false;
                 });
 
         return optionalCredential.isPresent();
@@ -213,7 +218,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         .create(requestFlagCreate)
                         .update(requestFlagUpdate)
                         .userAvailability(userAvailability)
-                        .forceAuthenticate(false)
+                        .forceAuthenticate(issueNewConsentDuringAuthentication)
                         .build();
         refreshInformationRequest.setItemsToRefresh(refreshableItems);
         refreshInformationRequest.setCallbackUri(redirectUrl);
@@ -282,43 +287,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                         "Agent instance did not contain an instance of type Agent.class."));
     }
 
-    private boolean isLoggedIn(Agent agent) throws Exception {
-        if (!(agent instanceof PersistentLogin)) {
-            return false;
-        }
+    private void login(AgentInstance agentInstance, CredentialsRequest credentialsRequest)
+            throws Exception {
+        LoginCommand loginCommand =
+                new LoginCommand(
+                        agentInstance, credentialsRequest, this.supplementalInformationController);
 
-        PersistentLogin persistentAgent = (PersistentLogin) agent;
-
-        persistentAgent.loadLoginSession();
-        if (!persistentAgent.isLoggedIn()) {
-            persistentAgent.clearLoginSession();
-            return false;
-        }
-        return true;
-    }
-
-    private void login(Agent agent, CredentialsRequest credentialsRequest) throws Exception {
-        if (isLoggedIn(agent)) {
-            return;
-        }
-
-        if (agent instanceof AgentPlatformAuthenticator) {
-            new AgentPlatformAuthenticationExecutor()
-                    .processAuthentication(
-                            agent, credentialsRequest, supplementalInformationController);
-            return;
-        }
-
-        if (agent instanceof ProgressiveAuthAgent) {
-            final ProgressiveLoginExecutor executor =
-                    new ProgressiveLoginExecutor(
-                            supplementalInformationController, (ProgressiveAuthAgent) agent);
-            executor.login(credentialsRequest);
-            return;
-        }
-
-        boolean loginSuccessful = agent.login();
-        Assert.assertTrue("Agent could not login successfully.", loginSuccessful);
+        loginCommand.execute();
     }
 
     private boolean keepAlive(Agent agent) throws Exception {
@@ -638,10 +613,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
+        AgentInstance agentInstance = createAgentSdkInstance(credentialsRequest);
+        Agent agent = getAgent(agentInstance);
 
         try {
-            login(agent, credentialsRequest);
+            login(agentInstance, credentialsRequest);
             saveCredentials(agent);
             refresh(agent);
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
@@ -713,7 +689,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = getAgent(agentInstance);
 
         try {
-            login(agent, credentialsRequest);
+            login(agentInstance, credentialsRequest);
 
             if (!agentInstance.supportsBulkPaymentInitiation()) {
                 throw new Exception("Not supported");
@@ -742,9 +718,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
+        AgentInstance agentInstance = createAgentSdkInstance(credentialsRequest);
+        Agent agent = getAgent(agentInstance);
         try {
-            login(agent, credentialsRequest);
+            login(agentInstance, credentialsRequest);
             doBankTransfer(agent, transfer);
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
@@ -784,10 +761,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
+        AgentInstance agentInstance = createAgentSdkInstance(credentialsRequest);
+        Agent agent = getAgent(agentInstance);
 
         try {
-            login(agent, credentialsRequest);
+            login(agentInstance, credentialsRequest);
 
             if (agent instanceof PaymentControllerable) {
                 doGenericPaymentBankTransfer(agent, paymentList);
@@ -828,10 +806,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
+        AgentInstance agentInstance = createAgentSdkInstance(credentialsRequest);
+        Agent agent = getAgent(agentInstance);
 
         try {
-            login(agent, credentialsRequest);
+            login(agentInstance, credentialsRequest);
 
             if (agent instanceof PaymentControllerable) {
                 cancelGenericPaymentBankTransfer(agent, payment);
@@ -899,9 +878,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
-        Agent agent = getAgent(createAgentSdkInstance(credentialsRequest));
+        AgentInstance agentInstance = createAgentSdkInstance(credentialsRequest);
+        Agent agent = getAgent(agentInstance);
         try {
-            login(agent, credentialsRequest);
+            login(agentInstance, credentialsRequest);
             if (agent instanceof CreateBeneficiaryControllerable) {
                 log.info("Adding beneficiary.");
                 CreateBeneficiaryController createBeneficiaryController =
