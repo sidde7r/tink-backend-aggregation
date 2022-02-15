@@ -1,6 +1,20 @@
 # Bulk payment initiation
 
-Flow chart of bulk payment initiation:
+Flow chart of bulk payment initiation.
+
+Clarification:
+- A payment is in a _final state_ if:
+    - An error has occurred, or
+    - It has a terminal sign status
+- Agent methods are denoted with `Agent:`, they are:
+    - [`ListUnsignedPayments()`](https://github.com/tink-ab/tink-backend-aggregation/blob/master/src/agent_sdk/sdk/src/payments/features/global_signing_basket/DeleteUnsignedPayments.java)
+    - [`DeleteUnsignedPayments(...)`](https://github.com/tink-ab/tink-backend-aggregation/blob/master/src/agent_sdk/sdk/src/payments/features/global_signing_basket/DeleteUnsignedPayments.java)
+    - [`FetchBeneficiariesFor(...)`](https://github.com/tink-ab/tink-backend-aggregation/blob/master/src/agent_sdk/sdk/src/payments/features/beneficiary/FetchBeneficiaries.java)
+    - [`RegisterBeneficiary(...)`](https://github.com/tink-ab/tink-backend-aggregation/blob/master/src/agent_sdk/sdk/src/payments/features/beneficiary/RegisterBeneficiaryGeneric.java)
+    - [`SignBeneficiary(...)`](https://github.com/tink-ab/tink-backend-aggregation/blob/master/src/agent_sdk/sdk/src/payments/features/beneficiary/RegisterBeneficiaryGeneric.java)
+    - [`RegisterPayments(...)`](https://github.com/tink-ab/tink-backend-aggregation/blob/master/src/agent_sdk/sdk/src/payments/features/bulk/InitiateBulkPaymentGeneric.java)
+    - [`SignPayments(...)`](https://github.com/tink-ab/tink-backend-aggregation/blob/master/src/agent_sdk/sdk/src/payments/features/bulk/InitiateBulkPaymentGeneric.java)
+    - [`GetSignStatus(...)`](https://github.com/tink-ab/tink-backend-aggregation/blob/master/src/agent_sdk/sdk/src/payments/features/bulk/InitiateBulkPaymentGeneric.java)
 
 ```mermaid
 flowchart TD
@@ -10,7 +24,7 @@ flowchart TD
     DeleteUnsigned --> DeleteUnsignedResult{Successful?}
     DeleteUnsignedResult -- Yes --> SupportBeneficiary
     DeleteUnsignedResult -- No --> Abort[Abort with exception]
-    SupportUnsigned -- No --> SupportBeneficiary{Does agent support\n Fetch & Register Beneficiaries}
+    SupportUnsigned -- No --> SupportBeneficiary{Does agent support\n Fetch & Register Beneficiaries?}
     SupportBeneficiary -- Yes --> BeneficiaryLoop{For each payment}
     SupportBeneficiary -- No --> RegisterPayments
     BeneficiaryLoop -- Continue --> HaveFetchedBeneficiaries{Are Beneficiaries for\nPayment::Debtor cached?}
@@ -36,7 +50,7 @@ flowchart TD
     AllPaymentsInFinalState2 -- No --> SignPayments(Agent:\nSign payments)
     SignPayments --> AllPaymentsInFinalState3{All payments\n in final state?}
     AllPaymentsInFinalState3 -- Yes --> ReturnFinalReport
-    AllPaymentsInFinalState3 -- No --> PollPaymentsStatus(Agent:\nPoll payments status)
+    AllPaymentsInFinalState3 -- No --> PollPaymentsStatus(Agent:\nGet signed payments status)
     PollPaymentsStatus --> AllPaymentsInFinalState4{All payments\n in final state?}
     AllPaymentsInFinalState4 -- Yes --> ReturnFinalReport
     AllPaymentsInFinalState4 -- No --> PollExceededTime{Has exceeded poll time?}
