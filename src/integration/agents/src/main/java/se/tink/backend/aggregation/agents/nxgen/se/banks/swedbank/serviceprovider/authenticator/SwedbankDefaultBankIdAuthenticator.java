@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
@@ -22,16 +23,20 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
 import se.tink.backend.aggregation.agents.utils.business.OrganisationNumberSeLogger;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
+import se.tink.libraries.authentication_options.SelectedAuthenticationOption;
 
 @Slf4j
 public class SwedbankDefaultBankIdAuthenticator
         implements BankIdAuthenticator<AbstractBankIdAuthResponse> {
 
     private final SwedbankDefaultApiClient apiClient;
+    private final AgentComponentProvider componentProvider;
     private final String organisationNumber;
 
     private SwedbankBaseConstants.BankIdResponseStatus previousStatus;
@@ -42,9 +47,12 @@ public class SwedbankDefaultBankIdAuthenticator
     private LinkEntity imageChallenge;
 
     public SwedbankDefaultBankIdAuthenticator(
-            SwedbankDefaultApiClient apiClient, String organisationNumber) {
+            SwedbankDefaultApiClient apiClient,
+            String organisationNumber,
+            AgentComponentProvider componentProvider) {
         this.apiClient = apiClient;
         this.organisationNumber = organisationNumber;
+        this.componentProvider = componentProvider;
     }
 
     @Override
@@ -57,6 +65,17 @@ public class SwedbankDefaultBankIdAuthenticator
 
         OrganisationNumberSeLogger.logIfUnknownOrgnumber(organisationNumber);
 
+        Set<SelectedAuthenticationOption> authenticationOptions =
+                componentProvider.getCredentialsRequest().getSelectedAuthenticationOptions();
+
+        if (authenticationOptions != null) {
+            for (SelectedAuthenticationOption authenticationOption : authenticationOptions) {
+                if (authenticationOption.getAuthenticationOptionDefinition()
+                        == AuthenticationOptionDefinition.SE_MOBILE_BANKID_OTHER_DEVICE) {
+                    this.bankIdOnSameDevice = false;
+                }
+            }
+        }
         InitBankIdResponse initBankIdResponse = refreshAutostartToken();
 
         if (!this.bankIdOnSameDevice) {
