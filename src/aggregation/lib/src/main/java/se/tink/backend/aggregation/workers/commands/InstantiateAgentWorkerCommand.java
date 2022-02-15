@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 
 public class InstantiateAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger log = LoggerFactory.getLogger(InstantiateAgentWorkerCommand.class);
-    private static final double TEST_RATIO = 0.001; // 0.1%
+    private static final double TEST_RATIO = 0.1; // 10%
     private InstantiateAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;
     private final Random random;
