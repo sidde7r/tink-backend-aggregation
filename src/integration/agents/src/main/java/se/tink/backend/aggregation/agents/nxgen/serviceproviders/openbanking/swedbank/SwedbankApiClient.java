@@ -394,6 +394,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
     public AccountBalanceResponse getAccountBalance(String accountId) {
         return createRequestInSession(
                         Urls.ACCOUNT_BALANCES.parameter(UrlParameters.ACCOUNT_ID, accountId), true)
+                .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
                 .get(AccountBalanceResponse.class);
     }
 
@@ -407,6 +408,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
+                .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
                 .get(FetchOnlineTransactionsResponse.class);
     }
 
@@ -423,6 +425,7 @@ public class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
                             .queryParam(SwedbankConstants.HeaderKeys.FROM_DATE, fromDate.toString())
                             .queryParam(SwedbankConstants.HeaderKeys.TO_DATE, toDate.toString())
                             .queryParam(SwedbankConstants.QueryKeys.BOOKING_STATUS, bookingStatus)
+                            .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
                             .header(
                                     HeaderKeys.CONSENT_ID,
                                     persistentStorage.get(
