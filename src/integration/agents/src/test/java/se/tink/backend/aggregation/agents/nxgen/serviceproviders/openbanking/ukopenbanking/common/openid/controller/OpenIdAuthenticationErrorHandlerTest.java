@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.storage.data.ConsentDataStorage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RunWith(JUnitParamsRunner.class)
@@ -47,9 +46,7 @@ public class OpenIdAuthenticationErrorHandlerTest {
         log.addAppender(listAppender);
         PersistentStorage persistentStorage = mock(PersistentStorage.class);
         ConsentDataStorage consentDataStorage = new ConsentDataStorage(persistentStorage);
-        errorHandler =
-                new OpenIdAuthenticationErrorHandler(
-                        consentDataStorage, mock(OpenIdApiClient.class));
+        errorHandler = new OpenIdAuthenticationErrorHandler(consentDataStorage);
     }
 
     @Test
@@ -90,8 +87,7 @@ public class OpenIdAuthenticationErrorHandlerTest {
     public void shouldThrowException(
             Map<String, String> providedCallbackData,
             Class<? extends AgentException> expectedExceptionClass,
-            AgentError expectedError,
-            String expectedMessage) {
+            AgentError expectedError) {
         // given
         // when
         ThrowingCallable throwingCallable = () -> errorHandler.handle(providedCallbackData);
@@ -99,8 +95,7 @@ public class OpenIdAuthenticationErrorHandlerTest {
         assertThatThrownBy(throwingCallable)
                 .isInstanceOfSatisfying(
                         expectedExceptionClass,
-                        e -> assertThat(e.getError()).isEqualTo(expectedError))
-                .hasMessage(expectedMessage);
+                        e -> assertThat(e.getError()).isEqualTo(expectedError));
     }
 
     public Object[] parametersForShouldThrowException() {
@@ -108,20 +103,17 @@ public class OpenIdAuthenticationErrorHandlerTest {
             new Object[] {
                 ImmutableMap.of("error", "server_error"),
                 BankServiceException.class,
-                BankServiceError.BANK_SIDE_FAILURE,
-                ""
+                BankServiceError.BANK_SIDE_FAILURE
             },
             new Object[] {
                 ImmutableMap.of("error", "temporarily_unavailable"),
                 BankServiceException.class,
-                BankServiceError.NO_BANK_SERVICE,
-                ""
+                BankServiceError.NO_BANK_SERVICE
             },
             new Object[] {
                 ImmutableMap.of("error", "401 Unauthorised"),
                 BankServiceException.class,
-                BankServiceError.SESSION_TERMINATED,
-                ""
+                BankServiceError.SESSION_TERMINATED
             },
             new Object[] {
                 ImmutableMap.<String, String>builder()
@@ -129,14 +121,12 @@ public class OpenIdAuthenticationErrorHandlerTest {
                         .put("error_description", "server_error_processing")
                         .build(),
                 ThirdPartyAppException.class,
-                ThirdPartyAppError.CANCELLED,
-                "server_error_processing"
+                ThirdPartyAppError.CANCELLED
             },
             new Object[] {
                 ImmutableMap.of("error", "invalid_openbanking_intent_id"),
                 SessionException.class,
-                SessionError.CONSENT_INVALID,
-                "Cause: SessionError.CONSENT_INVALID"
+                SessionError.CONSENT_INVALID
             }
         };
     }
@@ -148,9 +138,6 @@ public class OpenIdAuthenticationErrorHandlerTest {
         // when
         ThrowingCallable throwingCallable = () -> errorHandler.handle(callbackData);
         // then
-        assertThatThrownBy(throwingCallable)
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessageContaining(
-                        "[OpenIdAuthenticationErrorHandler] Unknown error with details:");
+        assertThatThrownBy(throwingCallable).isExactlyInstanceOf(ThirdPartyAppException.class);
     }
 }

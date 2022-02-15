@@ -255,8 +255,7 @@ public class OpenIdAuthenticationControllerTest {
         assertThat(throwable)
                 .isInstanceOfSatisfying(
                         ThirdPartyAppException.class,
-                        e -> assertThat(e.getError()).isEqualTo(ThirdPartyAppError.CANCELLED))
-                .hasMessage(ErrorDescriptions.SERVER_ERROR_PROCESSING);
+                        e -> assertThat(e.getError()).isEqualTo(ThirdPartyAppError.CANCELLED));
     }
 
     @Test
@@ -283,8 +282,9 @@ public class OpenIdAuthenticationControllerTest {
         assertThat(throwable)
                 .isInstanceOfSatisfying(
                         BankServiceException.class,
-                        e -> assertThat(e.getError()).isEqualTo(BankServiceError.BANK_SIDE_FAILURE))
-                .hasMessage("Description of some other server error");
+                        e ->
+                                assertThat(e.getError())
+                                        .isEqualTo(BankServiceError.BANK_SIDE_FAILURE));
     }
 
     @Test

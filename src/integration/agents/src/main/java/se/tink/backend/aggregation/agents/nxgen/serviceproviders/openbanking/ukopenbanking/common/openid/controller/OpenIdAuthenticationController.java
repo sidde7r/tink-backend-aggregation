@@ -112,8 +112,7 @@ public class OpenIdAuthenticationController
                                 TimeUnit.MINUTES)
                         .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
-        ErrorHandler errorHandler =
-                new OpenIdAuthenticationErrorHandler(consentDataStorage, apiClient);
+        ErrorHandler errorHandler = new OpenIdAuthenticationErrorHandler(consentDataStorage);
         errorHandler.handle(callbackData);
 
         String code =
