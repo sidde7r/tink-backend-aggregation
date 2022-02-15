@@ -52,7 +52,7 @@ spec:
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-        summary: <{ $value | humanizePercentage }> $labels.login_type login failure rate, excluding authentication errors) for <{ $labels.className }> over the last hour.
+        summary: <{ $value | humanizePercentage }> <{ $labels.login_type }> login failure rate (excluding authentication errors) for <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
     - alert: LoginFailureRateAbove75%PL
@@ -65,10 +65,10 @@ spec:
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
-        summary: <{ $value | humanizePercentage }> $labels.login_type login failure rate (excluding authentication errors) for <{ $labels.className }> over the last hour.
+        summary: <{ $value | humanizePercentage }> <{ $labels.login_type }> login failure rate (excluding authentication errors) for <{ $labels.className }> over the last hour.
         tags: <{ $labels.className }>
 
-    - alert: BankSideErrorLoginRateAbove75%PL
+    - alert: BankSideErrorLoginRateAbove30%PL
       expr: |
         sum by (className) (internal:sum:all_logins_by_type_outcome_pl:delta1h{outcome="unavailable"}) 
         / 
