@@ -10,7 +10,6 @@ import static se.tink.libraries.transfer.rpc.PaymentServiceType.SINGLE;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agent.Agent;
@@ -26,9 +25,6 @@ public class SepaCapabilitiesInitializationValidatorTest {
     private static final MarketCode TEST_MARKET_CODE = MarketCode.DE;
 
     private SepaCapabilitiesInitializationValidator sepaCapabilitiesInitializationValidator;
-
-    @Before
-    public void setup() {}
 
     @Test
     @Parameters(method = "classesAndPaymentsThatDoNotMatch")
@@ -56,34 +52,34 @@ public class SepaCapabilitiesInitializationValidatorTest {
     private Object[] classesAndPaymentsThatDoNotMatch() {
         return new Object[] {
             new Object[] {
-                InstantPayValidationTestAgent.class, buildTestPayemnt(SINGLE, SEPA_CREDIT_TRANSFER)
+                InstantPayValidationTestAgent.class, buildTestPayment(SINGLE, SEPA_CREDIT_TRANSFER)
             },
             new Object[] {
                 RecurringPayValidationTestAgent.class,
-                buildTestPayemnt(SINGLE, SEPA_CREDIT_TRANSFER)
+                buildTestPayment(SINGLE, SEPA_CREDIT_TRANSFER)
             },
             new Object[] {
                 NormalPayValidationTestAgent.class,
-                buildTestPayemnt(SINGLE, SEPA_INSTANT_CREDIT_TRANSFER)
+                buildTestPayment(SINGLE, SEPA_INSTANT_CREDIT_TRANSFER)
             },
             new Object[] {
                 RecurringPayValidationTestAgent.class,
-                buildTestPayemnt(SINGLE, SEPA_INSTANT_CREDIT_TRANSFER)
+                buildTestPayment(SINGLE, SEPA_INSTANT_CREDIT_TRANSFER)
             },
             new Object[] {
                 InstantPayValidationTestAgent.class,
-                buildTestPayemnt(PERIODIC, SEPA_CREDIT_TRANSFER)
+                buildTestPayment(PERIODIC, SEPA_CREDIT_TRANSFER)
             },
             new Object[] {
-                SinglePayValidationTestAgent.class, buildTestPayemnt(PERIODIC, SEPA_CREDIT_TRANSFER)
+                SinglePayValidationTestAgent.class, buildTestPayment(PERIODIC, SEPA_CREDIT_TRANSFER)
             },
             new Object[] {
                 NormalPayValidationTestAgent.class,
-                buildTestPayemnt(PERIODIC, SEPA_INSTANT_CREDIT_TRANSFER)
+                buildTestPayment(PERIODIC, SEPA_INSTANT_CREDIT_TRANSFER)
             },
             new Object[] {
                 SinglePayValidationTestAgent.class,
-                buildTestPayemnt(PERIODIC, SEPA_INSTANT_CREDIT_TRANSFER)
+                buildTestPayment(PERIODIC, SEPA_INSTANT_CREDIT_TRANSFER)
             },
         };
     }
@@ -107,33 +103,33 @@ public class SepaCapabilitiesInitializationValidatorTest {
     private Object[] classesAndPaymentsThatDoMatch() {
         return new Object[] {
             new Object[] {
-                NormalPayValidationTestAgent.class, buildTestPayemnt(SINGLE, SEPA_CREDIT_TRANSFER)
+                NormalPayValidationTestAgent.class, buildTestPayment(SINGLE, SEPA_CREDIT_TRANSFER)
             },
             new Object[] {
-                SinglePayValidationTestAgent.class, buildTestPayemnt(SINGLE, SEPA_CREDIT_TRANSFER)
+                SinglePayValidationTestAgent.class, buildTestPayment(SINGLE, SEPA_CREDIT_TRANSFER)
             },
             new Object[] {
                 InstantPayValidationTestAgent.class,
-                buildTestPayemnt(SINGLE, SEPA_INSTANT_CREDIT_TRANSFER)
+                buildTestPayment(SINGLE, SEPA_INSTANT_CREDIT_TRANSFER)
             },
             new Object[] {
                 SinglePayValidationTestAgent.class,
-                buildTestPayemnt(SINGLE, SEPA_INSTANT_CREDIT_TRANSFER)
+                buildTestPayment(SINGLE, SEPA_INSTANT_CREDIT_TRANSFER)
             },
             new Object[] {
-                NormalPayValidationTestAgent.class, buildTestPayemnt(PERIODIC, SEPA_CREDIT_TRANSFER)
+                NormalPayValidationTestAgent.class, buildTestPayment(PERIODIC, SEPA_CREDIT_TRANSFER)
             },
             new Object[] {
                 RecurringPayValidationTestAgent.class,
-                buildTestPayemnt(PERIODIC, SEPA_CREDIT_TRANSFER)
+                buildTestPayment(PERIODIC, SEPA_CREDIT_TRANSFER)
             },
             new Object[] {
                 InstantPayValidationTestAgent.class,
-                buildTestPayemnt(PERIODIC, SEPA_INSTANT_CREDIT_TRANSFER)
+                buildTestPayment(PERIODIC, SEPA_INSTANT_CREDIT_TRANSFER)
             },
             new Object[] {
                 RecurringPayValidationTestAgent.class,
-                buildTestPayemnt(PERIODIC, SEPA_INSTANT_CREDIT_TRANSFER)
+                buildTestPayment(PERIODIC, SEPA_INSTANT_CREDIT_TRANSFER)
             },
         };
     }
@@ -156,7 +152,9 @@ public class SepaCapabilitiesInitializationValidatorTest {
 
     private Object[] paymentsWithMissingFields() {
         return new Object[] {
-            buildTestPayemnt(SINGLE, null), buildTestPayemnt(null, SEPA_CREDIT_TRANSFER)
+            buildTestPayment(SINGLE, null),
+            buildTestPayment(null, SEPA_CREDIT_TRANSFER),
+            buildTestPayment(null, null)
         };
     }
 
@@ -178,9 +176,9 @@ public class SepaCapabilitiesInitializationValidatorTest {
 
     private Object[] paymentsWithUnexpectedSchemes() {
         return new Object[] {
-            buildTestPayemnt(SINGLE, PaymentScheme.FASTER_PAYMENTS),
-            buildTestPayemnt(SINGLE, PaymentScheme.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER),
-            buildTestPayemnt(
+            buildTestPayment(SINGLE, PaymentScheme.FASTER_PAYMENTS),
+            buildTestPayment(SINGLE, PaymentScheme.NORWEGIAN_DOMESTIC_CREDIT_TRANSFER),
+            buildTestPayment(
                     SINGLE, PaymentScheme.INSTANT_NORWEGIAN_DOMESTIC_CREDIT_TRANSFER_STRAKS)
         };
     }
@@ -197,11 +195,11 @@ public class SepaCapabilitiesInitializationValidatorTest {
                         () ->
                                 sepaCapabilitiesInitializationValidator
                                         .throwIfNotPossibleToInitialize(
-                                                buildTestPayemnt(SINGLE, SEPA_CREDIT_TRANSFER)))
+                                                buildTestPayment(SINGLE, SEPA_CREDIT_TRANSFER)))
                 .doesNotThrowAnyException();
     }
 
-    private Payment buildTestPayemnt(PaymentServiceType serviceType, PaymentScheme scheme) {
+    private Payment buildTestPayment(PaymentServiceType serviceType, PaymentScheme scheme) {
         return new Payment.Builder()
                 .withPaymentServiceType(serviceType)
                 .withPaymentScheme(scheme)

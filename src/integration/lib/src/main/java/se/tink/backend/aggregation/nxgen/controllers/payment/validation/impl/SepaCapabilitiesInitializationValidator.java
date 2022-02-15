@@ -54,32 +54,51 @@ public class SepaCapabilitiesInitializationValidator implements PaymentInitializ
 
     @Override
     public void throwIfNotPossibleToInitialize(Payment payment) {
-        Map<MarketCode, Set<PisCapability>> capabilities =
-                CapabilitiesExtractor.readPisCapabilities(klass);
         // We exit without throwing anything in case of weird, unexpected situations
         // This is because I do not want to break/block/throw in case of any weird legacy
         // interactions I'm not aware of.
         // This validator is only made for simple SEPA stuff!
-        if (capabilities.isEmpty() || capabilities.get(executedForMarketCode) == null) {
-            log.warn(
-                    "Executed payments with no PisCapabilities on agent, or none for relevant market, skipping.");
-            return;
-        }
+        Map<MarketCode, Set<PisCapability>> capabilities =
+                CapabilitiesExtractor.readPisCapabilities(klass);
 
         PaymentServiceType serviceType = payment.getPaymentServiceType();
         PaymentScheme scheme = payment.getPaymentScheme();
 
+        if (areAnyCapabilitiesPresentOnAgent(capabilities)
+                && serviceAndSchemeOfExpectedTypes(serviceType, scheme)) {
+            validateIfCapabilitiesSupportPayment(capabilities, serviceType, scheme);
+        }
+    }
+
+    private boolean areAnyCapabilitiesPresentOnAgent(
+            Map<MarketCode, Set<PisCapability>> capabilities) {
+        if (capabilities.isEmpty() || capabilities.get(executedForMarketCode) == null) {
+            log.warn(
+                    "Executed payments with no PisCapabilities on agent, or none for relevant market, skipping.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean serviceAndSchemeOfExpectedTypes(
+            PaymentServiceType serviceType, PaymentScheme scheme) {
         if (serviceType == null || scheme == null) {
             log.warn("Either scheme or serviceType was null, skipping.");
-            return;
+            return false;
         }
 
         if (PaymentScheme.SEPA_CREDIT_TRANSFER != scheme
                 && PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER != scheme) {
             log.warn("Non-sepa scheme encountered, skipping.");
-            return;
+            return false;
         }
+        return true;
+    }
 
+    private void validateIfCapabilitiesSupportPayment(
+            Map<MarketCode, Set<PisCapability>> capabilities,
+            PaymentServiceType serviceType,
+            PaymentScheme scheme) {
         Set<PisCapability> interestingCapabilitiesOnAgent =
                 capabilities.get(executedForMarketCode).stream()
                         .filter(CAPABILITY_SERVICE_SCHEME::containsKey)
