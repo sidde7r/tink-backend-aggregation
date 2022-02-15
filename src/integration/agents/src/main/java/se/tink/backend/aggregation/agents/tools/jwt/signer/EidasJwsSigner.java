@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer;
+package se.tink.backend.aggregation.agents.tools.jwt.signer;
 
 import com.google.common.collect.ImmutableSet;
 import com.nimbusds.jose.JWSAlgorithm;

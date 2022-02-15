@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid;
+package se.tink.backend.aggregation.agents.tools.jwt.kid;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
+import se.tink.backend.aggregation.agents.tools.jwt.JwksClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @Slf4j

@@ -6,9 +6,9 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/configuration",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/jwt",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/jwt/kid",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/common/openid/jwt/signer/iface",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/jwt",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/jwt/kid",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents/utils",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",

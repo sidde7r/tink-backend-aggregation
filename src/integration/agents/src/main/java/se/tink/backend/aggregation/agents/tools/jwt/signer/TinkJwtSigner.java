@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer;
+package se.tink.backend.aggregation.agents.tools.jwt.signer;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -9,8 +9,8 @@ import com.nimbusds.jose.Payload;
 import java.util.Map;
 import java.util.Objects;
 import net.minidev.json.JSONObject;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.KeyIdProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
+import se.tink.backend.aggregation.agents.tools.jwt.kid.KeyIdProvider;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class TinkJwtSigner {

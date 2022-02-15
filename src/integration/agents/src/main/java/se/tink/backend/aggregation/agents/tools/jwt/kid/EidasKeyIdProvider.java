@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid;
+package se.tink.backend.aggregation.agents.tools.jwt.kid;
 
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;

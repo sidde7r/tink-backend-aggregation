@@ -5,7 +5,7 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base/jwt",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/jwt",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents/utils",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//third_party:com_nimbusds_nimbus_jose_jwt",
