@@ -5,7 +5,7 @@ import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 /**
- * Request for initiating bankID for login. bankIdOnSameDevice is always set to true to get an
+ * Request for initiating bankID for login. When bankIdOnSameDevice is set to true, we get an
  * autostart token in return. When set to false Swedbank returns a link to a QR code image that we
  * need to parse into an autostart token.
  */
@@ -14,12 +14,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InitBankIdRequest {
     private boolean bankIdOnSameDevice;
 
-    private InitBankIdRequest() {
-        this.bankIdOnSameDevice = true;
+    private InitBankIdRequest(boolean bankIdOnSameDevice) {
+        this.bankIdOnSameDevice = bankIdOnSameDevice;
     }
 
     @JsonIgnore
-    public static InitBankIdRequest create() {
-        return new InitBankIdRequest();
+    public static InitBankIdRequest create(boolean bankIdOnSameDevice) {
+        return new InitBankIdRequest(bankIdOnSameDevice);
     }
 }

@@ -252,11 +252,11 @@ public class SwedbankDefaultApiClient {
         }
     }
 
-    public InitBankIdResponse initBankId() {
+    public InitBankIdResponse initBankId(boolean bankIdOnSameDevice) {
         try {
             return makePostRequest(
                     SwedbankBaseConstants.Url.INIT_BANKID.get(host),
-                    InitBankIdRequest.create(),
+                    InitBankIdRequest.create(bankIdOnSameDevice),
                     InitBankIdResponse.class,
                     true);
         } catch (HttpClientException hce) {

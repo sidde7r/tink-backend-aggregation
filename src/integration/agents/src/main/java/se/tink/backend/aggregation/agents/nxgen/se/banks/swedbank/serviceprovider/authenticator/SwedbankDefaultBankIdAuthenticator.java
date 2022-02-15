@@ -38,6 +38,7 @@ public class SwedbankDefaultBankIdAuthenticator
     private String givenSsn;
     private String autoStartToken;
     private int pollCount;
+    private boolean bankIdOnSameDevice;
 
     public SwedbankDefaultBankIdAuthenticator(
             SwedbankDefaultApiClient apiClient, String organisationNumber) {
@@ -51,6 +52,7 @@ public class SwedbankDefaultBankIdAuthenticator
         this.previousStatus = null;
         this.givenSsn = ssn;
         this.pollCount = 0;
+        this.bankIdOnSameDevice = true;
 
         OrganisationNumberSeLogger.logIfUnknownOrgnumber(organisationNumber);
 
@@ -166,7 +168,7 @@ public class SwedbankDefaultBankIdAuthenticator
 
     @Override
     public InitBankIdResponse refreshAutostartToken() throws BankServiceException {
-        InitBankIdResponse initBankIdResponse = apiClient.initBankId();
+        InitBankIdResponse initBankIdResponse = apiClient.initBankId(bankIdOnSameDevice);
         this.autoStartToken = initBankIdResponse.getAutoStartToken();
 
         return initBankIdResponse;
