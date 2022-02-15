@@ -14,7 +14,7 @@ spec:
       labels:
         priority: P3
         severity: ping
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs4h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs4h }} |Grafana>

@@ -17,7 +17,7 @@ spec:
       labels:
         priority: P3
         severity: ping
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
@@ -30,7 +30,7 @@ spec:
       labels:
         priority: P1
         severity: urgent
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
@@ -48,7 +48,7 @@ spec:
       labels:
         priority: P3
         severity: ping
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
@@ -61,7 +61,7 @@ spec:
       labels:
         priority: P1
         severity: urgent
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
@@ -77,7 +77,7 @@ spec:
       labels:
         priority: P1
         severity: urgent
-        who: integration-teletubbies
+        who: integration-llamas
       annotations:
         description: <{{ .Values.kibanaClassLinkAbs1h }} |Kibana>
           <{{ .Values.grafanaClassLinkAbs1h }} |Grafana>
