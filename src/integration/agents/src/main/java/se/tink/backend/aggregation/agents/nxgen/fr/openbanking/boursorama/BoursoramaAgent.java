@@ -245,16 +245,20 @@ public final class BoursoramaAgent extends NextGenerationAgent
     }
 
     @Override
+    @SneakyThrows
     public Optional<PaymentController> constructPaymentController() {
         final AgentConfiguration<BoursoramaConfiguration> agentConfiguration =
                 getAgentConfiguration();
+        final String clientId =
+                CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac());
 
         FrOpenBankingPaymentExecutor paymentExecutor =
                 new FrOpenBankingPaymentExecutor(
                         new BoursoramaPaymentApiClient(
                                 client,
-                                agentConfiguration.getProviderSpecificConfiguration(),
-                                new FrCreatePaymentRequestValidator(localDateTimeSource)),
+                                clientId,
+                                new FrCreatePaymentRequestValidator(localDateTimeSource),
+                                sessionStorage),
                         agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,

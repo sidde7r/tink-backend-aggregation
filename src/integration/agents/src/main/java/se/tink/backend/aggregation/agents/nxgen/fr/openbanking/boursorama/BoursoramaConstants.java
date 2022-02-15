@@ -8,11 +8,11 @@ public class BoursoramaConstants {
 
     public static final String USER_HASH = "USER_HASH";
     public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
+    public static final String PISP_OAUTH_TOKEN = "PISP_TOKEN";
 
     public static final ZoneId ZONE_ID = ZoneId.of("CET");
     public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Europe/Paris");
     public static final Locale DEFAULT_LOCALE = new Locale("fr_FR", "FR");
-    public static final String INSUFFICIENT_FUND_STATUS = "CUST";
 
     public static class Urls {
         private static final String BASE_URL = "https://api-dsp2.boursorama.com";
@@ -41,6 +41,8 @@ public class BoursoramaConstants {
                         BASE_URL
                                 + "/services/api/v1.7/_user_/_{userHash}_/dsp2/trusted-beneficiaries");
 
+        public static final URL PISP_TOKEN =
+                URL.of(BASE_URL + "/services/api/v1.7/_public_/authentication/oauth/token");
         public static final URL CREATE_PAYMENT =
                 new URL(BASE_URL + "/services/api/v1.7/_public_/dsp2/payment-requests");
         public static final URL GET_PAYMENT =
