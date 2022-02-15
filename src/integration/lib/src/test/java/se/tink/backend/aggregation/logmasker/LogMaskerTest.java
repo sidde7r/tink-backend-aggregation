@@ -104,14 +104,15 @@ public class LogMaskerTest {
     @Test
     public void testIsWhiteListed() {
         LogMasker logMasker = new LogMaskerImpl();
-        logMasker.addNewSensitiveValuesToMasker(Arrays.asList("true", "false", "222", "1", "5555"));
+        logMasker.addNewSensitiveValuesToMasker(
+                Arrays.asList("true", "false", "null", "222", "1", "5555"));
 
-        String unmasked = "true2225555falsealfgoiangoiandg555adlkga222";
+        String unmasked = "true2225555falsealfgoiangoiandg555adlknullga222";
         String masked = logMasker.mask(unmasked);
 
         Assert.assertTrue(
                 "Didn't mask sensitive values as expected.",
-                Pattern.compile("true222" + MASK + "falsealfgoiangoiandg555adlkga222")
+                Pattern.compile("true222" + MASK + "falsealfgoiangoiandg555adlknullga222")
                         .matcher(masked)
                         .find());
     }

@@ -16,7 +16,7 @@ import se.tink.libraries.masker.StringMasker;
 public class LogMaskerImpl implements LogMasker {
 
     private static final ImmutableSet<String> WHITELISTED_SENSITIVE_VALUES =
-            ImmutableSet.<String>builder().add("true").add("false").build();
+            ImmutableSet.<String>builder().add("true").add("false").add("null").build();
     private static final ImmutableSet<String> MARKETS_MASKER_COVERS_SECRETS_FOR =
             ImmutableSet.<String>builder()
                     .add("fi")
