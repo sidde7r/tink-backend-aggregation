@@ -39,6 +39,7 @@ public class SwedbankDefaultBankIdAuthenticator
     private String autoStartToken;
     private int pollCount;
     private boolean bankIdOnSameDevice;
+    private LinkEntity imageChallenge;
 
     public SwedbankDefaultBankIdAuthenticator(
             SwedbankDefaultApiClient apiClient, String organisationNumber) {
@@ -57,6 +58,12 @@ public class SwedbankDefaultBankIdAuthenticator
         OrganisationNumberSeLogger.logIfUnknownOrgnumber(organisationNumber);
 
         InitBankIdResponse initBankIdResponse = refreshAutostartToken();
+
+        if (!this.bankIdOnSameDevice) {
+            this.imageChallenge = initBankIdResponse.getImageChallenge();
+            this.autoStartToken = apiClient.getDecodedQrCodeImage(imageChallenge);
+            return initBankIdResponse;
+        }
 
         LinkEntity linkEntity = initBankIdResponse.getLinks().getNextOrThrow();
         Preconditions.checkState(
@@ -97,6 +104,9 @@ public class SwedbankDefaultBankIdAuthenticator
             case CLIENT_NOT_STARTED:
             case USER_SIGN:
                 pollCount++;
+                if (!this.bankIdOnSameDevice) {
+                    this.autoStartToken = apiClient.getDecodedQrCodeImage(imageChallenge);
+                }
                 return BankIdStatus.WAITING;
             case CANCELLED:
                 return BankIdStatus.CANCELLED;
