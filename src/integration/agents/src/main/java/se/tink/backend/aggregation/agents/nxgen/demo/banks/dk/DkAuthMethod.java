@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @RequiredArgsConstructor
 public enum DkAuthMethod {
-    NEM_ID("nemId", "1"),
-    MIT_ID("mitId", "2");
+    MIT_ID("mitId", "1"),
+    NEM_ID("nemId", "2");
 
     private final List<String> supplementalInfoKeys;
 
