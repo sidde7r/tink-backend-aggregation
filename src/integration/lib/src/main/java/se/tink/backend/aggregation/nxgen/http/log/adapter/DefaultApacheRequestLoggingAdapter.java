@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -26,28 +27,36 @@ public class DefaultApacheRequestLoggingAdapter extends LoggingAdapter<HttpReque
 
     @Override
     protected boolean hasRequestBody(HttpRequest request) {
-        return getWrapped(request) instanceof HttpEntityEnclosingRequest;
+        return tryGetHttpEntity(request).isPresent();
     }
 
     @Override
-    protected InputStream convertRequest(HttpRequest request) throws IOException {
-        HttpRequest analyzed = getWrapped(request);
-        if (analyzed instanceof HttpEntityEnclosingRequest) {
-            HttpEntityEnclosingRequest entityEnclosing = (HttpEntityEnclosingRequestBase) analyzed;
+    protected InputStream convertRequestBody(HttpRequest request) throws IOException {
+        HttpEntity entity =
+                tryGetHttpEntity(request)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Cannot convert request without a body"));
 
-            HttpEntity entity = entityEnclosing.getEntity();
-            if (entity != null) {
-                InputStream inputStream = entityEnclosing.getEntity().getContent();
-                if (!entity.isRepeatable()) {
-                    inputStream = new BufferedInputStream(inputStream);
-                    if (entity instanceof BasicHttpEntity) {
-                        ((BasicHttpEntity) entity).setContent(inputStream);
-                    }
-                }
-                return inputStream;
+        InputStream inputStream = entity.getContent();
+        if (!entity.isRepeatable()) {
+            inputStream = new BufferedInputStream(inputStream);
+            if (entity instanceof BasicHttpEntity) {
+                ((BasicHttpEntity) entity).setContent(inputStream);
             }
         }
-        throw new IllegalArgumentException("Invalid request to convert");
+        return inputStream;
+    }
+
+    private Optional<HttpEntity> tryGetHttpEntity(HttpRequest request) {
+        HttpRequest unwrappedRequest = getWrapped(request);
+        if (unwrappedRequest instanceof HttpEntityEnclosingRequest) {
+            HttpEntityEnclosingRequest entityEnclosing =
+                    (HttpEntityEnclosingRequestBase) unwrappedRequest;
+            return Optional.ofNullable(entityEnclosing.getEntity());
+        }
+        return Optional.empty();
     }
 
     @Override

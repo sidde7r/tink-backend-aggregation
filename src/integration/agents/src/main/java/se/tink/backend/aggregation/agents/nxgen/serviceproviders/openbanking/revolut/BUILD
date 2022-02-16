@@ -22,6 +22,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidasidentity/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//third_party:com_google_inject_guice",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
