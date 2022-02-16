@@ -12,7 +12,7 @@ import se.tink.libraries.unleash.UnleashClient;
 import se.tink.libraries.unleash.model.Toggle;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UkOpenBankingFlowTest {
+public class UkOpenBankingFlowServiceTest {
 
     @Mock private UnleashClient unleashClient;
 
