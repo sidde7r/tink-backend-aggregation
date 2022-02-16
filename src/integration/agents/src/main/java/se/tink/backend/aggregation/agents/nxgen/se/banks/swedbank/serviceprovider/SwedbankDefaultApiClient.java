@@ -84,6 +84,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.utils.qrcode.QrCodeParser;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -252,11 +253,11 @@ public class SwedbankDefaultApiClient {
         }
     }
 
-    public InitBankIdResponse initBankId() {
+    public InitBankIdResponse initBankId(boolean bankIdOnSameDevice) {
         try {
             return makePostRequest(
                     SwedbankBaseConstants.Url.INIT_BANKID.get(host),
-                    InitBankIdRequest.create(),
+                    InitBankIdRequest.create(bankIdOnSameDevice),
                     InitBankIdResponse.class,
                     true);
         } catch (HttpClientException hce) {
@@ -491,6 +492,16 @@ public class SwedbankDefaultApiClient {
     public InitiateSecurityTokenSignTransferResponse signExternalTransferSecurityToken(
             LinkEntity linkEntity) {
         return makeRequest(linkEntity, InitiateSecurityTokenSignTransferResponse.class, false);
+    }
+
+    public String getDecodedQrCodeImage(LinkEntity imageChallenge) {
+        String encodedImage = getQrCodeImageAsBase64EncodedString(imageChallenge);
+        try {
+            return QrCodeParser.decodeQRCode(encodedImage);
+        } catch (IOException e) {
+            log.warn("Could not decode QR code. ", e);
+            throw new IllegalStateException(e);
+        }
     }
 
     public String getQrCodeImageAsBase64EncodedString(final LinkEntity linkEntity) {

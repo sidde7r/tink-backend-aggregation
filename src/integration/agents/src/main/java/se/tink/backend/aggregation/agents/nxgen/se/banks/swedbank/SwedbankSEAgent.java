@@ -30,6 +30,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.authentication_options.AuthenticationOption;
+import se.tink.libraries.authentication_options.AuthenticationOption.AuthenticationOptions;
+import se.tink.libraries.authentication_options.AuthenticationOptionDefinition;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -39,6 +42,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
     IDENTITY_DATA,
     INVESTMENTS,
     MORTGAGE_AGGREGATION
+})
+@AuthenticationOptions({
+    @AuthenticationOption(
+            definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_OTHER_DEVICE,
+            overallDefault = true),
+    @AuthenticationOption(definition = AuthenticationOptionDefinition.SE_MOBILE_BANKID_SAME_DEVICE)
 })
 public class SwedbankSEAgent extends SwedbankAbstractAgent
         implements RefreshLoanAccountsExecutor, RefreshInvestmentAccountsExecutor {
