@@ -17,5 +17,6 @@ java_library(
         "//src/libraries/agent-storage",
         "//src/libraries/pair",
         "//third_party:com_google_inject_guice",
+        "@tink_backend//src/libraries/authentication_options",
     ],
 )
