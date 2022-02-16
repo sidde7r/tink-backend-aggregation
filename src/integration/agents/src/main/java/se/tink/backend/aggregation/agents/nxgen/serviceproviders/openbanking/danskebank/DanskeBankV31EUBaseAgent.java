@@ -84,6 +84,27 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         this.aisConfig = aisConfig;
     }
 
+    public DanskeBankV31EUBaseAgent(
+            AgentComponentProvider componentProvider,
+            UkOpenBankingFlowFacade flowFacade,
+            UkOpenBankingAisConfig aisConfig,
+            UkOpenBankingPisConfig pisConfig,
+            UkOpenBankingPisRequestFilter pisRequestFilter,
+            CreditCardAccountMapper creditCardAccountMapper,
+            TransactionalAccountMapper transactionalAccountMapper) {
+        super(componentProvider);
+        ukOpenBankingBaseAgent =
+                new UkOpenBankingBaseAgentImpl(
+                        componentProvider,
+                        flowFacade,
+                        aisConfig,
+                        pisConfig,
+                        pisRequestFilter,
+                        creditCardAccountMapper,
+                        transactionalAccountMapper);
+        this.aisConfig = aisConfig;
+    }
+
     @Override
     public Optional<PaymentController> getPaymentController(Payment payment) {
         return ukOpenBankingBaseAgent.getPaymentController(payment);
@@ -187,6 +208,19 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
             super(componentProvider, flowFacade, aisConfig, pisConfig, pisRequestFilter);
             this.creditCardAccountMapper = creditCardAccountMapper;
             this.transactionalAccountMapper = defaultTransactionalAccountMapper();
+        }
+
+        UkOpenBankingBaseAgentImpl(
+                AgentComponentProvider componentProvider,
+                UkOpenBankingFlowFacade flowFacade,
+                UkOpenBankingAisConfig aisConfig,
+                UkOpenBankingPisConfig pisConfig,
+                UkOpenBankingPisRequestFilter pisRequestFilter,
+                CreditCardAccountMapper creditCardAccountMapper,
+                TransactionalAccountMapper transactionalAccountMapper) {
+            super(componentProvider, flowFacade, aisConfig, pisConfig, pisRequestFilter);
+            this.creditCardAccountMapper = creditCardAccountMapper;
+            this.transactionalAccountMapper = transactionalAccountMapper;
         }
 
         @Override

@@ -1,0 +1,138 @@
+REQUEST 1
+GET https://psd2-api.danskebank.com/psd2/no/private/.well-known/openid-configuration
+
+RESPONSE 1
+200
+Content-Type: application/json
+Content-Length: 1117
+
+{"issuer":"https://psd2-api.danskebank.com/psd2","authorization_endpoint":"https://psd2-auth.danskebank.com/psd2/no/private/oauth2/authorize","token_endpoint":"https://psd2-api.danskebank.com/psd2/no/private/oauth2/token","jwks_uri":"https://psd2-api.danskebank.com/psd2/jwks","token_endpoint_auth_methods_supported":["tls_client_auth"],"registration_endpoint":"https://psd2-api.danskebank.com/psd2/v1.0/thirdparty/register","tls_client_certificate_bound_access_tokens":true,"scopes_supported":["openid","payments","accounts","fundsconfirmations"],"response_types_supported":["code id_token"],"grant_types_supported":["authorization_code","client_credentials","refresh_token"],"subject_types_supported":["public"],"id_token_signing_alg_values_supported":["PS256"],"request_parameter_supported":true,"request_uri_parameter_supported":false,"request_object_signing_alg_values_supported":["PS256"],"token_endpoint_auth_signing_alg_values_supported":["PS256"],"display_values_supported":["page"],"claims_parameter_supported":true,"claims_supported":["sub","iss","iat","exp","acr","openbanking_intent_id","aud","at_hash"]}
+
+REQUEST 2
+POST https://psd2-api.danskebank.com/psd2/no/private/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+RESPONSE 2
+200
+Date: Mon, 24 Jan 2022 09:22:24 GMT
+Date: Mon, 24 Jan 2022 09:22:24 GMT
+Content-Type: application/json
+Content-Security-Policy: default-src 'self'; style-src 'unsafe-inline'
+Content-Length: 478
+
+{"token_type":"Bearer","access_token":"AAJJMWNm_access_token","metadata":"m:","expires_in":3600,"consented_on":1643016144,"scope":"payments"}
+
+REQUEST 4
+POST https://psd2-api.danskebank.com/psd2/v3.1/pisp/no/domestic-payment-consents
+Content-Type: application/json; charset=UTF-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+
+{"Risk":{"PaymentContextCode":"PartyToParty"},"Data":{"Initiation":{"RemittanceInformation":{"Unstructured":"TinkTest-2022-01-24-09-22"},"EndToEndIdentification":"f3fd90e27fb911eca8a30242ac12000","InstructionIdentification":"f3fd90e27fb911eca8a30242ac120002","DebtorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO1622221234567"},"LocalInstrument":"DK.DanskeBank.NO.TransferFunds","CreditorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO9411111234567","Name":"Tink Test"},"InstructedAmount":{"Amount":"1.00","Currency":"NOK"}}}}
+
+RESPONSE 4 SET 1
+201
+Date: Mon, 24 Jan 2022 09:22:26 GMT
+Date: Mon, 24 Jan 2022 09:22:26 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 975
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"ConsentId":"urn:obp:pi:3.1.8:e7af0b8e-152c-4c7a-bf91-4403bad30181","CreationDateTime":"2022-01-24T11:22:26.998385+02:00","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2022-01-24T11:22:26.998385+02:00","Initiation":{"RemittanceInformation":{"Unstructured":"TinkTest-2022-01-24-09-22"},"EndToEndIdentification":"f3fd90e27fb911eca8a30242ac12000","InstructionIdentification":"f3fd90e27fb911eca8a30242ac120002","DebtorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO1622221234567"},"LocalInstrument":"DK.DanskeBank.NO.TransferFunds","CreditorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO9411111234567","Name":"Tink Test"},"InstructedAmount":{"Amount":"1.00","Currency":"NOK"}}},"Risk":{"PaymentContextCode":"PartyToParty"},"Links":{"Self":"https://psd2-api.danskebank.com/psd2/v3.1/pisp/domestic-payment-consents/urn:obp:pi:3.1.8:e7af0b8e-152c-4c7a-bf91-4403bad30181"},"Meta":{}}
+
+REQUEST 5 MATCH 1
+POST https://psd2-api.danskebank.com/psd2/no/private/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&code=dummyCode
+
+RESPONSE 5
+200
+Date: Mon, 24 Jan 2022 09:23:34 GMT
+Date: Mon, 24 Jan 2022 09:23:34 GMT
+Content-Type: application/json
+Content-Security-Policy: default-src 'self'; style-src 'unsafe-inline'
+Content-Length: 1566
+
+{"token_type":"Bearer","access_token":"AAJJMWNA_access_token","metadata":"m:consent=urn:obp:pi:3.1.8:e7af0b8e-152c-4c7a-bf91-4403bad30181&nonce=06dfaae209fd56fd&acr=urn:openbanking:psd2:sca","expires_in":3600,"consented_on":1643016214,"scope":"openid payments","id_token":"eyJhbG_id_token"}
+
+REQUEST 6
+GET https://psd2-api.danskebank.com/psd2/jwks
+
+RESPONSE 6
+200
+Date: Mon, 24 Jan 2022 09:23:35 GMT
+Date: Mon, 24 Jan 2022 09:23:35 GMT
+Content-Type: application/json
+X-Forwarded-For: 34.254.6.61
+Accept-Encoding: identity
+Via: 1.1 AwAAAPyJ1Dk-
+X-Global-Transaction-ID: 1234568e61ee701700123455
+Content-Length: 6923
+
+{
+	"keys": [
+		{
+			"kty": "RSA",
+			"x5t#S256": "NDJmYmJmODRmZmZiYTY4NmQyNWI2MTRkNTQwMTI5MzdiYjliODQ2YjZhZTZmMGVlZWRiMDY1Mzk1YTlmOTk2Yw",
+			"e": "AQAB",
+			"use": "sig",
+			"kid": "JlcGUUF9jBTtU9gsAYcYZhPfGTs",
+			"x5c": [
+				"MIIGUzCCBDugAwIBAgIKBm/x5s_dummy1",
+				"MIIGezCCBGOg/x5x_dummy2",
+				"MIIFtjCCA/x5x_dummy3"
+			],
+			"n": "58cscA-dummy_n"
+		}
+	]
+}
+
+REQUEST 7
+POST https://psd2-api.danskebank.com/psd2/v3.1/pisp/domestic-payments
+Content-Type: application/json; charset=UTF-8
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk":{"PaymentContextCode":"PartyToParty"},"Data":{"ConsentId":"urn:obp:pi:3.1.8:e7af0b8e-152c-4c7a-bf91-4403bad30181","Initiation":{"RemittanceInformation":{"Unstructured":"TinkTest-2022-01-24-09-22"},"EndToEndIdentification":"f3fd90e27fb911eca8a30242ac12000","InstructionIdentification":"f3fd90e27fb911eca8a30242ac120002","DebtorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO1622221234567"},"LocalInstrument":"DK.DanskeBank.NO.TransferFunds","CreditorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO9411111234567","Name":"Tink Test"},"InstructedAmount":{"Amount":"1.00","Currency":"NOK"}}}}
+
+RESPONSE 7 SET 2_TOKEN
+201
+Date: Mon, 24 Jan 2022 09:23:36 GMT
+Date: Mon, 24 Jan 2022 09:23:36 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 955
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"DomesticPaymentId":"1ba97cd8-d6aa-4d75-8015-1d4d6d4cdf5c","ConsentId":"urn:obp:pi:3.1.8:e7af0b8e-152c-4c7a-bf91-4403bad30181","CreationDateTime":"2022-01-24T11:23:36.855353+02:00","Status":"AcceptedSettlementInProcess","StatusUpdateDateTime":"2022-01-24T11:23:37.393993+02:00","Initiation":{"RemittanceInformation":{"Unstructured":"TinkTest-2022-01-24-09-22"},"EndToEndIdentification":"f3fd90e27fb911eca8a30242ac12000","InstructionIdentification":"f3fd90e27fb911eca8a30242ac120002","DebtorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO1622221234567"},"LocalInstrument":"DK.DanskeBank.NO.TransferFunds","CreditorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO9411111234567","Name":"Tink Test"},"InstructedAmount":{"Amount":"1.00","Currency":"NOK"}},"Debtor":{"Name":"FirstName SecondName LastName"}},"Links":{"Self":"https://psd2-api.danskebank.com/psd2/v3.1/pisp/domestic-payments/1ba97cd8-d6aa-4d75-8015-1d4d6d4cdf5c"},"Meta":{}}
+
+REQUEST 8 MATCH 2_TOKEN
+POST https://psd2-api.danskebank.com/psd2/no/private/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID
+
+RESPONSE 8
+200
+Date: Mon, 24 Jan 2022 09:23:37 GMT
+Date: Mon, 24 Jan 2022 09:23:37 GMT
+Content-Type: application/json
+Content-Security-Policy: default-src 'self'; style-src 'unsafe-inline'
+Content-Length: 478
+
+{"token_type":"Bearer","access_token":"AAJJ_access_token","metadata":"m:","expires_in":3600,"consented_on":1643016218,"scope":"payments"}
+
+REQUEST 9
+GET https://psd2-api.danskebank.com/psd2/v3.1/pisp/domestic-payments/1ba97cd8-d6aa-4d75-8015-1d4d6d4cdf5c
+
+RESPONSE 9
+200
+Date: Mon, 24 Jan 2022 09:23:38 GMT
+Date: Mon, 24 Jan 2022 09:23:38 GMT
+Content-Type: application/json;charset=utf-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Content-Length: 955
+
+{"Data":{"DomesticPaymentId":"1ba97cd8-d6aa-4d75-8015-1d4d6d4cdf5c","ConsentId":"urn:obp:pi:3.1.8:e7af0b8e-152c-4c7a-bf91-4403bad30181","CreationDateTime":"2022-01-24T11:23:36.855353+02:00","Status":"AcceptedSettlementCompleted","StatusUpdateDateTime":"2022-01-24T11:23:37.393993+02:00","Initiation":{"RemittanceInformation":{"Unstructured":"TinkTest-2022-01-24-09-22"},"EndToEndIdentification":"f3fd90e27fb911eca8a30242ac12000","InstructionIdentification":"f3fd90e27fb911eca8a30242ac120002","DebtorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO1622221234567"},"LocalInstrument":"DK.DanskeBank.NO.TransferFunds","CreditorAccount":{"SchemeName":"UK.OBIE.IBAN","Identification":"NO9411111234567","Name":"Tink Test"},"InstructedAmount":{"Amount":"1.00","Currency":"NOK"}},"Debtor":{"Name":"FirstName SecondName LastName"}},"Links":{"Self":"https://psd2-api.danskebank.com/psd2/v3.1/pisp/domestic-payments/1ba97cd8-d6aa-4d75-8015-1d4d6d4cdf5c"},"Meta":{}}
+

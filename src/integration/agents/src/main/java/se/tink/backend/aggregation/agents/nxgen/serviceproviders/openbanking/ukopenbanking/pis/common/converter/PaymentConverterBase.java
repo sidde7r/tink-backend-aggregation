@@ -63,6 +63,7 @@ public abstract class PaymentConverterBase {
     public static final String SE_LOCAL_INSTRUMENT_CODE = "DK.DanskeBank.SE.TransferFunds";
     public static final String DK_LOCAL_INSTRUMENT_CODE = "DK.DanskeBank.DK.TransferFunds";
     public static final String NO_LOCAL_INSTRUMENT_CODE = "DK.DanskeBank.NO.TransferFunds";
+    public static final String NO_LOCAL_INSTRUMENT_CODE_KID = "DK.DanskeBank.NO.TransferFunds.KID";
 
     public DebtorAccount getDebtorAccount(Payment payment) {
         return Optional.ofNullable(payment.getDebtor())
@@ -112,14 +113,20 @@ public abstract class PaymentConverterBase {
     }
 
     public void getEuLocalInstrument(
-            DomesticPaymentInitiationBuilder domesticPaymentInitiation, String providerMarketCode) {
+            DomesticPaymentInitiationBuilder domesticPaymentInitiation,
+            Payment payment,
+            String providerMarketCode) {
         MarketCode marketCode = MarketCode.valueOf(providerMarketCode.toUpperCase());
         switch (marketCode) {
             case FI:
                 domesticPaymentInitiation.localInstrument(FI_LOCAL_INSTRUMENT_CODE);
                 return;
             case NO:
-                domesticPaymentInitiation.localInstrument(NO_LOCAL_INSTRUMENT_CODE);
+                if (getRemittanceInformationType(payment) == RemittanceInformationType.REFERENCE) {
+                    domesticPaymentInitiation.localInstrument(NO_LOCAL_INSTRUMENT_CODE_KID);
+                } else {
+                    domesticPaymentInitiation.localInstrument(NO_LOCAL_INSTRUMENT_CODE);
+                }
                 return;
             case SE:
                 domesticPaymentInitiation.localInstrument(SE_LOCAL_INSTRUMENT_CODE);
@@ -232,5 +239,11 @@ public abstract class PaymentConverterBase {
         return PAYMENT_SCHEME_TYPE_MAPPER
                 .translate(accountIdentifier)
                 .orElseThrow(() -> new IllegalArgumentException("Scheme name cannot be null!"));
+    }
+
+    private static RemittanceInformationType getRemittanceInformationType(Payment payment) {
+        return Optional.ofNullable(payment.getRemittanceInformation())
+                .map(RemittanceInformation::getType)
+                .orElse(null);
     }
 }

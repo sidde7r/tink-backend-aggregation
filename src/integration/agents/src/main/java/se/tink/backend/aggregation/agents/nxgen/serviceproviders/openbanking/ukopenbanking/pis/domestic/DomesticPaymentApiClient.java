@@ -290,7 +290,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                 && shouldGetEuLocalInstrument(payment, debtor)) {
             log.info("EU local instrument");
             domesticPaymentConverter.getEuLocalInstrument(
-                    domesticPaymentInitiationBuilder, getMarket(payment, debtor));
+                    domesticPaymentInitiationBuilder, payment, getMarket(payment, debtor));
         }
         // First step to optionally enable this before making this mandatory
         if (payment.getPaymentScheme() != null
