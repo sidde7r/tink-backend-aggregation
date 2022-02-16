@@ -85,7 +85,7 @@ public class AccountsBalancesUpdaterTest {
         verifyNoImpactOnAccount();
         assertThat(listAppender.list)
                 .extracting(ILoggingEvent::getFormattedMessage, ILoggingEvent::getLevel)
-                .contains(Tuple.tuple("[BALANCE UPDATER] This should be fixed.", Level.WARN));
+                .contains(Tuple.tuple("[BALANCE UPDATER] This should be fixed.", Level.ERROR));
     }
 
     @Test
