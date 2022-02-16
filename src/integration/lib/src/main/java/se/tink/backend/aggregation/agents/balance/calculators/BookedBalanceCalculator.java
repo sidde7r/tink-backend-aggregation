@@ -11,7 +11,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface BookedBalanceCalculator {
 
-    Optional<ExactCurrencyAmount> calculateBookedBalance(
+    Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary> calculateBookedBalance(
             Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
             List<Transaction> transactions);
 }

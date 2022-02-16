@@ -43,11 +43,11 @@ public class CalculationsTest {
                 Pair.of(ONE_HUNDRED_EURO, null);
 
         // when
-        Optional<ExactCurrencyAmount> result =
+        Pair<Optional<ExactCurrencyAmount>, CalculationSummary> result =
                 returnBalanceAmountAsIs.evaluate(balanceWithSnapshotTime, Collections.emptyList());
 
         // then
-        assertThat(result).isPresent().get().isEqualTo(ONE_HUNDRED_EURO);
+        assertThat(result.getLeft()).isPresent().get().isEqualTo(ONE_HUNDRED_EURO);
     }
 
     @Test
@@ -69,11 +69,11 @@ public class CalculationsTest {
                                 Transaction.class));
 
         // when
-        Optional<ExactCurrencyAmount> result =
+        Pair<Optional<ExactCurrencyAmount>, CalculationSummary> result =
                 subtractPendingTransactions.evaluate(balanceWithSnapshotTime, transactions);
 
         // then
-        assertThat(result).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(70.00));
+        assertThat(result.getLeft()).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(70.00));
     }
 
     @Test
@@ -95,12 +95,12 @@ public class CalculationsTest {
                                 Transaction.class));
 
         // when
-        Optional<ExactCurrencyAmount> result =
+        Pair<Optional<ExactCurrencyAmount>, CalculationSummary> result =
                 subtractPendingTransactionsWithBookingDateAfterBalanceSnapshot.evaluate(
                         balanceWithSnapshotTime, transactions);
 
         // then
-        assertThat(result).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(80.00));
+        assertThat(result.getLeft()).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(80.00));
     }
 
     @Test
@@ -122,12 +122,12 @@ public class CalculationsTest {
                                 Transaction.class));
 
         // when
-        Optional<ExactCurrencyAmount> result =
+        Pair<Optional<ExactCurrencyAmount>, CalculationSummary> result =
                 addPendingTransactionsWithBookingDateAfterBalanceSnapshot.evaluate(
                         balanceWithSnapshotTime, transactions);
 
         // then
-        assertThat(result).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(120.00));
+        assertThat(result.getLeft()).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(120.00));
     }
 
     @Test
@@ -152,12 +152,12 @@ public class CalculationsTest {
                                 Transaction.class));
 
         // when
-        Optional<ExactCurrencyAmount> result =
+        Pair<Optional<ExactCurrencyAmount>, CalculationSummary> result =
                 addBookedTransactionsWithBookingDateAfterBalanceSnapshot.evaluate(
                         balanceWithSnapshotTime, transactions);
 
         // then
-        assertThat(result).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(150.00));
+        assertThat(result.getLeft()).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(150.00));
     }
 
     @Test
@@ -173,12 +173,12 @@ public class CalculationsTest {
                                 Transaction.class));
 
         // when
-        Optional<ExactCurrencyAmount> result =
+        Pair<Optional<ExactCurrencyAmount>, CalculationSummary> result =
                 addBookedTransactionsWithBookingDateAfterBalanceSnapshot.evaluate(
                         balanceWithSnapshotTime, transactions);
 
         // then
-        assertThat(result).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(100.00));
+        assertThat(result.getLeft()).isPresent().get().isEqualTo(ExactCurrencyAmount.inEUR(100.00));
     }
 
     @Test

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.balance.calculators;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.agents.rpc.AccountBalanceType;
 import se.tink.backend.aggregation.agents.balance.Calculation;
+import se.tink.backend.aggregation.agents.balance.CalculationSummary;
+import se.tink.backend.aggregation.agents.balance.calculators.BalanceCalculatorSummary.BalanceCalculatorSummaryBuilder;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -16,19 +20,24 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @RequiredArgsConstructor
 public class BalanceCalculator {
 
-    public Optional<ExactCurrencyAmount> findFirstPossibleCalculationAndEvaluateIt(
-            Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
-            List<Transaction> transactions,
-            List<Pair<AccountBalanceType, Calculation>> prioritizedCalculations) {
+    public Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
+            findFirstPossibleCalculationAndEvaluateIt(
+                    Map<AccountBalanceType, Pair<ExactCurrencyAmount, Instant>> granularBalances,
+                    List<Transaction> transactions,
+                    List<Pair<AccountBalanceType, Calculation>> prioritizedCalculations) {
 
         Optional<Pair<AccountBalanceType, Calculation>> balanceTypeWithCalculation =
                 findFirstPossibleCalculation(granularBalances, prioritizedCalculations);
 
         if (!balanceTypeWithCalculation.isPresent()) {
-            log.info(
-                    "[BALANCE CALCULATOR] Not found any possible calculations for given balances: {}",
-                    granularBalances.keySet());
-            return Optional.empty();
+            BalanceCalculatorSummary balanceCalculatorSummary =
+                    BalanceCalculatorSummary.builder()
+                            .calculationSummary(
+                                    CalculationSummary.of(
+                                            "Not found any possible calculations for given granular balances"))
+                            .build();
+
+            return Pair.of(Optional.empty(), balanceCalculatorSummary);
         }
 
         AccountBalanceType balanceType = balanceTypeWithCalculation.get().getLeft();
@@ -36,12 +45,21 @@ public class BalanceCalculator {
         Pair<ExactCurrencyAmount, Instant> balanceWithSnapshotTime =
                 granularBalances.get(balanceType);
 
-        log.info(
-                "[BALANCE CALCULATOR] Running calculation with balance {} {} as input",
-                balanceType,
-                balanceWithSnapshotTime.getLeft());
+        BalanceCalculatorSummaryBuilder summaryBuilder =
+                BalanceCalculatorSummary.builder()
+                        .inputBalanceType(balanceType)
+                        .inputBalance(balanceWithSnapshotTime.getLeft().getExactValue())
+                        .inputBalanceSnapshotTime(
+                                LocalDateTime.ofInstant(
+                                        balanceWithSnapshotTime.getRight(), ZoneOffset.UTC));
 
-        return calculation.evaluate(balanceWithSnapshotTime, transactions);
+        Pair<Optional<ExactCurrencyAmount>, CalculationSummary> result =
+                calculation.evaluate(balanceWithSnapshotTime, transactions);
+
+        Optional<ExactCurrencyAmount> calculatedBalance = result.getLeft();
+        BalanceCalculatorSummary summary =
+                summaryBuilder.calculationSummary(result.getRight()).build();
+        return Pair.of(calculatedBalance, summary);
     }
 
     public Optional<Pair<AccountBalanceType, Calculation>> findFirstPossibleCalculation(

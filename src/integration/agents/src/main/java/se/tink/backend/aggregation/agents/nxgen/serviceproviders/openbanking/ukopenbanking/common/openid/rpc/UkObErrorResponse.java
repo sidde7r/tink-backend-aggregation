@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Slf4j
@@ -33,7 +34,7 @@ public class UkObErrorResponse {
 
     @JsonIgnore
     public boolean hasErrorCode(String errorCode) {
-        if (errors == null) {
+        if (CollectionUtils.isEmpty(errors)) {
             return false;
         }
         log.info("[ErrorResponse] Received errors list: `{}`", errors);
