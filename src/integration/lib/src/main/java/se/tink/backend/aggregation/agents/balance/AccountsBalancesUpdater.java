@@ -80,8 +80,11 @@ public class AccountsBalancesUpdater {
                         .accountNumber(account.getAccountNumber())
                         .inputAccountType(account.getType())
                         .balanceTypeToCalculate(BalanceType.BOOKED_BALANCE)
-                        .buggyBalance(account.getExactBalance().getExactValue())
                         .granularBalances(granularBalances);
+
+        Optional.ofNullable(account.getExactBalance())
+                .map(ExactCurrencyAmount::getExactValue)
+                .ifPresent(summaryBuilder::buggyBalance);
 
         Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
                 calculatedBookedBalanceWithSummary =
@@ -122,8 +125,11 @@ public class AccountsBalancesUpdater {
                         .accountNumber(account.getAccountNumber())
                         .inputAccountType(account.getType())
                         .balanceTypeToCalculate(BalanceType.AVAILABLE_BALANCE)
-                        .buggyBalance(account.getAvailableBalance().getExactValue())
                         .granularBalances(granularBalances);
+
+        Optional.ofNullable(account.getAvailableBalance())
+                .map(ExactCurrencyAmount::getExactValue)
+                .ifPresent(summaryBuilder::buggyBalance);
 
         Pair<Optional<ExactCurrencyAmount>, BalanceCalculatorSummary>
                 calculatedAvailableBalanceWithSummary =
