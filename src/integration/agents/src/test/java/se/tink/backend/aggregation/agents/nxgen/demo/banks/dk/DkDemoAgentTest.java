@@ -12,7 +12,7 @@ public final class DkDemoAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-demo-provider-nordea")
                         .addCredentialField(
                                 Field.Key.AUTH_METHOD_SELECTOR,
-                                DkAuthMethod.NEM_ID.getSupplementalInfoKey())
+                                DkAuthMethod.NEM_ID.getSupplementalInfoKeys().get(0))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
@@ -25,7 +25,7 @@ public final class DkDemoAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-demo-provider-nordea")
                         .addCredentialField(
                                 Field.Key.AUTH_METHOD_SELECTOR,
-                                DkAuthMethod.MIT_ID.getSupplementalInfoKey())
+                                DkAuthMethod.MIT_ID.getSupplementalInfoKeys().get(0))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
@@ -38,7 +38,7 @@ public final class DkDemoAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-demo-provider-danske")
                         .addCredentialField(
                                 Field.Key.AUTH_METHOD_SELECTOR,
-                                DkAuthMethod.NEM_ID.getSupplementalInfoKey())
+                                DkAuthMethod.NEM_ID.getSupplementalInfoKeys().get(1))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
@@ -51,7 +51,7 @@ public final class DkDemoAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-demo-provider-danske")
                         .addCredentialField(
                                 Field.Key.AUTH_METHOD_SELECTOR,
-                                DkAuthMethod.MIT_ID.getSupplementalInfoKey())
+                                DkAuthMethod.MIT_ID.getSupplementalInfoKeys().get(1))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
@@ -64,7 +64,7 @@ public final class DkDemoAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-demo-provider-bec")
                         .addCredentialField(
                                 Field.Key.AUTH_METHOD_SELECTOR,
-                                DkAuthMethod.NEM_ID.getSupplementalInfoKey())
+                                DkAuthMethod.NEM_ID.getSupplementalInfoKeys().get(0))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
@@ -77,7 +77,7 @@ public final class DkDemoAgentTest {
                 new AgentIntegrationTest.Builder("dk", "dk-demo-provider-bec")
                         .addCredentialField(
                                 Field.Key.AUTH_METHOD_SELECTOR,
-                                DkAuthMethod.MIT_ID.getSupplementalInfoKey())
+                                DkAuthMethod.MIT_ID.getSupplementalInfoKeys().get(0))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
