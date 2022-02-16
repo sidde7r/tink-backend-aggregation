@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.UkObConsentGenerator;
 import se.tink.backend.aggregation.agents.consent.generators.serviceproviders.ukob.rpc.AccountPermissionRequest;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.ConsentResponse;
@@ -77,10 +78,24 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public List<AccountEntity> fetchV31Accounts() {
-        return createAisRequest(aisConfig.getBulkAccountRequestURL())
-                .get(AccountsV31Response.class)
-                .getData()
-                .orElse(Collections.emptyList());
+        try {
+            return createAisRequest(aisConfig.getBulkAccountRequestURL())
+                    .get(AccountsV31Response.class)
+                    .getData()
+                    .orElse(Collections.emptyList());
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() >= 500) {
+                log.warn(
+                        "[UkOpenBankingApiClient] Bank side error (status code {}) during "
+                                + "fetching accounts",
+                        e.getResponse().getStatus());
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+            }
+            log.error(
+                    "[UkOpenBankingApiClient] Fetching accounts failed: {}",
+                    e.getResponse().getBody(String.class));
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 
     public List<AccountBalanceEntity> fetchV31AccountBalances(String accountId) {
