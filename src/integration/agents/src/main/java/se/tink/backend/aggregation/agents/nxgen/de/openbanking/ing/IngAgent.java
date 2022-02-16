@@ -7,14 +7,23 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 import com.google.inject.Inject;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.payment.IngPaymentMapper;
+import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentMapper;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.validation.impl.SepaCapabilitiesInitializationValidator;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.libraries.enums.MarketCode;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
@@ -44,5 +53,36 @@ public final class IngAgent extends IngBaseAgent {
                 .map(String::trim)
                 .map(name -> new Party(name, Party.Role.HOLDER))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        // NZG-964
+        // This overwrites the super method just to add the exception handling and validation to
+        // just our markets
+        // This should be expanded to cover entire serviceprovider once the solution is validated,
+        // and other teams are notified.
+        IngPaymentAuthenticator paymentAuthenticator =
+                new IngPaymentAuthenticator(supplementalInformationController);
+
+        IngPaymentMapper paymentMapper = new IngPaymentMapper(new BasePaymentMapper());
+
+        IngPaymentExecutor paymentExecutor =
+                new IngPaymentExecutor(
+                        sessionStorage,
+                        paymentApiClient,
+                        paymentAuthenticator,
+                        paymentMapper,
+                        this.getClass().getAnnotations());
+
+        return Optional.of(
+                PaymentController.builder()
+                        .paymentExecutor(paymentExecutor)
+                        .fetchablePaymentExecutor(paymentExecutor)
+                        .exceptionHandler(new PaymentControllerExceptionMapper())
+                        .validator(
+                                new SepaCapabilitiesInitializationValidator(
+                                        this.getClass(), MarketCode.valueOf(provider.getMarket())))
+                        .build());
     }
 }

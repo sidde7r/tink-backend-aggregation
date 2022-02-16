@@ -26,7 +26,9 @@ import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestina
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.controllers.payment.validation.impl.SepaCapabilitiesInitializationValidator;
 import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.enums.MarketCode;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(
@@ -79,8 +81,14 @@ public final class NorisbankAgent extends DeutscheBankAgent
                 new BasePaymentExecutor(apiClient, redirectPaymentAuthenticator, sessionStorage);
 
         return Optional.of(
-                new PaymentController(
-                        paymentExecutor, paymentExecutor, new PaymentControllerExceptionMapper()));
+                PaymentController.builder()
+                        .paymentExecutor(paymentExecutor)
+                        .fetchablePaymentExecutor(paymentExecutor)
+                        .exceptionHandler(new PaymentControllerExceptionMapper())
+                        .validator(
+                                new SepaCapabilitiesInitializationValidator(
+                                        this.getClass(), MarketCode.valueOf(provider.getMarket())))
+                        .build());
     }
 
     @Override

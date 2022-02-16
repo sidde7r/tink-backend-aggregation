@@ -60,7 +60,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 RefreshTransferDestinationExecutor {
 
     protected final IngBaseApiClient apiClient;
-    private final IngPaymentApiClient paymentApiClient;
+    protected final IngPaymentApiClient paymentApiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected final LocalDateTimeSource localDateTimeSource;
 

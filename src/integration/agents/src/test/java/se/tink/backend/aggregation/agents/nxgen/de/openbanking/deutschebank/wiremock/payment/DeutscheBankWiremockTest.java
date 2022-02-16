@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.deutschebank.wiremock.payment;
 
 import java.time.LocalDate;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -70,6 +71,7 @@ public class DeutscheBankWiremockTest {
     }
 
     @Test
+    @Ignore // This won't work till we add recurring capability to Deutsche
     public void testRecurringPaymentInitiation() throws Exception {
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_FILE);

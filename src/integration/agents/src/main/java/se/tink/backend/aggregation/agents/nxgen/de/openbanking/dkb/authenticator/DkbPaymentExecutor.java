@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.BasePaymentExecutor;
 import se.tink.backend.aggregation.agents.utils.berlingroup.payment.PaymentApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -16,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @Slf4j
 public class DkbPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -36,11 +34,6 @@ public class DkbPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        // Temporary solution to be fixed in NZG-1112
-        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER
-                == paymentRequest.getPayment().getPaymentScheme()) {
-            throw new PaymentValidationException("Instant payment is not supported");
-        }
         paymentAuthenticatorPreAuth.preAuthentication();
         return basePaymentExecutor.create(paymentRequest);
     }

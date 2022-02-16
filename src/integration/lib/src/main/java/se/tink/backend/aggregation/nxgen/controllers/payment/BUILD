@@ -12,6 +12,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/nemid",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/payment/validation",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/signing",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/payment:enums",
