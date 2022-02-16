@@ -114,7 +114,6 @@ public class IdTokenValidatorTest {
                     + "76e90813a2ad219d29";
 
     private static final BigInteger exponent = BigInteger.valueOf(65537);
-
     private final Map<String, PublicKey> publicKeyMap = new HashMap<>();
 
     @Before
@@ -128,7 +127,8 @@ public class IdTokenValidatorTest {
     @Test
     public void shouldValidateAtHashSuccess() {
         TokenValidationResult result =
-                new IdTokenValidator(ID_TOKEN_WITH_AT_HASH, publicKeyMap)
+                new IdTokenValidator(ID_TOKEN_WITH_AT_HASH)
+                        .withPublicKeys(publicKeyMap)
                         .withAtHashValidation("most-secure-access-token")
                         .execute();
         assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
@@ -139,19 +139,36 @@ public class IdTokenValidatorTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                new IdTokenValidator(ID_TOKEN_WITH_AT_HASH, publicKeyMap)
+                                new IdTokenValidator(ID_TOKEN_WITH_AT_HASH)
+                                        .withPublicKeys(publicKeyMap)
                                         .withAtHashValidation("wrong-token")
                                         .execute());
 
         assertThat(throwable)
                 .isExactlyInstanceOf(IdTokenValidationException.class)
-                .hasMessage("ID Token validation failed: Invalid at_hash");
+                .hasMessage("[IdTokenValidator] Invalid at_hash");
+    }
+
+    @Test
+    public void shouldValidateAtHashErrorWhenAccessTokenIsEmpty() {
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                new IdTokenValidator(ID_TOKEN_WITH_AT_HASH)
+                                        .withPublicKeys(publicKeyMap)
+                                        .withAtHashValidation(null)
+                                        .execute());
+
+        assertThat(throwable)
+                .isExactlyInstanceOf(IdTokenValidationException.class)
+                .hasMessage("[IdTokenValidator] Invalid at_hash (source is null)");
     }
 
     @Test
     public void shouldValidateCHashSuccess() {
         TokenValidationResult result =
-                new IdTokenValidator(ID_TOKEN_WITH_C_HASH, publicKeyMap)
+                new IdTokenValidator(ID_TOKEN_WITH_C_HASH)
+                        .withPublicKeys(publicKeyMap)
                         .withCHashValidation("so-so-secure-access-code")
                         .execute();
         assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
@@ -162,19 +179,36 @@ public class IdTokenValidatorTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                new IdTokenValidator(ID_TOKEN_WITH_C_HASH, publicKeyMap)
+                                new IdTokenValidator(ID_TOKEN_WITH_C_HASH)
+                                        .withPublicKeys(publicKeyMap)
                                         .withCHashValidation("wrong-code")
                                         .execute());
 
         assertThat(throwable)
                 .isExactlyInstanceOf(IdTokenValidationException.class)
-                .hasMessage("ID Token validation failed: Invalid c_hash");
+                .hasMessage("[IdTokenValidator] Invalid c_hash");
+    }
+
+    @Test
+    public void shouldValidateCHashErrorWhenCodeIsEmpty() {
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                new IdTokenValidator(ID_TOKEN_WITH_C_HASH)
+                                        .withPublicKeys(publicKeyMap)
+                                        .withCHashValidation(null)
+                                        .execute());
+
+        assertThat(throwable)
+                .isExactlyInstanceOf(IdTokenValidationException.class)
+                .hasMessage("[IdTokenValidator] Invalid c_hash (source is null)");
     }
 
     @Test
     public void shouldValidateSHashSuccess() {
         TokenValidationResult result =
-                new IdTokenValidator(ID_TOKEN_WITH_S_HASH, publicKeyMap)
+                new IdTokenValidator(ID_TOKEN_WITH_S_HASH)
+                        .withPublicKeys(publicKeyMap)
                         .withSHashValidation("that-is-a-state")
                         .execute();
         assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
@@ -185,19 +219,35 @@ public class IdTokenValidatorTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                new IdTokenValidator(ID_TOKEN_WITH_S_HASH, publicKeyMap)
+                                new IdTokenValidator(ID_TOKEN_WITH_S_HASH)
+                                        .withPublicKeys(publicKeyMap)
                                         .withSHashValidation("wrong-state")
                                         .execute());
 
         assertThat(throwable)
                 .isExactlyInstanceOf(IdTokenValidationException.class)
-                .hasMessage("ID Token validation failed: Invalid s_hash");
+                .hasMessage("[IdTokenValidator] Invalid s_hash");
+    }
+
+    @Test
+    public void shouldValidateSHashErrorWhenStateIsNull() {
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                new IdTokenValidator(ID_TOKEN_WITH_S_HASH)
+                                        .withPublicKeys(publicKeyMap)
+                                        .withSHashValidation(null)
+                                        .execute());
+
+        assertThat(throwable)
+                .isExactlyInstanceOf(IdTokenValidationException.class)
+                .hasMessage("[IdTokenValidator] Invalid s_hash (source is null)");
     }
 
     @Test
     public void shouldValidateSignatureOnly() {
         TokenValidationResult result =
-                new IdTokenValidator(TOKEN_WITHOUT_HASHES, publicKeyMap).execute();
+                new IdTokenValidator(TOKEN_WITHOUT_HASHES).withPublicKeys(publicKeyMap).execute();
         assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
     }
 
@@ -205,18 +255,21 @@ public class IdTokenValidatorTest {
     public void shouldValidateSignatureWrongSignature() {
         Throwable throwable =
                 catchThrowable(
-                        () -> new IdTokenValidator(TOKEN_WRONG_SIGNATURE, publicKeyMap).execute());
+                        () ->
+                                new IdTokenValidator(TOKEN_WRONG_SIGNATURE)
+                                        .withPublicKeys(publicKeyMap)
+                                        .execute());
 
         assertThat(throwable)
                 .isExactlyInstanceOf(IdTokenValidationException.class)
-                .hasMessage(
-                        "ID Token validation failed: Invalid signature (alg:RS256, kid:abc-123)");
+                .hasMessage("[IdTokenValidator] Invalid signature (alg:RS256, kid:abc-123)");
     }
 
     @Test
     public void shouldValidateSignatureWrongSignatureLoggingMode() {
         TokenValidationResult result =
-                new IdTokenValidator(TOKEN_WRONG_SIGNATURE, publicKeyMap)
+                new IdTokenValidator(TOKEN_WRONG_SIGNATURE)
+                        .withPublicKeys(publicKeyMap)
                         .withMode(ValidatorMode.LOGGING)
                         .execute();
 
@@ -226,17 +279,22 @@ public class IdTokenValidatorTest {
     @Test
     public void shouldValidateWrongFormat() {
         Throwable throwable =
-                catchThrowable(() -> new IdTokenValidator(MALFORMED_TOKEN, publicKeyMap).execute());
+                catchThrowable(
+                        () ->
+                                new IdTokenValidator(MALFORMED_TOKEN)
+                                        .withPublicKeys(publicKeyMap)
+                                        .execute());
 
         assertThat(throwable)
                 .isExactlyInstanceOf(IdTokenValidationException.class)
-                .hasMessage("ID Token validation failed: Invalid format");
+                .hasMessage("[IdTokenValidator] Invalid format");
     }
 
     @Test
     @Ignore
     public void shouldValidatePS384() {
-        TokenValidationResult result = new IdTokenValidator(TOKEN_PS384, publicKeyMap).execute();
+        TokenValidationResult result =
+                new IdTokenValidator(TOKEN_PS384).withPublicKeys(publicKeyMap).execute();
 
         assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
     }
@@ -244,17 +302,22 @@ public class IdTokenValidatorTest {
     @Test
     public void shouldValidateNoKeyAvailable() {
         Throwable throwable =
-                catchThrowable(() -> new IdTokenValidator(TOKEN_WRONG_KEY, publicKeyMap).execute());
+                catchThrowable(
+                        () ->
+                                new IdTokenValidator(TOKEN_WRONG_KEY)
+                                        .withPublicKeys(publicKeyMap)
+                                        .execute());
 
         assertThat(throwable)
                 .isExactlyInstanceOf(IdTokenValidationException.class)
-                .hasMessage("ID Token validation failed: Did not find key with id unknown");
+                .hasMessage("[IdTokenValidator] Did not find key with id unknown");
     }
 
     @Test
     public void shouldValidateNoKeyAvailableLoggingMode() {
         TokenValidationResult result =
-                new IdTokenValidator(TOKEN_WRONG_KEY, publicKeyMap)
+                new IdTokenValidator(TOKEN_WRONG_KEY)
+                        .withPublicKeys(publicKeyMap)
                         .withMode(ValidatorMode.LOGGING)
                         .execute();
 

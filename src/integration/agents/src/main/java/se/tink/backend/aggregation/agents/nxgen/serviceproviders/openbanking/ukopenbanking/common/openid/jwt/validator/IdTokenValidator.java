@@ -18,26 +18,17 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class IdTokenValidator {
 
     private final String idToken;
-
-    private final Map<String, PublicKey> publicKeys;
-
+    private Map<String, PublicKey> publicKeys;
     private String accessToken;
-
     private String code;
-
     private String state;
-
     private boolean atHashValidation;
-
     private boolean cHashValidation;
-
     private boolean sHashValidation;
-
     private ValidatorMode mode = ValidatorMode.TERMINATING;
 
-    public IdTokenValidator(String idToken, Map<String, PublicKey> publicKeys) {
+    public IdTokenValidator(String idToken) {
         this.idToken = idToken;
-        this.publicKeys = publicKeys;
     }
 
     public IdTokenValidator withAtHashValidation(String accessToken) {
@@ -58,16 +49,25 @@ public class IdTokenValidator {
         return this;
     }
 
+    public IdTokenValidator withPublicKeys(Map<String, PublicKey> publicKeys) {
+        this.publicKeys = publicKeys;
+        return this;
+    }
+
     public IdTokenValidator withMode(ValidatorMode mode) {
         this.mode = mode;
         return this;
+    }
+
+    public boolean isValidationWithAccessToken() {
+        return atHashValidation;
     }
 
     public TokenValidationResult execute() {
         String[] parts = idToken.split("\\.");
 
         if (parts.length != 3) {
-            handleError("Invalid format");
+            handleError("[IdTokenValidator] Invalid format");
             return TokenValidationResult.FAILURE;
         }
 
@@ -80,9 +80,12 @@ public class IdTokenValidator {
                         EncodingUtils.decodeBase64String(parts[1]), IdTokenPayload.class);
 
         try {
+            if (header == null || payload == null) {
+                return TokenValidationResult.FAILURE;
+            }
             if (!validateSignature(header.getKid(), header.getAlg(), parts)) {
                 handleError(
-                        "Invalid signature (alg:"
+                        "[IdTokenValidator] Invalid signature (alg:"
                                 + header.getAlg()
                                 + ", kid:"
                                 + header.getKid()
@@ -96,15 +99,24 @@ public class IdTokenValidator {
         }
 
         if (atHashValidation) {
-            guardValidateHash(accessToken, header.getAlg(), payload.getAtHash(), "Invalid at_hash");
+            guardValidateHash(
+                    accessToken,
+                    header.getAlg(),
+                    payload.getAtHash(),
+                    "[IdTokenValidator] Invalid at_hash");
         }
 
         if (cHashValidation) {
-            guardValidateHash(code, header.getAlg(), payload.getCHash(), "Invalid c_hash");
+            guardValidateHash(
+                    code, header.getAlg(), payload.getCHash(), "[IdTokenValidator] Invalid c_hash");
         }
 
         if (sHashValidation) {
-            guardValidateHash(state, header.getAlg(), payload.getSHash(), "Invalid s_hash");
+            guardValidateHash(
+                    state,
+                    header.getAlg(),
+                    payload.getSHash(),
+                    "[IdTokenValidator] Invalid s_hash");
         }
 
         return TokenValidationResult.SUCCESS;
@@ -141,7 +153,8 @@ public class IdTokenValidator {
 
         PublicKey publicKey = publicKeys.get(keyId);
         if (publicKey == null) {
-            throw new IllegalArgumentException("Did not find key with id " + keyId);
+            throw new IllegalArgumentException(
+                    "[IdTokenValidator] Did not find key with id " + keyId);
         }
 
         Signature signature = signatureBasedOnAlg(algorithm);
@@ -167,7 +180,8 @@ public class IdTokenValidator {
                 return Signature.getInstance("SHA256withRSA");
             default:
                 // Consider adding support for other algorithms if used by any bank
-                throw new UnsupportedOperationException("Not supported signing algorithm: " + alg);
+                throw new UnsupportedOperationException(
+                        "[IdTokenValidator] Not supported signing algorithm: " + alg);
         }
     }
 
@@ -189,7 +203,8 @@ public class IdTokenValidator {
             case "RS256":
                 return DigestUtils.sha256(value);
             default:
-                throw new UnsupportedOperationException("Not supported signing algorithm: " + alg);
+                throw new UnsupportedOperationException(
+                        "[IdTokenValidator] Not supported signing algorithm: " + alg);
         }
     }
 
@@ -210,7 +225,7 @@ public class IdTokenValidator {
             if (mode == ValidatorMode.TERMINATING) {
                 throw new IdTokenValidationException(message, cause);
             } else {
-                log.warn("ID Token validation failed: " + message, cause);
+                log.warn("[IdTokenValidator] ID Token validation failed: " + message, cause);
             }
         }
     }

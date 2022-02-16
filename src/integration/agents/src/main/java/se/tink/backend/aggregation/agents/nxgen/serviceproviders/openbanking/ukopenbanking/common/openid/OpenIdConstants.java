@@ -111,5 +111,9 @@ public class OpenIdConstants {
     public static class Token {
         public static final int DEFAULT_TOKEN_LIFETIME = 90;
         public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
+        public static final String CODE_AND_STATE_MSG = "code and state";
+        public static final String ACCESS_TOKEN_MSG = "access token"; // pragma: allowlist secret;
+        public static final String CLIENT_ACCESS_TOKEN_MSG =
+                "client access token"; // pragma: allowlist secret;
     }
 }
