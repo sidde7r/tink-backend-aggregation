@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.fetching.transactions.key;
+package se.tink.agent.sdk.fetching.transactions.paginators.key;
 
 import lombok.Builder;
 import lombok.Getter;

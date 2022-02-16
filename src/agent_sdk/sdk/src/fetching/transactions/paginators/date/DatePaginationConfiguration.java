@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.fetching.transactions.date;
+package se.tink.agent.sdk.fetching.transactions.paginators.date;
 
 import java.time.Duration;
 import lombok.Builder;

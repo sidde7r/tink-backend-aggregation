@@ -2,7 +2,6 @@ load("//tools/bzl:lib_with_sources.bzl", "java_library_with_sources")
 
 java_library_with_sources(
     name = "sdk",
-    srcs = glob(["src/**/*.java"]),
     exported_plugins = [
         "//src/agent_sdk/linter",
         "//src/agent_sdk:lombok_plugin",
@@ -17,6 +16,7 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/models/transaction",
     ],
     intdeps = [
+        "//src/agent_sdk/sdk/src/fetching",
         "//src/agent_sdk/sdk/src/models/payments",
         "//src/agent_sdk/sdk/src/models/account",
         "//src/agent_sdk/sdk/src/models/authentication",
@@ -39,6 +39,7 @@ java_library_with_sources(
         "//src/agent_sdk/sdk/src/capabilities",
         "//src/agent_sdk/sdk/src/environment",
         "//src/agent_sdk/sdk/src/exceptions",
+        "//src/agent_sdk/sdk/src/fetching",
         "//src/agent_sdk/sdk/src/libraries",
         "//src/agent_sdk/sdk/src/models/account",
         "//src/agent_sdk/sdk/src/models/authentication",
