@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, TRANSFERS})
 @AgentPisCapability(
@@ -32,6 +33,9 @@ public final class IngAgent extends IngBaseAgent implements RefreshCreditCardAcc
     @Inject
     public IngAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
 
         provider = agentComponentProvider.getProvider();
         creditCardRefreshController = constructCreditCardRefreshController();

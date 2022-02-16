@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 public abstract class BnpParibasBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -68,6 +69,9 @@ public abstract class BnpParibasBaseAgent extends NextGenerationAgent
             QsealcSigner qsealcSigner,
             BnpParibasBankConfig bankConfig) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
 
         agentConfiguration =
                 getAgentConfigurationController()

@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -43,6 +44,9 @@ public final class CicAgent extends CmcicAgent {
                         "https://oauth2-apiii.e-i.com",
                         "/cic/",
                         getLocalizedAuthUrl(componentProvider)));
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
     }
 
     private static String getLocalizedAuthUrl(AgentComponentProvider componentProvider) {

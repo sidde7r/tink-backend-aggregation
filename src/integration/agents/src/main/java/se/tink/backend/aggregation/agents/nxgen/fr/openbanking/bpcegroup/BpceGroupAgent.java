@@ -51,6 +51,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
@@ -74,6 +75,9 @@ public final class BpceGroupAgent extends NextGenerationAgent
     @SneakyThrows
     public BpceGroupAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
 
         final AgentConfiguration<BpceGroupConfiguration> agentConfiguration =
                 getAgentConfiguration();
