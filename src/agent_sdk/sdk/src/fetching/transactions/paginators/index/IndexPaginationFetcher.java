@@ -1,8 +1,8 @@
-package se.tink.agent.sdk.fetching.transactions.index;
+package se.tink.agent.sdk.fetching.transactions.paginators.index;
 
 import java.util.Optional;
-import se.tink.agent.sdk.fetching.transactions.PaginationResult;
 import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
+import se.tink.agent.sdk.fetching.transactions.pagination_result.PaginationResult;
 import se.tink.agent.sdk.storage.Reference;
 
 public interface IndexPaginationFetcher extends TransactionsFetcher {

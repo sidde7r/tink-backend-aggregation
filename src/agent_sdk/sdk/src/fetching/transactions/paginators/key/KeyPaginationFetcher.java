@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.fetching.transactions.key;
+package se.tink.agent.sdk.fetching.transactions.paginators.key;
 
 import java.util.Optional;
 import javax.annotation.Nullable;

@@ -1,4 +1,4 @@
-package se.tink.agent.sdk.fetching.transactions;
+package se.tink.agent.sdk.fetching.transactions.pagination_result;
 
 import java.util.List;
 import java.util.Optional;

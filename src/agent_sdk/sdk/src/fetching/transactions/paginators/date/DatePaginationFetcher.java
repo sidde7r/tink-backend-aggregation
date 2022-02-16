@@ -1,9 +1,9 @@
-package se.tink.agent.sdk.fetching.transactions.date;
+package se.tink.agent.sdk.fetching.transactions.paginators.date;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import se.tink.agent.sdk.fetching.transactions.PaginationResult;
 import se.tink.agent.sdk.fetching.transactions.TransactionsFetcher;
+import se.tink.agent.sdk.fetching.transactions.pagination_result.PaginationResult;
 import se.tink.agent.sdk.storage.Reference;
 
 public interface DatePaginationFetcher extends TransactionsFetcher {
