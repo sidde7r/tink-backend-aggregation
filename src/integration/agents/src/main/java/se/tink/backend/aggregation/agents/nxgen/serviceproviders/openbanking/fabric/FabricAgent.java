@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.enums.MarketCode;
 
@@ -60,6 +61,9 @@ public abstract class FabricAgent extends NextGenerationAgent
     @Inject
     public FabricAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
 
         Objects.requireNonNull(getBaseUrl());
         localDateTimeSource = componentProvider.getLocalDateTimeSource();

@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.exception.PaymentControllerExceptionMapper;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class BuddybankAgent extends UnicreditBaseAgent {
@@ -31,6 +32,9 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
     @Inject
     public BuddybankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, PROVIDER_CONFIG);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
     }
 
     @Override
