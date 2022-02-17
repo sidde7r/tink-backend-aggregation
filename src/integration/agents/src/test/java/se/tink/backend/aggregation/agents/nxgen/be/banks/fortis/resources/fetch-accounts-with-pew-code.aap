@@ -3,7 +3,7 @@
 REQUEST fetchAccountsFailWithPewCode
 POST https://app.easybanking.bnpparibasfortis.be/AC52-pr01/rpc/accounts/getViewAccountList
 CSRF: randomly-generated-csrf-string
-User-Agent: Mozilla/5.0 (iPhone10,4; U;iOS 11.1.2; en-us) AppleWebKit/604.1.25 (KHTML, like Gecko) Mobile/7D11 FAT/ APPTYPE=001/ APPVERSION=31.1.1/OS=ios-phone
+User-Agent: Mozilla/5.0 (iPhone10,4; U;iOS 11.1.2; en-us) AppleWebKit/604.1.25 (KHTML, like Gecko) Mobile/7D11 FAT/ APPTYPE=001/ APPVERSION=31.2.1/OS=ios-phone
 Content-Type: application/json
 Cookie: CSRF=randomly-generated-csrf-string; axes=null; deviceFeatures=0|1|0|0|0|1|1|0|0|1|0|0|0|1|1|750; distributorid=49FB001; europolicy=optin
 
