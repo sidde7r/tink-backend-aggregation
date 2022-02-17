@@ -7,11 +7,15 @@ import static se.tink.backend.aggregation.agents.agentcapabilities.Capability.TR
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import java.util.List;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentcapabilities.PisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.fetcher.DanskeBankNOTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.mapper.DanskeNoIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskeBankV31EUBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.Url.V31;
@@ -33,6 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
@@ -44,6 +49,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     static {
         aisConfig =
@@ -69,6 +75,7 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
                         componentProvider.getRandomValueGenerator()),
                 getCreditCardAccountMapperWithDanskeIdentifierMapper(),
                 getTransactionalAccountMapperWithDanskeIdentifierMapper());
+        this.transferDestinationRefreshController = constructTransferDestinationController();
     }
 
     private static CreditCardAccountMapper getCreditCardAccountMapperWithDanskeIdentifierMapper() {
@@ -100,5 +107,15 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
 
         return new UkOpenBankingPisRequestFilter(
                 jwtSignatureHelper, paymentStorage, randomValueGenerator);
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new DanskeBankNOTransferDestinationFetcher());
     }
 }
