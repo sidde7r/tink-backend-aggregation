@@ -11,6 +11,8 @@ initialDelaySeconds: "300"
 coordinationHosts: coordination-0.internal.production.aggregation.tink.network:2181,coordination-1.internal.production.aggregation.tink.network:2181,coordination-2.internal.production.aggregation.tink.network:2181
 
 cacheHosts: main-mirrored.pxkgtt.cfg.euw1.cache.amazonaws.com:11211
+mirrorCacheHosts:
+  - main.pxkgtt.cfg.euw1.cache.amazonaws.com:11211
 
 regularSqsQueueConfiguration:
   enabled: True
