@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
@@ -73,6 +74,10 @@ public abstract class CbiGlobeAgent extends NextGenerationAgent
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
 

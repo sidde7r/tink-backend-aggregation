@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.RateLimitFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TerminatedHandshakeRetryFilter;
 import se.tink.libraries.account.enums.AccountIdentifierType;
@@ -73,6 +74,10 @@ public final class N26Agent extends AgentPlatformAgent
     @Inject
     public N26Agent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         logMasker = componentProvider.getContext().getLogMasker();
         objectMapper = new ObjectMapper();
         RedirectTokensAccessor oAuth2TokenAccessor =

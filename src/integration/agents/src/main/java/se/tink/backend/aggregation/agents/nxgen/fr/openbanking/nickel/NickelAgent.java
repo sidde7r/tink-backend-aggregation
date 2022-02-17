@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.libraries.cryptography.hash.Hash;
@@ -56,6 +57,10 @@ public class NickelAgent extends NextGenerationAgent
     @Inject
     protected NickelAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         this.storage = new NickelStorage(sessionStorage, persistentStorage);
         this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(NickelConfiguration.class);

@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 
 public class CreditAgricoleBaseAgent extends NextGenerationAgent
@@ -68,6 +69,10 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider,
             QSealSignatureProvider qSealSignatureProvider) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         final CreditAgricoleBranchMapper configurationMapper = new CreditAgricoleBranchMapper();
         this.branchConfiguration =
                 configurationMapper.determineBranchConfiguration(

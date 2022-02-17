@@ -10,6 +10,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.log.executor.LoggingExecutor;
 import se.tink.backend.aggregation.nxgen.http.log.executor.RequestLogEntry;
 import se.tink.backend.aggregation.nxgen.http.log.executor.ResponseLogEntry;
@@ -24,6 +25,8 @@ import se.tink.backend.aggregation.nxgen.http.log.executor.ResponseLogEntry;
 @Slf4j
 public abstract class LoggingAdapter<T, S> {
 
+    private static final LogTag LOG_TAG = LogTag.from("[LoggingAdapter]");
+
     private static final int MAX_SIZE = 500 * 1024;
     private static final String NOT_IMPLEMENTED = "Not implemented";
 
@@ -37,25 +40,55 @@ public abstract class LoggingAdapter<T, S> {
         this.loggingExecutors = loggingExecutors;
     }
 
-    public void logRequest(T request) {
-        RequestLogEntry requestLogEntry =
-                RequestLogEntry.builder()
-                        .method(mapMethod(request))
-                        .url(mapUrl(request))
-                        .headers(mapRequestHeaders(request))
-                        .body(mapRequestBody(request))
-                        .build();
-        loggingExecutors.forEach(executor -> executor.log(requestLogEntry));
+    public final void logRequest(T request) {
+        try {
+            RequestLogEntry requestLogEntry =
+                    RequestLogEntry.builder()
+                            .method(mapMethod(request))
+                            .url(mapUrl(request))
+                            .headers(mapRequestHeaders(request))
+                            .body(mapRequestBody(request))
+                            .build();
+            logRequestWithExecutors(requestLogEntry);
+        } catch (Exception e) {
+            log.error("{} Could not log request", LOG_TAG, e);
+        }
     }
 
-    public void logResponse(S response) {
-        ResponseLogEntry responseLogEntry =
-                ResponseLogEntry.builder()
-                        .status(mapStatus(response))
-                        .headers(mapResponseHeaders(response))
-                        .body(mapResponseBody(response))
-                        .build();
-        loggingExecutors.forEach(executor -> executor.log(responseLogEntry));
+    private void logRequestWithExecutors(RequestLogEntry requestLogEntry) {
+        loggingExecutors.forEach(
+                executor -> {
+                    try {
+                        executor.log(requestLogEntry);
+                    } catch (Exception e) {
+                        log.error("{} Could not log request with executor: {}", LOG_TAG, executor);
+                    }
+                });
+    }
+
+    public final void logResponse(S response) {
+        try {
+            ResponseLogEntry responseLogEntry =
+                    ResponseLogEntry.builder()
+                            .status(mapStatus(response))
+                            .headers(mapResponseHeaders(response))
+                            .body(mapResponseBody(response))
+                            .build();
+            logResponseWithExecutors(responseLogEntry);
+        } catch (Exception e) {
+            log.error("{} Could not log response", LOG_TAG, e);
+        }
+    }
+
+    private void logResponseWithExecutors(ResponseLogEntry responseLogEntry) {
+        loggingExecutors.forEach(
+                executor -> {
+                    try {
+                        executor.log(responseLogEntry);
+                    } catch (Exception e) {
+                        log.error("{} Could not log response with executor: {}", LOG_TAG, executor);
+                    }
+                });
     }
 
     /**
@@ -97,7 +130,7 @@ public abstract class LoggingAdapter<T, S> {
     protected String mapRequestBody(T request) {
         try {
             if (hasRequestBody(request)) {
-                return parseInputStream(convertRequest(request));
+                return parseInputStream(convertRequestBody(request));
             } else {
                 return null;
             }
@@ -158,7 +191,7 @@ public abstract class LoggingAdapter<T, S> {
      * @return InputStream or null if no body available
      * @throws IOException in case of error during InputStream creation
      */
-    protected InputStream convertRequest(T request) throws IOException {
+    protected InputStream convertRequestBody(T request) throws IOException {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 

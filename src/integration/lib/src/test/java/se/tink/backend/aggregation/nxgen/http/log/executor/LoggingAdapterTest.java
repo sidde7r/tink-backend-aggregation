@@ -88,7 +88,7 @@ public class LoggingAdapterTest {
         }
 
         @Override
-        protected InputStream convertRequest(String request) throws IOException {
+        protected InputStream convertRequestBody(String request) throws IOException {
             return new ByteArrayInputStream(request.getBytes());
         }
 

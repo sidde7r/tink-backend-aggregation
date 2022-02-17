@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class MediolanumAgent extends NextGenerationAgent
@@ -38,6 +39,10 @@ public final class MediolanumAgent extends NextGenerationAgent
     @Inject
     public MediolanumAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
+
         this.mediolanumStorage = new MediolanumStorage(persistentStorage);
         this.mediolanumConfiguration = constructConfiguration(componentProvider.getUser());
         this.apiClient = constructApiClient(componentProvider);

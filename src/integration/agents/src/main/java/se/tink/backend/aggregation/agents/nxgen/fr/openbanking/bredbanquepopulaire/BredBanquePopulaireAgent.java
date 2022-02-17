@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA})
 public final class BredBanquePopulaireAgent extends NextGenerationAgent
@@ -46,6 +47,9 @@ public final class BredBanquePopulaireAgent extends NextGenerationAgent
     @Inject
     public BredBanquePopulaireAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+
+        setJsonHttpTrafficLogsEnabled(true);
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
 
         this.agentConfiguration = getAgentConfiguration();
         this.qsealcSigner = componentProvider.getQsealcSigner();
