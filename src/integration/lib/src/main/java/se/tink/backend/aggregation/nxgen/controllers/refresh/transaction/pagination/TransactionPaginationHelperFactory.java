@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination;
 
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.HasRefreshScope;
@@ -24,7 +25,12 @@ public class TransactionPaginationHelperFactory {
             return new RefreshScopeTransactionPaginationHelper(refreshScope);
         }
 
-        log.info("Using CertainDateTransactionPaginationHelper");
+        int requestAccountsSize =
+                Objects.nonNull(request.getAccounts()) ? request.getAccounts().size() : 0;
+
+        log.info(
+                "Using CertainDateTransactionPaginationHelper (request.getAccounts().size() == {})",
+                requestAccountsSize);
         return new CertainDateTransactionPaginationHelper(request);
     }
 
