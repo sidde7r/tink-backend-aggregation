@@ -29,7 +29,7 @@ public class RateLimitedExecutorService implements Managed {
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final double MULTIPLIER = 1.25;
-    private static final double SIBS_PERMITS_PER_SECOND = 0.01;
+    private static final double SIBS_PERMITS_PER_SECOND = 0.008;
 
     private static final ImmutableMap<String, Double> PROVIDERS_WITH_OVERRIDDEN_RATE_LIMITER =
             ImmutableMap.<String, Double>builder()
