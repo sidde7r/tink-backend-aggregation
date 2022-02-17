@@ -2,6 +2,8 @@ coordinationHosts: coordination-0.internal.staging.aggregation.tink.network:2181
 initialDelaySeconds: "300"
 
 cacheHosts: main-mirrored.wazhro.cfg.euw1.cache.amazonaws.com:11211
+mirrorCacheHosts:
+  - main.wazhro.cfg.euw1.cache.amazonaws.com:11211
 
 podCpuRequest: "2"
 podCpuLimit: "2"
